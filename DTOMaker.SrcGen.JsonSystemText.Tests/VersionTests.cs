@@ -33,7 +33,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             Version thisVersion = typeof(DTOMaker.Runtime.JsonSystemText.PairOfInt16Converter).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
             coreVersion.ToString().ShouldBe("0.72.0.0");
-            thisVersion.ToString().ShouldBe("1.1.0.0");
+            thisVersion.ToString().ShouldBe("1.2.0.0");
 
             //thisVersion.Major.ShouldBe(coreVersion.Major);
             //thisVersion.Minor.ShouldBeGreaterThanOrEqualTo(coreVersion.Minor);
