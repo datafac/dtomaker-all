@@ -15,4 +15,3 @@ public class OffsetAttribute : Attribute
         FieldOffset = fieldOffset;
     }
 }
-
