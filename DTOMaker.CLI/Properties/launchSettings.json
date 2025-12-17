@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DTOMaker.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "t2g -s input.cs -o output.g.cs -x"
+    }
+  }
+}
