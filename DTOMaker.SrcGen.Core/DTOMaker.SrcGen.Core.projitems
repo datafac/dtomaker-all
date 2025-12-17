@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>eb3e6582-b3e1-4151-951f-b710d2618d15</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DTOMaker.SrcGen.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DiagnosticCategory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DiagnosticId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DiagnosticsEN.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EntityGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EquatableArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILanguage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IsExternalInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KnownType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Language_CSharp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MemberKind.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OutputEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OutputMember.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParsedEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParsedMember.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ParsedName.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Phase1Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntaxDiagnostic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SyntheticId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TokenStack.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TypeFullName.cs" />
+  </ItemGroup>
+</Project>

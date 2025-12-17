@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<!--IncludeBuildOutput should be false for source generators-->
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<!--<GeneratePackageOnBuild>true</GeneratePackageOnBuild>-->
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<PackageProjectUrl>https://github.com/datafac/dtomaker-json2</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/datafac/dtomaker-json2</RepositoryUrl>
+		<Company>DataFac</Company>
+		<Product>DTOMaker</Product>
+		<Authors>DataFac Contributors</Authors>
+		<Title>DTOMaker Generator</Title>
+		<Description>Model-driven source generator for JSON-serializable POCOs.</Description>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\SigningKey.snk</AssemblyOriginatorKeyFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>generator; roslyn</PackageTags>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Package the generator in the analyzer directory of the nuget package -->
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<Import Project="..\DTOMaker.SrcGen.Core\DTOMaker.SrcGen.Core.projitems" Label="Shared" />
+
+</Project>

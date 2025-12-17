@@ -1,0 +1,4 @@
+﻿{
+  "field1": "\uFFFF",
+  "field2": "\uFFFF"
+}

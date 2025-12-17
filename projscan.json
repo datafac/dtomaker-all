@@ -1,0 +1,8 @@
+{
+  "CompanyName":  "DataFac",
+  "ProductName": "DTOMaker",
+  "ExemptionCodes": [
+    "includesymbols_equals_true",
+    "symbolpackageformat_equals_snupkg"
+  ]
+}
