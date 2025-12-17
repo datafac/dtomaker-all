@@ -9,9 +9,7 @@ namespace DTOMaker.SrcGen.JsonSystemText
     [Generator]
     public sealed class JsonSTSourceGenerator : SourceGeneratorBase
     {
-        protected override void OnBeginInitialize(IncrementalGeneratorInitializationContext context)
-        {
-        }
+        protected override SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context) => new SourceGeneratorParameters("JsonSystemText");
         protected override void OnEndInitialize(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OutputEntity> entities)
         {
             // generate entities

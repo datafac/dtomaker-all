@@ -17,6 +17,8 @@ namespace DTOMaker.SrcGen.Core
         private readonly int _syntheticId;
         private readonly MemberKind _memberKind;
 
+        private readonly string _implSpaceSuffix;
+
         private static int GetSyntheticId(string fullname)
         {
             return fullname switch
@@ -79,48 +81,50 @@ namespace DTOMaker.SrcGen.Core
             };
         }
 
-        private TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments)
+        private TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments, string implSpaceSuffix)
         {
             Intf = intf;
             Impl = impl;
             _typeParameters = typeParameters;
             _typeArguments = typeArguments;
-            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, typeParameters, typeArguments);
+            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, typeParameters, typeArguments, implSpaceSuffix);
             _syntheticId = GetSyntheticId(_fullName);
             _memberKind = kind;
+            _implSpaceSuffix = implSpaceSuffix;
         }
 
-        public TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind)
+        public TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, string implSpaceSuffix)
         {
             Intf = intf;
             Impl = impl;
             _typeParameters = ImmutableArray<ITypeParameterSymbol>.Empty;
             _typeArguments = ImmutableArray<ITypeSymbol>.Empty;
-            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments);
+            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, implSpaceSuffix);
             _syntheticId = GetSyntheticId(_fullName);
             _memberKind = kind;
+            _implSpaceSuffix = implSpaceSuffix;
         }
 
-        public TypeFullName(ITypeSymbol ids)
+        public TypeFullName(ITypeSymbol ids, string implSpaceSuffix)
         {
-            const string implSpaceSuffix = "JsonSystemText"; // todo: get from generator
             string nameSpace = ids.ContainingNamespace.ToDisplayString();
             Intf = new ParsedName(nameSpace, ids.Name);
             Impl = ids.TypeKind == TypeKind.Interface && ids.Name.StartsWith("I") ? new ParsedName(nameSpace + "." + implSpaceSuffix, ids.Name.Substring(1)) : Intf;
             _typeParameters = ids is INamedTypeSymbol nts1 ? nts1.TypeParameters : ImmutableArray<ITypeParameterSymbol>.Empty;
             _typeArguments = ids is INamedTypeSymbol nts2 ? nts2.TypeArguments : ImmutableArray<ITypeSymbol>.Empty;
-            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments);
+            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, implSpaceSuffix);
             _syntheticId = GetSyntheticId(_fullName);
             _memberKind = GetMemberKind(_fullName);
             if (_memberKind == MemberKind.Unknown && ids.TypeKind == TypeKind.Interface)
             {
                 _memberKind = MemberKind.Entity;
             }
+            _implSpaceSuffix = implSpaceSuffix;
         }
 
         public string IntfNameSpace => Intf.Space;
         public string ImplNameSpace => Impl.Space;
-        public string ShortImplName => MakeCSImplName(Impl.Name, _typeParameters, _typeArguments);
+        public string ShortImplName => MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, _implSpaceSuffix);
         public string ShortIntfName => MakeCSIntfName(Intf.Name, _typeParameters, _typeArguments);
         public string FullName => _fullName;
         public int SyntheticId => _syntheticId;
@@ -133,11 +137,11 @@ namespace DTOMaker.SrcGen.Core
         public ImmutableArray<ITypeSymbol> TypeArguments => _typeArguments;
         public TypeFullName AsOpenGeneric()
         {
-            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, ImmutableArray<ITypeSymbol>.Empty);
+            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, ImmutableArray<ITypeSymbol>.Empty, _implSpaceSuffix);
         }
         public TypeFullName AsClosedGeneric(ImmutableArray<ITypeSymbol> typeArguments)
         {
-            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, typeArguments);
+            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, typeArguments, _implSpaceSuffix);
         }
 
         public bool Equals(TypeFullName other) => string.Equals(_fullName, other._fullName, StringComparison.Ordinal);
@@ -158,7 +162,7 @@ namespace DTOMaker.SrcGen.Core
         /// <param name="typeParameters"></param>
         /// <param name="typeArguments"></param>
         /// <returns></returns>
-        private static string MakeCSImplName(string name, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments)
+        private static string MakeCSImplName(string name, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments, string implSpaceSuffix)
         {
             if (typeParameters.Length == 0) return name;
 
@@ -171,7 +175,7 @@ namespace DTOMaker.SrcGen.Core
                 result.Append('_');
                 if (i < typeArguments.Length && typeArguments[i].Kind == SymbolKind.NamedType)
                 {
-                    var aTFN = new TypeFullName(typeArguments[i]);
+                    var aTFN = new TypeFullName(typeArguments[i], implSpaceSuffix);
                     result.Append(aTFN.ShortImplName);
                 }
                 else

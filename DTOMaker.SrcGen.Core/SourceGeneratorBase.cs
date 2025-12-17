@@ -7,9 +7,23 @@ using System.Linq;
 
 namespace DTOMaker.SrcGen.Core
 {
+    public sealed record class SourceGeneratorParameters
+    {
+        /// <summary>
+        /// The suffix appended to implementation namespace names. This is a
+        /// constant defined by each source generator template and runtime, and 
+        /// cannot be changed easily.
+        /// </summary>
+        public string ImplSpaceSuffix { get; }
+
+        public SourceGeneratorParameters(string implSpaceSuffix)
+        {
+            ImplSpaceSuffix = implSpaceSuffix;
+        }
+    }
     public abstract class SourceGeneratorBase : IIncrementalGenerator
     {
-        protected abstract void OnBeginInitialize(IncrementalGeneratorInitializationContext context);
+        protected abstract SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context);
         protected abstract void OnEndInitialize(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OutputEntity> model);
 
         // determine the namespace the syntax node is declared in, if any
@@ -91,7 +105,7 @@ namespace DTOMaker.SrcGen.Core
                     $"Expected {attrData.AttributeClass?.Name} attribute to have {expectedCount} arguments, but it has {attrArgs.Length}.");
         }
 
-        private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx)
+        private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
         {
             //List<SyntaxDiagnostic> syntaxErrors = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -171,14 +185,14 @@ namespace DTOMaker.SrcGen.Core
             // or OuterClass<T>.Colour if it was nested in a generic type (for example)
             string fullname = propSymbol.ToString();
 
-            (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type);
+            (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, implSpaceSuffix);
 
             return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError);
         }
 
-        private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol)
+        private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
         {
-            TypeFullName tfn = new TypeFullName(typeSymbol);
+            TypeFullName tfn = new TypeFullName(typeSymbol, implSpaceSuffix);
             MemberKind kind = tfn.MemberKind;
             bool isNullable = false;
             if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
@@ -188,7 +202,7 @@ namespace DTOMaker.SrcGen.Core
                     // nullable value type
                     isNullable = true;
                     ITypeSymbol typeArg0 = namedTypeSymbol.TypeArguments[0];
-                    tfn = new TypeFullName(typeArg0);
+                    tfn = new TypeFullName(typeArg0, implSpaceSuffix);
                     kind = tfn.MemberKind;
                 }
             }
@@ -232,7 +246,7 @@ namespace DTOMaker.SrcGen.Core
             };
         }
 
-        private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx)
+        private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
         {
             //List<SyntaxDiagnostic> syntaxErrors = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -315,8 +329,8 @@ namespace DTOMaker.SrcGen.Core
             //}
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
-            TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf) : null;
-            return new ParsedEntity(new TypeFullName(intfSymbol), entityId, baseTFN);
+            TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, implSpaceSuffix) : null;
+            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, baseTFN);
         }
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
@@ -344,12 +358,12 @@ namespace DTOMaker.SrcGen.Core
             return derivedEntities;
         }
 
-        public static ImmutableArray<ParsedEntity> AddEntityBase(ImmutableArray<ParsedEntity> parsedEntities)
+        public static ImmutableArray<ParsedEntity> AddEntityBase(ImmutableArray<ParsedEntity> parsedEntities, string implSpaceSuffix)
         {
             // add base entity
             var baseEntityIntf = new ParsedName("DTOMaker.Runtime.IEntityBase");
-            var baseEntityImpl = new ParsedName("DTOMaker.Runtime.JsonSystemText.EntityBase");
-            var baseEntityTFN = new TypeFullName(baseEntityIntf, baseEntityImpl, MemberKind.Entity);
+            var baseEntityImpl = new ParsedName($"DTOMaker.Runtime.{implSpaceSuffix}.EntityBase");
+            var baseEntityTFN = new TypeFullName(baseEntityIntf, baseEntityImpl, MemberKind.Entity, implSpaceSuffix);
             var baseEntity = new ParsedEntity(baseEntityTFN, 0, null);
             var builder = ImmutableArray<ParsedEntity>.Empty.ToBuilder();
             builder.Add(baseEntity);
@@ -409,14 +423,16 @@ namespace DTOMaker.SrcGen.Core
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             // do derived stuff
-            OnBeginInitialize(context);
+            var srcGenParams = OnBeginInitialize(context);
+            string implSpaceSuffix = srcGenParams.ImplSpaceSuffix;
+
 
             // filter for entities
             IncrementalValuesProvider<ParsedEntity> parsedEntities1 = context.SyntaxProvider
                 .ForAttributeWithMetadataName(
                     "DTOMaker.Models.EntityAttribute",
                     predicate: static (syntaxNode, _) => syntaxNode is InterfaceDeclarationSyntax,
-                    transform: static (ctx, _) => GetParsedEntity(ctx))
+                    transform: (ctx, _) => GetParsedEntity(ctx, implSpaceSuffix))
                 .Where(static e => e is not null)!;
 
             // filter for Members
@@ -424,11 +440,11 @@ namespace DTOMaker.SrcGen.Core
                 .ForAttributeWithMetadataName(
                     "DTOMaker.Models.MemberAttribute",
                     predicate: static (syntaxNode, _) => syntaxNode is PropertyDeclarationSyntax,
-                    transform: static (ctx, _) => GetParsedMember(ctx))
+                    transform: (ctx, _) => GetParsedMember(ctx, implSpaceSuffix))
                 .Where(static m => m is not null)!;
 
             // add base entity
-            IncrementalValuesProvider<ParsedEntity> parsedEntities2 = parsedEntities1.Collect().Select((list1, _) => AddEntityBase(list1)).SelectMany((list2, _) => list2.ToImmutableArray());
+            IncrementalValuesProvider<ParsedEntity> parsedEntities2 = parsedEntities1.Collect().Select((list1, _) => AddEntityBase(list1, implSpaceSuffix)).SelectMany((list2, _) => list2.ToImmutableArray());
 
             var parsedMatrix = parsedEntities2.Collect().Combine(parsedMembers.Collect());
 
@@ -483,7 +499,7 @@ namespace DTOMaker.SrcGen.Core
             //    spc.AddSource("Metadata.Summary.g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
             //});
 
-            // todo emit metadata in json format
+            // emit metadata in json format
             //IncrementalValueProvider<string?> projectDirProvider = context.AnalyzerConfigOptionsProvider
             //    .Select(static (provider, _) =>
             //    {

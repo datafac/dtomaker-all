@@ -170,12 +170,12 @@ namespace DTOMaker.SrcGen.Core
             return _tokenStack.NewScope(tokens);
         }
 
-        protected abstract void OnGenerate(OutputEntity scope);
-        public string GenerateSourceText(OutputEntity scope)
+        protected abstract void OnGenerate(OutputEntity entity);
+        public string GenerateSourceText(OutputEntity entity)
         {
-            using var _ = NewScope(scope);
+            using var _ = NewScope(entity);
             _builder.Clear();
-            OnGenerate(scope);
+            OnGenerate(entity);
             return _builder.ToString();
         }
     }

@@ -20,9 +20,13 @@ namespace Template.JsonSystemText.Tests
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
             orig.T_RequiredScalarMemberName_ = 123;
-            //todo orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 456L };
+            orig.T_NullableScalarMemberName_ = 456;
+            orig.T_RequiredStringMemberName_ = "abc";
+            orig.T_NullableStringMemberName_ = "def";
             orig.T_RequiredBinaryMemberName_ = largeBinary;
             orig.T_NullableBinaryMemberName_ = smallBinary;
+            orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
+            orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.Freeze();
 
             string buffer = orig.SerializeToJson<T_EntityImplName_>();
@@ -35,7 +39,7 @@ namespace Template.JsonSystemText.Tests
             copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredBinaryMemberName_.AsSpan().SequenceEqual(orig.T_RequiredBinaryMemberName_.AsSpan()).ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
-            //copy.ShouldBe(orig);
+            copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
         }
 
