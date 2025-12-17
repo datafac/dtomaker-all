@@ -20,8 +20,9 @@
 		<!--settings for NuGet packages-->
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageTags>DTOMaker; generator; roslyn</PackageTags>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!--do not include symbols for source generators-->
+		<!--<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>-->
 
 		<!--settings for source generators-->
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
