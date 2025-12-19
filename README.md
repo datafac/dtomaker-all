@@ -1,17 +1,17 @@
 # DTOMaker
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
-[![CodeQL](https://github.com/datafac/dtomaker-all/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/github-code-scanning/codeql)
 ![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
+![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
 Model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
 supporting various serialization protocols:
 - JSON (System.Text.Json)
-- JSON (Newtonsoft.Json)
+- JSON (Newtonsoft.Json) [in progress]
 - MessagePack [coming soon]
 - MemBlocks [coming soon]
 
@@ -93,6 +93,7 @@ public partial class MyTree : Tree_2_String_Octets, IMyTree, IEquatable<MyTree>
 ```
 # Development
 ## In progress
+- JSON (NewtonSoft) source generator
 
 ## Coming soon
 - custom struct members (to avoid primitive obsession)
@@ -104,3 +105,11 @@ public partial class MyTree : Tree_2_String_Octets, IMyTree, IEquatable<MyTree>
 - command-line alternative
 - variable length arrays
 - logical value equality
+
+## How to sponsor
+If you find these tools useful, please consider sponsoring my work on GitHub 
+at https://github.com/sponsors/Psiman62
+or buy me a coffee at https://www.buymeacoffee.com/psiman62
+
+## License
+This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.

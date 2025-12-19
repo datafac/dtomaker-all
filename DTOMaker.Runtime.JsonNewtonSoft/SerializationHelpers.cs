@@ -10,7 +10,9 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
     /// </summary>
     /// <remarks>This class uses Newtonsoft.Json with settings that include indented formatting, automatic
     /// type name handling, and ignoring default values. The methods are intended to simplify common serialization and
-    /// deserialization scenarios with consistent configuration.</remarks>
+    /// deserialization scenarios with consistent configuration.
+    /// Todo: Use entity id as type discriminator when serializing/deserializing polymorphic types.
+    /// </remarks>
     public static class SerializationHelpers
     {
         private static readonly JsonSerializerSettings _settings = new JsonSerializerSettings()
