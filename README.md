@@ -1,17 +1,17 @@
 # DTOMaker
 
-[![Build-Deploy](https://github.com/datafac/dtomaker-json/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-json/actions/workflows/dotnet.yml)
-[![CodeQL](https://github.com/datafac/dtomaker-json/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/datafac/dtomaker-json/actions/workflows/github-code-scanning/codeql)
+[![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
+[![CodeQL](https://github.com/datafac/dtomaker-all/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/github-code-scanning/codeql)
 ![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
 ![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
-![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-json)
+![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
 Model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
 supporting various serialization protocols:
 - JSON (System.Text.Json)
-- JSON (Newtonsoft.Json) [coming soon]
+- JSON (Newtonsoft.Json)
 - MessagePack [coming soon]
 - MemBlocks [coming soon]
 
