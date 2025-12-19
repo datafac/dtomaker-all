@@ -26,7 +26,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("using System;");
         Emit("using System.Linq;");
         Emit("using System.Runtime.CompilerServices;");
-        Emit("using System.Text.Json.Serialization;");
+        Emit("using Newtonsoft.Json;");
         Emit("using T_ImplNameSpace_;");
         Emit("");
         if (false)
@@ -75,8 +75,6 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("}");
             Emit("namespace T_BaseImplNameSpace_");
             Emit("{");
-            Emit("    [JsonPolymorphic]");
-            Emit("    [JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), 1)]");
             Emit("    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>");
             Emit("    {");
             Emit("        protected override int OnGetEntityId() => 2;");
@@ -131,11 +129,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
         {
             if (entity.DerivedEntities.Count > 0)
             {
-                Emit("    [JsonPolymorphic]");
                 foreach (var derived in entity.DerivedEntities)
                 {
                     using var _ = NewScope(derived);
-                    Emit("    [JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), T_EntityId_)]");
                 }
             }
             Emit("    public class EntityBase : IEntityBase, IEquatable<EntityBase>");
@@ -241,11 +237,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
         {
             if (entity.DerivedEntities.Count > 0)
             {
-                Emit("    [JsonPolymorphic]");
                 foreach (var derived in entity.DerivedEntities)
                 {
                     using var _ = NewScope(derived);
-                    Emit("    [JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), T_EntityId_)]");
                 }
             }
             Emit("    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>");
@@ -474,6 +468,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         if (member.IsNullable)
                         {
+                            Emit("        [JsonProperty(\"T_NullableScalarMemberJsonName_\")]");
                             Emit("        public T_MemberType_? T_NullableScalarMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableScalarMemberName_;");
@@ -482,6 +477,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         else
                         {
+                            Emit("        [JsonProperty(\"T_RequiredScalarMemberJsonName_\")]");
                             Emit("        public T_MemberType_ T_RequiredScalarMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredScalarMemberName_;");
@@ -494,11 +490,25 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [JsonIgnore]");
                             Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;");
+                        }
+                        else
+                        {
+                            Emit("        [JsonIgnore]");
+                            Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
+                        }
+                        if (member.IsObsolete)
+                        {
+                            Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
+                        }
+                        if (member.IsNullable)
+                        {
+                            Emit("        [JsonProperty(\"T_NullableEntityMemberJsonName_\")]");
                             Emit("        public T_MemberTypeImplSpace_.T_MemberTypeImplName_? T_NullableEntityMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableEntityMemberName_;");
                             Emit("            set => _T_NullableEntityMemberName_ = IfNotFrozen(value);");
                             Emit("        }");
+                            Emit("        [JsonIgnore]");
                             Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableEntityMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableEntityMemberName_;");
@@ -507,13 +517,13 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         else
                         {
-                            Emit("        [JsonIgnore]");
-                            Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
+                            Emit("        [JsonProperty(\"T_RequiredEntityMemberJsonName_\")]");
                             Emit("        public T_MemberTypeImplSpace_.T_MemberTypeImplName_ T_RequiredEntityMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredEntityMemberName_;");
                             Emit("            set => _T_RequiredEntityMemberName_ = IfNotFrozen(value);");
                             Emit("        }");
+                            Emit("        [JsonIgnore]");
                             Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredEntityMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredEntityMemberName_;");
@@ -526,6 +536,19 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [JsonIgnore]");
                             Emit("        private byte[]? _T_NullableBinaryMemberName_;");
+                        }
+                        else
+                        {
+                            Emit("        [JsonIgnore]");
+                            Emit("        private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();");
+                        }
+                        if (member.IsObsolete)
+                        {
+                            Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
+                        }
+                        if (member.IsNullable)
+                        {
+                            Emit("        [JsonProperty(\"T_NullableBinaryMemberJsonName_\")]");
                             Emit("        public byte[]? T_NullableBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableBinaryMemberName_;");
@@ -540,8 +563,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         else
                         {
-                            Emit("        [JsonIgnore]");
-                            Emit("        private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();");
+                            Emit("        [JsonProperty(\"T_RequiredBinaryMemberJsonName_\")]");
                             Emit("        public byte[] T_RequiredBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredBinaryMemberName_;");
@@ -560,6 +582,19 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [JsonIgnore]");
                             Emit("        private string? _T_NullableStringMemberName_;");
+                        }
+                        else
+                        {
+                            Emit("        [JsonIgnore]");
+                            Emit("        private string _T_RequiredStringMemberName_ = string.Empty;");
+                        }
+                        if (member.IsObsolete)
+                        {
+                            Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
+                        }
+                        if (member.IsNullable)
+                        {
+                            Emit("        [JsonProperty(\"T_NullableStringMemberJsonName_\")]");
                             Emit("        public string? T_NullableStringMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableStringMemberName_;");
@@ -568,8 +603,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         else
                         {
-                            Emit("        [JsonIgnore]");
-                            Emit("        private string _T_RequiredStringMemberName_ = string.Empty;");
+                            Emit("        [JsonProperty(\"T_RequiredStringMemberJsonName_\")]");
                             Emit("        public string T_RequiredStringMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredStringMemberName_;");

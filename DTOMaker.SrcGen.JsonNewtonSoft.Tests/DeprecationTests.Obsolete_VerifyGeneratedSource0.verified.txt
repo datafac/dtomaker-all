@@ -10,13 +10,11 @@ using DTOMaker.Runtime.JsonNewtonSoft;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using DTOMaker.Runtime.JsonNewtonSoft;
 
 namespace DTOMaker.Runtime.JsonNewtonSoft
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonNewtonSoft.MyDTO), 1)]
     public class EntityBase : IEntityBase, IEquatable<EntityBase>
     {
         protected virtual int OnGetEntityId() => 0;

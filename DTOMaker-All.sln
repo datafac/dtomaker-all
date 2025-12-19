@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.JsonNewtonS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.JsonNewtonSoft.Tests", "DTOMaker.SrcGen.JsonNewtonSoft.Tests\DTOMaker.SrcGen.JsonNewtonSoft.Tests.csproj", "{94D882B3-B8E4-5708-DD58-3D2D0325B447}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.JsonNewtonSoft.IntTests", "DTOMaker.SrcGen.JsonNewtonSoft.IntTests\DTOMaker.SrcGen.JsonNewtonSoft.IntTests.csproj", "{450C6F61-1313-A206-B4C8-CED9C979E995}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{94D882B3-B8E4-5708-DD58-3D2D0325B447}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94D882B3-B8E4-5708-DD58-3D2D0325B447}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94D882B3-B8E4-5708-DD58-3D2D0325B447}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450C6F61-1313-A206-B4C8-CED9C979E995}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450C6F61-1313-A206-B4C8-CED9C979E995}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450C6F61-1313-A206-B4C8-CED9C979E995}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450C6F61-1313-A206-B4C8-CED9C979E995}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +131,7 @@ Global
 		{21C6E32A-74F2-29B8-0104-93D8BC055B1F} = {F5817947-5666-4E27-A682-1F5FBDD0C569}
 		{321632A4-148F-A1EE-5C73-1D2BE0D06D78} = {F5817947-5666-4E27-A682-1F5FBDD0C569}
 		{94D882B3-B8E4-5708-DD58-3D2D0325B447} = {F5817947-5666-4E27-A682-1F5FBDD0C569}
+		{450C6F61-1313-A206-B4C8-CED9C979E995} = {F5817947-5666-4E27-A682-1F5FBDD0C569}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C984986-C2C9-4136-A2D4-1A5FE9BDF8F0}

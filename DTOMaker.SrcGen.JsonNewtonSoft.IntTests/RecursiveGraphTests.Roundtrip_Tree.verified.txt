@@ -1,0 +1,21 @@
+﻿{
+  "l": {
+    "n": {
+      "$type": "DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft.StringNode, DTOMaker.SrcGen.JsonNewtonSoft.IntTests",
+      "v": "LStr",
+      "k": "L"
+    }
+  },
+  "r": {
+    "n": {
+      "$type": "DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft.NumberNode, DTOMaker.SrcGen.JsonNewtonSoft.IntTests",
+      "v": 314,
+      "k": "R"
+    }
+  },
+  "n": {
+    "$type": "DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft.StringNode, DTOMaker.SrcGen.JsonNewtonSoft.IntTests",
+    "v": "MStr",
+    "k": "M"
+  }
+}

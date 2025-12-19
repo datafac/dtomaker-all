@@ -10,7 +10,7 @@ using DTOMaker.Runtime.JsonNewtonSoft;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using MyOrg.Models.JsonNewtonSoft;
 
 namespace MyOrg.Models.JsonNewtonSoft
@@ -77,6 +77,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private string _Field11 = string.Empty;
+        [JsonProperty("field11")]
         public string Field11
         {
             get => _Field11;
@@ -85,6 +86,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private string? _Field12;
+        [JsonProperty("field12")]
         public string? Field12
         {
             get => _Field12;

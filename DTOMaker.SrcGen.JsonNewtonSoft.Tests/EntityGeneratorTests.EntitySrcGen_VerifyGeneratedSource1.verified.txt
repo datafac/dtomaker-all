@@ -10,13 +10,11 @@ using DTOMaker.Runtime.JsonNewtonSoft;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using MyOrg.Models.JsonNewtonSoft;
 
 namespace MyOrg.Models.JsonNewtonSoft
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonNewtonSoft.Derived), 2)]
     public partial class MyDTO : DTOMaker.Runtime.JsonNewtonSoft.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
@@ -82,6 +80,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private Int32 _Field1 = default;
+        [JsonProperty("field1")]
         public Int32 Field1
         {
             get => _Field1;
@@ -90,6 +89,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private Int32? _Field2;
+        [JsonProperty("field2")]
         public Int32? Field2
         {
             get => _Field2;

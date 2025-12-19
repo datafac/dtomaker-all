@@ -125,10 +125,8 @@ namespace T_ImplNameSpace_
 {
     //##if (entity.EntityId == 0) {
     //##if (entity.DerivedEntities.Count > 0) {
-    //[JsonPolymorphic]
     //##foreach (var derived in entity.DerivedEntities) {
     //##using var _ = NewScope(derived);
-    //[JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), T_EntityId_)]
     //##}
     //##}
     public class EntityBase : IEntityBase, IEquatable<EntityBase>
@@ -227,10 +225,8 @@ namespace T_ImplNameSpace_
     }
     //##} else {
     //##if (entity.DerivedEntities.Count > 0) {
-    //[JsonPolymorphic]
     //##foreach (var derived in entity.DerivedEntities) {
     //##using var _ = NewScope(derived);
-    //[JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), T_EntityId_)]
     //##}
     //##}
     public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>
@@ -415,12 +411,14 @@ namespace T_ImplNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         //##if (member.IsNullable) {
+        [JsonProperty("T_NullableScalarMemberJsonName_")]
         public T_MemberType_? T_NullableScalarMemberName_
         {
             get => _T_NullableScalarMemberName_;
             set => _T_NullableScalarMemberName_ = IfNotFrozen(value);
         }
         //##} else {
+        [JsonProperty("T_RequiredScalarMemberJsonName_")]
         public T_MemberType_ T_RequiredScalarMemberName_
         {
             get => _T_RequiredScalarMemberName_;
@@ -432,24 +430,34 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [JsonIgnore]
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
+        //##} else {
+        [JsonIgnore]
+        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
+        //##}
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        //##if (member.IsNullable) {
+        [JsonProperty("T_NullableEntityMemberJsonName_")]
         public T_MemberTypeImplSpace_.T_MemberTypeImplName_? T_NullableEntityMemberName_
         {
             get => _T_NullableEntityMemberName_;
             set => _T_NullableEntityMemberName_ = IfNotFrozen(value);
         }
+        [JsonIgnore]
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableEntityMemberName_
         {
             get => _T_NullableEntityMemberName_;
             set => _T_NullableEntityMemberName_ = IfNotFrozen(value is null ? null : T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(value));
         }
         //##} else {
-        [JsonIgnore]
-        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
+        [JsonProperty("T_RequiredEntityMemberJsonName_")]
         public T_MemberTypeImplSpace_.T_MemberTypeImplName_ T_RequiredEntityMemberName_
         {
             get => _T_RequiredEntityMemberName_;
             set => _T_RequiredEntityMemberName_ = IfNotFrozen(value);
         }
+        [JsonIgnore]
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredEntityMemberName_
         {
             get => _T_RequiredEntityMemberName_;
@@ -461,6 +469,15 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [JsonIgnore]
         private byte[]? _T_NullableBinaryMemberName_;
+        //##} else {
+        [JsonIgnore]
+        private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();
+        //##}
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        //##if (member.IsNullable) {
+        [JsonProperty("T_NullableBinaryMemberJsonName_")]
         public byte[]? T_NullableBinaryMemberName_
         {
             get => _T_NullableBinaryMemberName_;
@@ -473,8 +490,7 @@ namespace T_ImplNameSpace_
             set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.ToByteArray());
         }
         //##} else {
-        [JsonIgnore]
-        private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();
+        [JsonProperty("T_RequiredBinaryMemberJsonName_")]
         public byte[] T_RequiredBinaryMemberName_
         {
             get => _T_RequiredBinaryMemberName_;
@@ -492,14 +508,22 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [JsonIgnore]
         private string? _T_NullableStringMemberName_;
+        //##} else {
+        [JsonIgnore]
+        private string _T_RequiredStringMemberName_ = string.Empty;
+        //##}
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        //##if (member.IsNullable) {
+        [JsonProperty("T_NullableStringMemberJsonName_")]
         public string? T_NullableStringMemberName_
         {
             get => _T_NullableStringMemberName_;
             set => _T_NullableStringMemberName_ = IfNotFrozen(value);
         }
         //##} else {
-        [JsonIgnore]
-        private string _T_RequiredStringMemberName_ = string.Empty;
+        [JsonProperty("T_RequiredStringMemberJsonName_")]
         public string T_RequiredStringMemberName_
         {
             get => _T_RequiredStringMemberName_;

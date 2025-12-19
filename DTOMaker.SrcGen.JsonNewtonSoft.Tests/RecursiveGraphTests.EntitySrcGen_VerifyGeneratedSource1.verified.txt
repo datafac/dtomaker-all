@@ -10,7 +10,7 @@ using DTOMaker.Runtime.JsonNewtonSoft;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using MyOrg.Models.JsonNewtonSoft;
 
 namespace MyOrg.Models.JsonNewtonSoft
@@ -76,11 +76,13 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private MyOrg.Models.JsonNewtonSoft.MyDTO? _Field1;
+        [JsonProperty("field1")]
         public MyOrg.Models.JsonNewtonSoft.MyDTO? Field1
         {
             get => _Field1;
             set => _Field1 = IfNotFrozen(value);
         }
+        [JsonIgnore]
         MyOrg.Models.IMyDTO? MyOrg.Models.IMyDTO.Field1
         {
             get => _Field1;

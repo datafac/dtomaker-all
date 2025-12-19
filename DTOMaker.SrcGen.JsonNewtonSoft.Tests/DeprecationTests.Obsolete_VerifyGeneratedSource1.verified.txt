@@ -10,7 +10,7 @@ using DTOMaker.Runtime.JsonNewtonSoft;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using MyOrg.Models.JsonNewtonSoft;
 
 namespace MyOrg.Models.JsonNewtonSoft
@@ -80,6 +80,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field1 = default;
         [Obsolete("", false)]
+        [JsonProperty("field1")]
         public Double Field1
         {
             get => _Field1;
@@ -89,6 +90,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field2 = default;
         [Obsolete("Removed", false)]
+        [JsonProperty("field2")]
         public Double Field2
         {
             get => _Field2;
@@ -98,6 +100,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field3 = default;
         [Obsolete("Removed", true)]
+        [JsonProperty("field3")]
         public Double Field3
         {
             get => _Field3;

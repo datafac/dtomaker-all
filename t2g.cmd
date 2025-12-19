@@ -7,6 +7,7 @@
 set _cli=dtomaker
 
 call :t2g JsonSystemText
+call :t2g JsonNewtonSoft
 
 goto :eof
 

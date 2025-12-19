@@ -120,15 +120,19 @@ namespace DTOMaker.SrcGen.Core
                     tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberSequence"] = member.Sequence;
                     tokens["ScalarMemberName"] = member.Name;
                     tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberName"] = member.Name;
+                    tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberJsonName"] = ToCamelCase(member.Name);
                     break;
                 case MemberKind.Entity:
                     tokens[(member.IsNullable ? "Nullable" : "Required") + "EntityMemberName"] = member.Name;
+                    tokens[(member.IsNullable ? "Nullable" : "Required") + "EntityMemberJsonName"] = ToCamelCase(member.Name);
                     break;
                 case MemberKind.Binary:
                     tokens[(member.IsNullable ? "Nullable" : "Required") + "BinaryMemberName"] = member.Name;
+                    tokens[(member.IsNullable ? "Nullable" : "Required") + "BinaryMemberJsonName"] = ToCamelCase(member.Name);
                     break;
                 case MemberKind.String:
                     tokens[(member.IsNullable ? "Nullable" : "Required") + "StringMemberName"] = member.Name;
+                    tokens[(member.IsNullable ? "Nullable" : "Required") + "StringMemberJsonName"] = ToCamelCase(member.Name);
                     break;
             }
             return _tokenStack.NewScope(tokens);
