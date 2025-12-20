@@ -12,89 +12,109 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-namespace DTOMaker.Runtime.JsonSystemText
+namespace MyOrg.Models.JsonSystemText
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonSystemText.MyDTO), 1)]
-    public class EntityBase : IEntityBase, IEquatable<EntityBase>
+    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
-        protected virtual int OnGetEntityId() => 0;
-        public int GetEntityId() => OnGetEntityId();
 
-        private static EntityBase CreateEmpty()
+        protected override int OnGetEntityId() => 1;
+
+        private static MyDTO CreateEmpty()
         {
-            var empty = new EntityBase();
+            var empty = new MyDTO();
             empty.Freeze();
             return empty;
         }
-        private static readonly EntityBase _empty = CreateEmpty();
-        public static EntityBase Empty => _empty;
+        private static readonly MyDTO _empty = CreateEmpty();
+        public static new MyDTO Empty => _empty;
 
-        public static EntityBase CreateFrom(EntityBase source)
+        public new static MyDTO CreateFrom(MyDTO source)
         {
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonSystemText.MyDTO source2 => new MyOrg.Models.JsonSystemText.MyDTO(source2),
-                _ => new EntityBase(source)
+                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
             };
         }
 
-        public new static EntityBase CreateFrom(IEntityBase source)
+        public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
         {
-            if (source is EntityBase concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IMyDTO source2 => new MyOrg.Models.JsonSystemText.MyDTO(source2),
-                _ => new EntityBase(source)
+                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
             };
         }
 
-        public new static EntityBase CreateNewFromId(int entityId)
+        public new static MyDTO CreateNewFromId(int entityId)
         {
-            if (entityId == 0) return new EntityBase();
+            if (entityId == 1) return new MyDTO();
             return entityId switch
             {
-                1 => new MyOrg.Models.JsonSystemText.MyDTO(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
 
-        public EntityBase() { }
-        public EntityBase(IEntityBase notUsed) { }
-        public EntityBase(EntityBase notUsed) { }
-
-        private volatile bool _frozen;
-        [JsonIgnore] public bool IsFrozen => _frozen;
-        protected virtual void OnFreeze() { }
-        public void Freeze()
+        protected override void OnFreeze()
         {
-            if (_frozen) return;
-            OnFreeze();
-            _frozen = true;
-        }
-        protected virtual IEntityBase OnPartCopy() => new EntityBase(this);
-        public IEntityBase PartCopy() => OnPartCopy();
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected T IfNotFrozen<T>(T value, [CallerMemberName] string? methodName = null)
-        {
-            if (_frozen) ThrowIsFrozenException(methodName);
-            return value;
+            base.OnFreeze();
+            _Field1?.Freeze();
         }
 
-        public bool Equals(EntityBase? other) => true;
-        public override bool Equals(object? obj) => obj is EntityBase;
-        public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
+        protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
-        protected static bool BinaryValuesAreEqual(byte[]? left, byte[]? right)
+        public MyDTO() { }
+        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
-            if (left is null) return (right is null);
-            if (right is null) return false;
-            return left.AsSpan().SequenceEqual(right.AsSpan());
+            _Field1 = source.Field1 is null ? null : MyOrg.Models.JsonSystemText.MyDTO.CreateFrom(source.Field1);
+        }
+        public MyDTO(MyDTO source) : base(source)
+        {
+            _Field1 = source._Field1;
+        }
+
+        [JsonIgnore]
+        private MyOrg.Models.JsonSystemText.MyDTO? _Field1;
+        public MyOrg.Models.JsonSystemText.MyDTO? Field1
+        {
+            get => _Field1;
+            set => _Field1 = IfNotFrozen(value);
+        }
+        MyOrg.Models.IMyDTO? MyOrg.Models.IMyDTO.Field1
+        {
+            get => _Field1;
+            set => _Field1 = IfNotFrozen(value is null ? null : MyOrg.Models.JsonSystemText.MyDTO.CreateFrom(value));
+        }
+
+
+        public bool Equals(MyDTO? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (_Field1 != other.Field1) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
+
+        private int CalcHashCode()
+        {
+            HashCode result = new HashCode();
+            result.Add(base.GetHashCode());
+            result.Add(_Field1);
+            return result.ToHashCode();
+        }
+
+        private int? _hashCode;
+        public override int GetHashCode()
+        {
+            if (!IsFrozen) return CalcHashCode();
+            if (_hashCode.HasValue) return _hashCode.Value;
+            _hashCode = CalcHashCode();
+            return _hashCode.Value;
         }
 
     }

@@ -14,48 +14,43 @@ using System.Text.Json.Serialization;
 
 namespace MyOrg.Models.JsonSystemText
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonSystemText.Derived), 2)]
-    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
+    public partial class Derived : MyOrg.Models.JsonSystemText.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
 
-        protected override int OnGetEntityId() => 1;
+        protected override int OnGetEntityId() => 2;
 
-        private static MyDTO CreateEmpty()
+        private static Derived CreateEmpty()
         {
-            var empty = new MyDTO();
+            var empty = new Derived();
             empty.Freeze();
             return empty;
         }
-        private static readonly MyDTO _empty = CreateEmpty();
-        public static new MyDTO Empty => _empty;
+        private static readonly Derived _empty = CreateEmpty();
+        public static new Derived Empty => _empty;
 
-        public new static MyDTO CreateFrom(MyDTO source)
+        public new static Derived CreateFrom(Derived source)
         {
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonSystemText.Derived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Models.JsonSystemText.Derived(source)
             };
         }
 
-        public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
+        public new static Derived CreateFrom(MyOrg.Models.IDerived source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
+            if (source is Derived concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Models.JsonSystemText.Derived(source)
             };
         }
 
-        public new static MyDTO CreateNewFromId(int entityId)
+        public new static Derived CreateNewFromId(int entityId)
         {
-            if (entityId == 1) return new MyDTO();
+            if (entityId == 2) return new Derived();
             return entityId switch
             {
-                2 => new MyOrg.Models.JsonSystemText.Derived(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
@@ -65,57 +60,57 @@ namespace MyOrg.Models.JsonSystemText
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnPartCopy() => new Derived(this);
 
-        public MyDTO() { }
-        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
+        public Derived() { }
+        public Derived(MyOrg.Models.IDerived source) : base(source)
         {
-            _Field1 = source.Field1;
-            _Field2 = source.Field2;
+            _Field11 = source.Field11;
+            _Field12 = source.Field12;
         }
-        public MyDTO(MyDTO source) : base(source)
+        public Derived(Derived source) : base(source)
         {
-            _Field1 = source._Field1;
-            _Field2 = source._Field2;
-        }
-
-        [JsonIgnore]
-        private Int32 _Field1 = default;
-        public Int32 Field1
-        {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
+            _Field11 = source._Field11;
+            _Field12 = source._Field12;
         }
 
         [JsonIgnore]
-        private Int32? _Field2;
-        public Int32? Field2
+        private string _Field11 = string.Empty;
+        public string Field11
         {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
+            get => _Field11;
+            set => _Field11 = IfNotFrozen(value);
+        }
+
+        [JsonIgnore]
+        private string? _Field12;
+        public string? Field12
+        {
+            get => _Field12;
+            set => _Field12 = IfNotFrozen(value);
         }
 
 
-        public bool Equals(MyDTO? other)
+        public bool Equals(Derived? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other.Field1) return false;
-            if (_Field2 != other.Field2) return false;
+            if (_Field11 != other.Field11) return false;
+            if (_Field12 != other.Field12) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
-        public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
-        public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
+        public override bool Equals(object? obj) => obj is Derived other && Equals(other);
+        public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
-            result.Add(_Field1);
-            result.Add(_Field2);
+            result.Add(_Field11);
+            result.Add(_Field12);
             return result.ToHashCode();
         }
 

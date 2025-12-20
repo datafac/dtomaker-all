@@ -35,7 +35,7 @@ namespace T_MemberTypeIntfSpace_
 }
 namespace T_MemberTypeImplSpace_
 {
-    public class T_MemberTypeImplName_ : T_ImplNameSpace_.EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
+    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
     {
         protected override int OnGetEntityId() => 3;
 
@@ -74,7 +74,7 @@ namespace T_BaseImplNameSpace_
 {
     [JsonPolymorphic]
     [JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), 1)]
-    public class T_BaseImplName_ : T_ImplNameSpace_.EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
+    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
     {
         protected override int OnGetEntityId() => 2;
 
@@ -124,109 +124,6 @@ namespace T_IntfNameSpace_
 //##}
 namespace T_ImplNameSpace_
 {
-    //##if (entity.EntityId == 0) {
-    //##if (entity.DerivedEntities.Count > 0) {
-    [JsonPolymorphic]
-    //##foreach (var derived in entity.DerivedEntities) {
-    //##using var _ = NewScope(derived);
-    [JsonDerivedType(typeof(T_ImplNameSpace_.T_EntityImplName_), T_EntityId_)]
-    //##}
-    //##}
-    public class EntityBase : IEntityBase, IEquatable<EntityBase>
-    {
-        //##if (false) {
-        private const int T_EntityId_ = 999;
-        //##}
-        protected virtual int OnGetEntityId() => T_EntityId_;
-        public int GetEntityId() => OnGetEntityId();
-
-        private static EntityBase CreateEmpty()
-        {
-            var empty = new EntityBase();
-            empty.Freeze();
-            return empty;
-        }
-        private static readonly EntityBase _empty = CreateEmpty();
-        public static EntityBase Empty => _empty;
-
-        public static EntityBase CreateFrom(EntityBase source)
-        {
-            if (source.IsFrozen) return source;
-            return source switch
-            {
-                //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
-                //##using var _ = NewScope(derived);
-                T_ImplNameSpace_.T_EntityImplName_ source2 => new T_ImplNameSpace_.T_EntityImplName_(source2),
-                //##}
-                _ => new EntityBase(source)
-            };
-        }
-
-        public new static EntityBase CreateFrom(IEntityBase source)
-        {
-            if (source is EntityBase concrete && concrete.IsFrozen) return concrete;
-            return source switch
-            {
-                //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
-                //##using var _ = NewScope(derived);
-                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ImplNameSpace_.T_EntityImplName_(source2),
-                //##}
-                _ => new EntityBase(source)
-            };
-        }
-
-        public new static EntityBase CreateNewFromId(int entityId)
-        {
-            if (entityId == T_EntityId_) return new EntityBase();
-            return entityId switch
-            {
-                //##foreach(var derived in entity.DerivedEntities.OrderBy(e => e.EntityId)) {
-                //##using var _ = NewScope(derived);
-                T_EntityId_ => new T_ImplNameSpace_.T_EntityImplName_(),
-                //##}
-                _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
-            };
-        }
-
-        public EntityBase() { }
-        public EntityBase(IEntityBase notUsed) { }
-        public EntityBase(EntityBase notUsed) { }
-
-        private volatile bool _frozen;
-        [JsonIgnore] public bool IsFrozen => _frozen;
-        protected virtual void OnFreeze() { }
-        public void Freeze()
-        {
-            if (_frozen) return;
-            OnFreeze();
-            _frozen = true;
-        }
-        protected virtual IEntityBase OnPartCopy() => new EntityBase(this);
-        public IEntityBase PartCopy() => OnPartCopy();
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected T IfNotFrozen<T>(T value, [CallerMemberName] string? methodName = null)
-        {
-            if (_frozen) ThrowIsFrozenException(methodName);
-            return value;
-        }
-
-        public bool Equals(EntityBase? other) => true;
-        public override bool Equals(object? obj) => obj is EntityBase;
-        public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
-
-        protected static bool BinaryValuesAreEqual(byte[]? left, byte[]? right)
-        {
-            if (left is null) return (right is null);
-            if (right is null) return false;
-            return left.AsSpan().SequenceEqual(right.AsSpan());
-        }
-
-    }
-    //##} else {
     //##if (entity.DerivedEntities.Count > 0) {
     [JsonPolymorphic]
     //##foreach (var derived in entity.DerivedEntities) {
@@ -637,7 +534,6 @@ namespace T_ImplNameSpace_
         }
 
     }
-    //##}
 }
 //##    }
 //##}

@@ -8,13 +8,6 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
 {
     public class InternalPipelineTests
     {
-        private static readonly TypeFullName EntityBase = 
-            new TypeFullName(
-                new ParsedName("DTOMaker.Runtime.IEntityBase"),
-                new ParsedName("DTOMaker.Runtime.JST.EntityBase"),
-                MemberKind.Entity,
-                "JST");
-
         private static TypeFullName CreateTFN(string name) =>
             new TypeFullName(
                 new ParsedName($"MyOrg.Models.I{name}"),
@@ -23,7 +16,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
                 "JST");
 
         private static ParsedEntity CreateEntity(string name, int id, string? baseName) =>
-            new ParsedEntity(CreateTFN(name), id, baseName is null ? EntityBase : CreateTFN(baseName));
+            new ParsedEntity(CreateTFN(name), id, baseName is null ? null : CreateTFN(baseName));
 
         private static ParsedMember CreateMember(string entName, string fieldName, int sequence, Type type, bool isNullable = false)
         {
@@ -49,10 +42,10 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
                 throw new NotSupportedException($"Type {type.FullName} not supported in test");
             }
             return new ParsedMember(
-                    $"MyOrg.Models.I{entName}.{fieldName}", 
+                    $"MyOrg.Models.I{entName}.{fieldName}",
                     sequence,
                     memberType,
-                    memberType.MemberKind, 
+                    memberType.MemberKind,
                     isNullable,
                     false, "", false);
         }
@@ -79,8 +72,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             input.Length.ShouldBe(3);
             input[0].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVariant");
             input[0].TFN.Impl.FullName.ShouldBe("MyOrg.Models.Variant");
-            input[0].BaseTFN.ShouldNotBeNull();
-            input[0].BaseTFN.ToString().ShouldBe("DTOMaker.Runtime.JST.EntityBase : DTOMaker.Runtime.IEntityBase");
+            input[0].BaseTFN.ShouldBeNull();
             input[0].EntityId.ShouldBe(1);
             input[1].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
             input[1].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarString");
@@ -94,41 +86,41 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             input[2].EntityId.ShouldBe(3);
         }
 
-        [Fact]
-        public void Pipeline01_AddEntityBase()
-        {
-            // arrange
-            input.Length.ShouldBe(3);
+        //[Fact]
+        //public void Pipeline01_AddEntityBase()
+        //{
+        //    // arrange
+        //    input.Length.ShouldBe(3);
 
-            // act
-            var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
+        //    // act
+        //    var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
 
-            // assert
-            parsedEntities.Length.ShouldBe(4);
-            parsedEntities[0].TFN.Intf.FullName.ShouldBe("DTOMaker.Runtime.IEntityBase");
-            parsedEntities[0].TFN.Impl.FullName.ShouldBe("DTOMaker.Runtime.JST.EntityBase");
-            parsedEntities[0].TFN.ToString().ShouldBe("DTOMaker.Runtime.JST.EntityBase : DTOMaker.Runtime.IEntityBase");
-            parsedEntities[0].BaseTFN.ShouldBeNull();
-            parsedEntities[0].EntityId.ShouldBe(0);
+        //    // assert
+        //    parsedEntities.Length.ShouldBe(4);
+        //    parsedEntities[0].TFN.Intf.FullName.ShouldBe("DTOMaker.Runtime.IEntityBase");
+        //    parsedEntities[0].TFN.Impl.FullName.ShouldBe("DTOMaker.Runtime.JST.EntityBase");
+        //    parsedEntities[0].TFN.ToString().ShouldBe("DTOMaker.Runtime.JST.EntityBase : DTOMaker.Runtime.IEntityBase");
+        //    parsedEntities[0].BaseTFN.ShouldBeNull();
+        //    parsedEntities[0].EntityId.ShouldBe(0);
 
-            parsedEntities[1].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVariant");
-            parsedEntities[1].TFN.Impl.FullName.ShouldBe("MyOrg.Models.Variant");
-            parsedEntities[1].BaseTFN.ShouldNotBeNull();
-            parsedEntities[1].BaseTFN.ToString().ShouldBe("DTOMaker.Runtime.JST.EntityBase : DTOMaker.Runtime.IEntityBase");
-            parsedEntities[1].EntityId.ShouldBe(1);
+        //    parsedEntities[1].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVariant");
+        //    parsedEntities[1].TFN.Impl.FullName.ShouldBe("MyOrg.Models.Variant");
+        //    parsedEntities[1].BaseTFN.ShouldNotBeNull();
+        //    parsedEntities[1].BaseTFN.ToString().ShouldBe("DTOMaker.Runtime.JST.EntityBase : DTOMaker.Runtime.IEntityBase");
+        //    parsedEntities[1].EntityId.ShouldBe(1);
 
-            parsedEntities[2].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
-            parsedEntities[2].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarString");
-            parsedEntities[2].BaseTFN.ShouldNotBeNull();
-            parsedEntities[2].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
-            parsedEntities[2].EntityId.ShouldBe(2);
+        //    parsedEntities[2].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
+        //    parsedEntities[2].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarString");
+        //    parsedEntities[2].BaseTFN.ShouldNotBeNull();
+        //    parsedEntities[2].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
+        //    parsedEntities[2].EntityId.ShouldBe(2);
 
-            parsedEntities[3].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarNumber");
-            parsedEntities[3].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarNumber");
-            parsedEntities[3].BaseTFN.ShouldNotBeNull();
-            parsedEntities[3].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
-            parsedEntities[3].EntityId.ShouldBe(3);
-        }
+        //    parsedEntities[3].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarNumber");
+        //    parsedEntities[3].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarNumber");
+        //    parsedEntities[3].BaseTFN.ShouldNotBeNull();
+        //    parsedEntities[3].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
+        //    parsedEntities[3].EntityId.ShouldBe(3);
+        //}
 
         [Fact]
         public void Pipeline02_ResolveMembers()
@@ -137,34 +129,34 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             input.Length.ShouldBe(3);
 
             // act
-            var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
-            parsedEntities.Length.ShouldBe(4);
+            //var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
+            //parsedEntities.Length.ShouldBe(4);
 
-            var result0 = SourceGeneratorBase.ResolveMembers(parsedEntities[0], members, parsedEntities);
-            var result1 = SourceGeneratorBase.ResolveMembers(parsedEntities[1], members, parsedEntities);
-            var result2 = SourceGeneratorBase.ResolveMembers(parsedEntities[2], members, parsedEntities);
-            var result3 = SourceGeneratorBase.ResolveMembers(parsedEntities[3], members, parsedEntities);
+            var result0 = SourceGeneratorBase.ResolveMembers(input[0], members, input);
+            var result1 = SourceGeneratorBase.ResolveMembers(input[1], members, input);
+            var result2 = SourceGeneratorBase.ResolveMembers(input[2], members, input);
+            //var result3 = SourceGeneratorBase.ResolveMembers(input[3], members, input);
 
             // assert
-            result0.TFN.Intf.FullName.ShouldBe("DTOMaker.Runtime.IEntityBase");
+            //result0.TFN.Intf.FullName.ShouldBe("DTOMaker.Runtime.IEntityBase");
+            //result0.Members.Count.ShouldBe(0);
+
+            result0.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVariant");
             result0.Members.Count.ShouldBe(0);
 
-            result1.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVariant");
-            result1.Members.Count.ShouldBe(0);
+            result1.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
+            result1.Members.Count.ShouldBe(1);
+            result1.Members.Array[0].Name.ShouldBe("Value");
+            result1.Members.Array[0].Sequence.ShouldBe(1);
+            result1.Members.Array[0].MemberType.Impl.Name.ShouldBe("String");
+            result1.Members.Array[0].IsNullable.ShouldBe(false);
 
-            result2.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
+            result2.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarNumber");
             result2.Members.Count.ShouldBe(1);
             result2.Members.Array[0].Name.ShouldBe("Value");
             result2.Members.Array[0].Sequence.ShouldBe(1);
-            result2.Members.Array[0].MemberType.Impl.Name.ShouldBe("String");
+            result2.Members.Array[0].MemberType.Impl.Name.ShouldBe("Int32");
             result2.Members.Array[0].IsNullable.ShouldBe(false);
-
-            result3.TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarNumber");
-            result3.Members.Count.ShouldBe(1);
-            result3.Members.Array[0].Name.ShouldBe("Value");
-            result3.Members.Array[0].Sequence.ShouldBe(1);
-            result3.Members.Array[0].MemberType.Impl.Name.ShouldBe("Int32");
-            result3.Members.Array[0].IsNullable.ShouldBe(false);
         }
 
         [Fact]
@@ -174,48 +166,47 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             input.Length.ShouldBe(3);
 
             // act
-            var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
-            parsedEntities.Length.ShouldBe(4);
+            //var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
+            //parsedEntities.Length.ShouldBe(4);
 
-            var entity0 = SourceGeneratorBase.ResolveMembers(parsedEntities[0], members, parsedEntities);
-            var entity1 = SourceGeneratorBase.ResolveMembers(parsedEntities[1], members, parsedEntities);
-            var entity2 = SourceGeneratorBase.ResolveMembers(parsedEntities[2], members, parsedEntities);
-            var entity3 = SourceGeneratorBase.ResolveMembers(parsedEntities[3], members, parsedEntities);
+            var entity0 = SourceGeneratorBase.ResolveMembers(input[0], members, input);
+            var entity1 = SourceGeneratorBase.ResolveMembers(input[1], members, input);
+            var entity2 = SourceGeneratorBase.ResolveMembers(input[2], members, input);
+            //var entity3 = SourceGeneratorBase.ResolveMembers(input[3], members, input);
 
-            var entities = ImmutableArray.Create<Phase1Entity>(entity0, entity1, entity2, entity3);
+            var entities = ImmutableArray.Create<Phase1Entity>(entity0, entity1, entity2); //, entity3);
 
             var result0 = SourceGeneratorBase.ResolveEntities(entity0, entities);
             var result1 = SourceGeneratorBase.ResolveEntities(entity1, entities);
             var result2 = SourceGeneratorBase.ResolveEntities(entity2, entities);
-            var result3 = SourceGeneratorBase.ResolveEntities(entity3, entities);
+            //var result3 = SourceGeneratorBase.ResolveEntities(entity3, entities);
 
             // assert
-            result0.TFN.FullName.ShouldBe("DTOMaker.Runtime.JST.EntityBase");
+            //result0.TFN.FullName.ShouldBe("DTOMaker.Runtime.JST.EntityBase");
+            //result0.BaseEntity.ShouldBeNull();
+            //result0.ClassHeight.ShouldBe(0);
+            //result0.Members.Count.ShouldBe(0);
+            //result0.DerivedEntities.Count.ShouldBe(3);
+
+            result0.TFN.FullName.ShouldBe("MyOrg.Models.Variant");
             result0.BaseEntity.ShouldBeNull();
-            result0.ClassHeight.ShouldBe(0);
+            result0.ClassHeight.ShouldBe(1);
             result0.Members.Count.ShouldBe(0);
-            result0.DerivedEntities.Count.ShouldBe(3);
+            result0.DerivedEntities.Count.ShouldBe(2);
 
-            result1.TFN.FullName.ShouldBe("MyOrg.Models.Variant");
+            result1.TFN.FullName.ShouldBe("MyOrg.Models.VarString");
             result1.BaseEntity.ShouldNotBeNull();
-            result1.BaseEntity.TFN.FullName.ShouldBe("DTOMaker.Runtime.JST.EntityBase");
-            result1.ClassHeight.ShouldBe(1);
-            result1.Members.Count.ShouldBe(0);
-            result1.DerivedEntities.Count.ShouldBe(2);
+            result1.BaseEntity.TFN.FullName.ShouldBe("MyOrg.Models.Variant");
+            result1.ClassHeight.ShouldBe(2);
+            result1.Members.Count.ShouldBe(1);
+            result1.DerivedEntities.Count.ShouldBe(0);
 
-            result2.TFN.FullName.ShouldBe("MyOrg.Models.VarString");
+            result2.TFN.FullName.ShouldBe("MyOrg.Models.VarNumber");
             result2.BaseEntity.ShouldNotBeNull();
             result2.BaseEntity.TFN.FullName.ShouldBe("MyOrg.Models.Variant");
             result2.ClassHeight.ShouldBe(2);
             result2.Members.Count.ShouldBe(1);
             result2.DerivedEntities.Count.ShouldBe(0);
-
-            result3.TFN.FullName.ShouldBe("MyOrg.Models.VarNumber");
-            result3.BaseEntity.ShouldNotBeNull();
-            result3.BaseEntity.TFN.FullName.ShouldBe("MyOrg.Models.Variant");
-            result3.ClassHeight.ShouldBe(2);
-            result3.Members.Count.ShouldBe(1);
-            result3.DerivedEntities.Count.ShouldBe(0);
         }
     }
 }

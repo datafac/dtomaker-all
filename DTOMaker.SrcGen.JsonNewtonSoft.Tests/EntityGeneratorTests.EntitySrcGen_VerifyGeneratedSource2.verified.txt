@@ -12,43 +12,43 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
-namespace MyOrg.Models.JsonNewtonSoft
+namespace MyOrg.Model2.JsonNewtonSoft
 {
-    public partial class Derived : MyOrg.Models.JsonNewtonSoft.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
+    public partial class MyDTO : DTOMaker.Runtime.JsonNewtonSoft.EntityBase, MyOrg.Model2.IMyDTO, IEquatable<MyDTO>
     {
 
-        protected override int OnGetEntityId() => 2;
+        protected override int OnGetEntityId() => 3;
 
-        private static Derived CreateEmpty()
+        private static MyDTO CreateEmpty()
         {
-            var empty = new Derived();
+            var empty = new MyDTO();
             empty.Freeze();
             return empty;
         }
-        private static readonly Derived _empty = CreateEmpty();
-        public static new Derived Empty => _empty;
+        private static readonly MyDTO _empty = CreateEmpty();
+        public static new MyDTO Empty => _empty;
 
-        public new static Derived CreateFrom(Derived source)
+        public new static MyDTO CreateFrom(MyDTO source)
         {
             if (source.IsFrozen) return source;
             return source switch
             {
-                _ => new MyOrg.Models.JsonNewtonSoft.Derived(source)
+                _ => new MyOrg.Model2.JsonNewtonSoft.MyDTO(source)
             };
         }
 
-        public new static Derived CreateFrom(MyOrg.Models.IDerived source)
+        public new static MyDTO CreateFrom(MyOrg.Model2.IMyDTO source)
         {
-            if (source is Derived concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                _ => new MyOrg.Models.JsonNewtonSoft.Derived(source)
+                _ => new MyOrg.Model2.JsonNewtonSoft.MyDTO(source)
             };
         }
 
-        public new static Derived CreateNewFromId(int entityId)
+        public new static MyDTO CreateNewFromId(int entityId)
         {
-            if (entityId == 2) return new Derived();
+            if (entityId == 3) return new MyDTO();
             return entityId switch
             {
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
@@ -58,61 +58,75 @@ namespace MyOrg.Models.JsonNewtonSoft
         protected override void OnFreeze()
         {
             base.OnFreeze();
+            _Field31.Freeze();
+            _Field32?.Freeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Derived(this);
+        protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
-        public Derived() { }
-        public Derived(MyOrg.Models.IDerived source) : base(source)
+        public MyDTO() { }
+        public MyDTO(MyOrg.Model2.IMyDTO source) : base(source)
         {
-            _Field11 = source.Field11;
-            _Field12 = source.Field12;
+            _Field31 = MyOrg.Model2.JsonNewtonSoft.MyDTO.CreateFrom(source.Field31);
+            _Field32 = source.Field32 is null ? null : MyOrg.Model2.JsonNewtonSoft.MyDTO.CreateFrom(source.Field32);
         }
-        public Derived(Derived source) : base(source)
+        public MyDTO(MyDTO source) : base(source)
         {
-            _Field11 = source._Field11;
-            _Field12 = source._Field12;
+            _Field31 = source._Field31;
+            _Field32 = source._Field32;
         }
 
         [JsonIgnore]
-        private string _Field11 = string.Empty;
-        [JsonProperty("field11")]
-        public string Field11
+        private MyOrg.Model2.JsonNewtonSoft.MyDTO _Field31 = MyOrg.Model2.JsonNewtonSoft.MyDTO.Empty;
+        [JsonProperty("field31")]
+        public MyOrg.Model2.JsonNewtonSoft.MyDTO Field31
         {
-            get => _Field11;
-            set => _Field11 = IfNotFrozen(value);
+            get => _Field31;
+            set => _Field31 = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        MyOrg.Model2.IMyDTO MyOrg.Model2.IMyDTO.Field31
+        {
+            get => _Field31;
+            set => _Field31 = IfNotFrozen(MyOrg.Model2.JsonNewtonSoft.MyDTO.CreateFrom(value));
         }
 
         [JsonIgnore]
-        private string? _Field12;
-        [JsonProperty("field12")]
-        public string? Field12
+        private MyOrg.Model2.JsonNewtonSoft.MyDTO? _Field32;
+        [JsonProperty("field32")]
+        public MyOrg.Model2.JsonNewtonSoft.MyDTO? Field32
         {
-            get => _Field12;
-            set => _Field12 = IfNotFrozen(value);
+            get => _Field32;
+            set => _Field32 = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        MyOrg.Model2.IMyDTO? MyOrg.Model2.IMyDTO.Field32
+        {
+            get => _Field32;
+            set => _Field32 = IfNotFrozen(value is null ? null : MyOrg.Model2.JsonNewtonSoft.MyDTO.CreateFrom(value));
         }
 
 
-        public bool Equals(Derived? other)
+        public bool Equals(MyDTO? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field11 != other.Field11) return false;
-            if (_Field12 != other.Field12) return false;
+            if (_Field31 != other.Field31) return false;
+            if (_Field32 != other.Field32) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Derived other && Equals(other);
-        public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
-        public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
+        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
-            result.Add(_Field11);
-            result.Add(_Field12);
+            result.Add(_Field31);
+            result.Add(_Field32);
             return result.ToHashCode();
         }
 

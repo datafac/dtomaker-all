@@ -335,10 +335,9 @@ namespace DTOMaker.SrcGen.Core
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
         {
-            if (thisEntity.BaseTFN is null) return 0; //we are root
+            if (thisEntity.BaseTFN is null) return 1; //we are root
             var parentEntity = allEntities.FirstOrDefault(e => e.TFN.Intf == thisEntity.BaseTFN?.Intf);
-            if (parentEntity is null) return 0; // parent not found
-            if (parentEntity.BaseTFN is null) return 1; // parent is root (shortcut)
+            if (parentEntity is null) return 1; // parent not found
             return 1 + GetClassHeight(parentEntity, allEntities);
         }
 
@@ -358,20 +357,20 @@ namespace DTOMaker.SrcGen.Core
             return derivedEntities;
         }
 
-        public static ImmutableArray<ParsedEntity> AddEntityBase(ImmutableArray<ParsedEntity> parsedEntities, string implSpaceSuffix)
-        {
-            // add base entity
-            var baseEntityIntf = new ParsedName("DTOMaker.Runtime.IEntityBase");
-            var baseEntityImpl = new ParsedName($"DTOMaker.Runtime.{implSpaceSuffix}.EntityBase");
-            var baseEntityTFN = new TypeFullName(baseEntityIntf, baseEntityImpl, MemberKind.Entity, implSpaceSuffix);
-            var baseEntity = new ParsedEntity(baseEntityTFN, 0, null);
-            var builder = ImmutableArray<ParsedEntity>.Empty.ToBuilder();
-            builder.Add(baseEntity);
-            builder.AddRange(parsedEntities);
-            // add closed generic entities
-            // todo
-            return builder.ToImmutable();
-        }
+        //public static ImmutableArray<ParsedEntity> AddEntityBase(ImmutableArray<ParsedEntity> parsedEntities, string implSpaceSuffix)
+        //{
+        //    // add base entity
+        //    var baseEntityIntf = new ParsedName("DTOMaker.Runtime.IEntityBase");
+        //    var baseEntityImpl = new ParsedName($"DTOMaker.Runtime.{implSpaceSuffix}.EntityBase");
+        //    var baseEntityTFN = new TypeFullName(baseEntityIntf, baseEntityImpl, MemberKind.Entity, implSpaceSuffix);
+        //    var baseEntity = new ParsedEntity(baseEntityTFN, 0, null);
+        //    var builder = ImmutableArray<ParsedEntity>.Empty.ToBuilder();
+        //    builder.Add(baseEntity);
+        //    builder.AddRange(parsedEntities);
+        //    // add closed generic entities
+        //    // todo
+        //    return builder.ToImmutable();
+        //}
 
         public static Phase1Entity ResolveMembers(ParsedEntity entity, ImmutableArray<ParsedMember> members, ImmutableArray<ParsedEntity> entities)
         {
@@ -444,12 +443,12 @@ namespace DTOMaker.SrcGen.Core
                 .Where(static m => m is not null)!;
 
             // add base entity
-            IncrementalValuesProvider<ParsedEntity> parsedEntities2 = parsedEntities1.Collect().Select((list1, _) => AddEntityBase(list1, implSpaceSuffix)).SelectMany((list2, _) => list2.ToImmutableArray());
+            //IncrementalValuesProvider<ParsedEntity> parsedEntities2 = parsedEntities1.Collect().Select((list1, _) => AddEntityBase(list1, implSpaceSuffix)).SelectMany((list2, _) => list2.ToImmutableArray());
 
-            var parsedMatrix = parsedEntities2.Collect().Combine(parsedMembers.Collect());
+            var parsedMatrix = parsedEntities1.Collect().Combine(parsedMembers.Collect());
 
             // resolve members and class height
-            IncrementalValuesProvider<Phase1Entity> phase1Entities = parsedEntities2.Combine(parsedMatrix)
+            IncrementalValuesProvider<Phase1Entity> phase1Entities = parsedEntities1.Combine(parsedMatrix)
                 .Select((pair, _) =>
                 {
                     var entity = pair.Left;

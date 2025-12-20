@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 namespace DTOMaker.SrcGen.Core
@@ -155,6 +156,7 @@ namespace DTOMaker.SrcGen.Core
 
         protected IDisposable NewScope(OutputEntity entity)
         {
+            string implSpaceSuffix = entity.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
             var tokens = new Dictionary<string, object?>()
             {
                 ["IntfNameSpace"] = entity.Intf.Space,
@@ -167,8 +169,8 @@ namespace DTOMaker.SrcGen.Core
                 ["ClassHeight"] = entity.ClassHeight,
                 ["BaseIntfNameSpace"] = entity.BaseEntity is null ? "DTOMaker.Runtime" : entity.BaseEntity.Intf.Space,
                 ["BaseIntfName"] = entity.BaseEntity is null ? "IEntityBase" : entity.BaseEntity.Intf.Name,
-                ["BaseImplNameSpace"] = entity.BaseEntity is null ? "System" : entity.BaseEntity.Impl.Space,
-                ["BaseImplName"] = entity.BaseEntity is null ? "Object" : entity.BaseEntity.Impl.Name,
+                ["BaseImplNameSpace"] = entity.BaseEntity is null ? $"DTOMaker.Runtime.{implSpaceSuffix}" : entity.BaseEntity.Impl.Space,
+                ["BaseImplName"] = entity.BaseEntity is null ? "EntityBase" : entity.BaseEntity.Impl.Name,
                 ["DerivedEntityCount"] = entity.DerivedEntities.Count,
             };
             return _tokenStack.NewScope(tokens);
