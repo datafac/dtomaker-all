@@ -26,7 +26,6 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using T_ImplNameSpace_;
 
 //##if (false) {
 using T_MemberType_ = System.Int32;
@@ -36,7 +35,7 @@ namespace T_MemberTypeIntfSpace_
 }
 namespace T_MemberTypeImplSpace_
 {
-    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
+    public class T_MemberTypeImplName_ : T_ImplNameSpace_.EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
     {
         protected override int OnGetEntityId() => 3;
 
@@ -73,7 +72,7 @@ namespace T_BaseIntfNameSpace_
 }
 namespace T_BaseImplNameSpace_
 {
-    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
+    public class T_BaseImplName_ : T_ImplNameSpace_.EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
     {
         protected override int OnGetEntityId() => 2;
 

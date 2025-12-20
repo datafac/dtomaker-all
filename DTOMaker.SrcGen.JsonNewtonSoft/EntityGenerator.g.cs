@@ -27,7 +27,6 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("using System.Linq;");
         Emit("using System.Runtime.CompilerServices;");
         Emit("using Newtonsoft.Json;");
-        Emit("using T_ImplNameSpace_;");
         Emit("");
         if (false)
         {
@@ -38,7 +37,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("}");
             Emit("namespace T_MemberTypeImplSpace_");
             Emit("{");
-            Emit("    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>");
+            Emit("    public class T_MemberTypeImplName_ : T_ImplNameSpace_.EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>");
             Emit("    {");
             Emit("        protected override int OnGetEntityId() => 3;");
             Emit("");
@@ -75,7 +74,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("}");
             Emit("namespace T_BaseImplNameSpace_");
             Emit("{");
-            Emit("    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>");
+            Emit("    public class T_BaseImplName_ : T_ImplNameSpace_.EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>");
             Emit("    {");
             Emit("        protected override int OnGetEntityId() => 2;");
             Emit("");
