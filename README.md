@@ -11,7 +11,7 @@
 Model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
 supporting various serialization protocols:
 - JSON (System.Text.Json)
-- JSON (Newtonsoft.Json) [in progress]
+- JSON (Newtonsoft.Json)
 - MessagePack [coming soon]
 - MemBlocks [coming soon]
 
@@ -93,14 +93,17 @@ public partial class MyTree : Tree_2_String_Octets, IMyTree, IEquatable<MyTree>
 ```
 # Development
 ## In progress
-- JSON (NewtonSoft) source generator
 
 ## Coming soon
+- MessagePack serialization
+- MemBlocks serialization
+- Protobuf.Net serialization
 - custom struct members (to avoid primitive obsession)
 - global interface equality comparer
 - reservation (hidden members)
 
 ## Coming later
+- generic entities
 - model.json generation
 - command-line alternative
 - variable length arrays
