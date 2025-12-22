@@ -341,7 +341,7 @@ namespace DTOMaker.SrcGen.Core
             return 1 + GetClassHeight(parentEntity, allEntities);
         }
 
-        private static List<Phase1Entity> GetDerivedEntities(TypeFullName parentTFN, ImmutableArray<Phase1Entity> allEntities)
+        private static List<Phase1Entity> GetDerivedEntities1(TypeFullName parentTFN, ImmutableArray<Phase1Entity> allEntities)
         {
             var derivedEntities = new List<Phase1Entity>();
             foreach (var entity in allEntities)
@@ -351,7 +351,23 @@ namespace DTOMaker.SrcGen.Core
                     // found derived
                     derivedEntities.Add(entity);
                     // now recurse
-                    derivedEntities.AddRange(GetDerivedEntities(entity.TFN, allEntities));
+                    derivedEntities.AddRange(GetDerivedEntities1(entity.TFN, allEntities));
+                }
+            }
+            return derivedEntities;
+        }
+
+        private static List<Phase2Entity> GetDerivedEntities2(TypeFullName parentTFN, ImmutableArray<Phase2Entity> allEntities)
+        {
+            var derivedEntities = new List<Phase2Entity>();
+            foreach (var entity in allEntities)
+            {
+                if (entity.BaseEntity is not null && entity.BaseEntity.TFN == parentTFN)
+                {
+                    // found derived
+                    derivedEntities.Add(entity);
+                    // now recurse
+                    derivedEntities.AddRange(GetDerivedEntities2(entity.TFN, allEntities));
                 }
             }
             return derivedEntities;
@@ -404,10 +420,25 @@ namespace DTOMaker.SrcGen.Core
             };
         }
 
-        public static OutputEntity ResolveEntities(Phase1Entity entity, ImmutableArray<Phase1Entity> allEnts)
+        public static Phase2Entity ResolveEntities1(Phase1Entity entity, ImmutableArray<Phase1Entity> allEnts)
         {
             var baseEntity = allEnts.FirstOrDefault(e => e.TFN == entity.BaseTFN);
-            List<Phase1Entity> derivedEntities = GetDerivedEntities(entity.TFN, allEnts);
+            List<Phase1Entity> derivedEntities = GetDerivedEntities1(entity.TFN, allEnts);
+            return new Phase2Entity()
+            {
+                TFN = entity.TFN,
+                EntityId = entity.EntityId,
+                ClassHeight = entity.ClassHeight,
+                Members = entity.Members,
+                BaseEntity = baseEntity,
+                DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName))
+            };
+        }
+
+        public static OutputEntity ResolveEntities2(Phase2Entity entity, ImmutableArray<Phase2Entity> allEnts)
+        {
+            var baseEntity = allEnts.FirstOrDefault(e => e.TFN == entity.BaseEntity?.TFN);
+            List<Phase2Entity> derivedEntities = GetDerivedEntities2(entity.TFN, allEnts);
             return new OutputEntity()
             {
                 TFN = entity.TFN,
@@ -415,7 +446,7 @@ namespace DTOMaker.SrcGen.Core
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
-                DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.Intf.FullName))
+                DerivedEntities = new EquatableArray<Phase2Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName))
             };
         }
 
@@ -475,12 +506,21 @@ namespace DTOMaker.SrcGen.Core
             //    });
 
             // resolve base entity and derived entities
-            IncrementalValuesProvider<OutputEntity> outputEntities = phase1Entities.Combine(phase1Entities.Collect())
+            IncrementalValuesProvider<Phase2Entity> phase2Entities = phase1Entities.Combine(phase1Entities.Collect())
                 .Select((pair, _) =>
                 {
                     var entity = pair.Left;
                     var allEnts = pair.Right;
-                    return ResolveEntities(entity, allEnts);
+                    return ResolveEntities1(entity, allEnts);
+                })
+                .Where(e => e.TFN.IsClosed);
+
+            IncrementalValuesProvider<OutputEntity> outputEntities = phase2Entities.Combine(phase2Entities.Collect())
+                .Select((pair, _) =>
+                {
+                    var entity = pair.Left;
+                    var allEnts = pair.Right;
+                    return ResolveEntities2(entity, allEnts);
                 })
                 .Where(e => e.TFN.IsClosed);
 

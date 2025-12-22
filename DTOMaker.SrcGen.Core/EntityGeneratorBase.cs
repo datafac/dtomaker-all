@@ -96,7 +96,22 @@ namespace DTOMaker.SrcGen.Core
             return new string(output.ToArray());
         }
 
-        protected IDisposable NewScope(OutputMember member)
+        private static string BuildTokenName(OutputMember member, string name)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(member.IsNullable ? "Nullable" : "Required");
+            sb.Append(member.Kind switch {
+                MemberKind.Native => "Scalar",
+                MemberKind.String => "String",
+                MemberKind.Binary => "Binary",
+                MemberKind.Entity => "Entity",
+                _ => "NoKind"
+            });
+            sb.Append(name);
+            return sb.ToString();
+        }
+
+        protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
             var tokens = new Dictionary<string, object?>
             {
@@ -114,67 +129,78 @@ namespace DTOMaker.SrcGen.Core
                 ["MemberJsonName"] = ToCamelCase(member.Name),
                 ["MemberDefaultValue"] = _language.GetDefaultValue(member.MemberType)
             };
-            switch (member.Kind)
+            tokens[BuildTokenName(member, "MemberName")] = member.Name;
+            tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
+            tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
+
+            var memberKeyOffset = 0; // todo entity.MemberKeyOffset;
+            if (memberKeyOffset == 0)
             {
-                case MemberKind.Native:
-                    tokens["ScalarMemberSequence"] = member.Sequence;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberSequence"] = member.Sequence;
-                    tokens["ScalarMemberName"] = member.Name;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberName"] = member.Name;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "ScalarMemberJsonName"] = ToCamelCase(member.Name);
-                    break;
-                case MemberKind.Entity:
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "EntityMemberName"] = member.Name;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "EntityMemberJsonName"] = ToCamelCase(member.Name);
-                    break;
-                case MemberKind.Binary:
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "BinaryMemberName"] = member.Name;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "BinaryMemberJsonName"] = ToCamelCase(member.Name);
-                    break;
-                case MemberKind.String:
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "StringMemberName"] = member.Name;
-                    tokens[(member.IsNullable ? "Nullable" : "Required") + "StringMemberJsonName"] = ToCamelCase(member.Name);
-                    break;
+                int classHeight = entity.ClassHeight;
+                memberKeyOffset = (classHeight - 1) * 100;
             }
+            int memberKey = memberKeyOffset + member.Sequence;
+            tokens[BuildTokenName(member, "MemberKey")] = memberKey;
             return _tokenStack.NewScope(tokens);
         }
 
         protected IDisposable NewScope(Phase1Entity entity)
         {
+            string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
             var tokens = new Dictionary<string, object?>()
             {
-                ["IntfNameSpace"] = entity.Intf.Space,
-                ["EntityIntfName"] = entity.Intf.Name,
-                ["ImplNameSpace"] = entity.Impl.Space,
-                ["EntityImplName"] = entity.Impl.Name,
-                ["AbstractEntity"] = entity.Impl.Name,
-                ["ConcreteEntity"] = entity.Impl.Name,
+                ["IntfNameSpace"] = entity.TFN.Intf.Space,
+                ["EntityIntfName"] = entity.TFN.Intf.Name,
+                ["ImplNameSpace"] = entity.TFN.Impl.Space,
+                ["EntityImplName"] = entity.TFN.Impl.Name,
+                ["AbstractEntity"] = entity.TFN.Impl.Name,
+                ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
             };
             return _tokenStack.NewScope(tokens);
         }
 
-        protected IDisposable NewScope(OutputEntity entity)
+        protected IDisposable NewScope(IResolvedEntity entity)
         {
-            string implSpaceSuffix = entity.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
+            string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
             var tokens = new Dictionary<string, object?>()
             {
-                ["IntfNameSpace"] = entity.Intf.Space,
-                ["EntityIntfName"] = entity.Intf.Name,
-                ["ImplNameSpace"] = entity.Impl.Space,
-                ["EntityImplName"] = entity.Impl.Name,
-                ["AbstractEntity"] = entity.Impl.Name,
-                ["ConcreteEntity"] = entity.Impl.Name,
+                ["IntfNameSpace"] = entity.TFN.Intf.Space,
+                ["EntityIntfName"] = entity.TFN.Intf.Name,
+                ["ImplNameSpace"] = entity.TFN.Impl.Space,
+                ["EntityImplName"] = entity.TFN.Impl.Name,
+                ["AbstractEntity"] = entity.TFN.Impl.Name,
+                ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
-                ["BaseIntfNameSpace"] = entity.BaseEntity is null ? "DTOMaker.Runtime" : entity.BaseEntity.Intf.Space,
-                ["BaseIntfName"] = entity.BaseEntity is null ? "IEntityBase" : entity.BaseEntity.Intf.Name,
-                ["BaseImplNameSpace"] = entity.BaseEntity is null ? $"DTOMaker.Runtime.{implSpaceSuffix}" : entity.BaseEntity.Impl.Space,
-                ["BaseImplName"] = entity.BaseEntity is null ? "EntityBase" : entity.BaseEntity.Impl.Name,
-                ["DerivedEntityCount"] = entity.DerivedEntities.Count,
+                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? "DTOMaker.Runtime",
+                ["BaseIntfName"] =      entity.BaseEntity?.TFN.Intf.Name ?? "IEntityBase",
+                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
+                ["BaseImplName"] =      entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
             };
             return _tokenStack.NewScope(tokens);
         }
+
+        //protected IDisposable NewScope(OutputEntity entity)
+        //{
+        //    string implSpaceSuffix = entity.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
+        //    var tokens = new Dictionary<string, object?>()
+        //    {
+        //        ["IntfNameSpace"] = entity.Intf.Space,
+        //        ["EntityIntfName"] = entity.Intf.Name,
+        //        ["ImplNameSpace"] = entity.Impl.Space,
+        //        ["EntityImplName"] = entity.Impl.Name,
+        //        ["AbstractEntity"] = entity.Impl.Name,
+        //        ["ConcreteEntity"] = entity.Impl.Name,
+        //        ["EntityId"] = entity.EntityId,
+        //        ["ClassHeight"] = entity.ClassHeight,
+        //        ["BaseIntfNameSpace"] = entity.BaseEntity is null ? "DTOMaker.Runtime" : entity.BaseEntity.TFN.Intf.Space,
+        //        ["BaseIntfName"] = entity.BaseEntity is null ? "IEntityBase" : entity.BaseEntity.TFN.Intf.Name,
+        //        ["BaseImplNameSpace"] = entity.BaseEntity is null ? $"DTOMaker.Runtime.{implSpaceSuffix}" : entity.BaseEntity.TFN.Impl.Space,
+        //        ["BaseImplName"] = entity.BaseEntity is null ? "EntityBase" : entity.BaseEntity.TFN.Impl.Name,
+        //    };
+        //    return _tokenStack.NewScope(tokens);
+        //}
 
         protected abstract void OnGenerate(OutputEntity entity);
         public string GenerateSourceText(OutputEntity entity)

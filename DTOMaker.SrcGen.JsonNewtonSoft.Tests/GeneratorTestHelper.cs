@@ -54,7 +54,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
 
             // directly create an instance of the generator
             // (Note: in the compiler this is loaded from an assembly, and created via reflection at runtime)
-            var generator = new JsonNSSourceGenerator();
+            var generator = new SourceGenerator();
 
             // Create the driver that will control the generation, passing in our generator
             GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);

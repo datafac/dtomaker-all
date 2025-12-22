@@ -194,7 +194,7 @@ namespace T_ImplNameSpace_
         {
             base.OnFreeze();
             //##foreach (var member in entity.Members) {
-            //##using var _ = NewScope(member);
+            //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
             //##break;
@@ -222,7 +222,7 @@ namespace T_ImplNameSpace_
         public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)
         {
             //##foreach (var member in entity.Members) {
-            //##using var _ = NewScope(member);
+            //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
             //##if (member.IsNullable) {
@@ -261,7 +261,7 @@ namespace T_ImplNameSpace_
         public T_EntityImplName_(T_EntityImplName_ source) : base(source)
         {
             //##foreach (var member in entity.Members) {
-            //##using var _ = NewScope(member);
+            //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
             //##if (member.IsNullable) {
@@ -299,7 +299,7 @@ namespace T_ImplNameSpace_
         }
 
         //##foreach (var member in entity.Members) {
-        //##using var _ = NewScope(member);
+        //##using var _ = NewScope(entity, member);
         //##switch(member.Kind) {
         //##case MemberKind.Native:
         //##if (member.IsNullable) {
@@ -418,7 +418,7 @@ namespace T_ImplNameSpace_
             if (other is null) return false;
             if (!base.Equals(other)) return false;
             //##foreach (var member in entity.Members) {
-            //##using var _ = NewScope(member);
+            //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
             //##if (member.IsNullable) {
@@ -465,7 +465,7 @@ namespace T_ImplNameSpace_
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
             //##foreach (var member in entity.Members) {
-            //##using var _ = NewScope(member);
+            //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
             //##if (member.IsNullable) {
