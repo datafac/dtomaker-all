@@ -49,9 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.JsonNewtonS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.JsonNewtonSoft.IntTests", "DTOMaker.SrcGen.JsonNewtonSoft.IntTests\DTOMaker.SrcGen.JsonNewtonSoft.IntTests.csproj", "{450C6F61-1313-A206-B4C8-CED9C979E995}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MessagePack", "MessagePack", "{751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox.MessagePack", "Sandbox.MessagePack\Sandbox.MessagePack.csproj", "{B9EB8FE3-8254-4E71-9987-4C0BDC6287F6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MsgPack2", "MsgPack2", "{751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Runtime.MsgPack2", "DTOMaker.Runtime.MsgPack2\DTOMaker.Runtime.MsgPack2.csproj", "{C7B34797-3BE4-105D-0222-614A550836BC}"
 EndProject
@@ -129,10 +127,6 @@ Global
 		{450C6F61-1313-A206-B4C8-CED9C979E995}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{450C6F61-1313-A206-B4C8-CED9C979E995}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{450C6F61-1313-A206-B4C8-CED9C979E995}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9EB8FE3-8254-4E71-9987-4C0BDC6287F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9EB8FE3-8254-4E71-9987-4C0BDC6287F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9EB8FE3-8254-4E71-9987-4C0BDC6287F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9EB8FE3-8254-4E71-9987-4C0BDC6287F6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C7B34797-3BE4-105D-0222-614A550836BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7B34797-3BE4-105D-0222-614A550836BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7B34797-3BE4-105D-0222-614A550836BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
