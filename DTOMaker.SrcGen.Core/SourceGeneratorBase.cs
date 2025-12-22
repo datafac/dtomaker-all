@@ -390,7 +390,7 @@ namespace DTOMaker.SrcGen.Core
 
         public static Phase1Entity ResolveMembers(ParsedEntity entity, ImmutableArray<ParsedMember> members, ImmutableArray<ParsedEntity> entities)
         {
-            string prefix = entity.Intf.FullName + ".";
+            string prefix = entity.TFN.Intf.FullName + ".";
             var outputMembers = new List<OutputMember>();
             foreach (ParsedMember member in members)
             {
