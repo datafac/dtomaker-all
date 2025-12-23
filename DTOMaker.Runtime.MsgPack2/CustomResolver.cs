@@ -1,6 +1,7 @@
 ﻿using DataFac.Memory;
 using MessagePack;
 using MessagePack.Formatters;
+using System;
 
 namespace DTOMaker.Runtime.MsgPack2
 {
@@ -10,6 +11,16 @@ namespace DTOMaker.Runtime.MsgPack2
         private CustomResolver() { }
         public IMessagePackFormatter<T>? GetFormatter<T>()
         {
+#if NET7_0_OR_GREATER
+            if (typeof(T) == typeof(Int128))
+            {
+                return new Int128Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
+            }
+            if (typeof(T) == typeof(UInt128))
+            {
+                return new UInt128Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
+            }
+#endif
             if (typeof(T) == typeof(PairOfInt64))
             {
                 return new PairOfInt64Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;

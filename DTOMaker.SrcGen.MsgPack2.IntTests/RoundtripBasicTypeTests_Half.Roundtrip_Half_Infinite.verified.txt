@@ -1,4 +1,1 @@
-﻿{
-  "field1": "Infinity",
-  "field2": "-Infinity"
-}
+﻿93-C0-CA-7F-80-00-00-CA-FF-80-00-00

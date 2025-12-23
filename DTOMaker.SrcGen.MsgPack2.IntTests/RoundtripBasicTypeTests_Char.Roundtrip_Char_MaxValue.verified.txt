@@ -1,4 +1,1 @@
-﻿{
-  "field1": "\uFFFF",
-  "field2": "\uFFFF"
-}
+﻿93-C0-CD-FF-FF-CD-FF-FF

@@ -20,7 +20,7 @@
 
 //public class RoundtripBasicTypeTests_Decimal
 //{
-//    public ReadOnlyMemory<byte> Roundtrip_Decimal(Decimal reqValue, Decimal? optValue)
+//    public string Roundtrip_Decimal(Decimal reqValue, Decimal? optValue)
 //    {
 //        var orig = new SimpleDTO_Decimal { Field1 = reqValue, Field2 = optValue };
 //        orig.Freeze();
@@ -31,7 +31,7 @@
 //        copy.ShouldNotBeNull();
 //        copy.ShouldBe(orig);
 //        copy.Field1.ShouldBe(reqValue);
-//        return buffer;
+//        return buffer.Span.ToDisplay();
 //    }
 
 //    [Fact] public async Task Roundtrip_Decimal_Defaults() => await Verifier.Verify(Roundtrip_Decimal(default, default));

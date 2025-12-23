@@ -1,4 +1,1 @@
-﻿{
-  "field1": 65535,
-  "field2": 65535
-}
+﻿93-C0-CD-FF-FF-CD-FF-FF

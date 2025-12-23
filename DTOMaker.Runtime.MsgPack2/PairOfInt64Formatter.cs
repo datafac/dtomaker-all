@@ -1,6 +1,7 @@
 ﻿using DataFac.Memory;
 using MessagePack;
 using MessagePack.Formatters;
+using System;
 
 namespace DTOMaker.Runtime.MsgPack2
 {

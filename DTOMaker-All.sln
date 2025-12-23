@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MsgPack2", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MsgPack2.Tests", "DTOMaker.SrcGen.MsgPack2.Tests\DTOMaker.SrcGen.MsgPack2.Tests.csproj", "{0284D0E6-6E04-2F91-ED17-DC7E252FD914}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MsgPack2.IntTests", "DTOMaker.SrcGen.MsgPack2.IntTests\DTOMaker.SrcGen.MsgPack2.IntTests.csproj", "{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{0284D0E6-6E04-2F91-ED17-DC7E252FD914}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0284D0E6-6E04-2F91-ED17-DC7E252FD914}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0284D0E6-6E04-2F91-ED17-DC7E252FD914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +175,7 @@ Global
 		{981DED9F-1C9F-0C41-4375-0EBB010CEA79} = {751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}
 		{9BB4D5F2-A00A-39FA-D350-033C020090F0} = {751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}
 		{0284D0E6-6E04-2F91-ED17-DC7E252FD914} = {751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}
+		{3E9E4050-7BB1-238D-5FBD-ABF4361A44FA} = {751CBB39-AFD8-42F7-BAA7-A9C1ACE4FC31}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C984986-C2C9-4136-A2D4-1A5FE9BDF8F0}
