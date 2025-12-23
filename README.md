@@ -12,7 +12,7 @@ Model-driven compile-time source generators for quickly creating polymorphic, fr
 supporting various serialization protocols:
 - JSON (System.Text.Json)
 - JSON (Newtonsoft.Json)
-- MessagePack [coming soon]
+- MessagePack 2.x
 - MemBlocks [coming soon]
 
 ## Workflow
@@ -93,9 +93,9 @@ public partial class MyTree : Tree_2_String_Octets, IMyTree, IEquatable<MyTree>
 ```
 # Development
 ## In progress
+- MessagePack serialization
 
 ## Coming soon
-- MessagePack serialization
 - MemBlocks serialization
 - Protobuf.Net serialization
 - custom struct members (to avoid primitive obsession)
