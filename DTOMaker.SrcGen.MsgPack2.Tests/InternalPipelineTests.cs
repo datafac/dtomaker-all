@@ -15,8 +15,8 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
                 MemberKind.Entity,
                 "MP2");
 
-        private static ParsedEntity CreateEntity(string name, int id, string? baseName) =>
-            new ParsedEntity(CreateTFN(name), id, baseName is null ? null : CreateTFN(baseName));
+        private static ParsedEntity CreateEntity(string name, int id, int keyOffset, string? baseName) =>
+            new ParsedEntity(CreateTFN(name), id, keyOffset, baseName is null ? null : CreateTFN(baseName));
 
         private static ParsedMember CreateMember(string entName, string fieldName, int sequence, Type type, bool isNullable = false)
         {
@@ -51,9 +51,9 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
         }
 
         private static readonly ImmutableArray<ParsedEntity> input = ImmutableArray<ParsedEntity>.Empty
-                .Add(CreateEntity("Variant", 1, null))
-                .Add(CreateEntity("VarString", 2, "Variant"))
-                .Add(CreateEntity("VarNumber", 3, "Variant"))
+                .Add(CreateEntity("Variant", 1, 0, null))
+                .Add(CreateEntity("VarString", 2, 0, "Variant"))
+                .Add(CreateEntity("VarNumber", 3, 0, "Variant"))
             ;
 
         private static readonly ImmutableArray<ParsedMember> members = ImmutableArray<ParsedMember>.Empty
@@ -74,16 +74,19 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             input[0].TFN.Impl.FullName.ShouldBe("MyOrg.Models.Variant");
             input[0].BaseTFN.ShouldBeNull();
             input[0].EntityId.ShouldBe(1);
+            input[0].KeyOffset.ShouldBe(0);
             input[1].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarString");
             input[1].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarString");
             input[1].BaseTFN.ShouldNotBeNull();
             input[1].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
             input[1].EntityId.ShouldBe(2);
+            input[1].KeyOffset.ShouldBe(0);
             input[2].TFN.Intf.FullName.ShouldBe("MyOrg.Models.IVarNumber");
             input[2].TFN.Impl.FullName.ShouldBe("MyOrg.Models.VarNumber");
             input[2].BaseTFN.ShouldNotBeNull();
             input[2].BaseTFN.ToString().ShouldBe("MyOrg.Models.Variant : IVariant");
             input[2].EntityId.ShouldBe(3);
+            input[2].KeyOffset.ShouldBe(0);
         }
 
         //[Fact]

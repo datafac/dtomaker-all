@@ -124,15 +124,15 @@ namespace T_ImplNameSpace_
         private const string T_MemberObsoleteMessage_ = null;
         private const bool T_MemberObsoleteIsError_ = false;
         private const int T_EntityId_ = 2;
-        private const int T_MemberKeyOffset_ = 10;
-        private const int T_NullableScalarMemberKey_ = T_MemberKeyOffset_ + 1;
-        private const int T_RequiredScalarMemberKey_ = T_MemberKeyOffset_ + 2;
-        private const int T_NullableEntityMemberKey_ = T_MemberKeyOffset_ + 5;
-        private const int T_RequiredEntityMemberKey_ = T_MemberKeyOffset_ + 6;
-        private const int T_NullableBinaryMemberKey_ = T_MemberKeyOffset_ + 7;
-        private const int T_RequiredBinaryMemberKey_ = T_MemberKeyOffset_ + 8;
-        private const int T_NullableStringMemberKey_ = T_MemberKeyOffset_ + 9;
-        private const int T_RequiredStringMemberKey_ = T_MemberKeyOffset_ + 10;
+        private const int KeyOffset = 10;
+        private const int T_NullableScalarMemberKey_ = KeyOffset + 1;
+        private const int T_RequiredScalarMemberKey_ = KeyOffset + 2;
+        private const int T_NullableEntityMemberKey_ = KeyOffset + 5;
+        private const int T_RequiredEntityMemberKey_ = KeyOffset + 6;
+        private const int T_NullableBinaryMemberKey_ = KeyOffset + 7;
+        private const int T_RequiredBinaryMemberKey_ = KeyOffset + 8;
+        private const int T_NullableStringMemberKey_ = KeyOffset + 9;
+        private const int T_RequiredStringMemberKey_ = KeyOffset + 10;
         private const int T_MemberDefaultValue_ = 0;
         //##}
 
@@ -565,15 +565,15 @@ namespace T_ImplNameSpace_
         private const string T_MemberObsoleteMessage_ = null;
         private const bool T_MemberObsoleteIsError_ = false;
         private const int T_EntityId_ = 2;
-        private const int T_MemberKeyOffset_ = 10;
-        private const int T_NullableScalarMemberKey_ = T_MemberKeyOffset_ + 1;
-        private const int T_RequiredScalarMemberKey_ = T_MemberKeyOffset_ + 2;
-        private const int T_NullableEntityMemberKey_ = T_MemberKeyOffset_ + 5;
-        private const int T_RequiredEntityMemberKey_ = T_MemberKeyOffset_ + 6;
-        private const int T_NullableBinaryMemberKey_ = T_MemberKeyOffset_ + 7;
-        private const int T_RequiredBinaryMemberKey_ = T_MemberKeyOffset_ + 8;
-        private const int T_NullableStringMemberKey_ = T_MemberKeyOffset_ + 9;
-        private const int T_RequiredStringMemberKey_ = T_MemberKeyOffset_ + 10;
+        private const int KeyOffset = 10;
+        private const int T_NullableScalarMemberKey_ = KeyOffset + 1;
+        private const int T_RequiredScalarMemberKey_ = KeyOffset + 2;
+        private const int T_NullableEntityMemberKey_ = KeyOffset + 5;
+        private const int T_RequiredEntityMemberKey_ = KeyOffset + 6;
+        private const int T_NullableBinaryMemberKey_ = KeyOffset + 7;
+        private const int T_RequiredBinaryMemberKey_ = KeyOffset + 8;
+        private const int T_NullableStringMemberKey_ = KeyOffset + 9;
+        private const int T_RequiredStringMemberKey_ = KeyOffset + 10;
         private const int T_MemberDefaultValue_ = 0;
         //##}
 

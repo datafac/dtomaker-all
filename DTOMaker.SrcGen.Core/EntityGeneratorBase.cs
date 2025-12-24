@@ -133,13 +133,12 @@ namespace DTOMaker.SrcGen.Core
             tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
 
-            var memberKeyOffset = 0; // todo entity.MemberKeyOffset;
-            if (memberKeyOffset == 0)
+            var keyOffset = entity.KeyOffset;
+            if (keyOffset == 0)
             {
-                int classHeight = entity.ClassHeight;
-                memberKeyOffset = (classHeight - 1) * 100;
+                keyOffset = (entity.ClassHeight - 1) * 100;
             }
-            int memberKey = memberKeyOffset + member.Sequence;
+            int memberKey = keyOffset + member.Sequence;
             tokens[BuildTokenName(member, "MemberKey")] = memberKey;
             return _tokenStack.NewScope(tokens);
         }

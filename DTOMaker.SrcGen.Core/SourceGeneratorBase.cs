@@ -76,6 +76,7 @@ namespace DTOMaker.SrcGen.Core
         private const string MemberAttribute = nameof(MemberAttribute);
         private const string IdAttribute = nameof(IdAttribute);
         private const string ObsoleteAttribute = nameof(ObsoleteAttribute);
+        private const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
 
         protected static SyntaxDiagnostic? TryGetAttributeArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
         {
@@ -269,6 +270,7 @@ namespace DTOMaker.SrcGen.Core
             // Get the namespace the enum is declared in, if any
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
+            int keyOffset = 0;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in intfSymbol.GetAttributes())
@@ -289,6 +291,12 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; });
+                        break;
+                    case KeyOffsetAttribute:
+                        // get member key offset (used by MessagePack source generators)
+                        diagnostic =
+                            CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
                         break;
                     default:
                         // todo pass to derived
@@ -330,7 +338,7 @@ namespace DTOMaker.SrcGen.Core
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
             TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, implSpaceSuffix) : null;
-            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, baseTFN);
+            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, keyOffset, baseTFN);
         }
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
@@ -414,6 +422,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
+                KeyOffset = entity.KeyOffset,
                 ClassHeight = classHeight,
                 Members = new EquatableArray<OutputMember>(outputMembers.OrderBy(m => m.Sequence)),
                 BaseTFN = entity.BaseTFN,
@@ -428,6 +437,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
+                KeyOffset = entity.KeyOffset,
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
@@ -443,6 +453,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
+                KeyOffset = entity.KeyOffset,
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,

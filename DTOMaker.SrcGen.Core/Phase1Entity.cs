@@ -6,6 +6,7 @@ namespace DTOMaker.SrcGen.Core
     {
         public TypeFullName TFN { get; init; } = new();
         public int EntityId { get; init; }
+        public int KeyOffset { get; init; }
         public int ClassHeight { get; init; }
         public EquatableArray<OutputMember> Members { get; init; } = EquatableArray<OutputMember>.Empty;
         public TypeFullName? BaseTFN { get; init; }

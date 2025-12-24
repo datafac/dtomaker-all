@@ -79,7 +79,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private string _Field11 = string.Empty;
-        [Key(101)]
+        [Key(11)]
         public string Field11
         {
             get => _Field11;
@@ -88,7 +88,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private string? _Field12;
-        [Key(102)]
+        [Key(12)]
         public string? Field12
         {
             get => _Field12;

@@ -21,6 +21,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
                     [Member(2)] int? Field2 { get; set; }
                 }
                 [Entity][Id(2)]
+                [KeyOffset(10)]
                 public interface IDerived : IMyDTO
                 {
                     [Member(1)] String  Field11 { get; set; }

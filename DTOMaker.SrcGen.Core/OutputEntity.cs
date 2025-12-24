@@ -6,6 +6,7 @@ public record class Phase2Entity : IResolvedEntity
 {
     public TypeFullName TFN { get; init; } = new();
     public int EntityId { get; init; }
+    public int KeyOffset { get; init; }
     public int ClassHeight { get; init; }
     public EquatableArray<OutputMember> Members { get; init; } = EquatableArray<OutputMember>.Empty;
     public Phase1Entity? BaseEntity { get; init; }
@@ -22,6 +23,7 @@ public record class OutputEntity : IResolvedEntity
 {
     public TypeFullName TFN { get; init; } = new();
     public int EntityId { get; init; }
+    public int KeyOffset { get; init; }
     public int ClassHeight { get; init; }
     public EquatableArray<OutputMember> Members { get; init; } = EquatableArray<OutputMember>.Empty;
     public Phase2Entity? BaseEntity { get; init; }
@@ -38,6 +40,7 @@ public interface IResolvedEntity
 {
     public TypeFullName TFN { get; }
     public int EntityId { get; }
+    public int KeyOffset { get; }
     public int ClassHeight { get; }
     public IResolvedEntity? BaseEntity { get; }
     public IReadOnlyCollection<IResolvedEntity> DerivedEntities { get; }

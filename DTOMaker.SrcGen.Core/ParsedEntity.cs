@@ -6,13 +6,15 @@ namespace DTOMaker.SrcGen.Core
     public record class ParsedEntity
     {
         public TypeFullName TFN { get; init; } = new();
-        public int EntityId { get; init; } = 0;
+        public int EntityId { get; init; }
+        public int KeyOffset { get; init; }
         public TypeFullName? BaseTFN { get; init; } = null;
 
-        public ParsedEntity(TypeFullName tfn, int entityId, TypeFullName? baseTFN)
+        public ParsedEntity(TypeFullName tfn, int entityId, int keyOffset, TypeFullName? baseTFN)
         {
             TFN = tfn;
             EntityId = entityId;
+            KeyOffset = keyOffset;
             BaseTFN = baseTFN;
         }
 
