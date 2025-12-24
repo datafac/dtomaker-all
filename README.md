@@ -93,10 +93,9 @@ public partial class MyTree : Tree_2_String_Octets, IMyTree, IEquatable<MyTree>
 ```
 # Development
 ## In progress
-- MessagePack serialization
+- MemBlocks serialization
 
 ## Coming soon
-- MemBlocks serialization
 - Protobuf.Net serialization
 - custom struct members (to avoid primitive obsession)
 - global interface equality comparer
