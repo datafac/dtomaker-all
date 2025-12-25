@@ -1,4 +1,6 @@
-﻿namespace DTOMaker.SrcGen.Core
+﻿using Microsoft.CodeAnalysis;
+
+namespace DTOMaker.SrcGen.Core
 {
     public sealed record OutputMember
     {
@@ -9,6 +11,7 @@
         public bool IsNullable { get; init; }
         public bool IsObsolete { get; init; }
         public string ObsoleteMessage { get; init; } = string.Empty;
-        public bool ObsoleteIsError { get; init; }
+        public bool ObsoleteIsErrorqqq { get; init; }
+        public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     }
 }

@@ -47,7 +47,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                     memberType,
                     memberType.MemberKind, 
                     isNullable,
-                    false, "", false);
+                    false, "", false, []);
         }
 
         private static readonly ImmutableArray<ParsedEntity> input = ImmutableArray<ParsedEntity>.Empty

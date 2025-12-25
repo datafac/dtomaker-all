@@ -90,14 +90,30 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             return outputCode;
         }
 
-        internal static void GenerateAndCheckLength(this string modelSource, int expectedLength)
+        internal static void GenerateAndCheckLength(this string modelSource, int expectedLength, string? expectedErrorCodes = null)
         {
             var generatorResult = GeneratorTestHelper.RunSourceGenerator(modelSource, LanguageVersion.LatestMajor);
             generatorResult.Exception.ShouldBeNull();
             generatorResult.Diagnostics.Count(d => d.Id == "INF01").ShouldBe(1);
             generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Info).ShouldBe(1);
             generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Warning).ShouldBeEmpty();
-            generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ShouldBeEmpty();
+
+            int expectedErrorCount = 0;
+            if (expectedErrorCodes is null)
+            {
+                expectedErrorCount = 0;
+                generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(expectedErrorCount);
+            }
+            else
+            {
+                string[] codes = expectedErrorCodes.Split(',');
+                expectedErrorCount = codes.Length;
+                generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(expectedErrorCount);
+                foreach (var code in codes)
+                {
+                    generatorResult.Diagnostics.Count(d => d.Id == code).ShouldBe(1);
+                }
+            }
 
             // custom generation checks
             generatorResult.GeneratedSources.Length.ShouldBe(expectedLength);

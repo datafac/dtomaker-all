@@ -91,7 +91,7 @@ namespace DTOMaker.SrcGen.Core
 
             string inputAsStr = input is null ? "(null)" : $"'{input}' <{input.GetType().Name}>";
 
-            return Diagnostic.Create(DiagnosticsEN.ERR03, location);
+            return Diagnostic.Create(DiagnosticsEN.InvalidArgValue, location);
         }
 
         private static Diagnostic? CheckAttributeArguments(AttributeData attrData, Location location, int expectedCount)
@@ -100,7 +100,7 @@ namespace DTOMaker.SrcGen.Core
             if (attrArgs.Length == expectedCount)
                 return null;
 
-            return Diagnostic.Create(DiagnosticsEN.ERR02, location);
+            return Diagnostic.Create(DiagnosticsEN.InvalidArgCount, location);
         }
 
         private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
@@ -141,31 +141,23 @@ namespace DTOMaker.SrcGen.Core
                         break;
                     case MemberAttribute:
                         // get sequence
-                        diagnostic 
+                        diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; });
                         break;
                     case ObsoleteAttribute:
                         isObsolete = true;
                         var attributeArguments = attributeData.ConstructorArguments;
-                        if (attributeArguments.Length == 1)
-                        {
-                            diagnostic 
-                                = TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; });
-                        }
-                        else if (attributeArguments.Length == 2)
-                        {
-                            diagnostic 
-                                = TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
-                                ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; });
-                        }
-                        else
-                        {
-                            diagnostic = Diagnostic.Create(DiagnosticsEN.ERR02, location);
-                        }
+                        diagnostic = attributeArguments.Length switch { 
+                            0 => null,
+                            1 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; }),
+                            2 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
+                                ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; }),
+                            _ => Diagnostic.Create(DiagnosticsEN.InvalidArgCount, location),
+                        };
                         break;
                     default:
-                        diagnostic = Diagnostic.Create(DiagnosticsEN.WRN01, location);
+                        diagnostic = Diagnostic.Create(DiagnosticsEN.IgnoredAttribute, location);
                         break;
                 }
 
@@ -177,7 +169,7 @@ namespace DTOMaker.SrcGen.Core
 
             if (sequence <= 0)
             {
-                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.ERR04, location));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.InvalidMemberId, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -186,7 +178,7 @@ namespace DTOMaker.SrcGen.Core
 
             (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, implSpaceSuffix);
 
-            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError);
+            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError, diagnostics);
         }
 
         private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
@@ -297,7 +289,7 @@ namespace DTOMaker.SrcGen.Core
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
                         break;
                     default:
-                        diagnostic = Diagnostic.Create(DiagnosticsEN.WRN01, location);
+                        diagnostic = Diagnostic.Create(DiagnosticsEN.IgnoredAttribute, location);
                         break;
                 }
 
@@ -309,7 +301,7 @@ namespace DTOMaker.SrcGen.Core
 
             if (entityId <= 0)
             {
-                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.ERR01, location));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.InvalidEntityId, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -406,7 +398,8 @@ namespace DTOMaker.SrcGen.Core
                         IsNullable = member.IsNullable,
                         IsObsolete = member.IsObsolete,
                         ObsoleteMessage = member.ObsoleteMessage,
-                        ObsoleteIsError = member.ObsoleteIsError,
+                        ObsoleteIsErrorqqq = member.ObsoleteIsError,
+                        Diagnostics = member.Diagnostics,
                     });
                 }
             }
@@ -462,6 +455,13 @@ namespace DTOMaker.SrcGen.Core
             foreach(var diagnostic in ent.Diagnostics)
             {
                 spc.ReportDiagnostic(diagnostic);
+            }
+            foreach (var member in ent.Members)
+            {
+                foreach (var diagnostic in member.Diagnostics)
+                {
+                    spc.ReportDiagnostic(diagnostic);
+                }
             }
         }
 

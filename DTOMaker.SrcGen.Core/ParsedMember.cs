@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DTOMaker.SrcGen.Core
 {
@@ -13,8 +15,9 @@ namespace DTOMaker.SrcGen.Core
         public bool IsObsolete { get; init; }
         public string ObsoleteMessage { get; init; }
         public bool ObsoleteIsError { get; init; }
+        public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
 
-        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, bool isObsolete, string obsoleteMessage, bool obsoleteIsError)
+        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, bool isObsolete, string obsoleteMessage, bool obsoleteIsError, IEnumerable<Diagnostic> diagnostics)
         {
             FullName = fullname;
             Sequence = sequence;
@@ -24,6 +27,7 @@ namespace DTOMaker.SrcGen.Core
             IsObsolete = isObsolete;
             ObsoleteMessage = obsoleteMessage;
             ObsoleteIsError = obsoleteIsError;
+            Diagnostics = new EquatableArray<Diagnostic>(diagnostics);
 
             // derived properties
             PropName = fullname.Split('.').Last();
