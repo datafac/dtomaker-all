@@ -1,9 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 
 namespace DTOMaker.SrcGen.Core
 {
@@ -78,7 +80,7 @@ namespace DTOMaker.SrcGen.Core
         private const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         private const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
 
-        protected static SyntaxDiagnostic? TryGetAttributeArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
+        protected static Diagnostic? TryGetAttributeArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
         {
             object? input = attrData.ConstructorArguments[index].Value;
             if (input is T value)
@@ -89,26 +91,21 @@ namespace DTOMaker.SrcGen.Core
 
             string inputAsStr = input is null ? "(null)" : $"'{input}' <{input.GetType().Name}>";
 
-            return
-                new SyntaxDiagnostic(
-                    DiagnosticId.DTOM0005, "Invalid argument value", DiagnosticCategory.Syntax, location, DiagnosticSeverity.Error,
-                    $"Could not read arg[{index}] {inputAsStr} as <{typeof(T).Name}>");
+            return Diagnostic.Create(DiagnosticsEN.ERR03, location);
         }
 
-        private static SyntaxDiagnostic? CheckAttributeArguments(AttributeData attrData, Location location, int expectedCount)
+        private static Diagnostic? CheckAttributeArguments(AttributeData attrData, Location location, int expectedCount)
         {
             var attrArgs = attrData.ConstructorArguments;
             if (attrArgs.Length == expectedCount)
                 return null;
 
-            return new SyntaxDiagnostic(
-                    DiagnosticId.DTOM0002, "Invalid argument count", DiagnosticCategory.Syntax, location, DiagnosticSeverity.Error,
-                    $"Expected {attrData.AttributeClass?.Name} attribute to have {expectedCount} arguments, but it has {attrArgs.Length}.");
+            return Diagnostic.Create(DiagnosticsEN.ERR02, location);
         }
 
         private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
         {
-            //List<SyntaxDiagnostic> syntaxErrors = new();
+            List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
             SyntaxNode syntaxNode = ctx.TargetNode;
             Location location = syntaxNode.GetLocation();
@@ -137,15 +134,15 @@ namespace DTOMaker.SrcGen.Core
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
             {
                 string? attrName = attributeData.AttributeClass?.Name;
-                SyntaxDiagnostic? diagnostic = null;
+                Diagnostic? diagnostic = null;
                 switch (attrName)
                 {
                     case null:
                         break;
                     case MemberAttribute:
                         // get sequence
-                        diagnostic =
-                            CheckAttributeArguments(attributeData, location, 1)
+                        diagnostic 
+                            = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; });
                         break;
                     case ObsoleteAttribute:
@@ -153,33 +150,34 @@ namespace DTOMaker.SrcGen.Core
                         var attributeArguments = attributeData.ConstructorArguments;
                         if (attributeArguments.Length == 1)
                         {
-                            TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; });
+                            diagnostic 
+                                = TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; });
                         }
-                        if (attributeArguments.Length == 2)
+                        else if (attributeArguments.Length == 2)
                         {
-                            TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; });
-                            TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; });
+                            diagnostic 
+                                = TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
+                                ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; });
+                        }
+                        else
+                        {
+                            diagnostic = Diagnostic.Create(DiagnosticsEN.ERR02, location);
                         }
                         break;
                     default:
-                        // todo pass to derived
-                        diagnostic = new SyntaxDiagnostic(
-                            "WRN001", "Ignored unknown attribute", DiagnosticCategory.Other, location, DiagnosticSeverity.Warning,
-                            $"The attribute '{attrName}' is not recognized.");
+                        diagnostic = Diagnostic.Create(DiagnosticsEN.WRN01, location);
                         break;
                 }
 
                 if (diagnostic is not null)
                 {
-                    //syntaxErrors.Add(diagnostic);
+                    diagnostics.Add(diagnostic);
                 }
             }
 
             if (sequence <= 0)
             {
-                //syntaxErrors.Add(new SyntaxDiagnostic(
-                //    "ERR001", "Missing or invalid member sequence", DiagnosticCategory.Syntax, syntaxNode.GetLocation(), DiagnosticSeverity.Error,
-                //    $"The interface '{propSymbol.Name}' must have a valid Id attribute with a positive integer value."));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.ERR04, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -249,7 +247,7 @@ namespace DTOMaker.SrcGen.Core
 
         private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
         {
-            //List<SyntaxDiagnostic> syntaxErrors = new();
+            List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
             SyntaxNode syntaxNode = ctx.TargetNode;
             Location location = syntaxNode.GetLocation();
@@ -276,7 +274,7 @@ namespace DTOMaker.SrcGen.Core
             foreach (AttributeData attributeData in intfSymbol.GetAttributes())
             {
                 string? attrName = attributeData.AttributeClass?.Name;
-                SyntaxDiagnostic? diagnostic = null;
+                Diagnostic? diagnostic = null;
                 switch (attrName)
                 {
                     case null:
@@ -299,24 +297,19 @@ namespace DTOMaker.SrcGen.Core
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
                         break;
                     default:
-                        // todo pass to derived
-                        diagnostic = new SyntaxDiagnostic(
-                            "WRN001", "Ignored unknown attribute", DiagnosticCategory.Other, location, DiagnosticSeverity.Warning,
-                            $"The attribute '{attrName}' is not recognized.");
+                        diagnostic = Diagnostic.Create(DiagnosticsEN.WRN01, location);
                         break;
                 }
 
                 if (diagnostic is not null)
                 {
-                    //syntaxErrors.Add(diagnostic);
+                    diagnostics.Add(diagnostic);
                 }
             }
 
             if (entityId <= 0)
             {
-                //syntaxErrors.Add(new SyntaxDiagnostic(
-                //    "ERR001", "Missing or invalid Id", DiagnosticCategory.Syntax, syntaxNode.GetLocation(), DiagnosticSeverity.Error,
-                //    $"The interface '{intfSymbol.Name}' must have a valid Id attribute with a positive integer value."));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.ERR01, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -338,7 +331,7 @@ namespace DTOMaker.SrcGen.Core
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
             TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, implSpaceSuffix) : null;
-            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, keyOffset, baseTFN);
+            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, keyOffset, baseTFN, diagnostics);
         }
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
@@ -426,6 +419,7 @@ namespace DTOMaker.SrcGen.Core
                 ClassHeight = classHeight,
                 Members = new EquatableArray<OutputMember>(outputMembers.OrderBy(m => m.Sequence)),
                 BaseTFN = entity.BaseTFN,
+                Diagnostics = entity.Diagnostics,
             };
         }
 
@@ -441,7 +435,8 @@ namespace DTOMaker.SrcGen.Core
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
-                DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName))
+                DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
+                Diagnostics = entity.Diagnostics,
             };
         }
 
@@ -457,8 +452,17 @@ namespace DTOMaker.SrcGen.Core
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
-                DerivedEntities = new EquatableArray<Phase2Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName))
+                DerivedEntities = new EquatableArray<Phase2Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
+                Diagnostics = entity.Diagnostics,
             };
+        }
+
+        protected void EmitDiagnostics(SourceProductionContext spc, OutputEntity ent)
+        {
+            foreach(var diagnostic in ent.Diagnostics)
+            {
+                spc.ReportDiagnostic(diagnostic);
+            }
         }
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -513,6 +517,7 @@ namespace DTOMaker.SrcGen.Core
             //            Members = entity.Members,
             //            BaseEntity = baseEntity,
             //            DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.Intf.FullName))
+            //            Diagnostics = entity.Diagnostics,    
             //        };
             //    });
 
@@ -583,11 +588,14 @@ namespace DTOMaker.SrcGen.Core
             //    spc.AddSource("Metadata.g.json", SourceText.From(metadataText, Encoding.UTF8));
             //});
 
+            // emit entity related diagnostics
+            context.RegisterSourceOutput(outputEntities, EmitDiagnostics);
+
             context.RegisterSourceOutput(context.CompilationProvider, (spc, compilation) =>
             {
                 // This is a way to check that the source generator is running
                 // You can remove this diagnostic if you don't need it
-                spc.ReportDiagnostic(Diagnostic.Create(DiagnosticsEN.OK01, Location.None));
+                spc.ReportDiagnostic(Diagnostic.Create(DiagnosticsEN.INF01, Location.None));
             });
 
             // do derived stuff

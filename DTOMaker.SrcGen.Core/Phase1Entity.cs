@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace DTOMaker.SrcGen.Core
 {
@@ -10,9 +11,11 @@ namespace DTOMaker.SrcGen.Core
         public int ClassHeight { get; init; }
         public EquatableArray<OutputMember> Members { get; init; } = EquatableArray<OutputMember>.Empty;
         public TypeFullName? BaseTFN { get; init; }
+        public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
 
         public IResolvedEntity? BaseEntity => throw new System.NotImplementedException();
         public IReadOnlyCollection<IResolvedEntity> DerivedEntities => throw new System.NotImplementedException();
+        IReadOnlyCollection<Diagnostic> IResolvedEntity.Diagnostics => Diagnostics;
 
         public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
     }

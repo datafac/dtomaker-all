@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
                 "MP2");
 
         private static ParsedEntity CreateEntity(string name, int id, int keyOffset, string? baseName) =>
-            new ParsedEntity(CreateTFN(name), id, keyOffset, baseName is null ? null : CreateTFN(baseName));
+            new ParsedEntity(CreateTFN(name), id, keyOffset, baseName is null ? null : CreateTFN(baseName), []);
 
         private static ParsedMember CreateMember(string entName, string fieldName, int sequence, Type type, bool isNullable = false)
         {

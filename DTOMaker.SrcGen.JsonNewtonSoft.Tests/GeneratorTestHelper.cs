@@ -94,7 +94,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
         {
             var generatorResult = GeneratorTestHelper.RunSourceGenerator(modelSource, LanguageVersion.LatestMajor);
             generatorResult.Exception.ShouldBeNull();
-            generatorResult.Diagnostics.Count(d => d.Id == "OK01").ShouldBe(1);
+            generatorResult.Diagnostics.Count(d => d.Id == "INF01").ShouldBe(1);
             generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Info).ShouldBe(1);
             generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Warning).ShouldBeEmpty();
             generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ShouldBeEmpty();

@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ParsedName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Phase1Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SyntaxDiagnostic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntheticId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TokenStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeFullName.cs" />
