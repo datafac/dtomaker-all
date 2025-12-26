@@ -9,6 +9,7 @@ set _cli=dtomaker
 call :t2g JsonSystemText
 call :t2g JsonNewtonSoft
 call :t2g MsgPack2
+call :t2g MemBlocks
 
 goto :eof
 
