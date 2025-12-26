@@ -24,7 +24,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "InvalidEntityId");
+            modelSource.GenerateAndCheckLength(1, "DME03");
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "InvalidMemberId");
+            modelSource.GenerateAndCheckLength(1, "DME04");
         }
     }
 }

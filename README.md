@@ -1,8 +1,8 @@
 # DTOMaker
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
-![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
-![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
+![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Runtime)
+![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Runtime)
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 
@@ -33,6 +33,8 @@ Models are defined as C# interfaces with additional attributes. So let's start w
 Here's how to define a polymorphic, recursive tree type:
 
 ```C#
+using DTOMaker.Models;
+using DTOMaker.Runtime;
 namespace MyModels;
 [Entity] [Id(30)] public interface INode : IEntityBase { [Member(1)] String K { get; set; } }
 [Entity] [Id(31)] public interface IStringNode : INode { [Member(1)] String V { get; set; } }

@@ -91,7 +91,7 @@ namespace DTOMaker.SrcGen.Core
 
             string inputAsStr = input is null ? "(null)" : $"'{input}' <{input.GetType().Name}>";
 
-            return Diagnostic.Create(DiagnosticsEN.InvalidArgValue, location);
+            return Diagnostic.Create(DiagnosticsEN.DME02, location);
         }
 
         private static Diagnostic? CheckAttributeArguments(AttributeData attrData, Location location, int expectedCount)
@@ -100,7 +100,7 @@ namespace DTOMaker.SrcGen.Core
             if (attrArgs.Length == expectedCount)
                 return null;
 
-            return Diagnostic.Create(DiagnosticsEN.InvalidArgCount, location);
+            return Diagnostic.Create(DiagnosticsEN.DME01, location);
         }
 
         private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
@@ -153,11 +153,12 @@ namespace DTOMaker.SrcGen.Core
                             1 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; }),
                             2 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
                                 ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; }),
-                            _ => Diagnostic.Create(DiagnosticsEN.InvalidArgCount, location),
+                            _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
                     default:
-                        diagnostic = Diagnostic.Create(DiagnosticsEN.IgnoredAttribute, location);
+                        // ignore other attributes
+                        diagnostic = null;
                         break;
                 }
 
@@ -169,7 +170,7 @@ namespace DTOMaker.SrcGen.Core
 
             if (sequence <= 0)
             {
-                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.InvalidMemberId, location));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -289,7 +290,8 @@ namespace DTOMaker.SrcGen.Core
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
                         break;
                     default:
-                        diagnostic = Diagnostic.Create(DiagnosticsEN.IgnoredAttribute, location);
+                        // ignore other attributes
+                        diagnostic = null;
                         break;
                 }
 
@@ -301,7 +303,7 @@ namespace DTOMaker.SrcGen.Core
 
             if (entityId <= 0)
             {
-                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.InvalidEntityId, location));
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME03, location));
             }
 
             // Get the full type name of the enum e.g. Colour, 
