@@ -9,17 +9,17 @@
 //##}
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 #nullable enable
+using DataFac.Memory;
+using DataFac.Storage;
+using DTOMaker.Runtime;
+using DTOMaker.Runtime.MemBlocks;
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using DataFac.Memory;
-using DataFac.Storage;
-using DTOMaker.Runtime;
-using DTOMaker.Runtime.MemBlocks;
-
+using T_ImplNameSpace_;
 //##if(false) {
 using T_MemberType_ = System.Int32;
 namespace DataFac.Memory
@@ -30,16 +30,16 @@ namespace DataFac.Memory
         public static void WriteToSpan(Span<byte> source, T_MemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
     }
 }
-namespace T_MemberTypeNameSpace_
+namespace T_MemberTypeIntfSpace_
 {
-    public interface IT_MemberTypeIntfName_ : IPackable
+    public interface T_MemberTypeIntfName_
     {
         Int64 Field1 { get; set; }
     }
 }
-namespace T_MemberTypeNameSpace_.MemBlocks
+namespace T_MemberTypeImplSpace_
 {
-    public class T_MemberTypeImplName_ : EntityBase, IT_MemberTypeIntfName_
+    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_
     {
         private const int ClassHeight = 1;
         private const int BlockLength = 8;
@@ -51,7 +51,7 @@ namespace T_MemberTypeNameSpace_.MemBlocks
             if (source.IsFrozen) return source;
             return new T_MemberTypeImplName_(source);
         }
-        public static T_MemberTypeImplName_ CreateFrom(IT_MemberTypeIntfName_ source)
+        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)
         {
             if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;
             return new T_MemberTypeImplName_(source);
@@ -70,7 +70,7 @@ namespace T_MemberTypeNameSpace_.MemBlocks
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
-        public T_MemberTypeImplName_(IT_MemberTypeIntfName_ source) : base(_header, source)
+        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) : base(_header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
@@ -106,14 +106,31 @@ namespace T_MemberTypeNameSpace_.MemBlocks
         }
     }
 }
-namespace T_BaseNameSpace_.MemBlocks
+namespace T_BaseIntfNameSpace_
 {
-    public interface IT_BaseName_
+    public interface T_BaseIntfName_ : IEntityBase
     {
         T_MemberType_ BaseField1 { get; set; }
     }
-    public class T_BaseName_ : EntityBase, IT_BaseName_, IEquatable<T_BaseName_>
+}
+namespace T_BaseImplNameSpace_
+{
+    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
     {
+        private const int T_EntityId_ = 2;
+        public new static T_BaseImplName_ CreateFrom(ReadOnlySequence<byte> buffers)
+        {
+            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
+            return blocks.Header.EntityId switch
+            {
+                //##foreach(var derived in entity.DerivedEntities) {
+                //##using var _ = NewScope(derived);
+                T_EntityId_ => new T_ImplNameSpace_.T_EntityImplName_(blocks),
+                //##}
+                _ => new T_BaseImplNameSpace_.T_BaseImplName_(blocks)
+            };
+        }
+
         private const int ClassHeight = 1;
         private const int BlockLength = 4; // structure code = 0x0031L;
         private readonly Memory<byte> _writableLocalBlock;
@@ -137,24 +154,24 @@ namespace T_BaseNameSpace_.MemBlocks
             return base.OnUnpack(dataStore, depth);
         }
 
-        protected T_BaseName_(BlockHeader header) : base(header)
+        protected T_BaseImplName_(BlockHeader header) : base(header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
 
-        protected T_BaseName_(BlockHeader header, T_BaseName_ source) : base(header, source)
-        {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-            this.BaseField1 = source.BaseField1;
-        }
-
-        protected T_BaseName_(BlockHeader header, IT_BaseName_ source) : base(header, source)
+        protected T_BaseImplName_(BlockHeader header, T_BaseImplName_ source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.BaseField1 = source.BaseField1;
         }
 
-        protected T_BaseName_(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
+        protected T_BaseImplName_(BlockHeader header, T_BaseIntfNameSpace_.T_BaseIntfName_ source) : base(header, source)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            this.BaseField1 = source.BaseField1;
+        }
+
+        protected T_BaseImplName_(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
         {
             var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
             if (sourceBlock.Length < BlockLength)
@@ -171,6 +188,11 @@ namespace T_BaseNameSpace_.MemBlocks
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
+        private const long T_BlockStructureCode_ = 0x0B00 + 0x0030 + 0x0001;
+        private const long BlockStructureCode = T_BlockStructureCode_;
+        private static readonly BlockHeader _header = BlockHeader.CreateNew(T_EntityId_, BlockStructureCode);
+        internal T_BaseImplName_(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+
         private const int T_FieldOffset_ = 0;
         private const int T_FieldLength_ = 4;
 
@@ -180,7 +202,7 @@ namespace T_BaseNameSpace_.MemBlocks
             set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
         }
 
-        public bool Equals(T_BaseName_? other)
+        public bool Equals(T_BaseImplName_? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
@@ -188,17 +210,18 @@ namespace T_BaseNameSpace_.MemBlocks
             if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
-        public override bool Equals(object? obj) => obj is T_BaseName_ other && Equals(other);
+        public override bool Equals(object? obj) => obj is T_BaseImplName_ other && Equals(other);
         public override int GetHashCode() => base.GetHashCode();
     }
 }
-namespace T_NameSpace_
+namespace T_IntfNameSpace_
 {
-    public interface IT_EntityIntfName_ : T_BaseNameSpace_.MemBlocks.IT_BaseName_
+    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_
     {
-        T_MemberType_ T_ScalarMemberName_ { get; set; }
-        T_MemberTypeNameSpace_.IT_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
-        T_MemberTypeNameSpace_.IT_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
+        //T_MemberType_? T_NullableScalarMemberName_ { get; set; }
+        T_MemberType_ T_RequiredScalarMemberName_ { get; set; }
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
         Octets? T_NullableFixLenBinaryMemberName_ { get; set; }
         Octets? T_NullableVarLenBinaryMemberName_ { get; set; }
         Octets T_RequiredFixLenBinaryMemberName_ { get; set; }
@@ -210,9 +233,9 @@ namespace T_NameSpace_
     }
 }
 //##}
-namespace T_NameSpace_.MemBlocks
+namespace T_ImplNameSpace_
 {
-    public partial class T_EntityImplName_ : T_BaseNameSpace_.MemBlocks.T_BaseName_, IT_EntityIntfName_, IEquatable<T_EntityImplName_>
+    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>
     {
         // Derived entities: T_DerivedEntityCount_
         //##foreach(var derived in entity.DerivedEntities) {
@@ -242,22 +265,22 @@ namespace T_NameSpace_.MemBlocks
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
                 //##using var _ = NewScope(derived);
-                T_NameSpace_.MemBlocks.T_EntityImplName_ source2 => new T_NameSpace_.MemBlocks.T_EntityImplName_(source2),
+                T_ImplNameSpace_.T_EntityImplName_ source2 => new T_ImplNameSpace_.T_EntityImplName_(source2),
                 //##}
-                _ => new T_NameSpace_.MemBlocks.T_EntityImplName_(source)
+                _ => new T_ImplNameSpace_.T_EntityImplName_(source)
             };
         }
 
-        public new static T_EntityImplName_ CreateFrom(T_NameSpace_.IT_EntityIntfName_ source)
+        public new static T_EntityImplName_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
             if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
                 //##using var _ = NewScope(derived);
-                T_NameSpace_.IT_EntityIntfName_ source2 => new T_NameSpace_.MemBlocks.T_EntityImplName_(source2),
+                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ImplNameSpace_.T_EntityImplName_(source2),
                 //##}
-                _ => new T_NameSpace_.MemBlocks.T_EntityImplName_(source)
+                _ => new T_ImplNameSpace_.T_EntityImplName_(source)
             };
         }
 
@@ -268,9 +291,9 @@ namespace T_NameSpace_.MemBlocks
             {
                 //##foreach(var derived in entity.DerivedEntities) {
                 //##using var _ = NewScope(derived);
-                T_EntityId_ => new T_NameSpace_.MemBlocks.T_EntityImplName_(blocks),
+                T_EntityId_ => new T_ImplNameSpace_.T_EntityImplName_(blocks),
                 //##}
-                _ => new T_NameSpace_.MemBlocks.T_EntityImplName_(blocks)
+                _ => new T_ImplNameSpace_.T_EntityImplName_(blocks)
             };
         }
 
@@ -434,7 +457,7 @@ namespace T_NameSpace_.MemBlocks
             //##using var _ = NewScope(member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
-            this.T_ScalarMemberName_ = source.T_ScalarMemberName_;
+            this.T_RequiredScalarMemberName_ = source.T_RequiredScalarMemberName_;
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -481,20 +504,20 @@ namespace T_NameSpace_.MemBlocks
         }
         public T_EntityImplName_(T_EntityImplName_ source) : this(_header, source) { }
 
-        protected T_EntityImplName_(BlockHeader header, IT_EntityIntfName_ source) : base(header, source)
+        protected T_EntityImplName_(BlockHeader header, T_IntfNameSpace_.T_EntityIntfName_ source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             //##foreach(var member in entity.Members.OfType<MemBlocksModelScopeMember>()) {
             //##using var _ = NewScope(member);
             //##switch(member.Kind) {
             //##case MemberKind.Native:
-            this.T_ScalarMemberName_ = source.T_ScalarMemberName_;
+            this.T_RequiredScalarMemberName_ = source.T_RequiredScalarMemberName_;
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
-            _T_NullableEntityMemberName_ = source.T_NullableEntityMemberName_ is null ? null : T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(source.T_NullableEntityMemberName_);
+            _T_NullableEntityMemberName_ = source.T_NullableEntityMemberName_ is null ? null : T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(source.T_NullableEntityMemberName_);
             //##} else {
-            _T_RequiredEntityMemberName_ = T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(source.T_RequiredEntityMemberName_);
+            _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(source.T_RequiredEntityMemberName_);
             //##}
             //##break;
             //##case MemberKind.Binary:
@@ -533,7 +556,7 @@ namespace T_NameSpace_.MemBlocks
             //##} // switch
             //##}
         }
-        public T_EntityImplName_(IT_EntityIntfName_ source) : this(_header, source) { }
+        public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : this(_header, source) { }
 
         protected T_EntityImplName_(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
         {
@@ -584,7 +607,7 @@ namespace T_NameSpace_.MemBlocks
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_MemberType_ T_ScalarMemberName_
+        public T_MemberType_ T_RequiredScalarMemberName_
         {
             get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span);
             set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
@@ -610,30 +633,30 @@ namespace T_NameSpace_.MemBlocks
             _T_NullableEntityMemberName_ = null;
             if (blob is not null)
             {
-                _T_NullableEntityMemberName_ = T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
                 await _T_NullableEntityMemberName_.Unpack(dataStore, depth - 1);
             }
         }
-        private T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
+        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_? T_NullableEntityMemberName_
+        public T_MemberTypeImplSpace_.T_MemberTypeImplName_? T_NullableEntityMemberName_
         {
             get => IfUnpacked(_T_NullableEntityMemberName_);
             set => _T_NullableEntityMemberName_ = IfNotFrozen(value);
         }
-        T_MemberTypeNameSpace_.IT_MemberTypeIntfName_? IT_EntityIntfName_.T_NullableEntityMemberName_
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableEntityMemberName_
         {
             get => IfUnpacked(_T_NullableEntityMemberName_);
-            set => _T_NullableEntityMemberName_ = IfNotFrozen(value is null ? null :  T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(value));
+            set => _T_NullableEntityMemberName_ = IfNotFrozen(value is null ? null :  T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(value));
         }
         //##} else {
         private async ValueTask T_RequiredEntityMemberName__Pack(IDataStore dataStore)
         {
             if (_T_RequiredEntityMemberName_ is null)
             {
-                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_>(dataStore);
+                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);
             }
             await _T_RequiredEntityMemberName_.Pack(dataStore);
             var buffer = _T_RequiredEntityMemberName_.GetBuffers();
@@ -646,27 +669,27 @@ namespace T_NameSpace_.MemBlocks
             var blob = await dataStore.GetBlob(blobId);
             if (blob is null)
             {
-                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_>(dataStore);
+                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);
             }
             else
             {
-                _T_RequiredEntityMemberName_ = T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
                 await _T_RequiredEntityMemberName_.Unpack(dataStore, depth - 1);
             }
         }
-        private T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_? _T_RequiredEntityMemberName_ = null;
+        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_RequiredEntityMemberName_ = null;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_ T_RequiredEntityMemberName_
+        public T_MemberTypeImplSpace_.T_MemberTypeImplName_ T_RequiredEntityMemberName_
         {
             get => IfNotNull(IfUnpacked(_T_RequiredEntityMemberName_));
             set => _T_RequiredEntityMemberName_ = IfNotFrozen(value);
         }
-        T_MemberTypeNameSpace_.IT_MemberTypeIntfName_ IT_EntityIntfName_.T_RequiredEntityMemberName_
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredEntityMemberName_
         {
             get => IfNotNull(IfUnpacked(_T_RequiredEntityMemberName_));
-            set => _T_RequiredEntityMemberName_ = IfNotFrozen(T_MemberTypeNameSpace_.MemBlocks.T_MemberTypeImplName_.CreateFrom(value));
+            set => _T_RequiredEntityMemberName_ = IfNotFrozen(T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(value));
         }
         //##}
         //##break;
