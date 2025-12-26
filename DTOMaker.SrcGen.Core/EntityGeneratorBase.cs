@@ -117,7 +117,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 ["MemberIsObsolete"] = member.IsObsolete,
                 ["MemberObsoleteMessage"] = member.ObsoleteMessage,
-                ["MemberObsoleteIsError"] = member.ObsoleteIsErrorqqq,
+                ["MemberObsoleteIsError"] = member.ObsoleteIsError,
                 ["MemberType"] = _language.GetDataTypeToken(member.MemberType),
                 ["MemberTypeImplName"] = member.MemberType.ShortImplName,
                 ["MemberTypeIntfName"] = member.MemberType.ShortIntfName,

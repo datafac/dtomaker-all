@@ -6,6 +6,10 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
 {
     public class VersionChecks
     {
+        /// <summary>
+        /// Some build pipelines have not yet updated to use Roslyn 5.0 or later.
+        /// This test ensures that the expected Roslyn version is being used.
+        /// </summary>
         [Fact]
         public void RoslynCSharpVersionCheck()
         {
@@ -15,6 +19,5 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             version.Minor.ShouldBe(14);
             version.ToString().ShouldBe("4.14.0.0");
         }
-
     }
 }

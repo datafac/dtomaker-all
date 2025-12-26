@@ -25,6 +25,14 @@ namespace DTOMaker.SrcGen.Core
     }
     public abstract class SourceGeneratorBase : IIncrementalGenerator
     {
+        //private const string DomainAttribute = nameof(DomainAttribute);
+        public const string EntityAttribute = nameof(EntityAttribute);
+        public const string MemberAttribute = nameof(MemberAttribute);
+        public const string IdAttribute = nameof(IdAttribute);
+        public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
+        public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
+        public const string FixedLengthAttribute = nameof(FixedLengthAttribute);
+
         protected abstract SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context);
         protected abstract void OnEndInitialize(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OutputEntity> model);
 
@@ -72,13 +80,6 @@ namespace DTOMaker.SrcGen.Core
             // return the final namespace
             return nameSpace;
         }
-
-        //private const string DomainAttribute = nameof(DomainAttribute);
-        private const string EntityAttribute = nameof(EntityAttribute);
-        private const string MemberAttribute = nameof(MemberAttribute);
-        private const string IdAttribute = nameof(IdAttribute);
-        private const string ObsoleteAttribute = nameof(ObsoleteAttribute);
-        private const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
 
         protected static Diagnostic? TryGetAttributeArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
         {
@@ -129,6 +130,7 @@ namespace DTOMaker.SrcGen.Core
             bool isObsolete = false;
             string obsoleteMessage = string.Empty;
             bool obsoleteIsError = false;
+            int fixedLength = 0;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
@@ -156,6 +158,12 @@ namespace DTOMaker.SrcGen.Core
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
+                    case FixedLengthAttribute:
+                        // get sequence
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fixedLength = value; });
+                        break;
                     default:
                         // ignore other attributes
                         diagnostic = null;
@@ -179,7 +187,7 @@ namespace DTOMaker.SrcGen.Core
 
             (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, implSpaceSuffix);
 
-            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError, diagnostics);
+            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError, fixedLength, diagnostics);
         }
 
         private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
@@ -400,7 +408,8 @@ namespace DTOMaker.SrcGen.Core
                         IsNullable = member.IsNullable,
                         IsObsolete = member.IsObsolete,
                         ObsoleteMessage = member.ObsoleteMessage,
-                        ObsoleteIsErrorqqq = member.ObsoleteIsError,
+                        ObsoleteIsError = member.ObsoleteIsErrorqqq,
+                        FixedLength = member.FixedLength,
                         Diagnostics = member.Diagnostics,
                     });
                 }

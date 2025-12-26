@@ -11,7 +11,9 @@ namespace DTOMaker.SrcGen.Core
         public bool IsNullable { get; init; }
         public bool IsObsolete { get; init; }
         public string ObsoleteMessage { get; init; } = string.Empty;
-        public bool ObsoleteIsErrorqqq { get; init; }
+        public bool ObsoleteIsError { get; init; }
+        public int FixedLength { get; init; }
+        public bool IsFixedLength => FixedLength > 0;
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     }
 }

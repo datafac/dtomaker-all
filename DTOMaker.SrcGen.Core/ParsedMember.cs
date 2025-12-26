@@ -14,10 +14,11 @@ namespace DTOMaker.SrcGen.Core
         public bool IsNullable { get; init; }
         public bool IsObsolete { get; init; }
         public string ObsoleteMessage { get; init; }
-        public bool ObsoleteIsError { get; init; }
+        public bool ObsoleteIsErrorqqq { get; init; }
+        public int FixedLength { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
 
-        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, bool isObsolete, string obsoleteMessage, bool obsoleteIsError, IEnumerable<Diagnostic> diagnostics)
+        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, bool isObsolete, string obsoleteMessage, bool obsoleteIsError, int fixedLength, IEnumerable<Diagnostic> diagnostics)
         {
             FullName = fullname;
             Sequence = sequence;
@@ -26,7 +27,8 @@ namespace DTOMaker.SrcGen.Core
             IsNullable = isNullable;
             IsObsolete = isObsolete;
             ObsoleteMessage = obsoleteMessage;
-            ObsoleteIsError = obsoleteIsError;
+            ObsoleteIsErrorqqq = obsoleteIsError;
+            FixedLength = fixedLength;
             Diagnostics = new EquatableArray<Diagnostic>(diagnostics);
 
             // derived properties
