@@ -73,6 +73,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.MemBlocks.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MemBlocks", "DTOMaker.SrcGen.MemBlocks\DTOMaker.SrcGen.MemBlocks.csproj", "{C4C14CCB-ECC2-EADC-CEB6-5D296ADD60CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MemBlocks.Tests", "DTOMaker.SrcGen.MemBlocks.Tests\DTOMaker.SrcGen.MemBlocks.Tests.csproj", "{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,10 @@ Global
 		{C4C14CCB-ECC2-EADC-CEB6-5D296ADD60CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4C14CCB-ECC2-EADC-CEB6-5D296ADD60CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4C14CCB-ECC2-EADC-CEB6-5D296ADD60CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +212,7 @@ Global
 		{274B1A69-16CD-ACA3-C2CF-FAA5A311DCD7} = {5CD124B1-3AFB-44E8-A4C4-E35B9B97F0B1}
 		{3C4F557E-274C-49EE-301C-2D4085FBF878} = {5CD124B1-3AFB-44E8-A4C4-E35B9B97F0B1}
 		{C4C14CCB-ECC2-EADC-CEB6-5D296ADD60CA} = {5CD124B1-3AFB-44E8-A4C4-E35B9B97F0B1}
+		{43391C89-DF6A-96FF-5FDD-A45DD5E2EDE9} = {5CD124B1-3AFB-44E8-A4C4-E35B9B97F0B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C984986-C2C9-4136-A2D4-1A5FE9BDF8F0}

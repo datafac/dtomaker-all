@@ -5,7 +5,7 @@ namespace DTOMaker.SrcGen.MemBlocks;
 #pragma warning disable CS0162 // Unreachable code detected
 public sealed class EntityGenerator : EntityGeneratorBase
 {
-    public EntityGenerator(ILanguage language) : base(language) { }
+    public EntityGenerator(SourceGeneratorParameters parameters) : base(parameters) { }
     protected override void OnGenerate(OutputEntity entity)
     {
         using var entityScope = NewScope(entity);
@@ -250,13 +250,6 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("{");
         Emit("    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>");
         Emit("    {");
-        Emit("        // Derived entities: T_DerivedEntityCount_");
-        foreach (var derived in entity.DerivedEntities)
-        {
-            using var _ = NewScope(derived);
-            Emit("        // - T_EntityImplName_");
-        }
-        Emit("");
         if (false)
         {
             Emit("        private const int T_ClassHeight_ = 2;");

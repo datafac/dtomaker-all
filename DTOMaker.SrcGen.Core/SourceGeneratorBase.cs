@@ -12,17 +12,23 @@ namespace DTOMaker.SrcGen.Core
     public sealed record class SourceGeneratorParameters
     {
         /// <summary>
-        /// The suffix appended to implementation namespace names. This is a
+        /// Gets the unique identifier for the source generator associated with this instance.
+        /// </summary>
+        public GeneratorId GeneratorId { get; init; }
+
+        /// <summary>
+        /// Gets the language configuration used for processing or interpreting content.
+        /// </summary>
+        public ILanguage Language { get; init; } = Language_CSharp.Instance;
+
+        /// <summary>
+        /// The suffix appended to implementation namespaces. This is a
         /// constant defined by each source generator template and runtime, and 
         /// cannot be changed easily.
         /// </summary>
-        public string ImplSpaceSuffix { get; }
-
-        public SourceGeneratorParameters(string implSpaceSuffix)
-        {
-            ImplSpaceSuffix = implSpaceSuffix;
-        }
+        public string ImplSpaceSuffix { get; init; } = "Generated";
     }
+
     public abstract class SourceGeneratorBase : IIncrementalGenerator
     {
         //private const string DomainAttribute = nameof(DomainAttribute);
@@ -479,8 +485,8 @@ namespace DTOMaker.SrcGen.Core
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             // do derived stuff
-            var srcGenParams = OnBeginInitialize(context);
-            string implSpaceSuffix = srcGenParams.ImplSpaceSuffix;
+            SourceGeneratorParameters srcGenParams = OnBeginInitialize(context);
+            string implSpaceSuffix = srcGenParams.ImplSpaceSuffix!;
 
 
             // filter for entities

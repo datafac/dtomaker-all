@@ -9,13 +9,19 @@ namespace DTOMaker.SrcGen.MsgPack2
     [Generator]
     public sealed class SourceGenerator : SourceGeneratorBase
     {
-        protected override SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context) => new SourceGeneratorParameters("MsgPack2");
+        private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
+        {
+            GeneratorId = GeneratorId.MsgPack2,
+            Language = Language_CSharp.Instance,
+            ImplSpaceSuffix = "MsgPack2"
+        };
+        protected override SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context) => _parameters;
         protected override void OnEndInitialize(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OutputEntity> entities)
         {
             // generate entities
             context.RegisterSourceOutput(entities, (spc, ent) =>
             {
-                var generator = new EntityGenerator(Language_CSharp.Instance);
+                var generator = new EntityGenerator(_parameters);
                 string source = generator.GenerateSourceText(ent);
                 string hintName = $"{ent.TFN.Impl.Space}.{ent.TFN.Impl.Name}.g.cs";
                 spc.AddSource(hintName, SourceText.From(source, Encoding.UTF8));

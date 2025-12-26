@@ -5,7 +5,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft;
 #pragma warning disable CS0162 // Unreachable code detected
 public sealed class EntityGenerator : EntityGeneratorBase
 {
-    public EntityGenerator(ILanguage language) : base(language) { }
+    public EntityGenerator(SourceGeneratorParameters parameters) : base(parameters) { }
     protected override void OnGenerate(OutputEntity entity)
     {
         using var entityScope = NewScope(entity);

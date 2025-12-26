@@ -11,18 +11,21 @@ namespace DTOMaker.SrcGen.Core
     {
         private readonly StringBuilder _builder = new StringBuilder();
         private readonly TokenStack _tokenStack = new TokenStack();
-        private readonly ILanguage _language;
 
-        protected EntityGeneratorBase(ILanguage language)
+        private readonly SourceGeneratorParameters _parameters;
+
+        public EntityGeneratorBase(SourceGeneratorParameters parameters)
         {
-            _language = language;
+            _parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
         }
 
         private string ReplaceTokens(string input)
         {
+            ILanguage language = _parameters.Language;
+
             // note token recursion not supported
-            var tokenPrefix = _language.TokenPrefix.AsSpan();
-            var tokenSuffix = _language.TokenSuffix.AsSpan();
+            var tokenPrefix = language.TokenPrefix.AsSpan();
+            var tokenSuffix = language.TokenSuffix.AsSpan();
 
             ReadOnlySpan<char> inputSpan = input.AsSpan();
 
@@ -50,7 +53,7 @@ namespace DTOMaker.SrcGen.Core
                         // - calc remainder
                         ReadOnlySpan<char> prefix = remainder.Slice(0, tokenPos);
                         result.Append(prefix.ToString());
-                        result.Append(_language.GetValueAsCode(tokenValue));
+                        result.Append(language.GetValueAsCode(tokenValue));
                         remainderPos += (tokenPos + tokenPrefix.Length + tokenEnd + tokenSuffix.Length);
                         replaced = true;
                     }
@@ -58,7 +61,7 @@ namespace DTOMaker.SrcGen.Core
                     {
                         // invalid token - emit error then original line
                         result.Clear();
-                        result.AppendLine($"#error The token '{_language.TokenPrefix}{tokenName}{_language.TokenSuffix}' on the following line is invalid.");
+                        result.AppendLine($"#error The token '{language.TokenPrefix}{tokenName}{language.TokenSuffix}' on the following line is invalid.");
                         result.AppendLine(input);
                         return result.ToString();
                     }
@@ -96,11 +99,17 @@ namespace DTOMaker.SrcGen.Core
             return new string(output.ToArray());
         }
 
-        private static string BuildTokenName(OutputMember member, string name)
+        private string BuildTokenName(OutputMember member, string name)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(member.IsNullable ? "Nullable" : "Required");
-            sb.Append(member.Kind switch {
+            if (_parameters.GeneratorId == GeneratorId.MemBlocks 
+                && (member.Kind == MemberKind.String || member.Kind == MemberKind.Binary))
+            {
+                sb.Append(member.IsFixedLength ? "FixLen" : "VarLen");
+            }
+            sb.Append(member.Kind switch
+            {
                 MemberKind.Native => "Scalar",
                 MemberKind.String => "String",
                 MemberKind.Binary => "Binary",
@@ -113,12 +122,13 @@ namespace DTOMaker.SrcGen.Core
 
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
+            ILanguage language = _parameters.Language;
             var tokens = new Dictionary<string, object?>
             {
                 ["MemberIsObsolete"] = member.IsObsolete,
                 ["MemberObsoleteMessage"] = member.ObsoleteMessage,
                 ["MemberObsoleteIsError"] = member.ObsoleteIsError,
-                ["MemberType"] = _language.GetDataTypeToken(member.MemberType),
+                ["MemberType"] = language.GetDataTypeToken(member.MemberType),
                 ["MemberTypeImplName"] = member.MemberType.ShortImplName,
                 ["MemberTypeIntfName"] = member.MemberType.ShortIntfName,
                 ["MemberTypeIntfSpace"] = member.MemberType.IntfNameSpace,
@@ -127,7 +137,7 @@ namespace DTOMaker.SrcGen.Core
                 ["MemberSequence"] = member.Sequence,
                 ["MemberName"] = member.Name,
                 ["MemberJsonName"] = ToCamelCase(member.Name),
-                ["MemberDefaultValue"] = _language.GetDefaultValue(member.MemberType)
+                ["MemberDefaultValue"] = language.GetDefaultValue(member.MemberType)
             };
             tokens[BuildTokenName(member, "MemberName")] = member.Name;
             tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
