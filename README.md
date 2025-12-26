@@ -53,15 +53,20 @@ The implmentations will be generated in the MyModels.JsonSystemText namespace.
 - MemBlocks serialization
 
 ## Coming soon
-- Protobuf.Net serialization
-- custom struct members (to avoid primitive obsession)
+- incremental serialization
+- custom type members (to avoid primitive obsession)
 - global interface equality comparer
 - reservation (hidden members)
 
 ## Coming later
+- MessagePack 3.x serialization
+- Orleans serialization
+- Protobuf.Net serialization
 - generic entities
 - model.json generation
 - command-line alternative
+- variant native type support
+- 
 - variable length arrays
 - logical value equality
 
