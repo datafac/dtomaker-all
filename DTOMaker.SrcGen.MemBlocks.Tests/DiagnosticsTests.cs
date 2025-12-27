@@ -17,7 +17,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity] [Layout(LayoutMethod.Linear)]
+                    [Entity(0)] [Layout(LayoutMethod.Linear)]
                     public interface IMyDTO : IEntityBase
                     {
                     }
@@ -38,7 +38,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity][Id(1)][Layout(LayoutMethod.Linear)]
+                    [Entity(1)][Layout(LayoutMethod.Linear)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(0)] int  Field1 { get; set; }
@@ -60,7 +60,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity] [Id(1)] [Layout(LayoutMethod.Linear)] [Length(8000)]
+                    [Entity(1)] [Layout(LayoutMethod.Linear)] [Length(8000)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)] string  Field1 { get; set; }
@@ -82,7 +82,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity][Id(1)][Layout(LayoutMethod.Linear)]
+                    [Entity(1)][Layout(LayoutMethod.Linear)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)][Length(15)] string  Field1 { get; set; }
@@ -104,7 +104,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity][Id(1)][Layout(LayoutMethod.Linear)]
+                    [Entity(1)][Layout(LayoutMethod.Linear)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)] int? Field1 { get; set; }
@@ -126,7 +126,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
-                    [Entity][Id(1)][Layout(LayoutMethod.Linear)]
+                    [Entity(1)][Layout(LayoutMethod.Linear)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)] DayOfWeek Field1 { get; set; }

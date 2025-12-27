@@ -36,10 +36,10 @@ Here's how to define a polymorphic, recursive tree type:
 using DTOMaker.Models;
 using DTOMaker.Runtime;
 namespace MyModels;
-[Entity] [Id(30)] public interface INode : IEntityBase { [Member(1)] String K { get; set; } }
-[Entity] [Id(31)] public interface IStringNode : INode { [Member(1)] String V { get; set; } }
-[Entity] [Id(32)] public interface INumberNode : INode { [Member(1)] Int64 V { get; set; } }
-[Entity] [Id(33)] public interface ITree : IEntityBase
+[Entity(30)] public interface INode : IEntityBase { [Member(1)] String K { get; set; } }
+[Entity(31)] public interface IStringNode : INode { [Member(1)] String V { get; set; } }
+[Entity(32)] public interface INumberNode : INode { [Member(1)] Int64 V { get; set; } }
+[Entity(33)] public interface ITree : IEntityBase
 {
     [Member(1)] ITree? L { get; set; }
     [Member(2)] ITree? R { get; set; }

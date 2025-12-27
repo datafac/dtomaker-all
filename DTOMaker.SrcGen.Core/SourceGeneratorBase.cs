@@ -45,7 +45,7 @@ namespace DTOMaker.SrcGen.Core
         //private const string DomainAttribute = nameof(DomainAttribute);
         public const string EntityAttribute = nameof(EntityAttribute);
         public const string MemberAttribute = nameof(MemberAttribute);
-        public const string IdAttribute = nameof(IdAttribute);
+        //public const string IdAttribute = nameof(IdAttribute);
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
         public const string LengthAttribute = nameof(LengthAttribute);
@@ -271,7 +271,6 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME10, location));
             }
 
-            // MemBlocks checks todo move to specific generator
             if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
             {
                 // set default length for Octets and String
@@ -372,14 +371,7 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostic? diagnostic = null;
                 switch (attrName)
                 {
-                    case null:
-                        break;
-                    //DomainAttribute => null,
                     case EntityAttribute:
-                        break;
-                    case MemberAttribute:
-                        break;
-                    case IdAttribute:
                         // get entity id
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 1)
@@ -417,7 +409,6 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME03, location));
             }
 
-            // MemBlocks checks todo move to specific generator
             if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
             {
                 if (!IsPowerOf2(blockLength, 1, 8192))
@@ -491,7 +482,6 @@ namespace DTOMaker.SrcGen.Core
         //    builder.Add(baseEntity);
         //    builder.AddRange(parsedEntities);
         //    // add closed generic entities
-        //    // todo
         //    return builder.ToImmutable();
         //}
 

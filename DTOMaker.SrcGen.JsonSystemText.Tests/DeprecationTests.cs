@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity] [Id(1)]
+                [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Obsolete]                  [Member(1)] double Field1 { get; set; }

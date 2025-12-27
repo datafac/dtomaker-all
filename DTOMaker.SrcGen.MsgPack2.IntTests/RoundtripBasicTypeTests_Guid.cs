@@ -10,8 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity]
-[Id(20)]
+[Entity(20)]
 public interface ISimpleDTO_Guid : IEntityBase
 {
     [Member(1)] Guid Field1 { get; set; }

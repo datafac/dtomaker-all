@@ -11,8 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity]
-[Id(18)]
+[Entity(18)]
 public interface ISimpleDTO_PairOfInt64 : IEntityBase
 {
     [Member(1)] PairOfInt64 Field1 { get; set; }

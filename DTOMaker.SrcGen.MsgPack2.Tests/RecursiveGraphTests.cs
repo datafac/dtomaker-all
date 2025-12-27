@@ -13,7 +13,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity][Id(1)]
+                [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(2)] IMyDTO? Field1 { get; set; }

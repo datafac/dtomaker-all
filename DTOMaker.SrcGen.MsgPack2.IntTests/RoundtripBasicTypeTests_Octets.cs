@@ -12,8 +12,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity]
-[Id(12)]
+[Entity(12)]
 public interface ISimpleDTO_Octets : IEntityBase
 {
     [Member(1)] Octets Field1 { get; set; }

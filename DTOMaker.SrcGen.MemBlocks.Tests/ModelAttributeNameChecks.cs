@@ -9,7 +9,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
     {
         [Fact] public void EntityAttributeName() => SourceGeneratorBase.EntityAttribute.ShouldBe(nameof(DTOMaker.Models.EntityAttribute));
         [Fact] public void MemberAttributeName() => SourceGeneratorBase.MemberAttribute.ShouldBe(nameof(DTOMaker.Models.MemberAttribute));
-        [Fact] public void IdAttributeName() => SourceGeneratorBase.IdAttribute.ShouldBe(nameof(DTOMaker.Models.IdAttribute));
         [Fact] public void ObsoleteAttributeName() => SourceGeneratorBase.ObsoleteAttribute.ShouldBe(nameof(System.ObsoleteAttribute));
         [Fact] public void KeyOffsetAttributeName() => SourceGeneratorBase.KeyOffsetAttribute.ShouldBe(nameof(DTOMaker.Models.KeyOffsetAttribute));
         [Fact] public void LengthAttributeName() => SourceGeneratorBase.LengthAttribute.ShouldBe(nameof(DTOMaker.Models.LengthAttribute));

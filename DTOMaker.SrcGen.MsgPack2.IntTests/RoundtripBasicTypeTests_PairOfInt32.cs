@@ -11,8 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity]
-[Id(17)]
+[Entity(17)]
 public interface ISimpleDTO_PairOfInt32 : IEntityBase
 {
     [Member(1)] PairOfInt32 Field1 { get; set; }

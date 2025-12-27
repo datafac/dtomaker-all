@@ -11,8 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
 
-[Entity]
-[Id(16)]
+[Entity(16)]
 public interface ISimpleDTO_PairOfInt16 : IEntityBase
 {
     [Member(1)] PairOfInt16 Field1 { get; set; }

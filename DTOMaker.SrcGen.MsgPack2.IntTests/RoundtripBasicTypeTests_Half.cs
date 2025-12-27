@@ -11,8 +11,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
 #if NET7_0_OR_GREATER
-[Entity]
-[Id(15)]
+[Entity(15)]
 public interface ISimpleDTO_Half : IEntityBase
 {
     [Member(1)] Half Field1 { get; set; }

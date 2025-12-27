@@ -10,8 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity]
-[Id(19)]
+[Entity(19)]
 public interface ISimpleDTO_Decimal : IEntityBase
 {
     [Member(1)] Decimal Field1 { get; set; }

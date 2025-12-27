@@ -15,18 +15,18 @@
 //            using DTOMaker.Runtime;
 //            namespace MyOrg.Models
 //            {
-//                [Entity][Id(1)]
+//                [Entity(1)]
 //                public interface IPair<T1, T2> : IEntityBase
 //                {
 //                    [Member(1)] T1 Item1 {get;set;}
 //                    [Member(2)] T2 Item2 {get;set;}
 //                }
-//                [Entity][Id(2)]
+//                [Entity(2)]
 //                public interface IMyDTO2 : IPair<long, string>
 //                {
 //                    [Member(1)] int Id {get;set;}
 //                }
-//                [Entity][Id(3)]
+//                [Entity(3)]
 //                public interface IMyDTO3 : IEntityBase
 //                {
 //                    [Member(1)] int Id {get;set;}
@@ -48,12 +48,12 @@
 //            using DTOMaker.Models;
 //            namespace MyOrg.Models
 //            {
-//                [Entity][Id(1)]
+//                [Entity(1)]
 //                public interface IMonoid<T1>
 //                {
 //                    [Member(1)] T1 Value {get;set;}
 //                }
-//                [Entity][Id(2)]
+//                [Entity(2)]
 //                public interface IMyDTO : IMonoid<_T1_>
 //                {
 //                }
@@ -272,16 +272,16 @@
 //            using DTOMaker.Models;
 //            namespace MyOrg.Models
 //            {
-//                [Entity][Id(1)]
+//                [Entity(1)]
 //                public interface IMonoid<T1>
 //                {
 //                    [Member(1)] T1? Value {get;set;}
 //                }
-//                [Entity][Id(2)]
+//                [Entity(2)]
 //                public interface IMyDTO : IMonoid<IOther>
 //                {
 //                }
-//                [Entity][Id(3)]
+//                [Entity(3)]
 //                public interface IOther
 //                {
 //                }
@@ -335,7 +335,7 @@
 //            using DTOMaker.Models;
 //            namespace MyOrg.Models
 //            {
-//                [Entity][Id(1)]
+//                [Entity(1)]
 //                public interface ITree<TK, TV>
 //                {
 //                    [Member(1)] int Count {get;set;}
@@ -344,7 +344,7 @@
 //                    [Member(4)] ITree<TK, TV>? Left  {get;set;}
 //                    [Member(5)] ITree<TK, TV>? Right {get;set;}
 //                }
-//                [Entity][Id(2)]
+//                [Entity(2)]
 //                public interface IMyTree : ITree<String, Octets>
 //                {
 //                }
@@ -388,21 +388,21 @@
 //            using DTOMaker.Models;
 //            namespace MyOrg.Models
 //            {
-//                [Entity][Id(100)]
+//                [Entity(100)]
 //                public interface IBase<T>
 //                {
 //                    [Member(1)] T Value {get; set;}
 //                }
-//                [Entity][Id(101)]
+//                [Entity(101)]
 //                public interface IPoco<TK, TV> : IBase<TV>
 //                {
 //                    [Member(1)] TK Key {get; set;}
 //                }
-//                [Entity][Id(1)]
+//                [Entity(1)]
 //                public interface IMyPoco1 : IPoco<String, Octets>
 //                {
 //                }
-//                [Entity][Id(2)]
+//                [Entity(2)]
 //                public interface IMyPoco2
 //                {
 //                    [Member(1)] IPoco<String, Int64>? Field1 {get; set;}

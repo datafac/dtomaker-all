@@ -11,8 +11,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
 #if NET7_0_OR_GREATER
-[Entity]
-[Id(22)]
+[Entity(22)]
 public interface ISimpleDTO_UInt128 : IEntityBase
 {
     [Member(1)] UInt128 Field1 { get; set; }

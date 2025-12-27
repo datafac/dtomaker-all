@@ -10,8 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity]
-[Id(2)]
+[Entity(2)]
 public interface ISimpleDTO_Int64 : IEntityBase
 {
     [Member(1)] Int64 Field1 { get; set; }

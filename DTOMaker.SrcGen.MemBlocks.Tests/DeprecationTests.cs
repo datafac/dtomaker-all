@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity] [Id(1)] [Layout(LayoutMethod.Linear)]
+                [Entity(1)] [Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Obsolete]                  [Member(1)] double Field1 { get; set; }

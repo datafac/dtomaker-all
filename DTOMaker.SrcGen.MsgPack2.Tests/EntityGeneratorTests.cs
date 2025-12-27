@@ -14,13 +14,13 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity][Id(1)]
+                [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] int  Field1 { get; set; }
                     [Member(2)] int? Field2 { get; set; }
                 }
-                [Entity][Id(2)]
+                [Entity(2)]
                 [KeyOffset(10)]
                 public interface IDerived : IMyDTO
                 {
@@ -30,7 +30,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             }
             namespace MyOrg.Model2
             {
-                [Entity][Id(3)]
+                [Entity(3)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] IMyDTO  Field31 { get; set; }
@@ -39,7 +39,7 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
             }
             namespace MyOrg.Model3
             {
-                [Entity][Id(4)]
+                [Entity(4)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] Octets  Field41 { get; set; }
