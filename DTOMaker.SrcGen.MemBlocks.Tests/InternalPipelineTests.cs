@@ -16,7 +16,10 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 "JST");
 
         private static ParsedEntity CreateEntity(string name, int id, int keyOffset, string? baseName) =>
-            new ParsedEntity(CreateTFN(name), id, keyOffset, baseName is null ? null : CreateTFN(baseName), []);
+            new ParsedEntity(CreateTFN(name), id, baseName is null ? null : CreateTFN(baseName), [])
+            {
+                KeyOffset = keyOffset
+            };
 
         private static ParsedMember CreateMember(string entName, string fieldName, int sequence, Type type, bool isNullable = false)
         {
@@ -47,7 +50,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                     memberType,
                     memberType.MemberKind,
                     isNullable,
-                    false, "", false, 0, []);
+                    []);
         }
 
         private static readonly ImmutableArray<ParsedEntity> input = ImmutableArray<ParsedEntity>.Empty

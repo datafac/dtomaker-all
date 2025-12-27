@@ -18,7 +18,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] int  Field1 { get; set; }
-                    [Member(2)] int? Field2 { get; set; }
+                    [Member(2)] long Field2 { get; set; }
                 }
                 [Entity][Id(2)]
                 public interface IDerived : IMyDTO

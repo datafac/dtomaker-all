@@ -9,11 +9,11 @@ namespace DTOMaker.Models;
 /// remainder contains the encoded characters.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public class FixedLengthAttribute : Attribute
+public class LengthAttribute : Attribute
 {
     public readonly int Length;
 
-    public FixedLengthAttribute(int length)
+    public LengthAttribute(int length)
     {
         Length = length;
     }

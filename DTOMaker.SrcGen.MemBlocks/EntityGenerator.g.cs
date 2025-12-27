@@ -367,7 +367,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_NullableFixLenBinaryMemberName__Pack();");
                         }
@@ -378,7 +378,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_RequiredFixLenBinaryMemberName__Pack();");
                         }
@@ -391,7 +391,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_NullableFixLenStringMemberName__Pack();");
                         }
@@ -402,7 +402,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_RequiredFixLenStringMemberName__Pack();");
                         }
@@ -442,7 +442,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_NullableFixLenBinaryMemberName__Unpack();");
                         }
@@ -453,7 +453,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_RequiredFixLenBinaryMemberName__Unpack();");
                         }
@@ -466,7 +466,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_NullableFixLenStringMemberName__Unpack();");
                         }
@@ -477,7 +477,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            T_RequiredFixLenStringMemberName__Unpack();");
                         }
@@ -495,12 +495,12 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("        }");
         Emit("");
         Emit("        // -------------------- field map -----------------------------");
-        Emit("        //  Seq.  Off.  Len.  N.    Type    End.  Name");
-        Emit("        //  ----  ----  ----  ----  ------- ----  -------");
+        Emit("        //  Seq.  Off.  Len.  End.  Type    Name");
+        Emit("        //  ----  ----  ----  ----  ------- -------");
         foreach (var member in entity.Members)
         {
             using var _ = NewScope(entity, member);
-            Emit("        //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_ArrayLengthR4_  T_MemberTypeL7_ T_MemberBELE_    T_MemberName_");
+            Emit("        //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_MemberBELE_    T_MemberTypeL7_ T_MemberName_");
         }
         Emit("        // ------------------------------------------------------------");
         Emit("");
@@ -537,7 +537,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_NullableFixLenBinaryMemberName_ = source._T_NullableFixLenBinaryMemberName_;");
                         }
@@ -548,7 +548,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_RequiredFixLenBinaryMemberName_ = source._T_RequiredFixLenBinaryMemberName_;");
                         }
@@ -561,7 +561,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_NullableFixLenStringMemberName_ = source._T_NullableFixLenStringMemberName_;");
                         }
@@ -572,7 +572,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_RequiredFixLenStringMemberName_ = source._T_RequiredFixLenStringMemberName_;");
                         }
@@ -614,7 +614,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_NullableFixLenBinaryMemberName_ = source.T_NullableFixLenBinaryMemberName_;");
                         }
@@ -625,7 +625,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_RequiredFixLenBinaryMemberName_ = source.T_RequiredFixLenBinaryMemberName_;");
                         }
@@ -638,7 +638,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_NullableFixLenStringMemberName_ = source.T_NullableFixLenStringMemberName_;");
                         }
@@ -649,7 +649,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("            _T_RequiredFixLenStringMemberName_ = source.T_RequiredFixLenStringMemberName_;");
                         }
@@ -687,7 +687,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("");
         if (false)
         {
-            Emit("        private const int T_ScalarFieldOffset_ = 0;");
+            Emit("        private const int T_RequiredScalarFieldOffset_ = 0;");
             Emit("        private const int T_NullableEntityFieldOffset_ = 64;");
             Emit("        private const int T_RequiredEntityFieldOffset_ = 128;");
             Emit("        private const int T_NullableFixLenBinaryFieldOffset_ = 192;");
@@ -708,7 +708,6 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("");
             Emit("        private const int T_FieldLength_ = 8;");
             Emit("        private const bool T_IsBigEndian_ = false;");
-            Emit("        private const int T_ArrayLength_ = 4;");
         }
         foreach (var member in entity.Members)
         {
@@ -722,8 +721,8 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     Emit("        public T_MemberType_ T_RequiredScalarMemberName_");
                     Emit("        {");
-                    Emit("            get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span);");
-                    Emit("            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));");
+                    Emit("            get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span);");
+                    Emit("            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));");
                     Emit("        }");
                     break;
                 case MemberKind.Entity:
@@ -814,7 +813,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("        private void T_NullableFixLenBinaryMemberName__Pack()");
                             Emit("        {");
@@ -866,7 +865,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("        private void T_RequiredFixLenBinaryMemberName__Pack()");
                             Emit("        {");
@@ -920,7 +919,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("        private void T_NullableFixLenStringMemberName__Pack()");
                             Emit("        {");
@@ -980,7 +979,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     }
                     else
                     {
-                        if (member.IsFixedLength)
+                        if (member.IsEmbedded)
                         {
                             Emit("        private void T_RequiredFixLenStringMemberName__Pack()");
                             Emit("        {");

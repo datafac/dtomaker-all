@@ -3,19 +3,16 @@ using System.Collections.Generic;
 
 namespace DTOMaker.SrcGen.Core
 {
-    public record class Phase1Entity : IResolvedEntity
+    public record class Phase1Entity
     {
         public TypeFullName TFN { get; init; } = new();
         public int EntityId { get; init; }
-        public int KeyOffset { get; init; }
         public int ClassHeight { get; init; }
         public EquatableArray<OutputMember> Members { get; init; } = EquatableArray<OutputMember>.Empty;
         public TypeFullName? BaseTFN { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
-
-        public IResolvedEntity? BaseEntity => throw new System.NotImplementedException();
-        public IReadOnlyCollection<IResolvedEntity> DerivedEntities => throw new System.NotImplementedException();
-        IReadOnlyCollection<Diagnostic> IResolvedEntity.Diagnostics => Diagnostics;
+        public int KeyOffset { get; init; }
+        public int BlockLength { get; init; }
 
         public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
     }

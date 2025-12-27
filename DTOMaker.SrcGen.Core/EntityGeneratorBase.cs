@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace DTOMaker.SrcGen.Core
@@ -106,7 +107,7 @@ namespace DTOMaker.SrcGen.Core
             if (_parameters.GeneratorId == GeneratorId.MemBlocks 
                 && (member.Kind == MemberKind.String || member.Kind == MemberKind.Binary))
             {
-                sb.Append(member.IsFixedLength ? "FixLen" : "VarLen");
+                sb.Append(member.IsEmbedded ? "FixLen" : "VarLen");
             }
             sb.Append(member.Kind switch
             {
@@ -143,6 +144,18 @@ namespace DTOMaker.SrcGen.Core
             tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
 
+            // ---------- MemBlocks tokens ----------
+            tokens[BuildTokenName(member, "FieldOffset")] = member.FieldOffset;
+            tokens["FieldLength"] = member.FieldLength;
+            //tokens["IsBigEndian"] = member.IsBigEndian;
+            tokens["MemberSequenceR4"] = member.Sequence.ToString().PadLeft(4);
+            tokens["FieldOffsetR4"] = member.FieldOffset.ToString().PadLeft(4);
+            tokens["FieldLengthR4"] = member.FieldLength.ToString().PadLeft(4);
+            tokens["MemberBELE"] = member.IsBigEndian ? "BE" : "LE";
+            string memberType = language.GetDataTypeToken(member.MemberType);
+            tokens["MemberTypeL7"] = memberType.PadRight(7);
+
+            // ---------- MessagePack tokens ----------
             var keyOffset = entity.KeyOffset;
             if (keyOffset == 0)
             {
@@ -153,7 +166,23 @@ namespace DTOMaker.SrcGen.Core
             return _tokenStack.NewScope(tokens);
         }
 
-        protected IDisposable NewScope(Phase1Entity entity)
+        //protected IDisposable NewScope(Phase1Entity entity)
+        //{
+        //    string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
+        //    var tokens = new Dictionary<string, object?>()
+        //    {
+        //        ["IntfNameSpace"] = entity.TFN.Intf.Space,
+        //        ["EntityIntfName"] = entity.TFN.Intf.Name,
+        //        ["ImplNameSpace"] = entity.TFN.Impl.Space,
+        //        ["EntityImplName"] = entity.TFN.Impl.Name,
+        //        ["AbstractEntity"] = entity.TFN.Impl.Name,
+        //        ["ConcreteEntity"] = entity.TFN.Impl.Name,
+        //        ["EntityId"] = entity.EntityId,
+        //    };
+        //    return _tokenStack.NewScope(tokens);
+        //}
+
+        protected IDisposable NewScope(Phase2Entity entity)
         {
             string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
             var tokens = new Dictionary<string, object?>()
@@ -165,11 +194,18 @@ namespace DTOMaker.SrcGen.Core
                 ["AbstractEntity"] = entity.TFN.Impl.Name,
                 ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
+                ["ClassHeight"] = entity.ClassHeight,
+                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? "DTOMaker.Runtime",
+                ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? "IEntityBase",
+                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
+                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
+                ["BlockLength"] = entity.BlockLength,
+                ["BlockStructureCode"] = entity.BlockStructureCode, // todo format as hex eg. 0x0041L
             };
             return _tokenStack.NewScope(tokens);
         }
 
-        protected IDisposable NewScope(IResolvedEntity entity)
+        protected IDisposable NewScope(OutputEntity entity)
         {
             string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
             var tokens = new Dictionary<string, object?>()
@@ -186,30 +222,11 @@ namespace DTOMaker.SrcGen.Core
                 ["BaseIntfName"] =      entity.BaseEntity?.TFN.Intf.Name ?? "IEntityBase",
                 ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
                 ["BaseImplName"] =      entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
+                ["BlockLength"] = entity.BlockLength,
+                ["BlockStructureCode"] = entity.BlockStructureCode, // todo format as hex eg. 0x0041L
             };
             return _tokenStack.NewScope(tokens);
         }
-
-        //protected IDisposable NewScope(OutputEntity entity)
-        //{
-        //    string implSpaceSuffix = entity.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
-        //    var tokens = new Dictionary<string, object?>()
-        //    {
-        //        ["IntfNameSpace"] = entity.Intf.Space,
-        //        ["EntityIntfName"] = entity.Intf.Name,
-        //        ["ImplNameSpace"] = entity.Impl.Space,
-        //        ["EntityImplName"] = entity.Impl.Name,
-        //        ["AbstractEntity"] = entity.Impl.Name,
-        //        ["ConcreteEntity"] = entity.Impl.Name,
-        //        ["EntityId"] = entity.EntityId,
-        //        ["ClassHeight"] = entity.ClassHeight,
-        //        ["BaseIntfNameSpace"] = entity.BaseEntity is null ? "DTOMaker.Runtime" : entity.BaseEntity.TFN.Intf.Space,
-        //        ["BaseIntfName"] = entity.BaseEntity is null ? "IEntityBase" : entity.BaseEntity.TFN.Intf.Name,
-        //        ["BaseImplNameSpace"] = entity.BaseEntity is null ? $"DTOMaker.Runtime.{implSpaceSuffix}" : entity.BaseEntity.TFN.Impl.Space,
-        //        ["BaseImplName"] = entity.BaseEntity is null ? "EntityBase" : entity.BaseEntity.TFN.Impl.Name,
-        //    };
-        //    return _tokenStack.NewScope(tokens);
-        //}
 
         protected abstract void OnGenerate(OutputEntity entity);
         public string GenerateSourceText(OutputEntity entity)

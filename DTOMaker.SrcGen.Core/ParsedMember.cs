@@ -13,22 +13,21 @@ namespace DTOMaker.SrcGen.Core
         public MemberKind Kind { get; init; }
         public bool IsNullable { get; init; }
         public bool IsObsolete { get; init; }
-        public string ObsoleteMessage { get; init; }
-        public bool ObsoleteIsErrorqqq { get; init; }
-        public int FixedLength { get; init; }
+        public string ObsoleteMessage { get; init; } = string.Empty;
+        public bool ObsoleteIsError { get; init; } 
+        public int FieldOffset { get; init; }
+        public int FieldLength { get; init; }
+        public bool IsBigEndian { get; init; }
+        public bool IsExternal { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
 
-        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, bool isObsolete, string obsoleteMessage, bool obsoleteIsError, int fixedLength, IEnumerable<Diagnostic> diagnostics)
+        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, IEnumerable<Diagnostic> diagnostics)
         {
             FullName = fullname;
             Sequence = sequence;
             MemberType = memberType;
             Kind = kind;
             IsNullable = isNullable;
-            IsObsolete = isObsolete;
-            ObsoleteMessage = obsoleteMessage;
-            ObsoleteIsErrorqqq = obsoleteIsError;
-            FixedLength = fixedLength;
             Diagnostics = new EquatableArray<Diagnostic>(diagnostics);
 
             // derived properties

@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace DTOMaker.SrcGen.Core
@@ -37,7 +40,10 @@ namespace DTOMaker.SrcGen.Core
         public const string IdAttribute = nameof(IdAttribute);
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
-        public const string FixedLengthAttribute = nameof(FixedLengthAttribute);
+        public const string LengthAttribute = nameof(LengthAttribute);
+        public const string OffsetAttribute = nameof(OffsetAttribute);
+        public const string EndianAttribute = nameof(EndianAttribute);
+        public const int BlobIdV1Size = 64;
 
         protected abstract SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context);
         protected abstract void OnEndInitialize(IncrementalGeneratorInitializationContext context, IncrementalValuesProvider<OutputEntity> model);
@@ -110,7 +116,55 @@ namespace DTOMaker.SrcGen.Core
             return Diagnostic.Create(DiagnosticsEN.DME01, location);
         }
 
-        private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
+        private static bool IsPowerOf2(int value, int minimum = 1, int maximum = 8192)
+        {
+            if (value < minimum) return false;
+            if (value > maximum) return false;
+            int comparand = 1;
+            while (true)
+            {
+                if (comparand > value) return false;
+                if (value == comparand) return true;
+                comparand = comparand * 2;
+            }
+        }
+
+        private static int GetFieldLength(TypeFullName tfn)
+        {
+            string typeName = tfn.Impl.FullName;
+            switch (typeName)
+            {
+                case KnownType.SystemBoolean:
+                case KnownType.SystemByte:
+                case KnownType.SystemSByte:
+                    return 1;
+                case KnownType.SystemInt16:
+                case KnownType.SystemUInt16:
+                case KnownType.SystemChar:
+                case KnownType.SystemHalf:
+                    return 2;
+                case KnownType.SystemInt32:
+                case KnownType.SystemUInt32:
+                case KnownType.SystemSingle:
+                case KnownType.PairOfInt16:
+                    return 4;
+                case KnownType.SystemInt64:
+                case KnownType.SystemUInt64:
+                case KnownType.SystemDouble:
+                case KnownType.PairOfInt32:
+                    return 8;
+                case KnownType.SystemInt128:
+                case KnownType.SystemUInt128:
+                case KnownType.SystemGuid:
+                case KnownType.SystemDecimal:
+                case KnownType.PairOfInt64:
+                    return 16;
+                default:
+                    return 0;
+            }
+        }
+
+        private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
         {
             List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -131,12 +185,19 @@ namespace DTOMaker.SrcGen.Core
                 return null;
             }
 
+            string fullname = propSymbol.ToString();
+
+            (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, srcGenParams.ImplSpaceSuffix);
+
             // Get the namespace the enum is declared in, if any
             int sequence = 0;
             bool isObsolete = false;
             string obsoleteMessage = string.Empty;
             bool obsoleteIsError = false;
-            int fixedLength = 0;
+            int fieldOffset = 0;
+            int fieldLength = GetFieldLength(tfn);
+            bool isBigEndian = false;
+            bool isExternal = false;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
@@ -164,11 +225,20 @@ namespace DTOMaker.SrcGen.Core
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
-                    case FixedLengthAttribute:
-                        // get sequence
+                    case LengthAttribute: // used by MemBlocks
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fixedLength = value; });
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fieldLength = value; });
+                        break;
+                    case OffsetAttribute: // used by MemBlocks
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fieldOffset = value; });
+                        break;
+                    case EndianAttribute: // used by MemBlocks
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 0, (value) => { isBigEndian = value; });
                         break;
                     default:
                         // ignore other attributes
@@ -187,13 +257,47 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
             }
 
-            // Get the full type name of the enum e.g. Colour, 
-            // or OuterClass<T>.Colour if it was nested in a generic type (for example)
-            string fullname = propSymbol.ToString();
+            // MemBlocks checks todo move to specific generator
+            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
+            {
+                // set default length for Octets and String
+                if (fieldLength == 0 && (kind == MemberKind.String || kind == MemberKind.Binary))
+                {
+                    fieldLength = BlobIdV1Size;
+                    isExternal = true;
+                }
+                // set default length for Octets and String
+                if (kind == MemberKind.Entity)
+                {
+                    fieldLength = BlobIdV1Size;
+                    isExternal = true;
+                }
 
-            (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, implSpaceSuffix);
+                // checks
+                if (!IsPowerOf2(fieldLength, 1, 1024))
+                {
+                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME06, location));
+                }
+                if (fieldOffset < 0)
+                {
+                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME07, location));
+                }
+                if (isNullable && kind == MemberKind.Native)
+                {
+                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME08, location));
+                }
+            }
 
-            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, isObsolete, obsoleteMessage, obsoleteIsError, fixedLength, diagnostics);
+            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, diagnostics)
+            { 
+                IsObsolete = isObsolete,
+                ObsoleteMessage = obsoleteMessage,
+                ObsoleteIsError = obsoleteIsError,
+                FieldOffset = fieldOffset,
+                FieldLength = fieldLength,
+                IsBigEndian = isBigEndian,
+                IsExternal = isExternal,
+            };
         }
 
         private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
@@ -220,39 +324,7 @@ namespace DTOMaker.SrcGen.Core
             return (tfn, kind, isNullable);
         }
 
-        private static MemberKind GetMemberKind(ITypeSymbol typeSymbol)
-        {
-            string fullname = typeSymbol.ToString();
-            return fullname switch
-            {
-                KnownType.SystemBoolean => MemberKind.Native,
-                KnownType.SystemSByte => MemberKind.Native,
-                KnownType.SystemByte => MemberKind.Native,
-                KnownType.SystemInt16 => MemberKind.Native,
-                KnownType.SystemUInt16 => MemberKind.Native,
-                KnownType.SystemChar => MemberKind.Native,
-                KnownType.SystemHalf => MemberKind.Native,
-                KnownType.SystemInt32 => MemberKind.Native,
-                KnownType.SystemUInt32 => MemberKind.Native,
-                KnownType.SystemSingle => MemberKind.Native,
-                KnownType.SystemInt64 => MemberKind.Native,
-                KnownType.SystemUInt64 => MemberKind.Native,
-                KnownType.SystemDouble => MemberKind.Native,
-                KnownType.SystemInt128 => MemberKind.Native,
-                KnownType.SystemUInt128 => MemberKind.Native,
-                KnownType.SystemGuid => MemberKind.Native,
-                KnownType.SystemDecimal => MemberKind.Native,
-                KnownType.SystemString => MemberKind.String,
-                // custom types
-                KnownType.PairOfInt16 => MemberKind.Native,
-                KnownType.PairOfInt32 => MemberKind.Native,
-                KnownType.PairOfInt64 => MemberKind.Native,
-                KnownType.MemoryOctets => MemberKind.Binary,
-                _ => MemberKind.Unknown,
-            };
-        }
-
-        private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, string implSpaceSuffix)
+        private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
         {
             List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -276,6 +348,7 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
+            int blockLength = 16; // todo calculate block length
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in intfSymbol.GetAttributes())
@@ -297,11 +370,15 @@ namespace DTOMaker.SrcGen.Core
                             CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; });
                         break;
-                    case KeyOffsetAttribute:
-                        // get member key offset (used by MessagePack source generators)
+                    case KeyOffsetAttribute: // used by MessagePack 
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
+                        break;
+                    case LengthAttribute: // used by MemBlocks
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
                         break;
                     default:
                         // ignore other attributes
@@ -318,6 +395,15 @@ namespace DTOMaker.SrcGen.Core
             if (entityId <= 0)
             {
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME03, location));
+            }
+
+            // MemBlocks checks todo move to specific generator
+            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
+            {
+                if (!IsPowerOf2(blockLength, 1, 8192))
+                {
+                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME05, location));
+                }
             }
 
             // Get the full type name of the enum e.g. Colour, 
@@ -338,8 +424,12 @@ namespace DTOMaker.SrcGen.Core
             //}
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
-            TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, implSpaceSuffix) : null;
-            return new ParsedEntity(new TypeFullName(intfSymbol, implSpaceSuffix), entityId, keyOffset, baseTFN, diagnostics);
+            TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, srcGenParams.ImplSpaceSuffix) : null;
+            return new ParsedEntity(new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
+            {
+                KeyOffset = keyOffset,
+                BlockLength = blockLength,
+            };
         }
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
@@ -413,10 +503,13 @@ namespace DTOMaker.SrcGen.Core
                         Kind = member.Kind,
                         IsNullable = member.IsNullable,
                         IsObsolete = member.IsObsolete,
-                        ObsoleteMessage = member.ObsoleteMessage,
-                        ObsoleteIsError = member.ObsoleteIsErrorqqq,
-                        FixedLength = member.FixedLength,
                         Diagnostics = member.Diagnostics,
+                        ObsoleteMessage = member.ObsoleteMessage,
+                        ObsoleteIsError = member.ObsoleteIsError,
+                        FieldOffset = member.FieldOffset,
+                        FieldLength = member.FieldLength,
+                        IsBigEndian = member.IsBigEndian,
+                        IsExternal = member.IsExternal,
                     });
                 }
             }
@@ -425,11 +518,12 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
-                KeyOffset = entity.KeyOffset,
                 ClassHeight = classHeight,
                 Members = new EquatableArray<OutputMember>(outputMembers.OrderBy(m => m.Sequence)),
                 BaseTFN = entity.BaseTFN,
                 Diagnostics = entity.Diagnostics,
+                KeyOffset = entity.KeyOffset,
+                BlockLength = entity.BlockLength,
             };
         }
 
@@ -441,12 +535,14 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
-                KeyOffset = entity.KeyOffset,
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
                 DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
                 Diagnostics = entity.Diagnostics,
+                KeyOffset = entity.KeyOffset,
+                BlockLength = entity.BlockLength,
+                BlockStructureCode = 0L, // todo calc block structure code
             };
         }
 
@@ -458,12 +554,14 @@ namespace DTOMaker.SrcGen.Core
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
-                KeyOffset = entity.KeyOffset,
                 ClassHeight = entity.ClassHeight,
                 Members = entity.Members,
                 BaseEntity = baseEntity,
                 DerivedEntities = new EquatableArray<Phase2Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
                 Diagnostics = entity.Diagnostics,
+                KeyOffset = entity.KeyOffset,
+                BlockLength = entity.BlockLength,
+                BlockStructureCode = entity.BlockStructureCode,
             };
         }
 
@@ -486,7 +584,7 @@ namespace DTOMaker.SrcGen.Core
         {
             // do derived stuff
             SourceGeneratorParameters srcGenParams = OnBeginInitialize(context);
-            string implSpaceSuffix = srcGenParams.ImplSpaceSuffix!;
+            //string implSpaceSuffix = srcGenParams.ImplSpaceSuffix!;
 
 
             // filter for entities
@@ -494,7 +592,7 @@ namespace DTOMaker.SrcGen.Core
                 .ForAttributeWithMetadataName(
                     "DTOMaker.Models.EntityAttribute",
                     predicate: static (syntaxNode, _) => syntaxNode is InterfaceDeclarationSyntax,
-                    transform: (ctx, _) => GetParsedEntity(ctx, implSpaceSuffix))
+                    transform: (ctx, _) => GetParsedEntity(ctx, srcGenParams))
                 .Where(static e => e is not null)!;
 
             // filter for Members
@@ -502,7 +600,7 @@ namespace DTOMaker.SrcGen.Core
                 .ForAttributeWithMetadataName(
                     "DTOMaker.Models.MemberAttribute",
                     predicate: static (syntaxNode, _) => syntaxNode is PropertyDeclarationSyntax,
-                    transform: (ctx, _) => GetParsedMember(ctx, implSpaceSuffix))
+                    transform: (ctx, _) => GetParsedMember(ctx, srcGenParams))
                 .Where(static m => m is not null)!;
 
             // add base entity

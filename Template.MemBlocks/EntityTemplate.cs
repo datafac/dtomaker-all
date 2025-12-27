@@ -349,13 +349,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_NullableFixLenBinaryMemberName__Pack();
             //##} else {
             await T_NullableVarLenBinaryMemberName__Pack(dataStore);
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_RequiredFixLenBinaryMemberName__Pack();
             //##} else {
             await T_RequiredVarLenBinaryMemberName__Pack(dataStore);
@@ -364,13 +364,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_NullableFixLenStringMemberName__Pack();
             //##} else {
             await T_NullableVarLenStringMemberName__Pack(dataStore);
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_RequiredFixLenStringMemberName__Pack();
             //##} else {
             await T_RequiredVarLenStringMemberName__Pack(dataStore);
@@ -401,13 +401,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_NullableFixLenBinaryMemberName__Unpack();
             //##} else {
             await T_NullableVarLenBinaryMemberName__Unpack(dataStore);
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_RequiredFixLenBinaryMemberName__Unpack();
             //##} else {
             await T_RequiredVarLenBinaryMemberName__Unpack(dataStore);
@@ -416,13 +416,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_NullableFixLenStringMemberName__Unpack();
             //##} else {
             await T_NullableVarLenStringMemberName__Unpack(dataStore);
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             T_RequiredFixLenStringMemberName__Unpack();
             //##} else {
             await T_RequiredVarLenStringMemberName__Unpack(dataStore);
@@ -437,11 +437,11 @@ namespace T_ImplNameSpace_
         }
 
         // -------------------- field map -----------------------------
-        //  Seq.  Off.  Len.  N.    Type    End.  Name
-        //  ----  ----  ----  ----  ------- ----  -------
+        //  Seq.  Off.  Len.  End.  Type    Name
+        //  ----  ----  ----  ----  ------- -------
         //##foreach (var member in entity.Members) {
         //##using var _ = NewScope(entity, member);
-        //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_ArrayLengthR4_  T_MemberTypeL7_ T_MemberBELE_    T_MemberName_
+        //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_MemberBELE_    T_MemberTypeL7_ T_MemberName_
         //##}
         // ------------------------------------------------------------
 
@@ -472,13 +472,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_NullableFixLenBinaryMemberName_ = source._T_NullableFixLenBinaryMemberName_;
             //##} else {
             _T_NullableVarLenBinaryMemberName_ = source._T_NullableVarLenBinaryMemberName_;
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_RequiredFixLenBinaryMemberName_ = source._T_RequiredFixLenBinaryMemberName_;
             //##} else {
             _T_RequiredVarLenBinaryMemberName_ = source._T_RequiredVarLenBinaryMemberName_;
@@ -487,13 +487,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_NullableFixLenStringMemberName_ = source._T_NullableFixLenStringMemberName_;
             //##} else {
             _T_NullableVarLenStringMemberName_ = source._T_NullableVarLenStringMemberName_;
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_RequiredFixLenStringMemberName_ = source._T_RequiredFixLenStringMemberName_;
             //##} else {
             _T_RequiredVarLenStringMemberName_ = source._T_RequiredVarLenStringMemberName_;
@@ -526,13 +526,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_NullableFixLenBinaryMemberName_ = source.T_NullableFixLenBinaryMemberName_;
             //##} else {
             _T_NullableVarLenBinaryMemberName_ = source.T_NullableVarLenBinaryMemberName_;
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_RequiredFixLenBinaryMemberName_ = source.T_RequiredFixLenBinaryMemberName_;
             //##} else {
             _T_RequiredVarLenBinaryMemberName_ = source.T_RequiredVarLenBinaryMemberName_;
@@ -541,13 +541,13 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_NullableFixLenStringMemberName_ = source.T_NullableFixLenStringMemberName_;
             //##} else {
             _T_NullableVarLenStringMemberName_ = source.T_NullableVarLenStringMemberName_;
             //##}
             //##} else {
-            //##if (member.IsFixedLength) {
+            //##if (member.IsEmbedded) {
             _T_RequiredFixLenStringMemberName_ = source.T_RequiredFixLenStringMemberName_;
             //##} else {
             _T_RequiredVarLenStringMemberName_ = source.T_RequiredVarLenStringMemberName_;
@@ -581,7 +581,7 @@ namespace T_ImplNameSpace_
         public T_EntityImplName_(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
         //##if(false) {
-        private const int T_ScalarFieldOffset_ = 0;
+        private const int T_RequiredScalarFieldOffset_ = 0;
         private const int T_NullableEntityFieldOffset_ = 64;
         private const int T_RequiredEntityFieldOffset_ = 128;
         private const int T_NullableFixLenBinaryFieldOffset_ = 192;
@@ -602,7 +602,6 @@ namespace T_ImplNameSpace_
 
         private const int T_FieldLength_ = 8;
         private const bool T_IsBigEndian_ = false;
-        private const int T_ArrayLength_ = 4;
         //##}
         //##foreach (var member in entity.Members) {
         //##using var _ = NewScope(entity, member);
@@ -613,8 +612,8 @@ namespace T_ImplNameSpace_
         //##}
         public T_MemberType_ T_RequiredScalarMemberName_
         {
-            get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span);
-            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_ScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
+            get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span);
+            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
         }
         //##break;
         //##case MemberKind.Entity:
@@ -699,7 +698,7 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.Binary:
         //##if (member.IsNullable) {
-        //##if (member.IsFixedLength) {
+        //##if (member.IsEmbedded) {
         private void T_NullableFixLenBinaryMemberName__Pack()
         {
             Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_NullableFixLenBinaryFieldOffset_, T_NullableFixLenBinaryFieldLength_),
@@ -744,7 +743,7 @@ namespace T_ImplNameSpace_
         }
         //##}
         //##} else {
-        //##if (member.IsFixedLength) {
+        //##if (member.IsEmbedded) {
         private void T_RequiredFixLenBinaryMemberName__Pack()
         {
             Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredFixLenBinaryFieldOffset_, T_RequiredFixLenBinaryFieldLength_),
@@ -792,7 +791,7 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
-        //##if (member.IsFixedLength) {
+        //##if (member.IsEmbedded) {
         private void T_NullableFixLenStringMemberName__Pack()
         {
             Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_NullableFixLenStringFieldOffset_, T_NullableFixLenStringFieldLength_),
@@ -845,7 +844,7 @@ namespace T_ImplNameSpace_
         }
         //##}
         //##} else {
-        //##if (member.IsFixedLength) {
+        //##if (member.IsEmbedded) {
         private void T_RequiredFixLenStringMemberName__Pack()
         {
             Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredFixLenStringFieldOffset_, T_RequiredFixLenStringFieldLength_),

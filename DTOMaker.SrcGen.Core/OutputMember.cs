@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace DTOMaker.SrcGen.Core
 {
@@ -12,8 +13,11 @@ namespace DTOMaker.SrcGen.Core
         public bool IsObsolete { get; init; }
         public string ObsoleteMessage { get; init; } = string.Empty;
         public bool ObsoleteIsError { get; init; }
-        public int FixedLength { get; init; }
-        public bool IsFixedLength => FixedLength > 0;
+        public int FieldOffset { get; init; }
+        public int FieldLength { get; init; }
+        public bool IsBigEndian { get; init; }
+        public bool IsExternal { get; init; }
+        public bool IsEmbedded => !IsExternal;
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     }
 }

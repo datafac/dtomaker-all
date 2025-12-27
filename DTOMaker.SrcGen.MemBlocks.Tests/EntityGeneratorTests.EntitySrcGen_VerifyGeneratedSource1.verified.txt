@@ -7,26 +7,25 @@
 using DataFac.Memory;
 using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlocks;
+using DataFac.Storage;
 using System;
-using System.Linq;
+using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
     public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
+        private const long BlockStructureCode = 0L;
+        private const int ClassHeight = 2;
+        private const int BlockLength = 16;
+        private readonly Memory<byte> _writableLocalBlock;
+        private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
-        protected override int OnGetEntityId() => 2;
-
-        private static Derived CreateEmpty()
-        {
-            var empty = new Derived();
-            empty.Freeze();
-            return empty;
-        }
-        private static readonly Derived _empty = CreateEmpty();
-        public static new Derived Empty => _empty;
+        private static readonly BlockHeader _header = BlockHeader.CreateNew(2, BlockStructureCode);
 
         public new static Derived CreateFrom(Derived source)
         {
@@ -46,47 +45,134 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
-        public new static Derived CreateNewFromId(int entityId)
+        public new static Derived CreateFrom(ReadOnlySequence<byte> buffers)
         {
-            if (entityId == 2) return new Derived();
-            return entityId switch
+            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
+            return blocks.Header.EntityId switch
             {
-                _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
+                _ => new MyOrg.Models.MemBlocks.Derived(blocks)
             };
         }
+
+        protected override int OnGetEntityId() => 2;
+        protected override int OnGetClassHeight() => ClassHeight;
+        protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        protected override IEntityBase OnPartCopy() => new Derived(this);
 
         protected override void OnFreeze()
         {
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Derived(this);
-
-        public Derived() { }
-        public Derived(MyOrg.Models.IDerived source) : base(source)
+        protected override async ValueTask OnPack(IDataStore dataStore)
         {
-            _Field11 = source.Field11;
-            _Field12 = source.Field12;
+            await base.OnPack(dataStore);
+            await Field11_Pack(dataStore);
+            await Field12_Pack(dataStore);
         }
-        public Derived(Derived source) : base(source)
+
+        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
         {
+            await base.OnUnpack(dataStore, depth);
+            await Field11_Unpack(dataStore);
+            await Field12_Unpack(dataStore);
+        }
+
+        // -------------------- field map -----------------------------
+        //  Seq.  Off.  Len.  End.  Type    Name
+        //  ----  ----  ----  ----  ------- -------
+        //     1     0    64  LE    String  Field11
+        //     2     0    64  LE    String  Field12
+        // ------------------------------------------------------------
+
+        protected Derived(BlockHeader header) : base(header)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+        }
+        public Derived() : base(_header)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+        }
+
+        protected Derived(BlockHeader header, Derived source) : base(header, source)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             _Field11 = source._Field11;
             _Field12 = source._Field12;
         }
+        public Derived(Derived source) : this(_header, source) { }
 
-        [JsonIgnore]
+        protected Derived(BlockHeader header, MyOrg.Models.IDerived source) : base(header, source)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _Field11 = source.Field11;
+            _Field12 = source.Field12;
+        }
+        public Derived(MyOrg.Models.IDerived source) : this(_header, source) { }
+
+        protected Derived(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
+        {
+            var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
+            if (sourceBlock.Length < BlockLength)
+            {
+                // source too small - allocate new
+                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+                sourceBlock.CopyTo(_writableLocalBlock);
+            }
+            else
+            {
+                _readonlyLocalBlock = sourceBlock;
+                _writableLocalBlock = Memory<byte>.Empty;
+            }
+        }
+        internal Derived(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+        public Derived(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
+
+        private async ValueTask Field11_Pack(IDataStore dataStore)
+        {
+            BlobIdV1 blobId = default;
+            var buffer = System.Text.Encoding.UTF8.GetBytes(_Field11);
+            blobId = await dataStore.PutBlob(buffer);
+            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+        }
+        private async ValueTask Field11_Unpack(IDataStore dataStore)
+        {
+            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            var blob = await dataStore.GetBlob(blobId);
+#if NET8_0_OR_GREATER
+            _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+#else
+            _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
+#endif
+        }
         private string _Field11 = string.Empty;
         public string Field11
         {
-            get => _Field11;
+            get => IfUnpacked(_Field11);
             set => _Field11 = IfNotFrozen(value);
         }
 
-        [JsonIgnore]
+        private async ValueTask Field12_Pack(IDataStore dataStore)
+        {
+            BlobIdV1 blobId = _Field12 is null
+                ? default
+                : blobId = await dataStore.PutBlob(System.Text.Encoding.UTF8.GetBytes(_Field12));
+            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+        }
+        private async ValueTask Field12_Unpack(IDataStore dataStore)
+        {
+            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            var blob = await dataStore.GetBlob(blobId);
+#if NET8_0_OR_GREATER
+            _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+#else
+            _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
+#endif
+        }
         private string? _Field12;
         public string? Field12
         {
-            get => _Field12;
+            get => IfUnpacked(_Field12);
             set => _Field12 = IfNotFrozen(value);
         }
 
@@ -96,32 +182,13 @@ namespace MyOrg.Models.MemBlocks
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field11 != other.Field11) return false;
-            if (_Field12 != other.Field12) return false;
+            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
-
         public override bool Equals(object? obj) => obj is Derived other && Equals(other);
+        public override int GetHashCode() => base.GetHashCode();
         public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
-
-        private int CalcHashCode()
-        {
-            HashCode result = new HashCode();
-            result.Add(base.GetHashCode());
-            result.Add(_Field11);
-            result.Add(_Field12);
-            return result.ToHashCode();
-        }
-
-        private int? _hashCode;
-        public override int GetHashCode()
-        {
-            if (!IsFrozen) return CalcHashCode();
-            if (_hashCode.HasValue) return _hashCode.Value;
-            _hashCode = CalcHashCode();
-            return _hashCode.Value;
-        }
 
     }
 }

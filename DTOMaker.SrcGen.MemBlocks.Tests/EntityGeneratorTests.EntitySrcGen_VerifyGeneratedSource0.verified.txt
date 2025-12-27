@@ -7,28 +7,25 @@
 using DataFac.Memory;
 using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlocks;
+using DataFac.Storage;
 using System;
-using System.Linq;
+using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
-
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.MemBlocks.Derived), 2)]
     public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
+        private const long BlockStructureCode = 0L;
+        private const int ClassHeight = 1;
+        private const int BlockLength = 16;
+        private readonly Memory<byte> _writableLocalBlock;
+        private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
-        protected override int OnGetEntityId() => 1;
-
-        private static MyDTO CreateEmpty()
-        {
-            var empty = new MyDTO();
-            empty.Freeze();
-            return empty;
-        }
-        private static readonly MyDTO _empty = CreateEmpty();
-        public static new MyDTO Empty => _empty;
+        private static readonly BlockHeader _header = BlockHeader.CreateNew(1, BlockStructureCode);
 
         public new static MyDTO CreateFrom(MyDTO source)
         {
@@ -50,49 +47,96 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
-        public new static MyDTO CreateNewFromId(int entityId)
+        public new static MyDTO CreateFrom(ReadOnlySequence<byte> buffers)
         {
-            if (entityId == 1) return new MyDTO();
-            return entityId switch
+            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
+            return blocks.Header.EntityId switch
             {
-                2 => new MyOrg.Models.MemBlocks.Derived(),
-                _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
+                2 => new MyOrg.Models.MemBlocks.Derived(blocks),
+                _ => new MyOrg.Models.MemBlocks.MyDTO(blocks)
             };
         }
+
+        protected override int OnGetEntityId() => 1;
+        protected override int OnGetClassHeight() => ClassHeight;
+        protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
         protected override void OnFreeze()
         {
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
-
-        public MyDTO() { }
-        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
+        protected override async ValueTask OnPack(IDataStore dataStore)
         {
-            _Field1 = source.Field1;
-            _Field2 = source.Field2;
-        }
-        public MyDTO(MyDTO source) : base(source)
-        {
-            _Field1 = source._Field1;
-            _Field2 = source._Field2;
+            await base.OnPack(dataStore);
         }
 
-        [JsonIgnore]
-        private Int32 _Field1 = default;
+        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
+        {
+            await base.OnUnpack(dataStore, depth);
+        }
+
+        // -------------------- field map -----------------------------
+        //  Seq.  Off.  Len.  End.  Type    Name
+        //  ----  ----  ----  ----  ------- -------
+        //     1     0     4  LE    Int32   Field1
+        //     2     0     8  LE    Int64   Field2
+        // ------------------------------------------------------------
+
+        protected MyDTO(BlockHeader header) : base(header)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+        }
+        public MyDTO() : base(_header)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+        }
+
+        protected MyDTO(BlockHeader header, MyDTO source) : base(header, source)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            this.Field1 = source.Field1;
+            this.Field2 = source.Field2;
+        }
+        public MyDTO(MyDTO source) : this(_header, source) { }
+
+        protected MyDTO(BlockHeader header, MyOrg.Models.IMyDTO source) : base(header, source)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            this.Field1 = source.Field1;
+            this.Field2 = source.Field2;
+        }
+        public MyDTO(MyOrg.Models.IMyDTO source) : this(_header, source) { }
+
+        protected MyDTO(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
+        {
+            var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
+            if (sourceBlock.Length < BlockLength)
+            {
+                // source too small - allocate new
+                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+                sourceBlock.CopyTo(_writableLocalBlock);
+            }
+            else
+            {
+                _readonlyLocalBlock = sourceBlock;
+                _writableLocalBlock = Memory<byte>.Empty;
+            }
+        }
+        internal MyDTO(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+        public MyDTO(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
+
         public Int32 Field1
         {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
+            get => Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span);
+            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, IfNotFrozen(value));
         }
 
-        [JsonIgnore]
-        private Int32? _Field2;
-        public Int32? Field2
+        public Int64 Field2
         {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
+            get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
+            set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
         }
 
 
@@ -101,32 +145,13 @@ namespace MyOrg.Models.MemBlocks
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other.Field1) return false;
-            if (_Field2 != other.Field2) return false;
+            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
-
         public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public override int GetHashCode() => base.GetHashCode();
         public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
-
-        private int CalcHashCode()
-        {
-            HashCode result = new HashCode();
-            result.Add(base.GetHashCode());
-            result.Add(_Field1);
-            result.Add(_Field2);
-            return result.ToHashCode();
-        }
-
-        private int? _hashCode;
-        public override int GetHashCode()
-        {
-            if (!IsFrozen) return CalcHashCode();
-            if (_hashCode.HasValue) return _hashCode.Value;
-            _hashCode = CalcHashCode();
-            return _hashCode.Value;
-        }
 
     }
 }
