@@ -266,6 +266,11 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
             }
 
+            if (kind == MemberKind.Unknown)
+            {
+                diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME10, location));
+            }
+
             // MemBlocks checks todo move to specific generator
             if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
             {
