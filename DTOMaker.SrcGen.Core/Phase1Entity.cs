@@ -5,6 +5,7 @@ namespace DTOMaker.SrcGen.Core
 {
     public record class Phase1Entity
     {
+        public Location Location { get; init; } = Location.None;
         public TypeFullName TFN { get; init; } = new();
         public int EntityId { get; init; }
         public int ClassHeight { get; init; }

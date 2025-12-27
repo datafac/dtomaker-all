@@ -28,6 +28,25 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
         }
 
         [Fact]
+        public void DuplicateEntityId()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 : IEntityBase { }
+                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO2 : IEntityBase { }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(2, "DME12,DME12");
+        }
+
+        [Fact]
         public void InvalidMemberId()
         {
             string modelSource =
@@ -136,5 +155,29 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
 
             modelSource.GenerateAndCheckLength(1, "DME06,DME10");
         }
+
+        [Fact]
+        public void InvalidMemberSequence()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    [Entity(1, LayoutMethod.Linear)]
+                    public interface IMyDTO : IEntityBase
+                    {
+                        [Member(1)] int  Field1 { get; set; }
+                        [Member(3)] int  Field3 { get; set; }
+                    }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(1, "DME11");
+        }
+
     }
 }

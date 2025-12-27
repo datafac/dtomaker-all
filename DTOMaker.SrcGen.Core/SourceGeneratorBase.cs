@@ -536,6 +536,7 @@ namespace DTOMaker.SrcGen.Core
             int classHeight = GetClassHeight(entity, entities);
             return new Phase1Entity()
             {
+                Location = entity.Location,
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
                 ClassHeight = classHeight,
@@ -552,8 +553,16 @@ namespace DTOMaker.SrcGen.Core
 
         public static Phase2Entity ResolveEntities1(Phase1Entity entity, ImmutableArray<Phase1Entity> allEnts)
         {
+            var newDiagnostics = new List<Diagnostic>();
             var baseEntity = allEnts.FirstOrDefault(e => e.TFN == entity.BaseTFN);
             List<Phase1Entity> derivedEntities = GetDerivedEntities1(entity.TFN, allEnts);
+
+            // check entity id uniqueness
+            int duplicateCount = allEnts.Count(e => e.EntityId == entity.EntityId);
+            if(duplicateCount > 1)
+            {
+                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location));
+            }
             return new Phase2Entity()
             {
                 TFN = entity.TFN,
@@ -562,7 +571,9 @@ namespace DTOMaker.SrcGen.Core
                 Members = entity.Members,
                 BaseEntity = baseEntity,
                 DerivedEntities = new EquatableArray<Phase1Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
-                Diagnostics = entity.Diagnostics,
+                Diagnostics = newDiagnostics.Count > 0
+                    ? new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics))
+                    : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
                 Layout = entity.Layout,

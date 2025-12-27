@@ -30,6 +30,7 @@ namespace DTOMaker.SrcGen.Core
         public static readonly DiagnosticDescriptor DME09 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME09), "Invalid layout method",  "Entity layout method must be defined.");
         public static readonly DiagnosticDescriptor DME10 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME10), "Invalid member type",    "The member type is not supported. Are you missing a converter?");
         public static readonly DiagnosticDescriptor DME11 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME11), "Invalid member type",    "Member sequence numbers must start at 1 and increase monotonically.");
+        public static readonly DiagnosticDescriptor DME12 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME12), "Duplicate entity id",    "All entity ids must be unique.");
 
         /*
          */
