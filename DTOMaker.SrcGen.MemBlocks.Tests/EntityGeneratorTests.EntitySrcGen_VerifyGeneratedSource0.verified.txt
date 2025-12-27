@@ -81,7 +81,7 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     0     4  LE    Int32   Field1
-        //     2     0     8  LE    Int64   Field2
+        //     2     8     8  LE    Int64   Field2
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -135,8 +135,8 @@ namespace MyOrg.Models.MemBlocks
 
         public Int64 Field2
         {
-            get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
-            set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
+            get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
+            set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, IfNotFrozen(value));
         }
 
 

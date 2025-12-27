@@ -21,7 +21,7 @@ namespace MyOrg.Models.MemBlocks
     {
         private const long BlockStructureCode = 0L;
         private const int ClassHeight = 2;
-        private const int BlockLength = 16;
+        private const int BlockLength = 128;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
@@ -82,7 +82,7 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     0    64  LE    String  Field11
-        //     2     0    64  LE    String  Field12
+        //     2    64    64  LE    String  Field12
         // ------------------------------------------------------------
 
         protected Derived(BlockHeader header) : base(header)
@@ -157,11 +157,11 @@ namespace MyOrg.Models.MemBlocks
             BlobIdV1 blobId = _Field12 is null
                 ? default
                 : blobId = await dataStore.PutBlob(System.Text.Encoding.UTF8.GetBytes(_Field12));
-            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+            blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
         private async ValueTask Field12_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(64, 64));
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
             _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.Span);

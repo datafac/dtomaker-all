@@ -21,7 +21,7 @@ namespace MyOrg.Models.MemBlocks
     {
         private const long BlockStructureCode = 0L;
         private const int ClassHeight = 1;
-        private const int BlockLength = 16;
+        private const int BlockLength = 32;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
@@ -78,8 +78,8 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     0     8  LE    Double  Field1
-        //     2     0     8  LE    Double  Field2
-        //     3     0     8  LE    Double  Field3
+        //     2     8     8  LE    Double  Field2
+        //     3    16     8  LE    Double  Field3
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -137,15 +137,15 @@ namespace MyOrg.Models.MemBlocks
         [Obsolete("Removed", false)]
         public Double Field2
         {
-            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
-            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
+            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
+            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, IfNotFrozen(value));
         }
 
         [Obsolete("Removed", true)]
         public Double Field3
         {
-            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
-            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
+            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(16, 8).Span);
+            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(16, 8).Span, IfNotFrozen(value));
         }
 
 

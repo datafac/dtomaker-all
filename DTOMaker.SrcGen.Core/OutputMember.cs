@@ -5,6 +5,7 @@ namespace DTOMaker.SrcGen.Core
 {
     public sealed record OutputMember
     {
+        public Location Location { get; init; } = Location.None;
         public string Name { get; init; } = string.Empty;
         public int Sequence { get; init; }
         public TypeFullName MemberType { get; init; }

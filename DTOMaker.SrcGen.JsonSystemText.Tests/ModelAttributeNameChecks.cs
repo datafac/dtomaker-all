@@ -17,6 +17,6 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact] public void LayoutMethod_Undefined() => ((int)LayoutAlgo.Default).ShouldBe((int)DTOMaker.Models.LayoutMethod.Undefined);
         [Fact] public void LayoutMethod_Explicit() => ((int)LayoutAlgo.Explicit).ShouldBe((int)DTOMaker.Models.LayoutMethod.Explicit);
         [Fact] public void LayoutMethod_Linear() => ((int)LayoutAlgo.Linear).ShouldBe((int)DTOMaker.Models.LayoutMethod.Linear);
-        [Fact] public void LayoutMethod_Compact() => ((int)LayoutAlgo.Compact).ShouldBe((int)DTOMaker.Models.LayoutMethod.Compact);
+        //[Fact] public void LayoutMethod_Compact() => ((int)LayoutAlgo.Compact).ShouldBe((int)DTOMaker.Models.LayoutMethod.Compact);
     }
 }

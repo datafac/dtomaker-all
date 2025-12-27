@@ -21,7 +21,7 @@ namespace MyOrg.Models.MemBlocks
     {
         private const long BlockStructureCode = 0L;
         private const int ClassHeight = 1;
-        private const int BlockLength = 16;
+        private const int BlockLength = 64;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 

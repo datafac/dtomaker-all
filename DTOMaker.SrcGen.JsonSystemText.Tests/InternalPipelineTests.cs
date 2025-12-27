@@ -130,6 +130,13 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact]
         public void Pipeline02_ResolveMembers()
         {
+            SourceGeneratorParameters srcGenParams = new SourceGeneratorParameters()
+            {
+                GeneratorId = GeneratorId.JsonSystemText,
+                ImplSpaceSuffix = "JsonSystemText",
+                Language = Language_CSharp.Instance,
+            };
+
             // arrange
             input.Length.ShouldBe(3);
 
@@ -137,9 +144,9 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             //var parsedEntities = SourceGeneratorBase.AddEntityBase(input, "JST");
             //parsedEntities.Length.ShouldBe(4);
 
-            var result0 = SourceGeneratorBase.ResolveMembers(input[0], members, input);
-            var result1 = SourceGeneratorBase.ResolveMembers(input[1], members, input);
-            var result2 = SourceGeneratorBase.ResolveMembers(input[2], members, input);
+            var result0 = SourceGeneratorBase.ResolveMembers(input[0], members, input, srcGenParams);
+            var result1 = SourceGeneratorBase.ResolveMembers(input[1], members, input, srcGenParams);
+            var result2 = SourceGeneratorBase.ResolveMembers(input[2], members, input, srcGenParams);
             //var result3 = SourceGeneratorBase.ResolveMembers(input[3], members, input);
 
             // assert
@@ -167,13 +174,20 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact]
         public void Pipeline03_ResolveEntities()
         {
+            SourceGeneratorParameters srcGenParams = new SourceGeneratorParameters()
+            {
+                GeneratorId = GeneratorId.JsonSystemText,
+                ImplSpaceSuffix = "JsonSystemText",
+                Language = Language_CSharp.Instance,
+            };
+
             input.Length.ShouldBe(3);
 
             // arrange
             var ph1Ents = ImmutableArray.Create<Phase1Entity>([
-                SourceGeneratorBase.ResolveMembers(input[0], members, input),
-                SourceGeneratorBase.ResolveMembers(input[1], members, input),
-                SourceGeneratorBase.ResolveMembers(input[2], members, input)]);
+                SourceGeneratorBase.ResolveMembers(input[0], members, input, srcGenParams),
+                SourceGeneratorBase.ResolveMembers(input[1], members, input, srcGenParams),
+                SourceGeneratorBase.ResolveMembers(input[2], members, input, srcGenParams)]);
 
             var ph2Ents = ImmutableArray.Create<Phase2Entity>([
                 SourceGeneratorBase.ResolveEntities1(ph1Ents[0], ph1Ents),

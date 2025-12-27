@@ -4,6 +4,5 @@
     {
         // todo add checks for the following:
         public const string DTOM0008 = nameof(DTOM0008); // Invalid base name(s)
-        public const string DTOM0009 = nameof(DTOM0009); // Duplicate entity id
     }
 }
