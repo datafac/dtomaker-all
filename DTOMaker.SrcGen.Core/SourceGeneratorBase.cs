@@ -32,7 +32,7 @@ namespace DTOMaker.SrcGen.Core
         public string ImplSpaceSuffix { get; init; } = "Generated";
     }
 
-    public enum LayoutMethod
+    public enum LayoutAlgo
     {
         Undefined = 0,
         Explicit = 1,
@@ -45,13 +45,11 @@ namespace DTOMaker.SrcGen.Core
         //private const string DomainAttribute = nameof(DomainAttribute);
         public const string EntityAttribute = nameof(EntityAttribute);
         public const string MemberAttribute = nameof(MemberAttribute);
-        //public const string IdAttribute = nameof(IdAttribute);
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
         public const string LengthAttribute = nameof(LengthAttribute);
         public const string OffsetAttribute = nameof(OffsetAttribute);
         public const string EndianAttribute = nameof(EndianAttribute);
-        public const string LayoutAttribute = nameof(LayoutAttribute);
         public const int BlobIdV1Size = 64;
 
         protected abstract SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context);
@@ -361,7 +359,7 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
-            LayoutMethod layoutMethod = LayoutMethod.Undefined;
+            LayoutAlgo layoutMethod = LayoutAlgo.Undefined;
             int blockLength = 16; // todo calculate block length
 
             // Loop through all of the attributes on the interface
@@ -374,8 +372,9 @@ namespace DTOMaker.SrcGen.Core
                     case EntityAttribute:
                         // get entity id
                         diagnostic =
-                            CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; });
+                            CheckAttributeArguments(attributeData, location, 2)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; })
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 1, (value) => { layoutMethod = (LayoutAlgo)value; });
                         break;
                     case KeyOffsetAttribute: // used by MessagePack 
                         diagnostic =
@@ -386,11 +385,6 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
-                        break;
-                    case LayoutAttribute: // used by MemBlocks
-                        diagnostic
-                            = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { layoutMethod = (LayoutMethod)value; });
                         break;
                     default:
                         // ignore other attributes
@@ -415,7 +409,7 @@ namespace DTOMaker.SrcGen.Core
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME05, location));
                 }
-                if (layoutMethod != LayoutMethod.Explicit && layoutMethod != LayoutMethod.Linear)
+                if (layoutMethod != LayoutAlgo.Explicit && layoutMethod != LayoutAlgo.Linear)
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME09, location));
                 }
@@ -427,7 +421,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 KeyOffset = keyOffset,
                 BlockLength = blockLength,
-                LayoutMethod = layoutMethod,
+                Layout = layoutMethod,
             };
         }
 
@@ -522,7 +516,7 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
-                LayoutMethod = entity.LayoutMethod,
+                Layout = entity.Layout,
             };
         }
 
@@ -541,7 +535,7 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
-                LayoutMethod = entity.LayoutMethod,
+                Layout = entity.Layout,
                 BlockStructureCode = 0L, // todo calc block structure code
             };
         }

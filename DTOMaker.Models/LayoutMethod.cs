@@ -7,7 +7,7 @@
 public enum LayoutMethod : int
 {
     /// <summary>
-    /// No member memory layout is defined.
+    /// No member memory layout method is defined.
     /// </summary>
     Undefined = 0,
 
@@ -44,6 +44,6 @@ public enum LayoutMethod : int
     /// method, the entity memory block length can be limited, or left undefined
     /// to allow automatic growth.
     /// </summary>
-    Compact = 3, // todo
+    Compact = 3, // todo implement and make default
 }
 
