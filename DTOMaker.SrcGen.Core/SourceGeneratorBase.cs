@@ -32,6 +32,14 @@ namespace DTOMaker.SrcGen.Core
         public string ImplSpaceSuffix { get; init; } = "Generated";
     }
 
+    public enum LayoutMethod
+    {
+        Undefined = 0,
+        Explicit = 1,
+        Linear = 2,
+        Compact = 3,
+    }
+
     public abstract class SourceGeneratorBase : IIncrementalGenerator
     {
         //private const string DomainAttribute = nameof(DomainAttribute);
@@ -43,6 +51,7 @@ namespace DTOMaker.SrcGen.Core
         public const string LengthAttribute = nameof(LengthAttribute);
         public const string OffsetAttribute = nameof(OffsetAttribute);
         public const string EndianAttribute = nameof(EndianAttribute);
+        public const string LayoutAttribute = nameof(LayoutAttribute);
         public const int BlobIdV1Size = 64;
 
         protected abstract SourceGeneratorParameters OnBeginInitialize(IncrementalGeneratorInitializationContext context);
@@ -348,6 +357,7 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
+            LayoutMethod layoutMethod = LayoutMethod.Undefined;
             int blockLength = 16; // todo calculate block length
 
             // Loop through all of the attributes on the interface
@@ -380,6 +390,11 @@ namespace DTOMaker.SrcGen.Core
                             = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
                         break;
+                    case LayoutAttribute: // used by MemBlocks
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { layoutMethod = (LayoutMethod)value; });
+                        break;
                     default:
                         // ignore other attributes
                         diagnostic = null;
@@ -404,24 +419,11 @@ namespace DTOMaker.SrcGen.Core
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME05, location));
                 }
+                if (layoutMethod != LayoutMethod.Explicit && layoutMethod != LayoutMethod.Linear)
+                {
+                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME09, location));
+                }
             }
-
-            // Get the full type name of the enum e.g. Colour, 
-            // or OuterClass<T>.Colour if it was nested in a generic type (for example)
-            //string fullname = intfSymbol.ToString();
-
-            // Get all the members in the enum
-            ImmutableArray<ISymbol> intfMembers = intfSymbol.GetMembers();
-            var members = new List<string>(intfMembers.Length);
-
-            // Get all the fields from the enum, and add their name to the list
-            //foreach (ISymbol member in intfMembers)
-            //{
-            //    if (member is IFieldSymbol field && field.ConstantValue is not null)
-            //    {
-            //        members.Add(member.Name);
-            //    }
-            //}
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
             TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, srcGenParams.ImplSpaceSuffix) : null;
@@ -429,6 +431,7 @@ namespace DTOMaker.SrcGen.Core
             {
                 KeyOffset = keyOffset,
                 BlockLength = blockLength,
+                LayoutMethod = layoutMethod,
             };
         }
 
@@ -524,6 +527,7 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
+                LayoutMethod = entity.LayoutMethod,
             };
         }
 
@@ -542,6 +546,7 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
+                LayoutMethod = entity.LayoutMethod,
                 BlockStructureCode = 0L, // todo calc block structure code
             };
         }

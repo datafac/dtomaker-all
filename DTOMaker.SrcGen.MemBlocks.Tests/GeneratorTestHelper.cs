@@ -102,7 +102,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             if (expectedErrorCodes is null)
             {
                 expectedErrorCount = 0;
-                generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(expectedErrorCount);
+                generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ShouldBeEmpty();
             }
             else
             {

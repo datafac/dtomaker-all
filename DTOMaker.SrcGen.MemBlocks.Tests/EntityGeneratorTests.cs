@@ -14,13 +14,13 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity][Id(1)]
+                [Entity][Id(1)][Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] int  Field1 { get; set; }
                     [Member(2)] long Field2 { get; set; }
                 }
-                [Entity][Id(2)]
+                [Entity][Id(2)][Layout(LayoutMethod.Linear)]
                 public interface IDerived : IMyDTO
                 {
                     [Member(1)] String  Field11 { get; set; }
@@ -29,7 +29,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             }
             namespace MyOrg.Model2
             {
-                [Entity][Id(3)]
+                [Entity][Id(3)][Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] IMyDTO  Field31 { get; set; }
@@ -38,7 +38,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             }
             namespace MyOrg.Model3
             {
-                [Entity][Id(4)]
+                [Entity][Id(4)][Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] Octets  Field41 { get; set; }

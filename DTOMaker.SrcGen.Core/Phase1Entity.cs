@@ -13,6 +13,7 @@ namespace DTOMaker.SrcGen.Core
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
         public int KeyOffset { get; init; }
         public int BlockLength { get; init; }
+        public LayoutMethod LayoutMethod { get; init; }
 
         public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
     }

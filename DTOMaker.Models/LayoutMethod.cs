@@ -44,6 +44,6 @@ public enum LayoutMethod : int
     /// method, the entity memory block length can be limited, or left undefined
     /// to allow automatic growth.
     /// </summary>
-    //todo Compact = 3,
+    Compact = 3, // todo
 }
 

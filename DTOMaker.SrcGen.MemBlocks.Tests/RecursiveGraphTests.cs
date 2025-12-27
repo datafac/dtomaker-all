@@ -13,7 +13,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity][Id(1)]
+                [Entity][Id(1)][Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(2)] IMyDTO? Field1 { get; set; }

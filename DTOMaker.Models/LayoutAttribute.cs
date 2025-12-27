@@ -6,10 +6,8 @@ namespace DTOMaker.Models;
 public class LayoutAttribute : Attribute
 {
     public readonly LayoutMethod LayoutMethod;
-    public readonly int BlockLength;
-    public LayoutAttribute(LayoutMethod layoutMethod, int blockLength = 0)
+    public LayoutAttribute(LayoutMethod layoutMethod)
     {
-        BlockLength = blockLength;
         LayoutMethod = layoutMethod;
     }
 }

@@ -15,5 +15,9 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact] public void LengthAttributeName() => SourceGeneratorBase.LengthAttribute.ShouldBe(nameof(DTOMaker.Models.LengthAttribute));
         [Fact] public void OffsetAttributeName() => SourceGeneratorBase.OffsetAttribute.ShouldBe(nameof(DTOMaker.Models.OffsetAttribute));
         [Fact] public void EndianAttributeName() => SourceGeneratorBase.EndianAttribute.ShouldBe(nameof(DTOMaker.Models.EndianAttribute));
+        [Fact] public void LayoutMethod_Undefined() => ((int)LayoutMethod.Undefined).ShouldBe((int)DTOMaker.Models.LayoutMethod.Undefined);
+        [Fact] public void LayoutMethod_Explicit() => ((int)LayoutMethod.Explicit).ShouldBe((int)DTOMaker.Models.LayoutMethod.Explicit);
+        [Fact] public void LayoutMethod_Linear() => ((int)LayoutMethod.Linear).ShouldBe((int)DTOMaker.Models.LayoutMethod.Linear);
+        [Fact] public void LayoutMethod_Compact() => ((int)LayoutMethod.Compact).ShouldBe((int)DTOMaker.Models.LayoutMethod.Compact);
     }
 }

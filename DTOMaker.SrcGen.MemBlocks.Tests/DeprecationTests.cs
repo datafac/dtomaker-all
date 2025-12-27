@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
-                [Entity] [Id(1)]
+                [Entity] [Id(1)] [Layout(LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Obsolete]                  [Member(1)] double Field1 { get; set; }
@@ -28,6 +28,5 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
 
         [Fact] public void Obsolete_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(1);
         [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.MemBlocks.MyDTO.g.cs"));
-
     }
 }
