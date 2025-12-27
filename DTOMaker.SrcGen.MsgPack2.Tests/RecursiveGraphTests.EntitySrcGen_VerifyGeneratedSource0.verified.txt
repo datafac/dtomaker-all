@@ -78,7 +78,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private MyOrg.Models.MsgPack2.MyDTO? _Field1;
-        [Key(2)]
+        [Key(1)]
         public MyOrg.Models.MsgPack2.MyDTO? Field1
         {
             get => _Field1;

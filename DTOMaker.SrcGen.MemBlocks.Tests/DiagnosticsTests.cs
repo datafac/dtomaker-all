@@ -46,7 +46,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME04");
+            modelSource.GenerateAndCheckLength(1, "DME04,DME11");
         }
 
         [Fact]

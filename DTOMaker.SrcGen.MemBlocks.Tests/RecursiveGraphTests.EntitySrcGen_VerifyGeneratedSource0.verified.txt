@@ -80,7 +80,7 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     2     0    64  LE    MyDTO   Field1
+        //     1     0    64  LE    MyDTO   Field1
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)

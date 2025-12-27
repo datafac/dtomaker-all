@@ -34,7 +34,7 @@ namespace DTOMaker.SrcGen.Core
 
     public enum LayoutAlgo
     {
-        Undefined = 0,
+        Default = 0,
         Explicit = 1,
         Linear = 2,
         Compact = 3,
@@ -123,15 +123,33 @@ namespace DTOMaker.SrcGen.Core
             return Diagnostic.Create(DiagnosticsEN.DME01, location);
         }
 
-        private static bool IsPowerOf2(int value, int minimum = 1, int maximum = 8192)
+        private static bool IsValidFieldLength(int fieldLength)
         {
-            if (value < minimum) return false;
-            if (value > maximum) return false;
+            const int minimum = 1;
+            const int maximum = 1024;
+            if (fieldLength < minimum) return false;
+            if (fieldLength > maximum) return false;
             int comparand = 1;
             while (true)
             {
-                if (comparand > value) return false;
-                if (value == comparand) return true;
+                if (comparand > fieldLength) return false;
+                if (fieldLength == comparand) return true;
+                comparand = comparand * 2;
+            }
+        }
+
+        private static bool IsValidBlockLength(int blockLength)
+        {
+            const int minimum = 0;
+            const int maximum = 8192;
+            if (blockLength < minimum) return false;
+            if (blockLength > maximum) return false;
+            if (blockLength == 0) return true;
+            int comparand = 1;
+            while (true)
+            {
+                if (comparand > blockLength) return false;
+                if (blockLength == comparand) return true;
                 comparand = comparand * 2;
             }
         }
@@ -285,7 +303,7 @@ namespace DTOMaker.SrcGen.Core
                 }
 
                 // checks
-                if (!IsPowerOf2(fieldLength, 1, 1024))
+                if (!IsValidFieldLength(fieldLength))
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME06, location));
                 }
@@ -299,7 +317,7 @@ namespace DTOMaker.SrcGen.Core
                 }
             }
 
-            return new ParsedMember(fullname, sequence, tfn, kind, isNullable, diagnostics)
+            return new ParsedMember(location, fullname, sequence, tfn, kind, isNullable, diagnostics)
             { 
                 IsObsolete = isObsolete,
                 ObsoleteMessage = obsoleteMessage,
@@ -359,7 +377,7 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
-            LayoutAlgo layoutMethod = LayoutAlgo.Undefined;
+            LayoutAlgo layoutAlgo = LayoutAlgo.Default;
             int blockLength = 16; // todo calculate block length
 
             // Loop through all of the attributes on the interface
@@ -374,7 +392,7 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 2)
                             ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; })
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 1, (value) => { layoutMethod = (LayoutAlgo)value; });
+                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 1, (value) => { layoutAlgo = (LayoutAlgo)value; });
                         break;
                     case KeyOffsetAttribute: // used by MessagePack 
                         diagnostic =
@@ -405,11 +423,11 @@ namespace DTOMaker.SrcGen.Core
 
             if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
             {
-                if (!IsPowerOf2(blockLength, 1, 8192))
+                if (!IsValidBlockLength(blockLength))
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME05, location));
                 }
-                if (layoutMethod != LayoutAlgo.Explicit && layoutMethod != LayoutAlgo.Linear)
+                if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear)
                 {
                     diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME09, location));
                 }
@@ -417,11 +435,11 @@ namespace DTOMaker.SrcGen.Core
 
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
             TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, srcGenParams.ImplSpaceSuffix) : null;
-            return new ParsedEntity(new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
+            return new ParsedEntity(location, new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
             {
                 KeyOffset = keyOffset,
                 BlockLength = blockLength,
-                Layout = layoutMethod,
+                Layout = layoutAlgo,
             };
         }
 
@@ -483,10 +501,20 @@ namespace DTOMaker.SrcGen.Core
         {
             string prefix = entity.TFN.Intf.FullName + ".";
             var outputMembers = new List<OutputMember>();
-            foreach (ParsedMember member in members)
+            var newDiagnostics = new List<Diagnostic>();
+            int expectedMemberSequence = 1;
+            foreach (ParsedMember member in members.OrderBy(m => m.Sequence))
             {
                 if (member.FullName.StartsWith(prefix, StringComparison.Ordinal))
                 {
+                    // check for member sequence issues
+                    if (member.Sequence != expectedMemberSequence)
+                    {
+                        newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME11, member.Location));
+                    }
+                    expectedMemberSequence++;
+
+                    // emit member
                     outputMembers.Add(new OutputMember()
                     {
                         Name = member.PropName,
@@ -513,7 +541,9 @@ namespace DTOMaker.SrcGen.Core
                 ClassHeight = classHeight,
                 Members = new EquatableArray<OutputMember>(outputMembers.OrderBy(m => m.Sequence)),
                 BaseTFN = entity.BaseTFN,
-                Diagnostics = entity.Diagnostics,
+                Diagnostics = newDiagnostics.Count > 0
+                    ? new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics)) 
+                    : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
                 Layout = entity.Layout,

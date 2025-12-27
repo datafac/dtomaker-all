@@ -29,6 +29,7 @@ namespace DTOMaker.SrcGen.Core
         public static readonly DiagnosticDescriptor DME08 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME08), "Invalid nullability",    "Nullable<T> fields are not supported in MemBlocks."); // todo allow Nullable<T>
         public static readonly DiagnosticDescriptor DME09 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME09), "Invalid layout method",  "Entity layout method must be defined.");
         public static readonly DiagnosticDescriptor DME10 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME10), "Invalid member type",    "The member type is not supported. Are you missing a converter?");
+        public static readonly DiagnosticDescriptor DME11 = CreateDiagnostic(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME11), "Invalid member type",    "Member sequence numbers must start at 1 and increase monotonically.");
 
         /*
          */

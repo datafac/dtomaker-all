@@ -7,6 +7,7 @@ namespace DTOMaker.SrcGen.Core
 {
     public record class ParsedEntity
     {
+        public Location Location { get; init; }
         public TypeFullName TFN { get; init; } = new();
         public int EntityId { get; init; }
         public TypeFullName? BaseTFN { get; init; } = null;
@@ -15,8 +16,9 @@ namespace DTOMaker.SrcGen.Core
         public int BlockLength { get; init; }
         public LayoutAlgo Layout { get; init; }
 
-        public ParsedEntity(TypeFullName tfn, int entityId, TypeFullName? baseTFN, IEnumerable<Diagnostic> diagnostics)
+        public ParsedEntity(Location location, TypeFullName tfn, int entityId, TypeFullName? baseTFN, IEnumerable<Diagnostic> diagnostics)
         {
+            Location = location;
             TFN = tfn;
             EntityId = entityId;
             BaseTFN = baseTFN;

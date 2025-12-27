@@ -1,4 +1,5 @@
 using DTOMaker.SrcGen.Core;
+using Microsoft.CodeAnalysis;
 using Shouldly;
 using System;
 using System.Collections.Immutable;
@@ -15,11 +16,8 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                 MemberKind.Entity,
                 "JNS");
 
-        private static ParsedEntity CreateEntity(string name, int id, int keyOffset, string? baseName) =>
-            new ParsedEntity(CreateTFN(name), id, baseName is null ? null : CreateTFN(baseName), [])
-            {
-                KeyOffset = keyOffset
-            };
+        private static ParsedEntity CreateEntity(string name, int id, string? baseName) =>
+            new ParsedEntity(Location.None, CreateTFN(name), id, baseName is null ? null : CreateTFN(baseName), []);
 
         private static ParsedMember CreateMember(string entName, string fieldName, int sequence, Type type, bool isNullable = false)
         {
@@ -45,18 +43,19 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                 throw new NotSupportedException($"Type {type.FullName} not supported in test");
             }
             return new ParsedMember(
-                    $"MyOrg.Models.I{entName}.{fieldName}", 
-                    sequence,
-                    memberType,
-                    memberType.MemberKind, 
-                    isNullable,
-                    []);
+                Location.None,
+                $"MyOrg.Models.I{entName}.{fieldName}",
+                sequence,
+                memberType,
+                memberType.MemberKind,
+                isNullable,
+                []);
         }
 
         private static readonly ImmutableArray<ParsedEntity> input = ImmutableArray<ParsedEntity>.Empty
-                .Add(CreateEntity("Variant", 1, 0, null))
-                .Add(CreateEntity("VarString", 2, 0, "Variant"))
-                .Add(CreateEntity("VarNumber", 3, 0, "Variant"))
+                .Add(CreateEntity("Variant", 1, null))
+                .Add(CreateEntity("VarString", 2, "Variant"))
+                .Add(CreateEntity("VarNumber", 3, "Variant"))
             ;
 
         private static readonly ImmutableArray<ParsedMember> members = ImmutableArray<ParsedMember>.Empty

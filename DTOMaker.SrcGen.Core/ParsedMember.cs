@@ -6,6 +6,7 @@ namespace DTOMaker.SrcGen.Core
 {
     public record class ParsedMember
     {
+        public Location Location { get; init; }
         public string FullName { get; init; }
         public string PropName { get; init; }
         public int Sequence { get; init; }
@@ -21,8 +22,9 @@ namespace DTOMaker.SrcGen.Core
         public bool IsExternal { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
 
-        public ParsedMember(string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, IEnumerable<Diagnostic> diagnostics)
+        public ParsedMember(Location location, string fullname, int sequence, TypeFullName memberType, MemberKind kind, bool isNullable, IEnumerable<Diagnostic> diagnostics)
         {
+            Location = location;
             FullName = fullname;
             Sequence = sequence;
             MemberType = memberType;

@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(2)] IMyDTO? Field1 { get; set; }
+                    [Member(1)] IMyDTO? Field1 { get; set; }
                 }
             }
             """;
