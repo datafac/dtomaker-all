@@ -4,6 +4,11 @@ using System.Linq;
 
 namespace DTOMaker.SrcGen.Core
 {
+    public sealed record ObsoleteInformation
+    {
+        public string Message { get; init; } = string.Empty;
+        public bool IsError { get; init; }
+    }
     public record class ParsedMember
     {
         public Location Location { get; init; }
@@ -13,9 +18,7 @@ namespace DTOMaker.SrcGen.Core
         public TypeFullName MemberType { get; init; }
         public MemberKind Kind { get; init; }
         public bool IsNullable { get; init; }
-        public bool IsObsolete { get; init; }
-        public string ObsoleteMessage { get; init; } = string.Empty;
-        public bool ObsoleteIsError { get; init; } 
+        public ObsoleteInformation? ObsoleteInfo { get; init; }
         public int FieldOffset { get; init; }
         public int FieldLength { get; init; }
         public bool IsBigEndian { get; init; }

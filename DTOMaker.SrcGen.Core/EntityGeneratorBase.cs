@@ -127,8 +127,8 @@ namespace DTOMaker.SrcGen.Core
             var tokens = new Dictionary<string, object?>
             {
                 ["MemberIsObsolete"] = member.IsObsolete,
-                ["MemberObsoleteMessage"] = member.ObsoleteMessage,
-                ["MemberObsoleteIsError"] = member.ObsoleteIsError,
+                ["MemberObsoleteMessage"] = member.ObsoleteInfo?.Message ?? "",
+                ["MemberObsoleteIsError"] = member.ObsoleteInfo?.IsError ?? false,
                 ["MemberType"] = language.GetDataTypeToken(member.MemberType),
                 ["MemberTypeImplName"] = member.MemberType.ShortImplName,
                 ["MemberTypeIntfName"] = member.MemberType.ShortIntfName,

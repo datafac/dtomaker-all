@@ -291,10 +291,10 @@ namespace DTOMaker.SrcGen.Core
             }
 
             return new ParsedMember(location, fullname, sequence, tfn, kind, isNullable, diagnostics)
-            { 
-                IsObsolete = isObsolete,
-                ObsoleteMessage = obsoleteMessage,
-                ObsoleteIsError = obsoleteIsError,
+            {
+                ObsoleteInfo = isObsolete
+                    ? new ObsoleteInformation() { Message = obsoleteMessage, IsError = obsoleteIsError }
+                    : null,
                 FieldOffset = fieldOffset,
                 FieldLength = fieldLength,
                 IsBigEndian = isBigEndian,
@@ -554,10 +554,8 @@ namespace DTOMaker.SrcGen.Core
                         MemberType = member.MemberType,
                         Kind = member.Kind,
                         IsNullable = member.IsNullable,
-                        IsObsolete = member.IsObsolete,
+                        ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,
-                        ObsoleteMessage = member.ObsoleteMessage,
-                        ObsoleteIsError = member.ObsoleteIsError,
                         FieldOffset = fieldOffset,
                         FieldLength = fieldLength,
                         IsBigEndian = member.IsBigEndian,
