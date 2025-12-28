@@ -46,4 +46,3 @@ public enum LayoutMethod : int
     /// </summary>
     //Compact = 3, // todo implement and make default
 }
-

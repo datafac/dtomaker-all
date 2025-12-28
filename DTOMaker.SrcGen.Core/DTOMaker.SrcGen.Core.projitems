@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KnownType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Language_CSharp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LayoutAlgo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OutputEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OutputMember.cs" />
@@ -26,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ParsedName.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Phase1Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorParameters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntheticId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TokenStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeFullName.cs" />
