@@ -8,7 +8,7 @@ namespace DTOMaker.Models
         public readonly int EntityId;
         public readonly LayoutMethod LayoutMethod;
 
-        public EntityAttribute(int entityId, LayoutMethod layoutMethod = LayoutMethod.Undefined) // todo default to Compact
+        public EntityAttribute(int entityId, LayoutMethod layoutMethod = LayoutMethod.Undefined)
         {
             EntityId = entityId;
             LayoutMethod = layoutMethod;

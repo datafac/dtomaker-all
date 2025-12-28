@@ -15,7 +15,6 @@ public record class Phase2Entity
     public int KeyOffset { get; init; }
     public int BlockLength { get; init; }
     public LayoutAlgo Layout { get; init; }
-    public long BlockStructureCode { get; init; }
 
     public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
 
@@ -50,14 +49,3 @@ public record class OutputEntity
     public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
 
 }
-
-//public interface IResolvedEntityNotUsed
-//{
-//    public TypeFullName TFN { get; }
-//    public int EntityId { get; }
-//    public int KeyOffset { get; }
-//    public int ClassHeight { get; }
-//    public IResolvedEntity? BaseEntity { get; }
-//    public IReadOnlyCollection<IResolvedEntity> DerivedEntities { get; }
-//    public IReadOnlyCollection<Diagnostic> Diagnostics { get; }
-//}

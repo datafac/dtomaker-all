@@ -19,7 +19,7 @@ namespace MyOrg.Models.MemBlocks
 {
     public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
-        private const long BlockStructureCode = 0L;
+        private const long BlockStructureCode = 97L;
         private const int ClassHeight = 1;
         private const int BlockLength = 32;
         private readonly Memory<byte> _writableLocalBlock;

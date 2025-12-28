@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DiagnosticCategory.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DiagnosticId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DiagnosticsEN.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EntityGeneratorBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EquatableArray.cs" />
@@ -28,6 +27,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Phase1Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SourceGeneratorParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StructureCode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SyntheticId.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TokenStack.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TypeFullName.cs" />

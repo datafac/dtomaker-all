@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace DTOMaker.Runtime.MemBlocks;
+namespace DTOMaker.SrcGen.Core;
 
+/// <summary>
+/// todo move to MemBlocks srcgen project
+/// </summary>
 internal readonly struct StructureCode
 {
     // indexes:                                  0, 1, 2, 3, 4,  5,  6,  7,   8,   9,  10,       11,       12,       13,       14,        15

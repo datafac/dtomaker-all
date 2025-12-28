@@ -19,7 +19,7 @@ namespace MyOrg.Models.MemBlocks
 {
     public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
-        private const long BlockStructureCode = 0L;
+        private const long BlockStructureCode = 2130L;
         private const int ClassHeight = 2;
         private const int BlockLength = 128;
         private readonly Memory<byte> _writableLocalBlock;

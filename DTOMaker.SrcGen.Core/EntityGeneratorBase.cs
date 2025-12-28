@@ -200,7 +200,6 @@ namespace DTOMaker.SrcGen.Core
                 ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
                 ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
                 ["BlockLength"] = entity.BlockLength,
-                ["BlockStructureCode"] = entity.BlockStructureCode, // todo format as hex eg. 0x0041L
             };
             return _tokenStack.NewScope(tokens);
         }
