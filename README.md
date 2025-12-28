@@ -13,7 +13,7 @@ supporting various serialization protocols:
 - JSON (System.Text.Json)
 - JSON (Newtonsoft.Json)
 - MessagePack 2.x
-- MemBlocks [coming soon]
+- MemBlocks
 
 ## Workflow
 ```mermaid
@@ -50,7 +50,6 @@ The implmentations will be generated in the MyModels.JsonSystemText namespace.
 
 # Development
 ## In progress
-- MemBlocks serialization
 
 ## Coming soon
 - incremental serialization
