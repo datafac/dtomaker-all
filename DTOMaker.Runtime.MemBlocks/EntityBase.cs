@@ -7,27 +7,6 @@ using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlocks;
 
-public interface IMemBlocksEntityBase : IEntityBase
-{
-    ReadOnlySequence<byte> GetBuffers();
-    ValueTask Pack(IDataStore dataStore);
-    ValueTask Unpack(IDataStore dataStore, int depth = 0);
-    ValueTask UnpackAll(IDataStore dataStore);
-}
-
-public interface IMemBlocksEntityFactory<T>
-{
-    T CreateInstance(ReadOnlySequence<byte> buffers);
-}
-
-public interface IMemBlocksEntity<T> : IMemBlocksEntityBase
-{
-#if NET8_0_OR_GREATER
-    static abstract T CreateInstance(ReadOnlySequence<byte> buffers);
-#endif
-    IMemBlocksEntityFactory<T> GetFactory();
-}
-
 public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
 {
     #region Static Helpers
