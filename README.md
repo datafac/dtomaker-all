@@ -50,9 +50,9 @@ The implmentations will be generated in the MyModels.JsonSystemText namespace.
 
 # Development
 ## In progress
+- incremental serialization (MemBlocks)
 
 ## Coming soon
-- incremental serialization
 - custom type members (to avoid primitive obsession)
 - global interface equality comparer
 - reservation (hidden members)
@@ -65,7 +65,6 @@ The implmentations will be generated in the MyModels.JsonSystemText namespace.
 - model.json generation
 - command-line alternative
 - variant native type support
-- 
 - variable length arrays
 - logical value equality
 
