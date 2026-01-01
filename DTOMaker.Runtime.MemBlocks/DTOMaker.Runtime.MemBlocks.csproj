@@ -37,7 +37,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DataFac.Memory" Version="0.16.13" />
-		<PackageReference Include="DataFac.Storage" Version="2.0.4-dev" />
+		<PackageReference Include="DataFac.Storage" Version="2.0.5" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
 			<PrivateAssets>all</PrivateAssets>

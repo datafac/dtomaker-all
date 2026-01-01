@@ -15,7 +15,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="DataFac.Memory" Version="0.16.13" />
-		<PackageReference Include="DataFac.Storage.Testing" Version="2.0.4-dev" />
+		<PackageReference Include="DataFac.Storage.Testing" Version="2.0.5" />
 		<PackageReference Include="MessagePack" Version="2.5.198" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
 		<PackageReference Include="Shouldly" Version="4.3.0" />

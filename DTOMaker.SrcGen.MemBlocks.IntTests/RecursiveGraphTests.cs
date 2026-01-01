@@ -58,7 +58,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
             int i = 0;
             foreach (byte b in sequence.ToBytes())
             {
-                if (i % 16 == 0)
+                if (i % 32 == 0)
                 {
                     if (i > 0) result.AppendLine();
                 }
