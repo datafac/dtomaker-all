@@ -17,8 +17,16 @@ using System.Threading.Tasks;
 using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
-    public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
+    public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>, IMemBlocksEntity<Derived>
     {
+        private sealed class _EntityFactory : IMemBlocksEntityFactory<Derived>
+        {
+            public Derived CreateInstance(ReadOnlySequence<byte> buffers) => Derived.CreateFrom(buffers);
+        }
+        private static readonly _EntityFactory _factory = new _EntityFactory();
+        public IMemBlocksEntityFactory<Derived> GetFactory() => _factory;
+        public static Derived CreateInstance(ReadOnlySequence<byte> buffers) => Derived.CreateFrom(buffers);
+
         private const long BlockStructureCode = 2130L;
         private const int ClassHeight = 2;
         private const int BlockLength = 128;

@@ -17,8 +17,16 @@ using System.Threading.Tasks;
 using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
-    public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
+    public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>, IMemBlocksEntity<MyDTO>
     {
+        private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
+        {
+            public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+        }
+        private static readonly _EntityFactory _factory = new _EntityFactory();
+        public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
+        public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+
         private const long BlockStructureCode = 113L;
         private const int ClassHeight = 1;
         private const int BlockLength = 64;

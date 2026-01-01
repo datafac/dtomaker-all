@@ -245,8 +245,16 @@ namespace T_IntfNameSpace_
 //##}
 namespace T_ImplNameSpace_
 {
-    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>
+    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>, IMemBlocksEntity<T_EntityImplName_>
     {
+        private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>
+        {
+            public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);
+        }
+        private static readonly _EntityFactory _factory = new _EntityFactory();
+        public IMemBlocksEntityFactory<T_EntityImplName_> GetFactory() => _factory;
+        public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);
+
         //##if(false) {
         private const int T_ClassHeight_ = 2;
         private const int T_EntityId_ = 2;

@@ -248,8 +248,16 @@ public sealed class EntityGenerator : EntityGeneratorBase
         }
         Emit("namespace T_ImplNameSpace_");
         Emit("{");
-        Emit("    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>");
+        Emit("    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>, IMemBlocksEntity<T_EntityImplName_>");
         Emit("    {");
+        Emit("        private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>");
+        Emit("        {");
+        Emit("            public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);");
+        Emit("        }");
+        Emit("        private static readonly _EntityFactory _factory = new _EntityFactory();");
+        Emit("        public IMemBlocksEntityFactory<T_EntityImplName_> GetFactory() => _factory;");
+        Emit("        public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);");
+        Emit("");
         if (false)
         {
             Emit("        private const int T_ClassHeight_ = 2;");
