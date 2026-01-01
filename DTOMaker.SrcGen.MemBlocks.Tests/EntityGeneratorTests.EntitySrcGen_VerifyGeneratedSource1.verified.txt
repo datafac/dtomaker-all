@@ -131,8 +131,8 @@ namespace MyOrg.Models.MemBlocks
         private async ValueTask Field11_Pack(IDataStore dataStore)
         {
             BlobIdV1 blobId = default;
-            var buffer = System.Text.Encoding.UTF8.GetBytes(_Field11);
-            blobId = await dataStore.PutBlob(buffer);
+            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_Field11));
+            blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
         private async ValueTask Field11_Unpack(IDataStore dataStore)
@@ -140,7 +140,7 @@ namespace MyOrg.Models.MemBlocks
             BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+            _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
             _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif
@@ -156,7 +156,7 @@ namespace MyOrg.Models.MemBlocks
         {
             BlobIdV1 blobId = _Field12 is null
                 ? default
-                : blobId = await dataStore.PutBlob(System.Text.Encoding.UTF8.GetBytes(_Field12));
+                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_Field12)));
             blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
         private async ValueTask Field12_Unpack(IDataStore dataStore)
@@ -164,7 +164,7 @@ namespace MyOrg.Models.MemBlocks
             BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(64, 64));
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+            _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
             _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif

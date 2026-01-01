@@ -130,8 +130,8 @@ namespace MyOrg.Model3.MemBlocks
 
         private async ValueTask Field41_Pack(IDataStore dataStore)
         {
-            var buffer = _Field41.AsMemory();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffer);
+            var buffers = _Field41.Sequence;
+            BlobIdV1 blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
         private async ValueTask Field41_Unpack(IDataStore dataStore)
@@ -152,7 +152,7 @@ namespace MyOrg.Model3.MemBlocks
         {
             BlobIdV1 blobId = _Field42 is null
                 ? default
-                : await dataStore.PutBlob(_Field42.AsMemory());
+                : await dataStore.PutBlob(_Field42.Sequence);
             blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
         private async ValueTask Field42_Unpack(IDataStore dataStore)

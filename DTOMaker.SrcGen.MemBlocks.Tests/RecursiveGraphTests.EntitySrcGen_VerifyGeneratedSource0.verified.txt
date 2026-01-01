@@ -130,8 +130,8 @@ namespace MyOrg.Models.MemBlocks
             if (_Field1 is not null)
             {
                 await _Field1.Pack(dataStore);
-                var buffer = _Field1.GetBuffers();
-                blobId = await dataStore.PutBlob(buffer.Compact());
+                var buffers = _Field1.GetBuffers();
+                blobId = await dataStore.PutBlob(buffers);
             }
             blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
@@ -142,7 +142,7 @@ namespace MyOrg.Models.MemBlocks
             _Field1 = null;
             if (blob is not null)
             {
-                _Field1 = MyOrg.Models.MemBlocks.MyDTO.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _Field1 = MyOrg.Models.MemBlocks.MyDTO.CreateFrom(blob.Value);
                 await _Field1.Unpack(dataStore, depth - 1);
             }
         }

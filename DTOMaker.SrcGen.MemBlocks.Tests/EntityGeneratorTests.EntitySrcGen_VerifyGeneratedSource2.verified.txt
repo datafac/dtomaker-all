@@ -137,8 +137,8 @@ namespace MyOrg.Model2.MemBlocks
                 _Field31 = await CreateEmpty<MyOrg.Model2.MemBlocks.MyDTO>(dataStore);
             }
             await _Field31.Pack(dataStore);
-            var buffer = _Field31.GetBuffers();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffer.Compact());
+            var buffers = _Field31.GetBuffers();
+            BlobIdV1 blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
         private async ValueTask Field31_Unpack(IDataStore dataStore, int depth)
@@ -151,7 +151,7 @@ namespace MyOrg.Model2.MemBlocks
             }
             else
             {
-                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(blob.Value);
                 await _Field31.Unpack(dataStore, depth - 1);
             }
         }
@@ -173,8 +173,8 @@ namespace MyOrg.Model2.MemBlocks
             if (_Field32 is not null)
             {
                 await _Field32.Pack(dataStore);
-                var buffer = _Field32.GetBuffers();
-                blobId = await dataStore.PutBlob(buffer.Compact());
+                var buffers = _Field32.GetBuffers();
+                blobId = await dataStore.PutBlob(buffers);
             }
             blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
@@ -185,7 +185,7 @@ namespace MyOrg.Model2.MemBlocks
             _Field32 = null;
             if (blob is not null)
             {
-                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(blob.Value);
                 await _Field32.Unpack(dataStore, depth - 1);
             }
         }

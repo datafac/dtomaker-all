@@ -624,8 +624,8 @@ namespace T_ImplNameSpace_
             if (_T_NullableEntityMemberName_ is not null)
             {
                 await _T_NullableEntityMemberName_.Pack(dataStore);
-                var buffer = _T_NullableEntityMemberName_.GetBuffers();
-                blobId = await dataStore.PutBlob(buffer.Compact());
+                var buffers = _T_NullableEntityMemberName_.GetBuffers();
+                blobId = await dataStore.PutBlob(buffers);
             }
             blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);
         }
@@ -636,7 +636,7 @@ namespace T_ImplNameSpace_
             _T_NullableEntityMemberName_ = null;
             if (blob is not null)
             {
-                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(blob.Value);
                 await _T_NullableEntityMemberName_.Unpack(dataStore, depth - 1);
             }
         }
@@ -662,8 +662,8 @@ namespace T_ImplNameSpace_
                 _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);
             }
             await _T_RequiredEntityMemberName_.Pack(dataStore);
-            var buffer = _T_RequiredEntityMemberName_.GetBuffers();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffer.Compact());
+            var buffers = _T_RequiredEntityMemberName_.GetBuffers();
+            BlobIdV1 blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64).Span);
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)
@@ -676,7 +676,7 @@ namespace T_ImplNameSpace_
             }
             else
             {
-                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(new ReadOnlySequence<byte>(blob.Value));
+                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(blob.Value);
                 await _T_RequiredEntityMemberName_.Unpack(dataStore, depth - 1);
             }
         }
@@ -723,7 +723,7 @@ namespace T_ImplNameSpace_
         {
             BlobIdV1 blobId = _T_NullableVarLenBinaryMemberName_ is null
                 ? default
-                : await dataStore.PutBlob(_T_NullableVarLenBinaryMemberName_.AsMemory());
+                : await dataStore.PutBlob(_T_NullableVarLenBinaryMemberName_.Sequence);
             blobId.WriteTo(_writableLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64).Span);
         }
         private async ValueTask T_NullableVarLenBinaryMemberName__Unpack(IDataStore dataStore)
@@ -766,8 +766,8 @@ namespace T_ImplNameSpace_
         //##} else {
         private async ValueTask T_RequiredVarLenBinaryMemberName__Pack(IDataStore dataStore)
         {
-            var buffer = _T_RequiredVarLenBinaryMemberName_.AsMemory();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffer);
+            var buffers = _T_RequiredVarLenBinaryMemberName_.Sequence;
+            BlobIdV1 blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64).Span);
         }
         private async ValueTask T_RequiredVarLenBinaryMemberName__Unpack(IDataStore dataStore)
@@ -820,7 +820,7 @@ namespace T_ImplNameSpace_
         {
             BlobIdV1 blobId = _T_NullableVarLenStringMemberName_ is null
                 ? default
-                : blobId = await dataStore.PutBlob(System.Text.Encoding.UTF8.GetBytes(_T_NullableVarLenStringMemberName_));
+                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableVarLenStringMemberName_)));
             blobId.WriteTo(_writableLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64).Span);
         }
         private async ValueTask T_NullableVarLenStringMemberName__Unpack(IDataStore dataStore)
@@ -828,7 +828,7 @@ namespace T_ImplNameSpace_
             BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64));
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+            _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
             _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif
@@ -872,8 +872,8 @@ namespace T_ImplNameSpace_
         private async ValueTask T_RequiredVarLenStringMemberName__Pack(IDataStore dataStore)
         {
             BlobIdV1 blobId = default;
-            var buffer = System.Text.Encoding.UTF8.GetBytes(_T_RequiredVarLenStringMemberName_);
-            blobId = await dataStore.PutBlob(buffer);
+            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_RequiredVarLenStringMemberName_));
+            blobId = await dataStore.PutBlob(buffers);
             blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64).Span);
         }
         private async ValueTask T_RequiredVarLenStringMemberName__Unpack(IDataStore dataStore)
@@ -881,7 +881,7 @@ namespace T_ImplNameSpace_
             BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64));
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.Span);
+            _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
             _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif
