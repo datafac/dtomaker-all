@@ -195,10 +195,10 @@ namespace DTOMaker.SrcGen.Core
                 ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
-                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? "DTOMaker.Runtime",
-                ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? "IEntityBase",
-                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
-                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
+                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? SpecialName.RuntimeNamespace,
+                ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
+                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeNamespace}.{implSpaceSuffix}",
+                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
                 ["BlockLength"] = entity.BlockLength,
             };
             return _tokenStack.NewScope(tokens);
@@ -217,10 +217,10 @@ namespace DTOMaker.SrcGen.Core
                 ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
-                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? "DTOMaker.Runtime",
-                ["BaseIntfName"] =      entity.BaseEntity?.TFN.Intf.Name ?? "IEntityBase",
-                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"DTOMaker.Runtime.{implSpaceSuffix}",
-                ["BaseImplName"] =      entity.BaseEntity?.TFN.Impl.Name ?? "EntityBase",
+                ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? SpecialName.RuntimeNamespace,
+                ["BaseIntfName"] =      entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
+                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeNamespace}.{implSpaceSuffix}",
+                ["BaseImplName"] =      entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
                 ["BlockLength"] = entity.BlockLength,
                 ["BlockStructureCode"] = entity.BlockStructureCode, // todo format as hex eg. 0x0041L
             };

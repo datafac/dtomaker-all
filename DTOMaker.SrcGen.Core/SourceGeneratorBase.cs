@@ -215,7 +215,8 @@ namespace DTOMaker.SrcGen.Core
                     case ObsoleteAttribute:
                         isObsolete = true;
                         var attributeArguments = attributeData.ConstructorArguments;
-                        diagnostic = attributeArguments.Length switch { 
+                        diagnostic = attributeArguments.Length switch
+                        {
                             0 => null,
                             1 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; }),
                             2 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
@@ -424,6 +425,21 @@ namespace DTOMaker.SrcGen.Core
             return 1 + GetClassHeight(parentEntity, allEntities);
         }
 
+        private static bool HasValidBase(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)
+        {
+            if (thisEntity.BaseTFN is null) return false;
+
+            // special case for IEntityBase
+            if (thisEntity.BaseTFN.Value.Intf.Name == SpecialName.RuntimeBaseIntfName
+                && thisEntity.BaseTFN.Value.Intf.Space == SpecialName.RuntimeNamespace) return true;
+
+            var baseEntity = allEntities.FirstOrDefault(e => e.TFN.Intf == thisEntity.BaseTFN?.Intf);
+            if (baseEntity is null)
+                return false;
+            else
+                return true;
+        }
+
         private static List<Phase1Entity> GetDerivedEntities1(TypeFullName parentTFN, ImmutableArray<Phase1Entity> allEntities)
         {
             var derivedEntities = new List<Phase1Entity>();
@@ -455,20 +471,6 @@ namespace DTOMaker.SrcGen.Core
             }
             return derivedEntities;
         }
-
-        //public static ImmutableArray<ParsedEntity> AddEntityBase(ImmutableArray<ParsedEntity> parsedEntities, string implSpaceSuffix)
-        //{
-        //    // add base entity
-        //    var baseEntityIntf = new ParsedName("DTOMaker.Runtime.IEntityBase");
-        //    var baseEntityImpl = new ParsedName($"DTOMaker.Runtime.{implSpaceSuffix}.EntityBase");
-        //    var baseEntityTFN = new TypeFullName(baseEntityIntf, baseEntityImpl, MemberKind.Entity, implSpaceSuffix);
-        //    var baseEntity = new ParsedEntity(baseEntityTFN, 0, null);
-        //    var builder = ImmutableArray<ParsedEntity>.Empty.ToBuilder();
-        //    builder.Add(baseEntity);
-        //    builder.AddRange(parsedEntities);
-        //    // add closed generic entities
-        //    return builder.ToImmutable();
-        //}
 
         public static Diagnostic? CheckMemberLayout(int blockLength, IEnumerable<OutputMember> members)
         {
@@ -565,6 +567,12 @@ namespace DTOMaker.SrcGen.Core
             }
             int classHeight = GetClassHeight(entity, entities);
 
+            // check base is valid
+            if (!HasValidBase(entity, entities))
+            {
+                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME14, entity.Location));
+            }
+
             if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
             {
                 // check for MemBlocks layout issues
@@ -600,7 +608,7 @@ namespace DTOMaker.SrcGen.Core
 
             // check entity id uniqueness
             int duplicateCount = allEnts.Count(e => e.EntityId == entity.EntityId);
-            if(duplicateCount > 1)
+            if (duplicateCount > 1)
             {
                 newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location));
             }
@@ -647,8 +655,8 @@ namespace DTOMaker.SrcGen.Core
             while (parent is not null)
             {
                 structureCode = structureCode.AddInnerBlock(parent.ClassHeight, parent.BlockLength);
-                parent = parent.BaseEntity is not null 
-                    ? allEnts.FirstOrDefault(e => e.TFN == parent.BaseEntity.TFN) 
+                parent = parent.BaseEntity is not null
+                    ? allEnts.FirstOrDefault(e => e.TFN == parent.BaseEntity.TFN)
                     : null;
             }
 
@@ -669,7 +677,7 @@ namespace DTOMaker.SrcGen.Core
 
         protected void EmitDiagnostics(SourceProductionContext spc, OutputEntity ent)
         {
-            foreach(var diagnostic in ent.Diagnostics)
+            foreach (var diagnostic in ent.Diagnostics)
             {
                 spc.ReportDiagnostic(diagnostic);
             }
@@ -819,5 +827,4 @@ namespace DTOMaker.SrcGen.Core
             OnEndInitialize(context, outputEntities);
         }
     }
-
 }

@@ -47,6 +47,45 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
         }
 
         [Fact]
+        public void MissingBaseEntity()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 { }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(1, "DME14");
+        }
+
+        [Fact]
+        public void MissingEntityTag()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    public interface IMyDTO1 : IEntityBase { }
+
+                    [Entity(2, LayoutMethod.Linear)]
+                    public interface IMyDTO2 : IMyDTO1 { }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(1, "DME14");
+        }
+
+        [Fact]
         public void InvalidMemberId()
         {
             string modelSource =

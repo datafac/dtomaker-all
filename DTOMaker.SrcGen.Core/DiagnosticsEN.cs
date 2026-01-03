@@ -2,6 +2,12 @@
 
 namespace DTOMaker.SrcGen.Core
 {
+    internal static class SpecialName
+    {
+        public const string RuntimeNamespace = "DTOMaker.Runtime";
+        public const string RuntimeBaseIntfName = "IEntityBase";
+        public const string RuntimeBaseImplName = "EntityBase";
+    }
     public static class DiagnosticsEN
     {
         private static DiagnosticDescriptor Create(DiagnosticSeverity sev, string cat, string id, string title, string desc)
@@ -26,6 +32,7 @@ namespace DTOMaker.SrcGen.Core
         public static readonly DiagnosticDescriptor DME11 = Create(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME11), "Member sequence issue",  "Member sequence numbers must start at 1 and increase monotonically.");
         public static readonly DiagnosticDescriptor DME12 = Create(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME12), "Duplicate entity id",    "Duplicate entity id. Entity ids must be unique.");
         public static readonly DiagnosticDescriptor DME13 = Create(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME13), "Member layout issue",    "Member overlaps another, is misaligned, or extends beyond the end of the block.");
+        public static readonly DiagnosticDescriptor DME14 = Create(DiagnosticSeverity.Error, DiagnosticCategory.Design, nameof(DME14), "Invalid base entity",    "Invalid or missing base entity. Do all entities have [Entity] attributes?");
     }
 
 }
