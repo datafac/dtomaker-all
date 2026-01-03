@@ -58,17 +58,25 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        private const long StructureCode = 0x00_41L;");
             Emit("        private static readonly BlockHeader _header = BlockHeader.CreateNew(3, StructureCode);");
             Emit("");
-            Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeImplName_ source)");
+            Emit("        public static T_MemberTypeImplName_ CreateRequired(T_MemberTypeImplName_ source)");
             Emit("        {");
             Emit("            if (source.IsFrozen) return source;");
             Emit("            return new T_MemberTypeImplName_(source);");
             Emit("        }");
-            Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)");
+            Emit("        public static T_MemberTypeImplName_? CreateNullable(T_MemberTypeImplName_? source)");
+            Emit("        {");
+            Emit("            return (source is null) ? null : CreateRequired(source);");
+            Emit("        }");
+            Emit("        public static T_MemberTypeImplName_ CreateRequired(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)");
             Emit("        {");
             Emit("            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;");
             Emit("            return new T_MemberTypeImplName_(source);");
             Emit("        }");
-            Emit("        public static T_MemberTypeImplName_ CreateFrom(ReadOnlySequence<byte> buffers)");
+            Emit("        public static T_MemberTypeImplName_? CreateNullable(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? source)");
+            Emit("        {");
+            Emit("            return (source is null) ? null : CreateRequired(source);");
+            Emit("        }");
+            Emit("        public static T_MemberTypeImplName_ DeserializeFrom(ReadOnlySequence<byte> buffers)");
             Emit("        {");
             Emit("            return new T_MemberTypeImplName_(buffers);");
             Emit("        }");
@@ -130,7 +138,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>");
             Emit("    {");
             Emit("        private const int T_EntityId_ = 2;");
-            Emit("        public new static T_BaseImplName_ CreateFrom(ReadOnlySequence<byte> buffers)");
+            Emit("        public new static T_BaseImplName_ DeserializeFrom(ReadOnlySequence<byte> buffers)");
             Emit("        {");
             Emit("            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);");
             Emit("            return blocks.Header.EntityId switch");
@@ -252,11 +260,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("    {");
         Emit("        private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>");
         Emit("        {");
-        Emit("            public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);");
+        Emit("            public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);");
         Emit("        }");
         Emit("        private static readonly _EntityFactory _factory = new _EntityFactory();");
         Emit("        public IMemBlocksEntityFactory<T_EntityImplName_> GetFactory() => _factory;");
-        Emit("        public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.CreateFrom(buffers);");
+        Emit("        public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);");
         Emit("");
         if (false)
         {
@@ -274,7 +282,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("");
         Emit("        private static readonly BlockHeader _header = BlockHeader.CreateNew(T_EntityId_, BlockStructureCode);");
         Emit("");
-        Emit("        public new static T_EntityImplName_ CreateFrom(T_EntityImplName_ source)");
+        Emit("        public new static T_EntityImplName_ CreateRequired(T_EntityImplName_ source)");
         Emit("        {");
         Emit("            if (source.IsFrozen) return source;");
         Emit("            return source switch");
@@ -288,7 +296,12 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("            };");
         Emit("        }");
         Emit("");
-        Emit("        public new static T_EntityImplName_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)");
+        Emit("        public new static T_EntityImplName_? CreateNullable(T_EntityImplName_? source)");
+        Emit("        {");
+        Emit("            return (source is null) ? null : CreateRequired(source);");
+        Emit("        }");
+        Emit("");
+        Emit("        public new static T_EntityImplName_ CreateRequired(T_IntfNameSpace_.T_EntityIntfName_ source)");
         Emit("        {");
         Emit("            if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;");
         Emit("            return source switch");
@@ -302,7 +315,12 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("            };");
         Emit("        }");
         Emit("");
-        Emit("        public new static T_EntityImplName_ CreateFrom(ReadOnlySequence<byte> buffers)");
+        Emit("        public new static T_EntityImplName_? CreateNullable(T_IntfNameSpace_.T_EntityIntfName_? source)");
+        Emit("        {");
+        Emit("            return (source is null) ? null : CreateRequired(source);");
+        Emit("        }");
+        Emit("");
+        Emit("        public new static T_EntityImplName_ DeserializeFrom(ReadOnlySequence<byte> buffers)");
         Emit("        {");
         Emit("            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);");
         Emit("            return blocks.Header.EntityId switch");
@@ -612,11 +630,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 case MemberKind.Entity:
                     if (member.IsNullable)
                     {
-                        Emit("            _T_NullableEntityMemberName_ = source.T_NullableEntityMemberName_ is null ? null : T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(source.T_NullableEntityMemberName_);");
+                        Emit("            _T_NullableEntityMemberName_ = source.T_NullableEntityMemberName_ is null ? null : T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateNullable(source.T_NullableEntityMemberName_);");
                     }
                     else
                     {
-                        Emit("            _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(source.T_RequiredEntityMemberName_);");
+                        Emit("            _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateRequired(source.T_RequiredEntityMemberName_);");
                     }
                     break;
                 case MemberKind.Binary:
@@ -754,7 +772,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         Emit("            _T_NullableEntityMemberName_ = null;");
                         Emit("            if (blob is not null)");
                         Emit("            {");
-                        Emit("                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(blob.Value);");
+                        Emit("                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.DeserializeFrom(blob.Value);");
                         Emit("                await _T_NullableEntityMemberName_.Unpack(dataStore, depth - 1);");
                         Emit("            }");
                         Emit("        }");
@@ -771,7 +789,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableEntityMemberName_");
                         Emit("        {");
                         Emit("            get => IfUnpacked(_T_NullableEntityMemberName_);");
-                        Emit("            set => _T_NullableEntityMemberName_ = IfNotFrozen(value is null ? null :  T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(value));");
+                        Emit("            set => _T_NullableEntityMemberName_ = IfNotFrozen(T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateNullable(value));");
                         Emit("        }");
                     }
                     else
@@ -797,7 +815,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         Emit("            }");
                         Emit("            else");
                         Emit("            {");
-                        Emit("                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(blob.Value);");
+                        Emit("                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.DeserializeFrom(blob.Value);");
                         Emit("                await _T_RequiredEntityMemberName_.Unpack(dataStore, depth - 1);");
                         Emit("            }");
                         Emit("        }");
@@ -814,7 +832,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredEntityMemberName_");
                         Emit("        {");
                         Emit("            get => IfNotNull(IfUnpacked(_T_RequiredEntityMemberName_));");
-                        Emit("            set => _T_RequiredEntityMemberName_ = IfNotFrozen(T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateFrom(value));");
+                        Emit("            set => _T_RequiredEntityMemberName_ = IfNotFrozen(T_MemberTypeImplSpace_.T_MemberTypeImplName_.CreateRequired(value));");
                         Emit("        }");
                     }
                     break;

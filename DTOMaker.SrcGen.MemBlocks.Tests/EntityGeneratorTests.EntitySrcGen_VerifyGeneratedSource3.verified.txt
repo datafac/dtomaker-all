@@ -21,11 +21,11 @@ namespace MyOrg.Model3.MemBlocks
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
         {
-            public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+            public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
         public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
-        public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+        public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
 
         private const long BlockStructureCode = 129L;
         private const int ClassHeight = 1;
@@ -35,7 +35,7 @@ namespace MyOrg.Model3.MemBlocks
 
         private static readonly BlockHeader _header = BlockHeader.CreateNew(4, BlockStructureCode);
 
-        public new static MyDTO CreateFrom(MyDTO source)
+        public new static MyDTO CreateRequired(MyDTO source)
         {
             if (source.IsFrozen) return source;
             return source switch
@@ -44,7 +44,12 @@ namespace MyOrg.Model3.MemBlocks
             };
         }
 
-        public new static MyDTO CreateFrom(MyOrg.Model3.IMyDTO source)
+        public new static MyDTO? CreateNullable(MyDTO? source)
+        {
+            return (source is null) ? null : CreateRequired(source);
+        }
+
+        public new static MyDTO CreateRequired(MyOrg.Model3.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
@@ -53,7 +58,12 @@ namespace MyOrg.Model3.MemBlocks
             };
         }
 
-        public new static MyDTO CreateFrom(ReadOnlySequence<byte> buffers)
+        public new static MyDTO? CreateNullable(MyOrg.Model3.IMyDTO? source)
+        {
+            return (source is null) ? null : CreateRequired(source);
+        }
+
+        public new static MyDTO DeserializeFrom(ReadOnlySequence<byte> buffers)
         {
             SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
             return blocks.Header.EntityId switch

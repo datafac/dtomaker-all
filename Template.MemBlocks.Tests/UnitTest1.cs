@@ -141,7 +141,7 @@ namespace Template.MemBlocks.Tests
 
             var buffers = orig.GetBuffers();
 
-            var copy = T_ImplNameSpace_.T_EntityImplName_.CreateFrom(buffers);
+            var copy = T_ImplNameSpace_.T_EntityImplName_.DeserializeFrom(buffers);
             copy.IsFrozen.ShouldBeTrue();
             await copy.Unpack(dataStore, 0);
             copy.BaseField1.ShouldBe(orig.BaseField1);
@@ -184,7 +184,7 @@ namespace Template.MemBlocks.Tests
             orig.Freeze();
 
             var buffers = orig.GetBuffers();
-            var copy = T_ImplNameSpace_.T_EntityImplName_.CreateFrom(buffers);
+            var copy = T_ImplNameSpace_.T_EntityImplName_.DeserializeFrom(buffers);
             await copy.UnpackAll(dataStore);
 
             copy.IsFrozen.ShouldBeTrue();
@@ -219,7 +219,7 @@ namespace Template.MemBlocks.Tests
             orig.Freeze();
 
             var buffers = orig.GetBuffers();
-            var recd = T_BaseImplNameSpace_.T_BaseImplName_.CreateFrom(buffers);
+            var recd = T_BaseImplNameSpace_.T_BaseImplName_.DeserializeFrom(buffers);
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();

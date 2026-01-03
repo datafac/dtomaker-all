@@ -21,11 +21,11 @@ namespace MyOrg.Model2.MemBlocks
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
         {
-            public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+            public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
         public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
-        public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.CreateFrom(buffers);
+        public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
 
         private const long BlockStructureCode = 129L;
         private const int ClassHeight = 1;
@@ -35,7 +35,7 @@ namespace MyOrg.Model2.MemBlocks
 
         private static readonly BlockHeader _header = BlockHeader.CreateNew(3, BlockStructureCode);
 
-        public new static MyDTO CreateFrom(MyDTO source)
+        public new static MyDTO CreateRequired(MyDTO source)
         {
             if (source.IsFrozen) return source;
             return source switch
@@ -44,7 +44,12 @@ namespace MyOrg.Model2.MemBlocks
             };
         }
 
-        public new static MyDTO CreateFrom(MyOrg.Model2.IMyDTO source)
+        public new static MyDTO? CreateNullable(MyDTO? source)
+        {
+            return (source is null) ? null : CreateRequired(source);
+        }
+
+        public new static MyDTO CreateRequired(MyOrg.Model2.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
@@ -53,7 +58,12 @@ namespace MyOrg.Model2.MemBlocks
             };
         }
 
-        public new static MyDTO CreateFrom(ReadOnlySequence<byte> buffers)
+        public new static MyDTO? CreateNullable(MyOrg.Model2.IMyDTO? source)
+        {
+            return (source is null) ? null : CreateRequired(source);
+        }
+
+        public new static MyDTO DeserializeFrom(ReadOnlySequence<byte> buffers)
         {
             SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
             return blocks.Header.EntityId switch
@@ -115,8 +125,8 @@ namespace MyOrg.Model2.MemBlocks
         protected MyDTO(BlockHeader header, MyOrg.Model2.IMyDTO source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-            _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(source.Field31);
-            _Field32 = source.Field32 is null ? null : MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(source.Field32);
+            _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateRequired(source.Field31);
+            _Field32 = source.Field32 is null ? null : MyOrg.Model2.MemBlocks.MyDTO.CreateNullable(source.Field32);
         }
         public MyDTO(MyOrg.Model2.IMyDTO source) : this(_header, source) { }
 
@@ -159,7 +169,7 @@ namespace MyOrg.Model2.MemBlocks
             }
             else
             {
-                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(blob.Value);
+                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(blob.Value);
                 await _Field31.Unpack(dataStore, depth - 1);
             }
         }
@@ -172,7 +182,7 @@ namespace MyOrg.Model2.MemBlocks
         MyOrg.Model2.IMyDTO MyOrg.Model2.IMyDTO.Field31
         {
             get => IfNotNull(IfUnpacked(_Field31));
-            set => _Field31 = IfNotFrozen(MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(value));
+            set => _Field31 = IfNotFrozen(MyOrg.Model2.MemBlocks.MyDTO.CreateRequired(value));
         }
 
         private async ValueTask Field32_Pack(IDataStore dataStore)
@@ -193,7 +203,7 @@ namespace MyOrg.Model2.MemBlocks
             _Field32 = null;
             if (blob is not null)
             {
-                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(blob.Value);
+                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(blob.Value);
                 await _Field32.Unpack(dataStore, depth - 1);
             }
         }
@@ -206,7 +216,7 @@ namespace MyOrg.Model2.MemBlocks
         MyOrg.Model2.IMyDTO? MyOrg.Model2.IMyDTO.Field32
         {
             get => IfUnpacked(_Field32);
-            set => _Field32 = IfNotFrozen(value is null ? null :  MyOrg.Model2.MemBlocks.MyDTO.CreateFrom(value));
+            set => _Field32 = IfNotFrozen(MyOrg.Model2.MemBlocks.MyDTO.CreateNullable(value));
         }
 
 
