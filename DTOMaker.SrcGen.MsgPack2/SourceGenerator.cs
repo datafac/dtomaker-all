@@ -1,6 +1,7 @@
 ﻿using DTOMaker.SrcGen.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 
@@ -29,19 +30,24 @@ namespace DTOMaker.SrcGen.MsgPack2
             });
         }
 
-        protected override OutputEntity OnCustomizeOutputEntity(OutputEntity outputEntity, Phase2Entity inputEntity, ImmutableArray<Phase2Entity> allEntities)
+        protected override OutputEntity OnCustomizeOutputEntity(OutputEntity entity, Phase2Entity inputEntity, ImmutableArray<Phase2Entity> allEntities)
         {
-            return outputEntity;
+            return entity;
         }
 
-        protected override ParsedEntity OnCustomizeParsedEntity(ParsedEntity parsedEntity, Location location)
+        protected override ParsedEntity OnCustomizeParsedEntity(ParsedEntity entity, Location location)
         {
-            return parsedEntity;
+            return entity;
         }
 
-        protected override ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location)
+        protected override ParsedMember OnCustomizeParsedMember(ParsedMember member, Location location)
         {
-            return parsedMember;
+            return member;
+        }
+
+        protected override Phase1Entity OnCustomizePhase1Entity(Phase1Entity entity, Location location, IReadOnlyList<OutputMember> members)
+        {
+            return entity;
         }
     }
 }

@@ -411,38 +411,9 @@ namespace DTOMaker.SrcGen.Core
             return derivedEntities;
         }
 
-        public static Diagnostic? CheckMemberLayout(int blockLength, IEnumerable<OutputMember> members)
-        {
-            BitArray blockMap = new BitArray(blockLength);
-            foreach (var member in members.OrderBy(m => m.Sequence))
-            {
-                if (member.FieldOffset + member.FieldLength > blockLength)
-                {
-                    return Diagnostic.Create(DiagnosticsEN.DME13, member.Location);
-                }
+        protected abstract Phase1Entity OnCustomizePhase1Entity(Phase1Entity phase1Entity, Location location, IReadOnlyList<OutputMember> members);
 
-                if (member.FieldLength > 0 && (member.FieldOffset % member.FieldLength != 0))
-                {
-                    return Diagnostic.Create(DiagnosticsEN.DME13, member.Location);
-                }
-
-                // check value bytes layout
-                for (var i = 0; i < member.FieldLength; i++)
-                {
-                    int offset = member.FieldOffset + i;
-                    if (blockMap.Get(offset))
-                    {
-                        return Diagnostic.Create(DiagnosticsEN.DME13, member.Location);
-                    }
-
-                    // not assigned
-                    blockMap.Set(offset, true);
-                }
-            }
-            return null;
-        }
-
-        internal static Phase1Entity ResolveMembers(ParsedEntity entity, ImmutableArray<ParsedMember> members, ImmutableArray<ParsedEntity> entities, SourceGeneratorParameters srcGenParams)
+        internal Phase1Entity ResolveMembers(ParsedEntity entity, ImmutableArray<ParsedMember> members, ImmutableArray<ParsedEntity> entities, SourceGeneratorParameters srcGenParams)
         {
             string prefix = entity.TFN.Intf.FullName + ".";
             var outputMembers = new List<OutputMember>();
@@ -503,6 +474,10 @@ namespace DTOMaker.SrcGen.Core
                         IsExternal = member.IsExternal,
                     });
                 }
+                else
+                {
+                    // not our member, ignore
+                }
             }
             int classHeight = GetClassHeight(entity, entities);
 
@@ -512,17 +487,7 @@ namespace DTOMaker.SrcGen.Core
                 newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME14, entity.Location));
             }
 
-            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
-            {
-                // check for MemBlocks layout issues
-                var diagnostic = CheckMemberLayout(blockLength, outputMembers);
-                if (diagnostic is not null)
-                {
-                    newDiagnostics.Add(diagnostic);
-                }
-            }
-
-            return new Phase1Entity()
+            var result = new Phase1Entity()
             {
                 Location = entity.Location,
                 TFN = entity.TFN,
@@ -537,6 +502,10 @@ namespace DTOMaker.SrcGen.Core
                 BlockLength = blockLength,
                 Layout = entity.Layout,
             };
+
+            result = OnCustomizePhase1Entity(result, entity.Location, outputMembers);
+
+            return result;
         }
 
         public static Phase2Entity ResolveEntities1(Phase1Entity entity, ImmutableArray<Phase1Entity> allEnts)

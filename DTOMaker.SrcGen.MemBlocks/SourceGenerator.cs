@@ -1,6 +1,7 @@
 ﻿using DTOMaker.SrcGen.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -12,20 +13,23 @@ namespace DTOMaker.SrcGen.MemBlocks
     [Generator]
     public sealed class SourceGenerator : SourceGeneratorBase
     {
-        public static readonly DiagnosticDescriptor DME05 = new DiagnosticDescriptor(nameof(DME05),
+        private static readonly DiagnosticDescriptor DME05 = new DiagnosticDescriptor(nameof(DME05),
             "Invalid entity length", "The entity length must be a whole power of 2 between 0 and 8192", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        public static readonly DiagnosticDescriptor DME09 = new DiagnosticDescriptor(nameof(DME09),
+        private static readonly DiagnosticDescriptor DME09 = new DiagnosticDescriptor(nameof(DME09),
             "Invalid layout method", "Entity layout method must be defined", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        public static readonly DiagnosticDescriptor DME06 = new DiagnosticDescriptor(nameof(DME06), 
+        private static readonly DiagnosticDescriptor DME06 = new DiagnosticDescriptor(nameof(DME06),
             "Invalid member length", "The member length must be a whole power of 2 between 1 and 1024", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        public static readonly DiagnosticDescriptor DME07 = new DiagnosticDescriptor(nameof(DME07), 
+        private static readonly DiagnosticDescriptor DME07 = new DiagnosticDescriptor(nameof(DME07),
             "Invalid member offset", "The member offset must be zero or greater", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        public static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08), 
+        private static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08),
             "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+
+        private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13), 
+            "Member layout issue", "Member overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
@@ -168,6 +172,55 @@ namespace DTOMaker.SrcGen.MemBlocks
             {
                 return parsedMember;
             }
+        }
+
+        private static Diagnostic? CheckMemberLayout(int blockLength, IReadOnlyList<OutputMember> members)
+        {
+            BitArray blockMap = new BitArray(blockLength);
+            foreach (var member in members.OrderBy(m => m.Sequence))
+            {
+                if (member.FieldOffset + member.FieldLength > blockLength)
+                {
+                    return Diagnostic.Create(DME13, member.Location);
+                }
+
+                if (member.FieldLength > 0 && (member.FieldOffset % member.FieldLength != 0))
+                {
+                    return Diagnostic.Create(DME13, member.Location);
+                }
+
+                // check value bytes layout
+                for (var i = 0; i < member.FieldLength; i++)
+                {
+                    int offset = member.FieldOffset + i;
+                    if (blockMap.Get(offset))
+                    {
+                        return Diagnostic.Create(DME13, member.Location);
+                    }
+
+                    // not assigned
+                    blockMap.Set(offset, true);
+                }
+            }
+            return null;
+        }
+
+        protected override Phase1Entity OnCustomizePhase1Entity(Phase1Entity entity, Location location, IReadOnlyList<OutputMember> members)
+        {
+            // check for layout issues
+            List<Diagnostic> newDiagnostics = new();
+            var diagnostic = CheckMemberLayout(entity.BlockLength, members);
+            if (diagnostic is not null)
+            {
+                newDiagnostics.Add(diagnostic);
+            }
+
+            if (newDiagnostics.Count == 0) return entity;
+
+            return entity with
+            {
+                Diagnostics = new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics)),
+            };
         }
     }
 }
