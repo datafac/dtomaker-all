@@ -17,6 +17,10 @@ public readonly struct SourceBlocks
         Blocks = blocks;
     }
 
+    private static readonly ReadOnlyMemory<int> _blockSizes
+        = new ReadOnlyMemory<int>([0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 * 1, 1024 * 2, 1024 * 4, 1024 * 8, 1024 * 16]);
+    private static int GetBlockSize(int blockSizeCode) => _blockSizes.Span[blockSizeCode];
+
     public static SourceBlocks ParseFrom(ReadOnlySequence<byte> buffers)
     {
         int startPosition = 0;
@@ -39,7 +43,7 @@ public readonly struct SourceBlocks
         {
             bits = bits >> 4;
             int blockSizeCode = (int)(bits & 0x0F);
-            int blockLength = StructureCode.GetBlockSize(blockSizeCode);
+            int blockLength = GetBlockSize(blockSizeCode);
             ReadOnlyMemory<byte> block = buffers.Slice(startPosition, blockLength).Compact();
             startPosition += blockLength;
             blockSpan[h + 1] = block;

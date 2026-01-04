@@ -7,7 +7,6 @@ using System.Text;
 
 namespace DTOMaker.SrcGen.MemBlocks
 {
-
     [Generator]
     public sealed class SourceGenerator : SourceGeneratorBase
     {
