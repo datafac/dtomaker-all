@@ -100,15 +100,10 @@ namespace DTOMaker.SrcGen.Core
             return new string(output.ToArray());
         }
 
-        private string BuildTokenName(OutputMember member, string name)
+        protected virtual string OnBuildTokenName(OutputMember member, string name)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(member.IsNullable ? "Nullable" : "Required");
-            if (_parameters.GeneratorId == GeneratorId.MemBlocks 
-                && (member.Kind == MemberKind.String || member.Kind == MemberKind.Binary))
-            {
-                sb.Append(member.IsEmbedded ? "FixLen" : "VarLen");
-            }
             sb.Append(member.Kind switch
             {
                 MemberKind.Native => "Scalar",
@@ -120,6 +115,7 @@ namespace DTOMaker.SrcGen.Core
             sb.Append(name);
             return sb.ToString();
         }
+        private string BuildTokenName(OutputMember member, string name) => OnBuildTokenName(member, name);
 
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {

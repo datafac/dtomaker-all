@@ -34,7 +34,6 @@ namespace DTOMaker.SrcGen.MemBlocks
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
-            GeneratorId = GeneratorId.MemBlocks,
             Language = Language_CSharp.Instance,
             ImplSpaceSuffix = "MemBlocks"
         };

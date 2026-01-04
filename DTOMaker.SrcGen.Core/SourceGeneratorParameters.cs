@@ -3,11 +3,6 @@
 public sealed record class SourceGeneratorParameters
 {
     /// <summary>
-    /// Gets the unique identifier for the source generator associated with this instance.
-    /// </summary>
-    public GeneratorId GeneratorId { get; init; }
-
-    /// <summary>
     /// Gets the language configuration used for processing or interpreting content.
     /// </summary>
     public ILanguage Language { get; init; } = Language_CSharp.Instance;

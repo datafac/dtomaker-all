@@ -13,7 +13,6 @@ namespace DTOMaker.SrcGen.JsonSystemText
     {
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
-            GeneratorId = GeneratorId.JsonSystemText,
             Language = Language_CSharp.Instance,
             ImplSpaceSuffix = "JsonSystemText"
         };

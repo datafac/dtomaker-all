@@ -13,7 +13,6 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft
     {
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
-            GeneratorId = GeneratorId.JsonNewtonSoft,
             Language = Language_CSharp.Instance,
             ImplSpaceSuffix = "JsonNewtonSoft"
         };

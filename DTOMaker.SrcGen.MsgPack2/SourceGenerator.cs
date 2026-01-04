@@ -13,7 +13,6 @@ namespace DTOMaker.SrcGen.MsgPack2
     {
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
-            GeneratorId = GeneratorId.MsgPack2,
             Language = Language_CSharp.Instance,
             ImplSpaceSuffix = "MsgPack2"
         };
