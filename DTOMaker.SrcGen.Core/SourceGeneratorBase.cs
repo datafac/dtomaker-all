@@ -111,22 +111,6 @@ namespace DTOMaker.SrcGen.Core
             }
         }
 
-        private static bool IsValidBlockLength(int blockLength)
-        {
-            const int minimum = 0;
-            const int maximum = 8192;
-            if (blockLength < minimum) return false;
-            if (blockLength > maximum) return false;
-            if (blockLength == 0) return true;
-            int comparand = 1;
-            while (true)
-            {
-                if (comparand > blockLength) return false;
-                if (blockLength == comparand) return true;
-                comparand = comparand * 2;
-            }
-        }
-
         private static int GetFieldLength(TypeFullName tfn)
         {
             string typeName = tfn.Impl.FullName;
@@ -327,7 +311,9 @@ namespace DTOMaker.SrcGen.Core
             return (tfn, kind, isNullable);
         }
 
-        private static ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
+        protected abstract ParsedEntity OnCustomizeParsedEntity(ParsedEntity parsedEntity, Location location);
+
+        private ParsedEntity? GetParsedEntity(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
         {
             List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -395,26 +381,18 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME03, location));
             }
 
-            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
-            {
-                if (!IsValidBlockLength(blockLength))
-                {
-                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME05, location));
-                }
-                if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear)
-                {
-                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME09, location));
-                }
-            }
-
             var baseIntf = intfSymbol.Interfaces.FirstOrDefault();
             TypeFullName? baseTFN = baseIntf is not null ? new TypeFullName(baseIntf, srcGenParams.ImplSpaceSuffix) : null;
-            return new ParsedEntity(location, new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
+            var result = new ParsedEntity(location, new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
             {
                 KeyOffset = keyOffset,
                 BlockLength = blockLength,
                 Layout = layoutAlgo,
             };
+
+            result = OnCustomizeParsedEntity(result, location);
+
+            return result;
         }
 
         private static int GetClassHeight(ParsedEntity thisEntity, ImmutableArray<ParsedEntity> allEntities)

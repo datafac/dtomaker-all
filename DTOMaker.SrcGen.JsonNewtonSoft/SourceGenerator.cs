@@ -33,5 +33,10 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft
         {
             return outputEntity;
         }
+
+        protected override ParsedEntity OnCustomizeParsedEntity(ParsedEntity parsedEntity, Location location)
+        {
+            return parsedEntity;
+        }
     }
 }
