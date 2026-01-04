@@ -166,22 +166,6 @@ namespace DTOMaker.SrcGen.Core
             return _tokenStack.NewScope(tokens);
         }
 
-        //protected IDisposable NewScope(Phase1Entity entity)
-        //{
-        //    string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
-        //    var tokens = new Dictionary<string, object?>()
-        //    {
-        //        ["IntfNameSpace"] = entity.TFN.Intf.Space,
-        //        ["EntityIntfName"] = entity.TFN.Intf.Name,
-        //        ["ImplNameSpace"] = entity.TFN.Impl.Space,
-        //        ["EntityImplName"] = entity.TFN.Impl.Name,
-        //        ["AbstractEntity"] = entity.TFN.Impl.Name,
-        //        ["ConcreteEntity"] = entity.TFN.Impl.Name,
-        //        ["EntityId"] = entity.EntityId,
-        //    };
-        //    return _tokenStack.NewScope(tokens);
-        //}
-
         protected IDisposable NewScope(Phase2Entity entity)
         {
             string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
@@ -218,11 +202,11 @@ namespace DTOMaker.SrcGen.Core
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
                 ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? SpecialName.RuntimeNamespace,
-                ["BaseIntfName"] =      entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
+                ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
                 ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeNamespace}.{implSpaceSuffix}",
-                ["BaseImplName"] =      entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
+                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
                 ["BlockLength"] = entity.BlockLength,
-                ["BlockStructureCode"] = entity.BlockStructureCode, // todo format as hex eg. 0x0041L
+                ["BlockStructureCode"] = $"0x{entity.BlockStructureCode:X8}",
             };
             return _tokenStack.NewScope(tokens);
         }

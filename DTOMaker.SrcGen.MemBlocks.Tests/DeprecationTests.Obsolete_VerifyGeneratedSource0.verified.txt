@@ -27,7 +27,7 @@ namespace MyOrg.Models.MemBlocks
         public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
         public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
 
-        private const long BlockStructureCode = 97L;
+        private const long BlockStructureCode = 0x00000061;
         private const int ClassHeight = 1;
         private const int BlockLength = 32;
         private readonly Memory<byte> _writableLocalBlock;

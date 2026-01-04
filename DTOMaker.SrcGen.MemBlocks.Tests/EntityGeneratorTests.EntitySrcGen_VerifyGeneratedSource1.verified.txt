@@ -27,7 +27,7 @@ namespace MyOrg.Models.MemBlocks
         public IMemBlocksEntityFactory<Derived> GetFactory() => _factory;
         public static Derived CreateInstance(ReadOnlySequence<byte> buffers) => Derived.DeserializeFrom(buffers);
 
-        private const long BlockStructureCode = 2130L;
+        private const long BlockStructureCode = 0x00000852;
         private const int ClassHeight = 2;
         private const int BlockLength = 128;
         private readonly Memory<byte> _writableLocalBlock;
