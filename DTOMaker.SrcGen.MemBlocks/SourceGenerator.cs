@@ -1,6 +1,7 @@
 ﻿using DTOMaker.SrcGen.Core;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -28,7 +29,7 @@ namespace DTOMaker.SrcGen.MemBlocks
         private static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08),
             "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13), 
+        private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13),
             "Member layout issue", "Member overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
@@ -174,7 +175,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
         }
 
-        private static Diagnostic? CheckMemberLayout(int blockLength, IReadOnlyList<OutputMember> members)
+        private static Diagnostic? CheckMemberLayout(int blockLength, IEnumerable<OutputMember> members)
         {
             BitArray blockMap = new BitArray(blockLength);
             foreach (var member in members.OrderBy(m => m.Sequence))
@@ -207,17 +208,55 @@ namespace DTOMaker.SrcGen.MemBlocks
 
         protected override Phase1Entity OnCustomizePhase1Entity(Phase1Entity entity, Location location, IReadOnlyList<OutputMember> members)
         {
-            // check for layout issues
             List<Diagnostic> newDiagnostics = new();
-            var diagnostic = CheckMemberLayout(entity.BlockLength, members);
-            if (diagnostic is not null)
+            Phase1Entity result = entity;
+            if (entity.Layout == LayoutAlgo.Linear)
             {
-                newDiagnostics.Add(diagnostic);
+                // calculate field offsets for Linear layout
+                List<OutputMember> updatedMembers = new();
+                int blockLength = entity.BlockLength;
+                blockLength = 0;
+                int nextFieldOffset = 0;
+                foreach (var member in members.OrderBy(m => m.Sequence))
+                {
+                    // calculate this offset
+                    while (member.FieldLength > 0 && nextFieldOffset % member.FieldLength != 0)
+                    {
+                        nextFieldOffset++;
+                    }
+                    int fieldOffset = nextFieldOffset;
+
+                    // calc next offset
+                    nextFieldOffset = nextFieldOffset + member.FieldLength;
+                    while (nextFieldOffset > blockLength)
+                    {
+                        blockLength = blockLength == 0 ? 1 : blockLength * 2;
+                    }
+
+                    // emit updated member
+                    updatedMembers.Add(member with
+                    {
+                        FieldOffset = fieldOffset,
+                    });
+                }
+
+                result = entity with
+                {
+                    BlockLength = blockLength,
+                    Members = new EquatableArray<OutputMember>(updatedMembers),
+                };
             }
 
-            if (newDiagnostics.Count == 0) return entity;
+            // check for layout issues
+            var newDiagnostic = CheckMemberLayout(result.BlockLength, result.Members);
+            if (newDiagnostic is not null)
+            {
+                newDiagnostics.Add(newDiagnostic);
+            }
 
-            return entity with
+            if (newDiagnostics.Count == 0) return result;
+
+            return result with
             {
                 Diagnostics = new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics)),
             };

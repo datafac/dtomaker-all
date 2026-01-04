@@ -411,7 +411,7 @@ namespace DTOMaker.SrcGen.Core
             return derivedEntities;
         }
 
-        protected abstract Phase1Entity OnCustomizePhase1Entity(Phase1Entity phase1Entity, Location location, IReadOnlyList<OutputMember> members);
+        protected abstract Phase1Entity OnCustomizePhase1Entity(Phase1Entity entity, Location location, IReadOnlyList<OutputMember> members);
 
         internal Phase1Entity ResolveMembers(ParsedEntity entity, ImmutableArray<ParsedMember> members, ImmutableArray<ParsedEntity> entities, SourceGeneratorParameters srcGenParams)
         {
@@ -419,13 +419,7 @@ namespace DTOMaker.SrcGen.Core
             var outputMembers = new List<OutputMember>();
             var newDiagnostics = new List<Diagnostic>();
             int expectedMemberSequence = 1;
-            int blockLength = entity.BlockLength;
-            // MemBlocks: calculate block length for Linear layout
-            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks && entity.Layout == LayoutAlgo.Linear)
-            {
-                blockLength = 0;
-            }
-            int nextFieldOffset = 0;
+
             foreach (ParsedMember member in members.OrderBy(m => m.Sequence))
             {
                 if (member.FullName.StartsWith(prefix, StringComparison.Ordinal))
@@ -436,26 +430,6 @@ namespace DTOMaker.SrcGen.Core
                         newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME11, member.Location));
                     }
                     expectedMemberSequence++;
-
-                    // MemBlocks: calculate member offset for Linear layout
-                    int fieldOffset = member.FieldOffset;
-                    int fieldLength = member.FieldLength;
-                    if (srcGenParams.GeneratorId == GeneratorId.MemBlocks && entity.Layout == LayoutAlgo.Linear)
-                    {
-                        // calculate this offset
-                        while (fieldLength > 0 && nextFieldOffset % fieldLength != 0)
-                        {
-                            nextFieldOffset++;
-                        }
-                        fieldOffset = nextFieldOffset;
-
-                        // calc next offset
-                        nextFieldOffset = nextFieldOffset + fieldLength;
-                        while (nextFieldOffset > blockLength)
-                        {
-                            blockLength = blockLength == 0 ? 1 : blockLength * 2;
-                        }
-                    }
 
                     // emit member
                     outputMembers.Add(new OutputMember()
@@ -468,8 +442,8 @@ namespace DTOMaker.SrcGen.Core
                         IsNullable = member.IsNullable,
                         ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,
-                        FieldOffset = fieldOffset,
-                        FieldLength = fieldLength,
+                        FieldOffset = member.FieldOffset,
+                        FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
                         IsExternal = member.IsExternal,
                     });
@@ -479,6 +453,7 @@ namespace DTOMaker.SrcGen.Core
                     // not our member, ignore
                 }
             }
+
             int classHeight = GetClassHeight(entity, entities);
 
             // check base is valid
@@ -499,7 +474,7 @@ namespace DTOMaker.SrcGen.Core
                     ? new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics))
                     : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
-                BlockLength = blockLength,
+                BlockLength = entity.BlockLength,
                 Layout = entity.Layout,
             };
 

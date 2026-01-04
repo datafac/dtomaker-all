@@ -218,5 +218,28 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             modelSource.GenerateAndCheckLength(1, "DME11");
         }
 
+        [Fact]
+        public void InvalidMemberLayout()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    [Entity(1, LayoutMethod.Explicit)]
+                    public interface IMyDTO : IEntityBase
+                    {
+                        [Member(1)] Octets Field1 { get; set; }
+                        [Member(2)] Octets Field2 { get; set; }
+                    }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(1, "DME13");
+        }
+
     }
 }
