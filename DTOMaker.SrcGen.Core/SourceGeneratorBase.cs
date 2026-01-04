@@ -629,38 +629,13 @@ namespace DTOMaker.SrcGen.Core
             };
         }
 
-        //public void BuildStructureCodes()
-        //{
-        //    // calculate structure code
-        //    int thisClassHeight = GetClassHeight();
-        //    var structureCode = new StructureCode(thisClassHeight, this.BlockLength);
-        //    var parent = this.Base;
-        //    while (parent is MemBlockEntity parentEntity)
-        //    {
-        //        var parentClassHeight = parentEntity.GetClassHeight();
-        //        structureCode = structureCode.AddInnerBlock(parentClassHeight, parentEntity.BlockLength);
-        //        parent = parentEntity.Base;
-        //    }
-        //    this.BlockStructureCode = structureCode.Bits;
-        //}
-
-        public static OutputEntity ResolveEntities2(Phase2Entity entity, ImmutableArray<Phase2Entity> allEnts)
+        protected abstract OutputEntity OnCustomizeOutputEntity(OutputEntity outputEntity, Phase2Entity inputEntity, ImmutableArray<Phase2Entity> allEntities);
+        public OutputEntity ResolveEntities2(Phase2Entity entity, ImmutableArray<Phase2Entity> allEnts)
         {
             var baseEntity = allEnts.FirstOrDefault(e => e.TFN == entity.BaseEntity?.TFN);
             List<Phase2Entity> derivedEntities = GetDerivedEntities2(entity.TFN, allEnts);
 
-            // calculate structure code
-            var structureCode = new StructureCode(entity.ClassHeight, entity.BlockLength);
-            Phase2Entity? parent = allEnts.FirstOrDefault(e => e.TFN == entity.BaseEntity?.TFN);
-            while (parent is not null)
-            {
-                structureCode = structureCode.AddInnerBlock(parent.ClassHeight, parent.BlockLength);
-                parent = parent.BaseEntity is not null
-                    ? allEnts.FirstOrDefault(e => e.TFN == parent.BaseEntity.TFN)
-                    : null;
-            }
-
-            return new OutputEntity()
+            var result = new OutputEntity()
             {
                 TFN = entity.TFN,
                 EntityId = entity.EntityId,
@@ -671,8 +646,11 @@ namespace DTOMaker.SrcGen.Core
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
-                BlockStructureCode = structureCode.Bits,
             };
+
+            result = OnCustomizeOutputEntity(result, entity, allEnts);
+
+            return result;
         }
 
         protected void EmitDiagnostics(SourceProductionContext spc, OutputEntity ent)
