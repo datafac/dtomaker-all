@@ -38,5 +38,10 @@ namespace DTOMaker.SrcGen.JsonSystemText
         {
             return parsedEntity;
         }
+
+        protected override ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location)
+        {
+            return parsedMember;
+        }
     }
 }

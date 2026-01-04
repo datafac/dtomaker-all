@@ -96,21 +96,6 @@ namespace DTOMaker.SrcGen.Core
             return Diagnostic.Create(DiagnosticsEN.DME01, location);
         }
 
-        private static bool IsValidFieldLength(int fieldLength)
-        {
-            const int minimum = 1;
-            const int maximum = 1024;
-            if (fieldLength < minimum) return false;
-            if (fieldLength > maximum) return false;
-            int comparand = 1;
-            while (true)
-            {
-                if (comparand > fieldLength) return false;
-                if (fieldLength == comparand) return true;
-                comparand = comparand * 2;
-            }
-        }
-
         private static int GetFieldLength(TypeFullName tfn)
         {
             string typeName = tfn.Impl.FullName;
@@ -146,7 +131,9 @@ namespace DTOMaker.SrcGen.Core
             }
         }
 
-        private static ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
+        protected abstract ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location);
+
+        private ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
         {
             List<Diagnostic> diagnostics = new();
             SemanticModel semanticModel = ctx.SemanticModel;
@@ -245,37 +232,7 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME10, location));
             }
 
-            if (srcGenParams.GeneratorId == GeneratorId.MemBlocks)
-            {
-                // set default length for Octets and String
-                if (fieldLength == 0 && (kind == MemberKind.String || kind == MemberKind.Binary))
-                {
-                    fieldLength = BlobIdV1Size;
-                    isExternal = true;
-                }
-                // set default length for Octets and String
-                if (kind == MemberKind.Entity)
-                {
-                    fieldLength = BlobIdV1Size;
-                    isExternal = true;
-                }
-
-                // checks
-                if (!IsValidFieldLength(fieldLength))
-                {
-                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME06, location));
-                }
-                if (fieldOffset < 0)
-                {
-                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME07, location));
-                }
-                if (isNullable && kind == MemberKind.Native)
-                {
-                    diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME08, location));
-                }
-            }
-
-            return new ParsedMember(location, fullname, sequence, tfn, kind, isNullable, diagnostics)
+            var result = new ParsedMember(location, fullname, sequence, tfn, kind, isNullable, diagnostics)
             {
                 ObsoleteInfo = isObsolete
                     ? new ObsoleteInformation() { Message = obsoleteMessage, IsError = obsoleteIsError }
@@ -285,6 +242,10 @@ namespace DTOMaker.SrcGen.Core
                 IsBigEndian = isBigEndian,
                 IsExternal = isExternal,
             };
+
+            result = OnCustomizeParsedMember(result, location);
+
+            return result;
         }
 
         private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)

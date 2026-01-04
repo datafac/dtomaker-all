@@ -12,11 +12,20 @@ namespace DTOMaker.SrcGen.MemBlocks
     [Generator]
     public sealed class SourceGenerator : SourceGeneratorBase
     {
-        public static readonly DiagnosticDescriptor DME05 = new DiagnosticDescriptor(nameof(DME05), 
+        public static readonly DiagnosticDescriptor DME05 = new DiagnosticDescriptor(nameof(DME05),
             "Invalid entity length", "The entity length must be a whole power of 2 between 0 and 8192", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        public static readonly DiagnosticDescriptor DME09 = new DiagnosticDescriptor(nameof(DME09), 
+        public static readonly DiagnosticDescriptor DME09 = new DiagnosticDescriptor(nameof(DME09),
             "Invalid layout method", "Entity layout method must be defined", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+
+        public static readonly DiagnosticDescriptor DME06 = new DiagnosticDescriptor(nameof(DME06), 
+            "Invalid member length", "The member length must be a whole power of 2 between 1 and 1024", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+
+        public static readonly DiagnosticDescriptor DME07 = new DiagnosticDescriptor(nameof(DME07), 
+            "Invalid member offset", "The member offset must be zero or greater", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+
+        public static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08), 
+            "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
@@ -90,6 +99,75 @@ namespace DTOMaker.SrcGen.MemBlocks
             {
                 Diagnostics = new EquatableArray<Diagnostic>(parsedEntity.Diagnostics.Concat(newDiagnostics)),
             };
+        }
+
+        private static bool IsValidFieldLength(int fieldLength)
+        {
+            const int minimum = 1;
+            const int maximum = 1024;
+            if (fieldLength < minimum) return false;
+            if (fieldLength > maximum) return false;
+            int comparand = 1;
+            while (true)
+            {
+                if (comparand > fieldLength) return false;
+                if (fieldLength == comparand) return true;
+                comparand = comparand * 2;
+            }
+        }
+
+        protected override ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location)
+        {
+            bool updated = false;
+            bool isExternal = false;
+            int fieldLength = parsedMember.FieldLength;
+
+            // set default length for external (variable length) Octets and String
+            if (fieldLength == 0 && (parsedMember.Kind == MemberKind.String || parsedMember.Kind == MemberKind.Binary))
+            {
+                fieldLength = BlobIdV1Size;
+                isExternal = true;
+                updated = true;
+            }
+            // set default length for entities
+            if (parsedMember.Kind == MemberKind.Entity)
+            {
+                fieldLength = BlobIdV1Size;
+                isExternal = true;
+                updated = true;
+            }
+
+            // checks
+            List<Diagnostic> newDiagnostics = new();
+            if (!IsValidFieldLength(fieldLength))
+            {
+                newDiagnostics.Add(Diagnostic.Create(DME06, location));
+                updated = true;
+            }
+            if (parsedMember.FieldOffset < 0)
+            {
+                newDiagnostics.Add(Diagnostic.Create(DME07, location));
+                updated = true;
+            }
+            if (parsedMember.IsNullable && parsedMember.Kind == MemberKind.Native)
+            {
+                newDiagnostics.Add(Diagnostic.Create(DME08, location));
+                updated = true;
+            }
+
+            if (updated)
+            {
+                return parsedMember with
+                {
+                    FieldLength = fieldLength,
+                    IsExternal = isExternal,
+                    Diagnostics = new EquatableArray<Diagnostic>(parsedMember.Diagnostics.Concat(newDiagnostics)),
+                };
+            }
+            else
+            {
+                return parsedMember;
+            }
         }
     }
 }
