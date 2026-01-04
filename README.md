@@ -36,24 +36,33 @@ Here's how to define a polymorphic, recursive tree type:
 using DTOMaker.Models;
 using DTOMaker.Runtime;
 namespace MyModels;
-[Entity(30)] public interface INode : IEntityBase { [Member(1)] String K { get; set; } }
-[Entity(31)] public interface IStringNode : INode { [Member(1)] String V { get; set; } }
-[Entity(32)] public interface INumberNode : INode { [Member(1)] Int64 V { get; set; } }
-[Entity(33)] public interface ITree : IEntityBase
+[Entity(1)] public interface INode : IEntityBase
 {
-    [Member(1)] ITree? L { get; set; }
-    [Member(2)] ITree? R { get; set; }
-    [Member(3)] INode? N { get; set; }
+    [Member(1)] String Key { get; set; } 
+}
+[Entity(2)] public interface IStringNode : INode
+{
+    [Member(1)] String Value { get; set; } 
+}
+[Entity(3)] public interface INumberNode : INode
+{
+    [Member(1)] Int64 Value  { get; set; } 
+}
+[Entity(4)] public interface ITree : IEntityBase
+{
+    [Member(1)] ITree? Left  { get; set; }
+    [Member(2)] ITree? Right { get; set; }
+    [Member(3)] INode? Node  { get; set; }
 }
 ```
-The implmentations will be generated in the MyModels.JsonSystemText namespace.
+When you add a reference to the DTOMaker.SrcGen.JsonSystemText package, the implmentations will be generated 
+in the MyModels.JsonSystemText namespace.
 
 # Development
 ## In progress
-- incremental serialization (MemBlocks)
+- custom type members (to avoid primitive obsession)
 
 ## Coming soon
-- custom type members (to avoid primitive obsession)
 - global interface equality comparer
 - reservation (hidden members)
 
