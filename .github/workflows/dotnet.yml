@@ -38,4 +38,4 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
 
     - name: Push
-      run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push **/DTOMaker*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
