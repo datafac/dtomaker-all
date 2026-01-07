@@ -16,92 +16,56 @@ namespace DTOMaker.SrcGen.Core
         private readonly string _fullName;
         private readonly int _syntheticId;
         private readonly MemberKind _memberKind;
+        private readonly NativeType _nativeType;
 
         private readonly string _implSpaceSuffix;
 
-        private static int GetSyntheticId(string fullname)
+        /// <summary>
+        /// Determines the kind, native type, and associated synthetic id for a specified fully qualified type name.
+        /// </summary>
+        /// <param name="fullname">The fully qualified name of the type to evaluate. This value is typically a string representing a known
+        /// system or custom type.</param>
+        private static (MemberKind, NativeType, int) GetMemberKind(string fullname)
         {
             return fullname switch
             {
-                KnownType.SystemBoolean => 9001,
-                KnownType.SystemSByte => 9002,
-                KnownType.SystemByte => 9003,
-                KnownType.SystemInt16 => 9004,
-                KnownType.SystemUInt16 => 9005,
-                KnownType.SystemChar => 9006,
-                KnownType.SystemHalf => 9007,
-                KnownType.SystemInt32 => 9008,
-                KnownType.SystemUInt32 => 9009,
-                KnownType.SystemSingle => 9010,
-                KnownType.SystemInt64 => 9011,
-                KnownType.SystemUInt64 => 9012,
-                KnownType.SystemDouble => 9013,
-                KnownType.SystemInt128 => 9014,
-                KnownType.SystemUInt128 => 9015,
-                KnownType.SystemGuid => 9016,
-                KnownType.SystemDecimal => 9017,
-                KnownType.SystemString => 9018,
+                KnownType.SystemBoolean => (MemberKind.Native, NativeType.Boolean, 9001),
+                KnownType.SystemSByte => (MemberKind.Native, NativeType.SByte, 9002),
+                KnownType.SystemByte => (MemberKind.Native, NativeType.Byte, 9003),
+                KnownType.SystemInt16 => (MemberKind.Native, NativeType.Int16, 9004),
+                KnownType.SystemUInt16 => (MemberKind.Native, NativeType.UInt16, 9005),
+                KnownType.SystemChar => (MemberKind.Native, NativeType.Char, 9006),
+                KnownType.SystemHalf => (MemberKind.Native, NativeType.Half, 9007),
+                KnownType.SystemInt32 => (MemberKind.Native, NativeType.Int32, 9008),
+                KnownType.SystemUInt32 => (MemberKind.Native, NativeType.UInt32, 9009),
+                KnownType.SystemSingle => (MemberKind.Native, NativeType.Single, 9010),
+                KnownType.SystemInt64 => (MemberKind.Native, NativeType.Int64, 9011),
+                KnownType.SystemUInt64 => (MemberKind.Native, NativeType.UInt64, 9012),
+                KnownType.SystemDouble => (MemberKind.Native, NativeType.Double, 9013),
+                KnownType.SystemInt128 => (MemberKind.Native, NativeType.Int128, 9014),
+                KnownType.SystemUInt128 => (MemberKind.Native, NativeType.UInt128, 9015),
+                KnownType.SystemGuid => (MemberKind.Native, NativeType.Guid, 9016),
+                KnownType.SystemDecimal => (MemberKind.Native, NativeType.Decimal, 9017),
+                KnownType.SystemString => (MemberKind.String, NativeType.String, 9018),
                 // custom types
-                KnownType.PairOfInt16 => 9096,
-                KnownType.PairOfInt32 => 9097,
-                KnownType.PairOfInt64 => 9098,
-                KnownType.MemoryOctets => 9099,
-                _ => 0,
+                KnownType.PairOfInt16 => (MemberKind.Native, NativeType.PairOfInt16, 9096),
+                KnownType.PairOfInt32 => (MemberKind.Native, NativeType.PairOfInt32, 9097),
+                KnownType.PairOfInt64 => (MemberKind.Native, NativeType.PairOfInt64, 9098),
+                KnownType.MemoryOctets => (MemberKind.Binary, NativeType.Binary, 9099),
+                _ => (MemberKind.Undefined, NativeType.Undefined, 0),
             };
         }
 
-        private static MemberKind GetMemberKind(string fullname)
-        {
-            return fullname switch
-            {
-                KnownType.SystemBoolean => MemberKind.Native,
-                KnownType.SystemSByte => MemberKind.Native,
-                KnownType.SystemByte => MemberKind.Native,
-                KnownType.SystemInt16 => MemberKind.Native,
-                KnownType.SystemUInt16 => MemberKind.Native,
-                KnownType.SystemChar => MemberKind.Native,
-                KnownType.SystemHalf => MemberKind.Native,
-                KnownType.SystemInt32 => MemberKind.Native,
-                KnownType.SystemUInt32 => MemberKind.Native,
-                KnownType.SystemSingle => MemberKind.Native,
-                KnownType.SystemInt64 => MemberKind.Native,
-                KnownType.SystemUInt64 => MemberKind.Native,
-                KnownType.SystemDouble => MemberKind.Native,
-                KnownType.SystemInt128 => MemberKind.Native,
-                KnownType.SystemUInt128 => MemberKind.Native,
-                KnownType.SystemGuid => MemberKind.Native,
-                KnownType.SystemDecimal => MemberKind.Native,
-                KnownType.SystemString => MemberKind.String,
-                // custom types
-                KnownType.PairOfInt16 => MemberKind.Native,
-                KnownType.PairOfInt32 => MemberKind.Native,
-                KnownType.PairOfInt64 => MemberKind.Native,
-                KnownType.MemoryOctets => MemberKind.Binary,
-                _ => MemberKind.Undefined,
-            };
-        }
-
-        private TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments, string implSpaceSuffix)
+        private TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, NativeType nativeType, int syntheticId, ImmutableArray<ITypeParameterSymbol> typeParameters, ImmutableArray<ITypeSymbol> typeArguments, string implSpaceSuffix)
         {
             Intf = intf;
             Impl = impl;
             _typeParameters = typeParameters;
             _typeArguments = typeArguments;
             _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, typeParameters, typeArguments, implSpaceSuffix);
-            _syntheticId = GetSyntheticId(_fullName);
+            _syntheticId = syntheticId;
             _memberKind = kind;
-            _implSpaceSuffix = implSpaceSuffix;
-        }
-
-        public TypeFullName(ParsedName intf, ParsedName impl, MemberKind kind, string implSpaceSuffix)
-        {
-            Intf = intf;
-            Impl = impl;
-            _typeParameters = ImmutableArray<ITypeParameterSymbol>.Empty;
-            _typeArguments = ImmutableArray<ITypeSymbol>.Empty;
-            _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, implSpaceSuffix);
-            _syntheticId = GetSyntheticId(_fullName);
-            _memberKind = kind;
+            _nativeType = nativeType;
             _implSpaceSuffix = implSpaceSuffix;
         }
 
@@ -113,8 +77,7 @@ namespace DTOMaker.SrcGen.Core
             _typeParameters = ids is INamedTypeSymbol nts1 ? nts1.TypeParameters : ImmutableArray<ITypeParameterSymbol>.Empty;
             _typeArguments = ids is INamedTypeSymbol nts2 ? nts2.TypeArguments : ImmutableArray<ITypeSymbol>.Empty;
             _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, implSpaceSuffix);
-            _syntheticId = GetSyntheticId(_fullName);
-            _memberKind = GetMemberKind(_fullName);
+            (_memberKind, _nativeType, _syntheticId) = GetMemberKind(_fullName);
             if (_memberKind == MemberKind.Undefined && ids.TypeKind == TypeKind.Interface)
             {
                 _memberKind = MemberKind.Entity;
@@ -129,6 +92,7 @@ namespace DTOMaker.SrcGen.Core
         public string FullName => _fullName;
         public int SyntheticId => _syntheticId;
         public MemberKind MemberKind => _memberKind;
+        public NativeType NativeType => _nativeType;
         public bool IsGeneric => _typeParameters.Length > 0;
         public bool IsClosed => (_typeArguments.Length == _typeParameters.Length)
                                 && _typeArguments.All(ta => ta.Kind != SymbolKind.TypeParameter);
@@ -137,11 +101,11 @@ namespace DTOMaker.SrcGen.Core
         public ImmutableArray<ITypeSymbol> TypeArguments => _typeArguments;
         public TypeFullName AsOpenGeneric()
         {
-            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, ImmutableArray<ITypeSymbol>.Empty, _implSpaceSuffix);
+            return new TypeFullName(Intf, Impl, _memberKind, _nativeType, _syntheticId, _typeParameters, ImmutableArray<ITypeSymbol>.Empty, _implSpaceSuffix);
         }
         public TypeFullName AsClosedGeneric(ImmutableArray<ITypeSymbol> typeArguments)
         {
-            return new TypeFullName(Intf, Impl, _memberKind, _typeParameters, typeArguments, _implSpaceSuffix);
+            return new TypeFullName(Intf, Impl, _memberKind, _nativeType, _syntheticId, _typeParameters, typeArguments, _implSpaceSuffix);
         }
 
         public bool Equals(TypeFullName other) => string.Equals(_fullName, other._fullName, StringComparison.Ordinal);
