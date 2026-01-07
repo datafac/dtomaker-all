@@ -196,6 +196,28 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
         }
 
         [Fact]
+        public void InvalidCustomMemberType()
+        {
+            string modelSource =
+                """
+                using System;
+                using DataFac.Memory;
+                using DTOMaker.Models;
+                using DTOMaker.Runtime;
+                namespace MyOrg.Models
+                {
+                    [Entity(1, LayoutMethod.Linear)]
+                    public interface IMyDTO : IEntityBase
+                    {
+                        [Member(1, "DayOfWeekToInt32Converter")] DayOfWeek Field1 { get; set; }
+                    }
+                }
+                """;
+
+            modelSource.GenerateAndCheckLength(1, "DME06,DME10");
+        }
+
+        [Fact]
         public void InvalidMemberSequence()
         {
             string modelSource =

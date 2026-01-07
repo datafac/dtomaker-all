@@ -77,7 +77,7 @@ namespace DTOMaker.SrcGen.Core
                 KnownType.PairOfInt32 => MemberKind.Native,
                 KnownType.PairOfInt64 => MemberKind.Native,
                 KnownType.MemoryOctets => MemberKind.Binary,
-                _ => MemberKind.Unknown,
+                _ => MemberKind.Undefined,
             };
         }
 
@@ -115,7 +115,7 @@ namespace DTOMaker.SrcGen.Core
             _fullName = Impl.Space + "." + MakeCSImplName(Impl.Name, _typeParameters, _typeArguments, implSpaceSuffix);
             _syntheticId = GetSyntheticId(_fullName);
             _memberKind = GetMemberKind(_fullName);
-            if (_memberKind == MemberKind.Unknown && ids.TypeKind == TypeKind.Interface)
+            if (_memberKind == MemberKind.Undefined && ids.TypeKind == TypeKind.Interface)
             {
                 _memberKind = MemberKind.Entity;
             }

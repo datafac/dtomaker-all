@@ -98,20 +98,18 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Info).ShouldBe(1);
             generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Warning).ShouldBeEmpty();
 
-            int expectedErrorCount = 0;
+            //int expectedErrorCount = 0;
             if (expectedErrorCodes is null)
             {
-                expectedErrorCount = 0;
                 generatorResult.Diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ShouldBeEmpty();
             }
             else
             {
                 string[] codes = expectedErrorCodes.Split(',');
-                expectedErrorCount = codes.Length;
-                generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(expectedErrorCount);
+                generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(codes.Length, $"Expected error codes: {expectedErrorCodes}");
                 foreach (var code in codes)
                 {
-                    generatorResult.Diagnostics.Count(d => d.Id == code).ShouldBeGreaterThanOrEqualTo(1);
+                    generatorResult.Diagnostics.Count(d => d.Id == code).ShouldBeGreaterThanOrEqualTo(1, $"Expected 1+ {code} errors");
                 }
             }
 

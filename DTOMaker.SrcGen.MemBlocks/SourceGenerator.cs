@@ -127,14 +127,14 @@ namespace DTOMaker.SrcGen.MemBlocks
             int fieldLength = parsedMember.FieldLength;
 
             // set default length for external (variable length) Octets and String
-            if (fieldLength == 0 && (parsedMember.Kind == MemberKind.String || parsedMember.Kind == MemberKind.Binary))
+            if (fieldLength == 0 && (parsedMember.MemberType.MemberKind == MemberKind.String || parsedMember.MemberType.MemberKind == MemberKind.Binary))
             {
                 fieldLength = BlobIdV1Size;
                 isExternal = true;
                 updated = true;
             }
             // set default length for entities
-            if (parsedMember.Kind == MemberKind.Entity)
+            if (parsedMember.MemberType.MemberKind == MemberKind.Entity)
             {
                 fieldLength = BlobIdV1Size;
                 isExternal = true;
@@ -153,7 +153,7 @@ namespace DTOMaker.SrcGen.MemBlocks
                 newDiagnostics.Add(Diagnostic.Create(DME07, location));
                 updated = true;
             }
-            if (parsedMember.IsNullable && parsedMember.Kind == MemberKind.Native)
+            if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Native)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME08, location));
                 updated = true;

@@ -2,7 +2,7 @@
 {
     public enum MemberKind
     {
-        Unknown,
+        Undefined,
         Native,
         Entity,
         Binary,

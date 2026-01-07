@@ -73,9 +73,24 @@ namespace DTOMaker.SrcGen.Core
             return nameSpace;
         }
 
-        protected static Diagnostic? TryGetAttributeArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
+        protected static Diagnostic? TryGetAttributeRequiredArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
         {
             object? input = attrData.ConstructorArguments[index].Value;
+            if (input is T value)
+            {
+                action(value);
+                return null;
+            }
+
+            string inputAsStr = input is null ? "(null)" : $"'{input}' <{input.GetType().Name}>";
+
+            return Diagnostic.Create(DiagnosticsEN.DME02, location);
+        }
+
+        protected static Diagnostic? TryGetAttributeOptionalArgumentValue<T>(AttributeData attrData, Location location, int index, Action<T> action)
+        {
+            object? input = attrData.ConstructorArguments[index].Value;
+            if (input is null) return null;
             if (input is T value)
             {
                 action(value);
@@ -156,7 +171,7 @@ namespace DTOMaker.SrcGen.Core
 
             string fullname = propSymbol.ToString();
 
-            (TypeFullName tfn, MemberKind kind, bool isNullable) = GetTypeInfo(propSymbol.Type, srcGenParams.ImplSpaceSuffix);
+            (TypeFullName tfn, bool isNullable) = GetTypeInfo(propSymbol.Type, srcGenParams.ImplSpaceSuffix);
 
             // Get the namespace the enum is declared in, if any
             int sequence = 0;
@@ -167,48 +182,53 @@ namespace DTOMaker.SrcGen.Core
             int fieldLength = GetFieldLength(tfn);
             bool isBigEndian = false;
             bool isExternal = false;
+            string? nativeTypeName = null;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
             {
                 string? attrName = attributeData.AttributeClass?.Name;
+                var attributeArguments = attributeData.ConstructorArguments;
                 Diagnostic? diagnostic = null;
                 switch (attrName)
                 {
                     case null:
                         break;
                     case MemberAttribute:
-                        // get sequence
-                        diagnostic
-                            = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; });
+                        // get sequence and optional native type
+                        diagnostic = attributeArguments.Length switch
+                        {
+                            1 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; }),
+                            2 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
+                                ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 1, (value) => { nativeTypeName = value; }),
+                            _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
+                        };
                         break;
                     case ObsoleteAttribute:
                         isObsolete = true;
-                        var attributeArguments = attributeData.ConstructorArguments;
                         diagnostic = attributeArguments.Length switch
                         {
                             0 => null,
-                            1 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; }),
-                            2 => TryGetAttributeArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
-                                ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; }),
+                            1 => TryGetAttributeRequiredArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; }),
+                            2 => TryGetAttributeRequiredArgumentValue<string>(attributeData, location, 0, (value) => { obsoleteMessage = value; })
+                                ?? TryGetAttributeRequiredArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
                     case LengthAttribute: // used by MemBlocks
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fieldLength = value; });
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { fieldLength = value; });
                         break;
                     case OffsetAttribute: // used by MemBlocks
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { fieldOffset = value; });
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { fieldOffset = value; });
                         break;
                     case EndianAttribute: // used by MemBlocks
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<bool>(attributeData, location, 0, (value) => { isBigEndian = value; });
+                            ?? TryGetAttributeRequiredArgumentValue<bool>(attributeData, location, 0, (value) => { isBigEndian = value; });
                         break;
                     default:
                         // ignore other attributes
@@ -227,12 +247,12 @@ namespace DTOMaker.SrcGen.Core
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
             }
 
-            if (kind == MemberKind.Unknown)
+            if (tfn.MemberKind == MemberKind.Undefined)
             {
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME10, location));
             }
 
-            var result = new ParsedMember(location, fullname, sequence, tfn, kind, isNullable, diagnostics)
+            var result = new ParsedMember(location, fullname, sequence, tfn, isNullable, diagnostics)
             {
                 ObsoleteInfo = isObsolete
                     ? new ObsoleteInformation() { Message = obsoleteMessage, IsError = obsoleteIsError }
@@ -248,10 +268,9 @@ namespace DTOMaker.SrcGen.Core
             return result;
         }
 
-        private static (TypeFullName tfn, MemberKind kind, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
+        private static (TypeFullName tfn, bool isNullable) GetTypeInfo(ITypeSymbol typeSymbol, string implSpaceSuffix)
         {
             TypeFullName tfn = new TypeFullName(typeSymbol, implSpaceSuffix);
-            MemberKind kind = tfn.MemberKind;
             bool isNullable = false;
             if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
             {
@@ -261,7 +280,6 @@ namespace DTOMaker.SrcGen.Core
                     isNullable = true;
                     ITypeSymbol typeArg0 = namedTypeSymbol.TypeArguments[0];
                     tfn = new TypeFullName(typeArg0, implSpaceSuffix);
-                    kind = tfn.MemberKind;
                 }
             }
             if (typeSymbol.NullableAnnotation == NullableAnnotation.Annotated)
@@ -269,7 +287,7 @@ namespace DTOMaker.SrcGen.Core
                 // nullable ref type
                 isNullable = true;
             }
-            return (tfn, kind, isNullable);
+            return (tfn, isNullable);
         }
 
         protected abstract ParsedEntity OnCustomizeParsedEntity(ParsedEntity parsedEntity, Location location);
@@ -312,18 +330,18 @@ namespace DTOMaker.SrcGen.Core
                         // get entity id and layout algo
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 2)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; })
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 1, (value) => { layoutAlgo = (LayoutAlgo)value; });
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; })
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 1, (value) => { layoutAlgo = (LayoutAlgo)value; });
                         break;
                     case KeyOffsetAttribute: // used by MessagePack 
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
                         break;
                     case LengthAttribute: // used by MemBlocks
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
                         break;
                     default:
                         // ignore other attributes
@@ -438,7 +456,7 @@ namespace DTOMaker.SrcGen.Core
                         Name = member.PropName,
                         Sequence = member.Sequence,
                         MemberType = member.MemberType,
-                        Kind = member.Kind,
+                        Kind = member.MemberType.MemberKind,
                         IsNullable = member.IsNullable,
                         ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,

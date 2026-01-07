@@ -6,10 +6,12 @@ namespace DTOMaker.Models;
 public class MemberAttribute : Attribute
 {
     public readonly int Sequence;
+    public readonly string? TypeConverterName;
 
-    public MemberAttribute(int sequence)
+    public MemberAttribute(int sequence, string? typeConverterName = null)
     {
         Sequence = sequence;
+        TypeConverterName = typeConverterName;
     }
 
 }
