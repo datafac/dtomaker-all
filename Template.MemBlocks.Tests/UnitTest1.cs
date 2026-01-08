@@ -98,7 +98,10 @@ namespace Template.MemBlocks.Tests
 
             var orig = new T_ImplNameSpace_.T_EntityImplName_();
             orig.BaseField1 = 789;
-            orig.T_RequiredScalarMemberName_ = 123;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 123 };
             orig.T_RequiredFixLenBinaryMemberName_ = smallBinary;
             orig.T_RequiredVarLenBinaryMemberName_ = largeBinary;
@@ -109,7 +112,6 @@ namespace Template.MemBlocks.Tests
             var copy = new T_ImplNameSpace_.T_EntityImplName_(orig);
             copy.IsFrozen.ShouldBeFalse();
             copy.BaseField1.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredEntityMemberName_.ShouldNotBeNull();
             copy.T_RequiredFixLenBinaryMemberName_.ShouldBe(orig.T_RequiredFixLenBinaryMemberName_);
             copy.T_RequiredVarLenBinaryMemberName_.ShouldBe(orig.T_RequiredVarLenBinaryMemberName_);
@@ -130,7 +132,10 @@ namespace Template.MemBlocks.Tests
 
             var orig = new T_ImplNameSpace_.T_EntityImplName_();
             orig.BaseField1 = 789;
-            orig.T_RequiredScalarMemberName_ = 123;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 123 };
             orig.T_RequiredFixLenBinaryMemberName_ = smallBinary;
             orig.T_RequiredVarLenBinaryMemberName_ = largeBinary;
@@ -145,7 +150,6 @@ namespace Template.MemBlocks.Tests
             copy.IsFrozen.ShouldBeTrue();
             await copy.Unpack(dataStore, 0);
             copy.BaseField1.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredEntityMemberName_.ShouldNotBeNull();
             copy.T_RequiredFixLenBinaryMemberName_.ShouldBe(orig.T_RequiredFixLenBinaryMemberName_);
             copy.T_RequiredVarLenBinaryMemberName_.ShouldBe(orig.T_RequiredVarLenBinaryMemberName_);
@@ -168,8 +172,10 @@ namespace Template.MemBlocks.Tests
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
-            //orig.T_NullableScalarMemberName_ = 456;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredFixLenStringMemberName_ = "abc";
             orig.T_RequiredVarLenStringMemberName_ = "def";
             orig.T_NullableFixLenStringMemberName_ = "ghi";
@@ -203,8 +209,10 @@ namespace Template.MemBlocks.Tests
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
-            //orig.T_NullableScalarMemberName_ = 456;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredFixLenStringMemberName_ = "abc";
             orig.T_RequiredVarLenStringMemberName_ = "def";
             orig.T_NullableFixLenStringMemberName_ = "ghi";

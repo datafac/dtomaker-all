@@ -19,8 +19,10 @@ namespace Template.JsonNewtonSoft.Tests
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
-            orig.T_NullableScalarMemberName_ = 456;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredStringMemberName_ = "abc";
             orig.T_NullableStringMemberName_ = "def";
             orig.T_RequiredBinaryMemberName_ = largeBinary;
@@ -36,7 +38,6 @@ namespace Template.JsonNewtonSoft.Tests
             copy.Freeze();
             copy.IsFrozen.ShouldBeTrue();
             copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredBinaryMemberName_.AsSpan().SequenceEqual(orig.T_RequiredBinaryMemberName_.AsSpan()).ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
@@ -51,7 +52,10 @@ namespace Template.JsonNewtonSoft.Tests
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredBinaryMemberName_ = largeBinary;
             orig.T_NullableBinaryMemberName_ = smallBinary;
             orig.Freeze();
@@ -66,7 +70,6 @@ namespace Template.JsonNewtonSoft.Tests
             copy.ShouldNotBeNull();
             copy!.IsFrozen.ShouldBeTrue();
             copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredBinaryMemberName_.AsSpan().SequenceEqual(orig.T_RequiredBinaryMemberName_.AsSpan()).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());

@@ -76,6 +76,7 @@ namespace MyOrg.Model3.JsonSystemText
 
         [JsonIgnore]
         private byte[] _Field41 = Array.Empty<byte>();
+        [JsonPropertyName("field41")]
         public byte[] Field41
         {
             get => _Field41;
@@ -90,6 +91,7 @@ namespace MyOrg.Model3.JsonSystemText
 
         [JsonIgnore]
         private byte[]? _Field42;
+        [JsonPropertyName("field42")]
         public byte[]? Field42
         {
             get => _Field42;

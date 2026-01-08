@@ -80,7 +80,7 @@ namespace MyOrg.Models.MsgPack2
         }
 
         [IgnoreMember]
-        private Double _Field1 = default;
+        private Double _Field1;
         [Obsolete("", false)]
         [Key(1)]
         public Double Field1
@@ -90,7 +90,7 @@ namespace MyOrg.Models.MsgPack2
         }
 
         [IgnoreMember]
-        private Double _Field2 = default;
+        private Double _Field2;
         [Obsolete("Removed", false)]
         [Key(2)]
         public Double Field2
@@ -100,7 +100,7 @@ namespace MyOrg.Models.MsgPack2
         }
 
         [IgnoreMember]
-        private Double _Field3 = default;
+        private Double _Field3;
         [Obsolete("Removed", true)]
         [Key(3)]
         public Double Field3
@@ -115,9 +115,9 @@ namespace MyOrg.Models.MsgPack2
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other.Field1) return false;
-            if (_Field2 != other.Field2) return false;
-            if (_Field3 != other.Field3) return false;
+            if (_Field1 != other._Field1) return false;
+            if (_Field2 != other._Field2) return false;
+            if (_Field3 != other._Field3) return false;
             return true;
         }
 

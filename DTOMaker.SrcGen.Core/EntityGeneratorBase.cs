@@ -104,9 +104,13 @@ namespace DTOMaker.SrcGen.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(member.IsNullable ? "Nullable" : "Required");
+            if (member.Kind == MemberKind.Struct)
+            {
+                sb.Append(member.IsCustom ? "Custom" : "Native");
+            }
             sb.Append(member.Kind switch
             {
-                MemberKind.Native => "Scalar",
+                MemberKind.Struct => "Struct",
                 MemberKind.String => "String",
                 MemberKind.Binary => "Binary",
                 MemberKind.Entity => "Entity",
@@ -120,12 +124,15 @@ namespace DTOMaker.SrcGen.Core
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
             ILanguage language = _parameters.Language;
+            string memberType = language.GetDataTypeToken(member.MemberType);
             var tokens = new Dictionary<string, object?>
             {
                 ["MemberIsObsolete"] = member.IsObsolete,
                 ["MemberObsoleteMessage"] = member.ObsoleteInfo?.Message ?? "",
                 ["MemberObsoleteIsError"] = member.ObsoleteInfo?.IsError ?? false,
-                ["MemberType"] = language.GetDataTypeToken(member.MemberType),
+                ["MemberType"] = memberType,
+                ["NativeMemberType"] = memberType,
+                ["CustomMemberType"] = memberType,
                 ["MemberTypeImplName"] = member.MemberType.ShortImplName,
                 ["MemberTypeIntfName"] = member.MemberType.ShortIntfName,
                 ["MemberTypeIntfSpace"] = member.MemberType.IntfNameSpace,
@@ -139,6 +146,10 @@ namespace DTOMaker.SrcGen.Core
             tokens[BuildTokenName(member, "MemberName")] = member.Name;
             tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
+            if (member.ConverterName is not null)
+            {
+                tokens["StructConverter"] = member.ConverterName;
+            }
 
             // ---------- MemBlocks tokens ----------
             tokens[BuildTokenName(member, "FieldOffset")] = member.FieldOffset;
@@ -148,7 +159,6 @@ namespace DTOMaker.SrcGen.Core
             tokens["FieldOffsetR4"] = member.FieldOffset.ToString().PadLeft(4);
             tokens["FieldLengthR4"] = member.FieldLength.ToString().PadLeft(4);
             tokens["MemberBELE"] = member.IsBigEndian ? "BE" : "LE";
-            string memberType = language.GetDataTypeToken(member.MemberType);
             tokens["MemberTypeL7"] = memberType.PadRight(7);
 
             // ---------- MessagePack tokens ----------

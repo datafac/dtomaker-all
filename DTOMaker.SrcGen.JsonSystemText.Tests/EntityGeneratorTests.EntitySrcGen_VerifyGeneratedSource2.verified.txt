@@ -78,11 +78,13 @@ namespace MyOrg.Model2.JsonSystemText
 
         [JsonIgnore]
         private MyOrg.Model2.JsonSystemText.MyDTO _Field31 = MyOrg.Model2.JsonSystemText.MyDTO.Empty;
+        [JsonPropertyName("field31")]
         public MyOrg.Model2.JsonSystemText.MyDTO Field31
         {
             get => _Field31;
             set => _Field31 = IfNotFrozen(value);
         }
+        [JsonIgnore]
         MyOrg.Model2.IMyDTO MyOrg.Model2.IMyDTO.Field31
         {
             get => _Field31;
@@ -91,11 +93,13 @@ namespace MyOrg.Model2.JsonSystemText
 
         [JsonIgnore]
         private MyOrg.Model2.JsonSystemText.MyDTO? _Field32;
+        [JsonPropertyName("field32")]
         public MyOrg.Model2.JsonSystemText.MyDTO? Field32
         {
             get => _Field32;
             set => _Field32 = IfNotFrozen(value);
         }
+        [JsonIgnore]
         MyOrg.Model2.IMyDTO? MyOrg.Model2.IMyDTO.Field32
         {
             get => _Field32;
@@ -108,8 +112,8 @@ namespace MyOrg.Model2.JsonSystemText
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field31 != other.Field31) return false;
-            if (_Field32 != other.Field32) return false;
+            if (_Field31 != other._Field31) return false;
+            if (_Field32 != other._Field32) return false;
             return true;
         }
 

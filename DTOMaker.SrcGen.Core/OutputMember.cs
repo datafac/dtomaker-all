@@ -10,6 +10,7 @@ namespace DTOMaker.SrcGen.Core
         public int Sequence { get; init; }
         public TypeFullName MemberType { get; init; }
         public MemberKind Kind { get; init; }
+        public bool IsCustom { get; init; }
         public bool IsNullable { get; init; }
         public ObsoleteInformation? ObsoleteInfo { get; init; }
         public bool IsObsolete => ObsoleteInfo is not null;
@@ -18,6 +19,7 @@ namespace DTOMaker.SrcGen.Core
         public bool IsBigEndian { get; init; }
         public bool IsExternal { get; init; }
         public bool IsEmbedded => !IsExternal;
+        public string? ConverterName { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     }
 }

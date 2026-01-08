@@ -112,9 +112,9 @@ namespace MyOrg.Models.JsonNewtonSoft
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other.Field1) return false;
-            if (_Field2 != other.Field2) return false;
-            if (_Field3 != other.Field3) return false;
+            if (_Field1 != other._Field1) return false;
+            if (_Field2 != other._Field2) return false;
+            if (_Field3 != other._Field3) return false;
             return true;
         }
 

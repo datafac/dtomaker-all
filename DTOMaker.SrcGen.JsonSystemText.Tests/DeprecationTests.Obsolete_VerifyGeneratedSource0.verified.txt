@@ -79,6 +79,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field1 = default;
         [Obsolete("", false)]
+        [JsonPropertyName("field1")]
         public Double Field1
         {
             get => _Field1;
@@ -88,6 +89,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field2 = default;
         [Obsolete("Removed", false)]
+        [JsonPropertyName("field2")]
         public Double Field2
         {
             get => _Field2;
@@ -97,6 +99,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field3 = default;
         [Obsolete("Removed", true)]
+        [JsonPropertyName("field3")]
         public Double Field3
         {
             get => _Field3;
@@ -109,9 +112,9 @@ namespace MyOrg.Models.JsonSystemText
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other.Field1) return false;
-            if (_Field2 != other.Field2) return false;
-            if (_Field3 != other.Field3) return false;
+            if (_Field1 != other._Field1) return false;
+            if (_Field2 != other._Field2) return false;
+            if (_Field3 != other._Field3) return false;
             return true;
         }
 

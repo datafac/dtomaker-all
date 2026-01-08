@@ -179,10 +179,11 @@ namespace DTOMaker.SrcGen.Core
             string obsoleteMessage = string.Empty;
             bool obsoleteIsError = false;
             int fieldOffset = 0;
-            int fieldLength = GetFieldLength(tfn);
+            int fieldLength = 0;
             bool isBigEndian = false;
             bool isExternal = false;
-            string? nativeTypeName = null;
+            NativeType nativeType = NativeType.Undefined;
+            string? structConverter = null;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
@@ -195,12 +196,13 @@ namespace DTOMaker.SrcGen.Core
                     case null:
                         break;
                     case MemberAttribute:
-                        // get sequence and optional native type
+                        // get sequence and optional custom/native type conversion info
                         diagnostic = attributeArguments.Length switch
                         {
                             1 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; }),
-                            2 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
-                                ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 1, (value) => { nativeTypeName = value; }),
+                            3 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
+                                 ?? TryGetAttributeOptionalArgumentValue<int>(attributeData, location, 1, (value) => { nativeType = (NativeType)value; })
+                                 ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 2, (value) => { structConverter = value; }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
@@ -242,6 +244,17 @@ namespace DTOMaker.SrcGen.Core
                 }
             }
 
+            // adjust for custom structs
+            if (tfn.MemberKind == MemberKind.Undefined && nativeType != NativeType.Undefined && structConverter is not null)
+            {
+                tfn = new TypeFullName(tfn, MemberKind.Struct, true, nativeType);
+            }
+
+            if (fieldLength == 0)
+            {
+                fieldLength = GetFieldLength(tfn);
+            }
+
             if (sequence <= 0)
             {
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
@@ -261,6 +274,7 @@ namespace DTOMaker.SrcGen.Core
                 FieldLength = fieldLength,
                 IsBigEndian = isBigEndian,
                 IsExternal = isExternal,
+                ConverterName = structConverter,
             };
 
             result = OnCustomizeParsedMember(result, location);
@@ -457,6 +471,7 @@ namespace DTOMaker.SrcGen.Core
                         Sequence = member.Sequence,
                         MemberType = member.MemberType,
                         Kind = member.MemberType.MemberKind,
+                        IsCustom = member.MemberType.IsCustom,
                         IsNullable = member.IsNullable,
                         ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,
@@ -464,6 +479,7 @@ namespace DTOMaker.SrcGen.Core
                         FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
                         IsExternal = member.IsExternal,
+                        ConverterName = member.ConverterName,
                     });
                 }
                 else

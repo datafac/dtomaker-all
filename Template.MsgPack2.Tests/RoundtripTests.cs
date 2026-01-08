@@ -20,7 +20,10 @@ namespace Template_MessagePack.Tests
 
             var orig = new T_ConcreteEntity_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 456L };
             orig.T_RequiredBinaryMemberName_ = largeBinary;
             orig.T_NullableBinaryMemberName_ = smallBinary;
@@ -32,7 +35,6 @@ namespace Template_MessagePack.Tests
             copy.Freeze();
             copy.IsFrozen.ShouldBeTrue();
             copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredEntityMemberName_.Field1.ShouldBe(orig.T_RequiredEntityMemberName_.Field1);
             copy.T_RequiredBinaryMemberName_.Span.SequenceEqual(orig.T_RequiredBinaryMemberName_.Span).ShouldBeTrue();
             copy.ShouldBe(orig);
@@ -47,7 +49,10 @@ namespace Template_MessagePack.Tests
 
             var orig = new T_ConcreteEntity_();
             orig.BaseField1 = 321;
-            orig.T_RequiredScalarMemberName_ = 123;
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 456L };
             orig.T_RequiredBinaryMemberName_ = largeBinary;
             orig.T_NullableBinaryMemberName_ = smallBinary;
@@ -63,7 +68,6 @@ namespace Template_MessagePack.Tests
             copy.ShouldNotBeNull();
             copy!.IsFrozen.ShouldBeTrue();
             copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredScalarMemberName_.ShouldBe(orig.T_RequiredScalarMemberName_);
             copy.T_RequiredBinaryMemberName_.Span.SequenceEqual(orig.T_RequiredBinaryMemberName_.Span).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());

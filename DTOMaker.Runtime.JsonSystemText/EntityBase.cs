@@ -35,6 +35,12 @@ namespace DTOMaker.Runtime.JsonSystemText
             return value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void CheckNotFrozen([CallerMemberName] string? methodName = null)
+        {
+            if (_frozen) ThrowIsFrozenException(methodName);
+        }
+
         public bool Equals(EntityBase? other) => true;
         public override bool Equals(object? obj) => obj is EntityBase;
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));

@@ -30,13 +30,14 @@ using System.Text;
 using System.Threading.Tasks;
 using T_ImplNameSpace_;
 //##if(false) {
-using T_MemberType_ = System.Int32;
+using T_CustomMemberType_ = System.DayOfWeek;
+using T_NativeMemberType_ = System.Int32;
 namespace DataFac.Memory
 {
-    public static class Codec_T_MemberType__T_MemberBELE_
+    public static class Codec_T_NativeMemberType__T_MemberBELE_
     {
-        public static T_MemberType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);
-        public static void WriteToSpan(Span<byte> source, T_MemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
+        public static T_NativeMemberType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);
+        public static void WriteToSpan(Span<byte> source, T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
     }
 }
 namespace T_MemberTypeIntfSpace_
@@ -127,7 +128,7 @@ namespace T_BaseIntfNameSpace_
 {
     public interface T_BaseIntfName_ : IEntityBase
     {
-        T_MemberType_ BaseField1 { get; set; }
+        T_NativeMemberType_ BaseField1 { get; set; }
     }
 }
 namespace T_BaseImplNameSpace_
@@ -213,10 +214,10 @@ namespace T_BaseImplNameSpace_
         private const int T_FieldOffset_ = 0;
         private const int T_FieldLength_ = 4;
 
-        public T_MemberType_ BaseField1
+        public T_NativeMemberType_ BaseField1
         {
-            get => (T_MemberType_)Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span);
-            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
+            get => (T_NativeMemberType_)Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span);
+            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
         }
 
         public bool Equals(T_BaseImplName_? other)
@@ -233,10 +234,18 @@ namespace T_BaseImplNameSpace_
 }
 namespace T_IntfNameSpace_
 {
+    public class T_StructConverter_ : IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
+    {
+        public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;
+        public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;
+        public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;
+        public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;
+    }
     public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_
     {
-        //T_MemberType_? T_NullableScalarMemberName_ { get; set; }
-        T_MemberType_ T_RequiredScalarMemberName_ { get; set; }
+        //T_MemberType_? T_NullableStructMemberName_ { get; set; }
+        T_NativeMemberType_ T_RequiredNativeStructMemberName_ { get; set; }
+        T_CustomMemberType_ T_RequiredCustomStructMemberName_ { get; set; }
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
         Octets? T_NullableFixLenBinaryMemberName_ { get; set; }
@@ -337,7 +346,7 @@ namespace T_ImplNameSpace_
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
-            //##case MemberKind.Native:
+            //##case MemberKind.Struct:
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -363,7 +372,7 @@ namespace T_ImplNameSpace_
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
-            //##case MemberKind.Native:
+            //##case MemberKind.Struct:
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -415,7 +424,7 @@ namespace T_ImplNameSpace_
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
-            //##case MemberKind.Native:
+            //##case MemberKind.Struct:
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -485,8 +494,12 @@ namespace T_ImplNameSpace_
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
-            //##case MemberKind.Native:
-            this.T_RequiredScalarMemberName_ = source.T_RequiredScalarMemberName_;
+            //##case MemberKind.Struct:
+            //##if (member.IsCustom) {
+            this.T_RequiredCustomStructMemberName_ = source.T_RequiredCustomStructMemberName_;
+            //##} else {
+            this.T_RequiredNativeStructMemberName_ = source.T_RequiredNativeStructMemberName_;
+            //##}
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -539,8 +552,12 @@ namespace T_ImplNameSpace_
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
-            //##case MemberKind.Native:
-            this.T_RequiredScalarMemberName_ = source.T_RequiredScalarMemberName_;
+            //##case MemberKind.Struct:
+            //##if (member.IsCustom) {
+            this.T_RequiredCustomStructMemberName_ = source.T_RequiredCustomStructMemberName_;
+            //##} else {
+            this.T_RequiredNativeStructMemberName_ = source.T_RequiredNativeStructMemberName_;
+            //##}
             //##break;
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
@@ -606,7 +623,8 @@ namespace T_ImplNameSpace_
         public T_EntityImplName_(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
         //##if(false) {
-        private const int T_RequiredScalarFieldOffset_ = 0;
+        private const int T_RequiredNativeStructFieldOffset_ = 0;
+        private const int T_RequiredCustomStructFieldOffset_ = 4;
         private const int T_NullableEntityFieldOffset_ = 64;
         private const int T_RequiredEntityFieldOffset_ = 128;
         private const int T_NullableFixLenBinaryFieldOffset_ = 192;
@@ -625,21 +643,29 @@ namespace T_ImplNameSpace_
         private const int T_NullableVarLenStringFieldOffset_ = 448;
         private const int T_RequiredVarLenStringFieldOffset_ = 512;
 
-        private const int T_FieldLength_ = 8;
+        private const int T_FieldLength_ = 4;
         private const bool T_IsBigEndian_ = false;
         //##}
         //##foreach (var member in entity.Members) {
         //##using var _ = NewScope(entity, member);
         //##switch(member.Kind) {
-        //##case MemberKind.Native:
+        //##case MemberKind.Struct:
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_MemberType_ T_RequiredScalarMemberName_
+        //##if (member.IsCustom) {
+        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
         {
-            get => Codec_T_MemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span);
-            set => Codec_T_MemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredScalarFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
+            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span));
+            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value)));
         }
+        //##} else {
+        public T_NativeMemberType_ T_RequiredNativeStructMemberName_
+        {
+            get => Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span);
+            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
+        }
+        //##}
         //##break;
         //##case MemberKind.Entity:
         //##if (member.IsNullable) {

@@ -153,7 +153,7 @@ namespace DTOMaker.SrcGen.MemBlocks
                 newDiagnostics.Add(Diagnostic.Create(DME07, location));
                 updated = true;
             }
-            if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Native)
+            if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Struct)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME08, location));
                 updated = true;

@@ -3,7 +3,7 @@
     public enum MemberKind
     {
         Undefined,
-        Native,
+        Struct,
         Entity,
         Binary,
         String,

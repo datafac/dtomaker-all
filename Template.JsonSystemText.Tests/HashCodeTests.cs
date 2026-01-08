@@ -19,13 +19,21 @@ namespace Template.JsonSystemText.Tests
         }
 
         [Fact]
-        public void Equality02_ScalarData()
+        public void Equality02_StructData()
         {
-            var orig = new T_ImplNameSpace_.T_EntityImplName_() { T_RequiredScalarMemberName_ = 123 };
+            var orig = new T_ImplNameSpace_.T_EntityImplName_()
+            {
+                T_RequiredNativeStructMemberName_ = 123,
+                T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday,
+            };
             orig.Freeze();
             int origHash = orig.GetHashCode();
 
-            var copy = new T_ImplNameSpace_.T_EntityImplName_() { T_RequiredScalarMemberName_ = 123 };
+            var copy = new T_ImplNameSpace_.T_EntityImplName_()
+            {
+                T_RequiredNativeStructMemberName_ = 123,
+                T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday,
+            };
             copy.Freeze();
             int copyHash = copy.GetHashCode();
 
