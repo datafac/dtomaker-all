@@ -527,7 +527,10 @@ namespace DTOMaker.SrcGen.Core
             int duplicateCount = allEnts.Count(e => e.EntityId == entity.EntityId);
             if (duplicateCount > 1)
             {
-                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location));
+                var usedIds = allEnts.Select(e => e.EntityId).ToImmutableHashSet();
+                var allIds = Enumerable.Range(1, allEnts.Max(e => e.EntityId) + 3).ToImmutableHashSet();
+                var freeIds = allIds.Except(usedIds).OrderBy(id => id).ToArray();
+                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location, freeIds));
             }
             return new Phase2Entity()
             {

@@ -21,19 +21,15 @@ namespace Template.JsonSystemText.Tests
         [Fact]
         public void Equality02_StructData()
         {
-            var orig = new T_ImplNameSpace_.T_EntityImplName_()
-            {
-                T_RequiredNativeStructMemberName_ = 123,
-                T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday,
-            };
+            T_IntfNameSpace_.T_EntityIntfName_ orig = new T_ImplNameSpace_.T_EntityImplName_();
+            orig.T_RequiredNativeStructMemberName_ = 123;
+            orig.T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday;
             orig.Freeze();
             int origHash = orig.GetHashCode();
 
-            var copy = new T_ImplNameSpace_.T_EntityImplName_()
-            {
-                T_RequiredNativeStructMemberName_ = 123,
-                T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday,
-            };
+            T_IntfNameSpace_.T_EntityIntfName_ copy = new T_ImplNameSpace_.T_EntityImplName_();
+            copy.T_RequiredNativeStructMemberName_ = 123;
+            copy.T_RequiredCustomStructMemberName_ = System.DayOfWeek.Wednesday;
             copy.Freeze();
             int copyHash = copy.GetHashCode();
 

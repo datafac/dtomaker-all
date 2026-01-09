@@ -39,3 +39,22 @@ public class RoundtripBasicTypeTests_Int32
     [Fact] public async Task Roundtrip_Int32_UnitVals() => await Verifier.Verify(Roundtrip_Int32(1, -1));
 
 }
+
+// ---------- custom structs ----------
+//[Entity(31, LayoutMethod.Linear)]
+//public interface IData_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek Value { get; } }
+
+public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, int>
+{
+    public static DayOfWeek ToCustom(int native) => (DayOfWeek)native;
+    public static DayOfWeek? ToCustom(int? native) => native.HasValue ? (DayOfWeek)native.Value : null;
+    public static int ToNative(DayOfWeek custom) => (int)custom;
+    public static int? ToNative(DayOfWeek? custom) => custom.HasValue ? (int)custom.Value : null;
+}
+
+//[Entity(23)]
+//public interface ISimpleDTO_DayOfWeek : IEntityBase
+//{
+//    [Member(1, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek Field1 { get; set; }
+//    [Member(2, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek? Field2 { get; set; }
+//}

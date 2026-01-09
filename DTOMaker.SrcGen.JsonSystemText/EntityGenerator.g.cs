@@ -48,8 +48,26 @@ Emit("        }");
 Emit("        private static readonly T_MemberTypeImplName_ _empty = CreateEmpty();");
 Emit("        public static new T_MemberTypeImplName_ Empty => _empty;");
 Emit("");
-Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) => throw new NotImplementedException();");
+Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeImplName_ source)");
+Emit("        {");
+Emit("            if (source.IsFrozen) return source;");
+Emit("            return source switch");
+Emit("            {");
+Emit("                T_MemberTypeImplName_ source2 => new T_MemberTypeImplName_(source2),");
+Emit("                _ => throw new NotImplementedException()");
+Emit("            };");
+Emit("        }");
+Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)");
+Emit("        {");
+Emit("            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;");
+Emit("            return source switch");
+Emit("            {");
+Emit("                T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source2 => new T_MemberTypeImplName_(source2),");
+Emit("                _ => throw new NotImplementedException()");
+Emit("            };");
+Emit("        }");
 Emit("        public T_MemberTypeImplName_() { }");
+Emit("        public T_MemberTypeImplName_(T_MemberTypeImplName_ source) { }");
 Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
 Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
 Emit("");
@@ -335,7 +353,13 @@ Emit("        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;")
 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
         }
 Emit("        [JsonPropertyName(\"T_NullableCustomStructMemberJsonName_\")]");
-Emit("        public T_CustomMemberType_? T_NullableCustomStructMemberName_");
+Emit("        public T_NativeMemberType_? T_NullableCustomStructMemberName_");
+Emit("        {");
+Emit("            get => _T_NullableCustomStructMemberName_;");
+Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);");
+Emit("        }");
+Emit("        [JsonIgnore]");
+Emit("        T_CustomMemberType_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableCustomStructMemberName_");
 Emit("        {");
 Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_NullableCustomStructMemberName_);");
 Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));");
@@ -361,7 +385,13 @@ Emit("        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_ = T
 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
         }
 Emit("        [JsonPropertyName(\"T_RequiredCustomStructMemberJsonName_\")]");
-Emit("        public T_CustomMemberType_ T_RequiredCustomStructMemberName_");
+Emit("        public T_NativeMemberType_ T_RequiredCustomStructMemberName_");
+Emit("        {");
+Emit("            get => _T_RequiredCustomStructMemberName_;");
+Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);");
+Emit("        }");
+Emit("        [JsonIgnore]");
+Emit("        T_CustomMemberType_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredCustomStructMemberName_");
 Emit("        {");
 Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_RequiredCustomStructMemberName_);");
 Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));");
@@ -484,6 +514,7 @@ Emit("        {");
 Emit("            get => _T_RequiredStringMemberName_;");
 Emit("            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);");
 Emit("        }");
+Emit("");
         }
         break;
         default:

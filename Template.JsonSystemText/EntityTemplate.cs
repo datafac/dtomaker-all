@@ -48,8 +48,26 @@ namespace T_MemberTypeImplSpace_
         private static readonly T_MemberTypeImplName_ _empty = CreateEmpty();
         public static new T_MemberTypeImplName_ Empty => _empty;
 
-        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) => throw new NotImplementedException();
+        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeImplName_ source)
+        {
+            if (source.IsFrozen) return source;
+            return source switch
+            {
+                T_MemberTypeImplName_ source2 => new T_MemberTypeImplName_(source2),
+                _ => throw new NotImplementedException()
+            };
+        }
+        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)
+        {
+            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;
+            return source switch
+            {
+                T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source2 => new T_MemberTypeImplName_(source2),
+                _ => throw new NotImplementedException()
+            };
+        }
         public T_MemberTypeImplName_() { }
+        public T_MemberTypeImplName_(T_MemberTypeImplName_ source) { }
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }
         protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
 
@@ -335,7 +353,13 @@ namespace T_ImplNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonPropertyName("T_NullableCustomStructMemberJsonName_")]
-        public T_CustomMemberType_? T_NullableCustomStructMemberName_
+        public T_NativeMemberType_? T_NullableCustomStructMemberName_
+        {
+            get => _T_NullableCustomStructMemberName_;
+            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        T_CustomMemberType_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableCustomStructMemberName_
         {
             get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_NullableCustomStructMemberName_);
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));
@@ -361,7 +385,13 @@ namespace T_ImplNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonPropertyName("T_RequiredCustomStructMemberJsonName_")]
-        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
+        public T_NativeMemberType_ T_RequiredCustomStructMemberName_
+        {
+            get => _T_RequiredCustomStructMemberName_;
+            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        T_CustomMemberType_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredCustomStructMemberName_
         {
             get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_RequiredCustomStructMemberName_);
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));
@@ -484,6 +514,7 @@ namespace T_ImplNameSpace_
             get => _T_RequiredStringMemberName_;
             set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
         }
+
         //##}
         //##break;
         //##default:

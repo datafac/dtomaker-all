@@ -83,6 +83,7 @@ namespace MyOrg.Models.JsonSystemText
             set => _Field11 = IfNotFrozen(value);
         }
 
+
         [JsonIgnore]
         private string? _Field12;
         [JsonPropertyName("field12")]
