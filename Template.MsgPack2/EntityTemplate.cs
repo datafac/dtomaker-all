@@ -422,35 +422,25 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.Binary:
         //##if (member.IsNullable) {
-        [IgnoreMember]
+        [Key(T_NullableBinaryMemberKey_)]
         private ReadOnlyMemory<byte>? _T_NullableBinaryMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_NullableBinaryMemberKey_)]
-        public ReadOnlyMemory<byte>? T_NullableBinaryMemberName_
-        {
-            get => _T_NullableBinaryMemberName_;
-            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);
-        }
-        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_
+        [IgnoreMember]
+        public Octets? T_NullableBinaryMemberName_
         {
             get => _T_NullableBinaryMemberName_ is null ? null : Octets.UnsafeWrap(_T_NullableBinaryMemberName_.Value);
             set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.AsMemory());
         }
         //##} else {
-        [IgnoreMember]
+        [Key(T_RequiredBinaryMemberKey_)]
         private ReadOnlyMemory<byte> _T_RequiredBinaryMemberName_ = ReadOnlyMemory<byte>.Empty;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_RequiredBinaryMemberKey_)]
-        public ReadOnlyMemory<byte> T_RequiredBinaryMemberName_
-        {
-            get => _T_RequiredBinaryMemberName_;
-            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);
-        }
-        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_
+        [IgnoreMember]
+        public Octets T_RequiredBinaryMemberName_
         {
             get => Octets.UnsafeWrap(_T_RequiredBinaryMemberName_);
             set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.AsMemory());
@@ -917,35 +907,25 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.Binary:
         //##if (member.IsNullable) {
-        [IgnoreMember]
+        [Key(T_NullableBinaryMemberKey_)]
         private ReadOnlyMemory<byte>? _T_NullableBinaryMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_NullableBinaryMemberKey_)]
-        public ReadOnlyMemory<byte>? T_NullableBinaryMemberName_
-        {
-            get => _T_NullableBinaryMemberName_;
-            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);
-        }
-        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_
+        [IgnoreMember]
+        public Octets? T_NullableBinaryMemberName_
         {
             get => _T_NullableBinaryMemberName_ is null ? null : Octets.UnsafeWrap(_T_NullableBinaryMemberName_.Value);
             set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.AsMemory());
         }
         //##} else {
-        [IgnoreMember]
+        [Key(T_RequiredBinaryMemberKey_)]
         private ReadOnlyMemory<byte> _T_RequiredBinaryMemberName_ = ReadOnlyMemory<byte>.Empty;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_RequiredBinaryMemberKey_)]
-        public ReadOnlyMemory<byte> T_RequiredBinaryMemberName_
-        {
-            get => _T_RequiredBinaryMemberName_;
-            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);
-        }
-        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_
+        [IgnoreMember]
+        public Octets T_RequiredBinaryMemberName_
         {
             get => Octets.UnsafeWrap(_T_RequiredBinaryMemberName_);
             set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.AsMemory());

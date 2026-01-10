@@ -87,88 +87,41 @@ namespace Template.MemBlocks.Tests
 
     public class RoundtripTests
     {
+        private static readonly Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
+        private static readonly Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
+
         [Fact]
 
-        public async Task RoundtripDTO1_Direct()
+        public async Task Roundtrip_Direct()
         {
-            Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
-            Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
-
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
             var orig = new T_ImplNameSpace_.T_EntityImplName_();
-            orig.BaseField1 = 789;
             orig.T_RequiredNativeStructMemberName_ = 123;
             //orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
             //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
-            orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 123 };
-            orig.T_RequiredFixLenBinaryMemberName_ = smallBinary;
+            orig.T_RequiredFixLenStringMemberName_ = "abc";
+            orig.T_NullableFixLenStringMemberName_ = "def";
             orig.T_RequiredVarLenBinaryMemberName_ = largeBinary;
-            orig.T_NullableFixLenBinaryMemberName_ = null;
-            orig.T_NullableVarLenBinaryMemberName_ = smallBinary;
+            orig.T_NullableFixLenBinaryMemberName_ = smallBinary;
+            orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
+            orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
+            //orig.Freeze();
             await orig.Pack(dataStore);
 
             var copy = new T_ImplNameSpace_.T_EntityImplName_(orig);
-            copy.IsFrozen.ShouldBeFalse();
-            copy.BaseField1.ShouldBe(orig.BaseField1);
-            copy.T_RequiredEntityMemberName_.ShouldNotBeNull();
-            copy.T_RequiredFixLenBinaryMemberName_.ShouldBe(orig.T_RequiredFixLenBinaryMemberName_);
-            copy.T_RequiredVarLenBinaryMemberName_.ShouldBe(orig.T_RequiredVarLenBinaryMemberName_);
-            copy.T_NullableFixLenBinaryMemberName_.ShouldBe(orig.T_NullableFixLenBinaryMemberName_);
-            copy.T_NullableVarLenBinaryMemberName_.ShouldBe(orig.T_NullableVarLenBinaryMemberName_);
-            await copy.T_RequiredEntityMemberName_.Unpack(dataStore, 0);
-            copy.T_RequiredEntityMemberName_!.Field1.ShouldBe(orig.T_RequiredEntityMemberName_.Field1);
-        }
-
-        [Fact]
-
-        public async Task RoundtripDTO2_ViaWire()
-        {
-            Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
-            Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
-
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-
-            var orig = new T_ImplNameSpace_.T_EntityImplName_();
-            orig.BaseField1 = 789;
-            orig.T_RequiredNativeStructMemberName_ = 123;
-            //orig.T_NullableNativeStructMemberName_ = 456;
-            orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
-            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
-            orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 123 };
-            orig.T_RequiredFixLenBinaryMemberName_ = smallBinary;
-            orig.T_RequiredVarLenBinaryMemberName_ = largeBinary;
-            orig.T_NullableFixLenBinaryMemberName_ = null;
-            orig.T_NullableVarLenBinaryMemberName_ = smallBinary;
-            await orig.Pack(dataStore);
-            orig.Freeze();
-
-            var buffers = orig.GetBuffers();
-
-            var copy = T_ImplNameSpace_.T_EntityImplName_.DeserializeFrom(buffers);
+            await copy.Pack(dataStore);
             copy.IsFrozen.ShouldBeTrue();
-            await copy.Unpack(dataStore, 0);
-            copy.BaseField1.ShouldBe(orig.BaseField1);
-            copy.T_RequiredEntityMemberName_.ShouldNotBeNull();
-            copy.T_RequiredFixLenBinaryMemberName_.ShouldBe(orig.T_RequiredFixLenBinaryMemberName_);
-            copy.T_RequiredVarLenBinaryMemberName_.ShouldBe(orig.T_RequiredVarLenBinaryMemberName_);
-            copy.T_NullableFixLenBinaryMemberName_.ShouldBe(orig.T_NullableFixLenBinaryMemberName_);
-            copy.T_NullableVarLenBinaryMemberName_.ShouldBe(orig.T_NullableVarLenBinaryMemberName_);
-            await copy.T_RequiredEntityMemberName_.Unpack(dataStore, 0);
-            copy.T_RequiredEntityMemberName_!.Field1.ShouldBe(orig.T_RequiredEntityMemberName_.Field1);
+            copy.Equals(orig).ShouldBeTrue();
+            copy.ShouldBe(orig);
+            copy.GetHashCode().ShouldBe(orig.GetHashCode());
         }
-    }
 
-    public class RoundtripTests2
-    {
         [Fact]
-        public async Task Roundtrip01AsEntityAsync()
+        public async Task Roundtrip_AsEntity()
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-
-            Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
-            Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
@@ -200,12 +153,9 @@ namespace Template.MemBlocks.Tests
         }
 
         [Fact]
-        public async Task Roundtrip03AsBaseAsync()
+        public async Task Roundtrip_AsBase()
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-
-            Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
-            Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
