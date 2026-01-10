@@ -21,7 +21,7 @@ public interface ISimpleDTO_Octets : IEntityBase
 
 public class RoundtripBasicTypeTests_Octets
 {
-    public string Roundtrip_Octets(byte[] reqValue, byte[]? optValue)
+    public string Roundtrip_Octets(Octets reqValue, Octets? optValue)
     {
         var orig = new SimpleDTO_Octets { Field1 = reqValue, Field2 = optValue };
         orig.Freeze();
@@ -35,9 +35,13 @@ public class RoundtripBasicTypeTests_Octets
         return json;
     }
 
-    [Fact] public async Task Roundtrip_Octets_Defaults() => await Verifier.Verify(Roundtrip_Octets([], null));
+    [Fact] 
+    public async Task Roundtrip_Octets_Defaults() => await Verifier.Verify(Roundtrip_Octets(Octets.Empty, null));
+
     [Fact]
-    public async Task Roundtrip_Octets_UnitVals() => await Verifier.Verify(Roundtrip_Octets(
-            Encoding.UTF8.GetBytes("abc"), Encoding.UTF8.GetBytes("def")));
+    public async Task Roundtrip_Octets_UnitVals() => await Verifier.Verify(
+        Roundtrip_Octets(
+            new Octets(Encoding.UTF8.GetBytes("abc")),
+            new Octets(Encoding.UTF8.GetBytes("def"))));
 
 }

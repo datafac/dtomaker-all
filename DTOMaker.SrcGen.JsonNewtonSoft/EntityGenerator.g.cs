@@ -50,8 +50,26 @@ public partial class EntityGenerator
             Emit("        private static readonly T_MemberTypeImplName_ _empty = CreateEmpty();");
             Emit("        public static new T_MemberTypeImplName_ Empty => _empty;");
             Emit("");
-            Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) => throw new NotImplementedException();");
+            Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeImplName_ source)");
+            Emit("        {");
+            Emit("            if (source.IsFrozen) return source;");
+            Emit("            return source switch");
+            Emit("            {");
+            Emit("                T_MemberTypeImplName_ source2 => new T_MemberTypeImplName_(source2),");
+            Emit("                _ => throw new NotImplementedException()");
+            Emit("            };");
+            Emit("        }");
+            Emit("        public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)");
+            Emit("        {");
+            Emit("            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;");
+            Emit("            return source switch");
+            Emit("            {");
+            Emit("                T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source2 => new T_MemberTypeImplName_(source2),");
+            Emit("                _ => throw new NotImplementedException()");
+            Emit("            };");
+            Emit("        }");
             Emit("        public T_MemberTypeImplName_() { }");
+            Emit("        public T_MemberTypeImplName_(T_MemberTypeImplName_ source) { }");
             Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
             Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
             Emit("");
@@ -375,13 +393,13 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("        [JsonIgnore]");
+                            Emit("        [JsonProperty(\"T_NullableCustomStructMemberJsonName_\")]");
                             Emit("        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
-                            Emit("        [JsonProperty(\"T_NullableCustomStructMemberJsonName_\")]");
+                            Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_? T_NullableCustomStructMemberName_");
                             Emit("        {");
                             Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_NullableCustomStructMemberName_);");
@@ -408,13 +426,13 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("        [JsonIgnore]");
+                            Emit("        [JsonProperty(\"T_RequiredCustomStructMemberJsonName_\")]");
                             Emit("        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_ = T_MemberDefaultValue_;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
-                            Emit("        [JsonProperty(\"T_RequiredCustomStructMemberJsonName_\")]");
+                            Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_ T_RequiredCustomStructMemberName_");
                             Emit("        {");
                             Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_RequiredCustomStructMemberName_);");
@@ -485,20 +503,14 @@ public partial class EntityGenerator
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        Emit("        [JsonIgnore]");
+                        Emit("        [JsonProperty(\"T_NullableBinaryMemberJsonName_\")]");
                         Emit("        private byte[]? _T_NullableBinaryMemberName_;");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                         }
-                        Emit("        [JsonProperty(\"T_NullableBinaryMemberJsonName_\")]");
-                        Emit("        public byte[]? T_NullableBinaryMemberName_");
-                        Emit("        {");
-                        Emit("            get => _T_NullableBinaryMemberName_;");
-                        Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);");
-                        Emit("        }");
                         Emit("        [JsonIgnore]");
-                        Emit("        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_");
+                        Emit("        public Octets? T_NullableBinaryMemberName_");
                         Emit("        {");
                         Emit("            get => _T_NullableBinaryMemberName_ is null ? null : _T_NullableBinaryMemberName_.Length == 0 ? Octets.Empty : new Octets(_T_NullableBinaryMemberName_);");
                         Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.ToByteArray());");
@@ -506,20 +518,14 @@ public partial class EntityGenerator
                     }
                     else
                     {
-                        Emit("        [JsonIgnore]");
+                        Emit("        [JsonProperty(\"T_RequiredBinaryMemberJsonName_\")]");
                         Emit("        private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                         }
-                        Emit("        [JsonProperty(\"T_RequiredBinaryMemberJsonName_\")]");
-                        Emit("        public byte[] T_RequiredBinaryMemberName_");
-                        Emit("        {");
-                        Emit("            get => _T_RequiredBinaryMemberName_;");
-                        Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);");
-                        Emit("        }");
                         Emit("        [JsonIgnore]");
-                        Emit("        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_");
+                        Emit("        public Octets T_RequiredBinaryMemberName_");
                         Emit("        {");
                         Emit("            get => _T_RequiredBinaryMemberName_.Length == 0 ? Octets.Empty : new Octets(_T_RequiredBinaryMemberName_);");
                         Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.ToByteArray());");

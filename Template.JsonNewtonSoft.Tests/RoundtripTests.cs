@@ -1,3 +1,4 @@
+using DataFac.Memory;
 using DTOMaker.Runtime.JsonNewtonSoft;
 using Shouldly;
 using System;
@@ -11,12 +12,12 @@ namespace Template.JsonNewtonSoft.Tests
 {
     public class RoundtripTests
     {
+        private static readonly Octets smallBinary = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7 });
+        private static readonly Octets largeBinary = new Octets(Enumerable.Range(0, 256).Select(i => (byte)i).ToArray());
+
         [Fact]
         public void Roundtrip01AsEntity()
         {
-            byte[] smallBinary = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
-            byte[] largeBinary = Enumerable.Range(0, 256).Select(i => (byte)i).ToArray();
-
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
@@ -37,8 +38,6 @@ namespace Template.JsonNewtonSoft.Tests
             copy.ShouldNotBeNull();
             copy.Freeze();
             copy.IsFrozen.ShouldBeTrue();
-            copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredBinaryMemberName_.AsSpan().SequenceEqual(orig.T_RequiredBinaryMemberName_.AsSpan()).ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
@@ -47,9 +46,6 @@ namespace Template.JsonNewtonSoft.Tests
         [Fact]
         public void Roundtrip03AsBase()
         {
-            byte[] smallBinary = new byte[] { 1, 2, 3, 4, 5, 6, 7 };
-            byte[] largeBinary = Enumerable.Range(0, 256).Select(i => (byte)i).ToArray();
-
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
@@ -69,8 +65,7 @@ namespace Template.JsonNewtonSoft.Tests
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();
             copy!.IsFrozen.ShouldBeTrue();
-            copy.BaseField1!.ShouldBe(orig.BaseField1);
-            copy.T_RequiredBinaryMemberName_.AsSpan().SequenceEqual(orig.T_RequiredBinaryMemberName_.AsSpan()).ShouldBeTrue();
+            copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
         }

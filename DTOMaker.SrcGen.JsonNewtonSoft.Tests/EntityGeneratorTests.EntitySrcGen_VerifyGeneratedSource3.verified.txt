@@ -74,31 +74,19 @@ namespace MyOrg.Model3.JsonNewtonSoft
             _Field42 = source._Field42;
         }
 
-        [JsonIgnore]
-        private byte[] _Field41 = Array.Empty<byte>();
         [JsonProperty("field41")]
-        public byte[] Field41
-        {
-            get => _Field41;
-            set => _Field41 = IfNotFrozen(value);
-        }
+        private byte[] _Field41 = Array.Empty<byte>();
         [JsonIgnore]
-        Octets MyOrg.Model3.IMyDTO.Field41
+        public Octets Field41
         {
             get => _Field41.Length == 0 ? Octets.Empty : new Octets(_Field41);
             set => _Field41 = IfNotFrozen(value.ToByteArray());
         }
 
-        [JsonIgnore]
-        private byte[]? _Field42;
         [JsonProperty("field42")]
-        public byte[]? Field42
-        {
-            get => _Field42;
-            set => _Field42 = IfNotFrozen(value);
-        }
+        private byte[]? _Field42;
         [JsonIgnore]
-        Octets? MyOrg.Model3.IMyDTO.Field42
+        public Octets? Field42
         {
             get => _Field42 is null ? null : _Field42.Length == 0 ? Octets.Empty : new Octets(_Field42);
             set => _Field42 = IfNotFrozen(value is null ? null : value.ToByteArray());
