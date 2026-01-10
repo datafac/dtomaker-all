@@ -83,7 +83,7 @@ namespace MyOrg.Models.JsonSystemText
             set => _Field1 = IfNotFrozen(value);
         }
         [JsonIgnore]
-        DayOfWeek MyOrg.Models.IMyDTO.Field1
+        System.DayOfWeek MyOrg.Models.IMyDTO.Field1
         {
             get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field1);
             set => _Field1 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));
@@ -98,7 +98,7 @@ namespace MyOrg.Models.JsonSystemText
             set => _Field2 = IfNotFrozen(value);
         }
         [JsonIgnore]
-        DayOfWeek? MyOrg.Models.IMyDTO.Field2
+        System.DayOfWeek? MyOrg.Models.IMyDTO.Field2
         {
             get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field2);
             set => _Field2 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));

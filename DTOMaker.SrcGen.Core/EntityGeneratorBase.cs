@@ -124,15 +124,11 @@ namespace DTOMaker.SrcGen.Core
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
             ILanguage language = _parameters.Language;
-            string memberType = language.GetDataTypeToken(member.MemberType);
             var tokens = new Dictionary<string, object?>
             {
                 ["MemberIsObsolete"] = member.IsObsolete,
                 ["MemberObsoleteMessage"] = member.ObsoleteInfo?.Message ?? "",
                 ["MemberObsoleteIsError"] = member.ObsoleteInfo?.IsError ?? false,
-                ["MemberType"] = memberType,
-                ["NativeMemberType"] = memberType,
-                ["CustomMemberType"] = memberType,
                 ["MemberTypeImplName"] = member.MemberType.ShortImplName,
                 ["MemberTypeIntfName"] = member.MemberType.ShortIntfName,
                 ["MemberTypeIntfSpace"] = member.MemberType.IntfNameSpace,
@@ -146,6 +142,19 @@ namespace DTOMaker.SrcGen.Core
             tokens[BuildTokenName(member, "MemberName")] = member.Name;
             tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
+
+            string memberType = language.GetDataTypeToken(member.MemberType);
+            if (member.IsCustom)
+            {
+                tokens["MemberType"] = memberType;
+                tokens["NativeMemberType"] = member.MemberType.Impl.Name;
+                tokens["CustomMemberType"] = member.MemberType.Intf.FullName;
+            }
+            else
+            {
+                tokens["MemberType"] = memberType;
+                tokens["NativeMemberType"] = memberType;
+            }
             if (member.ConverterName is not null)
             {
                 tokens["StructConverter"] = member.ConverterName;
