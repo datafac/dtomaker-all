@@ -18,8 +18,7 @@ namespace Template.JsonSystemText.Tests
         [Fact]
         public void Roundtrip01AsEntity()
         {
-            var impl = new T_ImplNameSpace_.T_EntityImplName_();
-            T_IntfNameSpace_.T_EntityIntfName_ orig = impl;
+            var orig = new T_ImplNameSpace_.T_EntityImplName_();
             orig.T_RequiredNativeStructMemberName_ = 123;
             orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
@@ -32,7 +31,7 @@ namespace Template.JsonSystemText.Tests
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.Freeze();
 
-            string buffer = impl.SerializeToJson<T_EntityImplName_>();
+            string buffer = orig.SerializeToJson<T_EntityImplName_>();
             var copy = buffer.DeserializeFromJson<T_EntityImplName_>();
 
             copy.ShouldNotBeNull();

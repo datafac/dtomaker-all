@@ -74,31 +74,21 @@ namespace MyOrg.Models.JsonSystemText
             _Field2 = source._Field2;
         }
 
-        [JsonIgnore]
-        private Int32 _Field1 = default;
         [JsonPropertyName("field1")]
-        public Int32 Field1
-        {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
-        }
+        [JsonInclude]
+        private Int32 _Field1 = default;
         [JsonIgnore]
-        System.DayOfWeek MyOrg.Models.IMyDTO.Field1
+        public System.DayOfWeek Field1
         {
             get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field1);
             set => _Field1 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));
         }
 
-        [JsonIgnore]
-        private Int32? _Field2;
         [JsonPropertyName("field2")]
-        public Int32? Field2
-        {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
-        }
+        [JsonInclude]
+        private Int32? _Field2;
         [JsonIgnore]
-        System.DayOfWeek? MyOrg.Models.IMyDTO.Field2
+        public System.DayOfWeek? Field2
         {
             get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field2);
             set => _Field2 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));

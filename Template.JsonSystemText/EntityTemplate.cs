@@ -347,19 +347,14 @@ namespace T_ImplNameSpace_
         //##case MemberKind.Struct:
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
-        [JsonIgnore]
+        [JsonPropertyName("T_NullableCustomStructMemberJsonName_")]
+        [JsonInclude]
         private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_NullableCustomStructMemberJsonName_")]
-        public T_NativeMemberType_? T_NullableCustomStructMemberName_
-        {
-            get => _T_NullableCustomStructMemberName_;
-            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
-        }
         [JsonIgnore]
-        T_CustomMemberType_? T_IntfNameSpace_.T_EntityIntfName_.T_NullableCustomStructMemberName_
+        public T_CustomMemberType_? T_NullableCustomStructMemberName_
         {
             get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_NullableCustomStructMemberName_);
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));
@@ -379,19 +374,14 @@ namespace T_ImplNameSpace_
         //##}
         //##} else {
         //##if (member.IsCustom) {
-        [JsonIgnore]
+        [JsonPropertyName("T_RequiredCustomStructMemberJsonName_")]
+        [JsonInclude]
         private T_NativeMemberType_ _T_RequiredCustomStructMemberName_ = T_MemberDefaultValue_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_RequiredCustomStructMemberJsonName_")]
-        public T_NativeMemberType_ T_RequiredCustomStructMemberName_
-        {
-            get => _T_RequiredCustomStructMemberName_;
-            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
-        }
         [JsonIgnore]
-        T_CustomMemberType_ T_IntfNameSpace_.T_EntityIntfName_.T_RequiredCustomStructMemberName_
+        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
         {
             get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_RequiredCustomStructMemberName_);
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));
@@ -452,37 +442,27 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.Binary:
         //##if (member.IsNullable) {
-        [JsonIgnore]
+        [JsonPropertyName("T_NullableBinaryMemberJsonName_")]
+        [JsonInclude]
         private byte[]? _T_NullableBinaryMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_NullableBinaryMemberJsonName_")]
-        public byte[]? T_NullableBinaryMemberName_
-        {
-            get => _T_NullableBinaryMemberName_;
-            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);
-        }
         [JsonIgnore]
-        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_
+        public Octets? T_NullableBinaryMemberName_
         {
             get => _T_NullableBinaryMemberName_ is null ? null : _T_NullableBinaryMemberName_.Length == 0 ? Octets.Empty : new Octets(_T_NullableBinaryMemberName_);
             set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.ToByteArray());
         }
         //##} else {
-        [JsonIgnore]
+        [JsonPropertyName("T_RequiredBinaryMemberJsonName_")]
+        [JsonInclude]
         private byte[] _T_RequiredBinaryMemberName_ = Array.Empty<byte>();
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_RequiredBinaryMemberJsonName_")]
-        public byte[] T_RequiredBinaryMemberName_
-        {
-            get => _T_RequiredBinaryMemberName_;
-            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);
-        }
         [JsonIgnore]
-        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_
+        public Octets T_RequiredBinaryMemberName_
         {
             get => _T_RequiredBinaryMemberName_.Length == 0 ? Octets.Empty : new Octets(_T_RequiredBinaryMemberName_);
             set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.ToByteArray());
@@ -514,7 +494,6 @@ namespace T_ImplNameSpace_
             get => _T_RequiredStringMemberName_;
             set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
         }
-
         //##}
         //##break;
         //##default:
