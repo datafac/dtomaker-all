@@ -355,14 +355,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (source.T_NullableBinaryMemberName_ is null)");
-                            Emit("                _T_NullableBinaryMemberName_ = null;");
-                            Emit("            else");
-                            Emit("                _T_NullableBinaryMemberName_ = source.T_NullableBinaryMemberName_.AsMemory();");
+                            Emit("            _T_NullableBinaryMemberName_ = source.T_NullableBinaryMemberName_;");
                         }
                         else
                         {
-                            Emit("            _T_RequiredBinaryMemberName_ = source.T_RequiredBinaryMemberName_.AsMemory();");
+                            Emit("            _T_RequiredBinaryMemberName_ = source.T_RequiredBinaryMemberName_;");
                         }
                         break;
                     case MemberKind.String:
@@ -501,41 +498,31 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         if (member.IsNullable)
                         {
                             Emit("        [IgnoreMember]");
-                            Emit("        private ReadOnlyMemory<byte>? _T_NullableBinaryMemberName_;");
+                            Emit("        private Octets? _T_NullableBinaryMemberName_;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
                             Emit("        [Key(T_NullableBinaryMemberKey_)]");
-                            Emit("        public ReadOnlyMemory<byte>? T_NullableBinaryMemberName_");
+                            Emit("        public Octets? T_NullableBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableBinaryMemberName_;");
                             Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);");
-                            Emit("        }");
-                            Emit("        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_");
-                            Emit("        {");
-                            Emit("            get => _T_NullableBinaryMemberName_ is null ? null : Octets.UnsafeWrap(_T_NullableBinaryMemberName_.Value);");
-                            Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.AsMemory());");
                             Emit("        }");
                         }
                         else
                         {
                             Emit("        [IgnoreMember]");
-                            Emit("        private ReadOnlyMemory<byte> _T_RequiredBinaryMemberName_ = ReadOnlyMemory<byte>.Empty;");
+                            Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
                             Emit("        [Key(T_RequiredBinaryMemberKey_)]");
-                            Emit("        public ReadOnlyMemory<byte> T_RequiredBinaryMemberName_");
+                            Emit("        public Octets T_RequiredBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredBinaryMemberName_;");
                             Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);");
-                            Emit("        }");
-                            Emit("        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_");
-                            Emit("        {");
-                            Emit("            get => Octets.UnsafeWrap(_T_RequiredBinaryMemberName_);");
-                            Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.AsMemory());");
                             Emit("        }");
                         }
                         break;
@@ -700,32 +687,38 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (_T_NullableBinaryMemberName_.HasValue)");
+                            Emit("            if (_T_NullableBinaryMemberName_ is not null)");
                             Emit("            {");
-                            Emit("                var span_T_NullableBinaryMemberName_ = _T_NullableBinaryMemberName_.Value.Span;");
-                            Emit("                result.Add(span_T_NullableBinaryMemberName_.Length);");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("                result.AddBytes(span_T_NullableBinaryMemberName_);");
-                            Emit("#else");
-                            Emit("                for (int i = 0; i < span_T_NullableBinaryMemberName_.Length; i++)");
+                            Emit("                result.Add(_T_NullableBinaryMemberName_.Length);");
+                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
                             Emit("                {");
-                            Emit("                    result.Add(span_T_NullableBinaryMemberName_[i]);");
-                            Emit("                }");
+                            Emit("#if NET8_0_OR_GREATER");
+                            Emit("                    result.AddBytes(segment.Span);");
+                            Emit("#else");
+                            Emit("                    var segmentSpan = segment.Span;");
+                            Emit("                    for (int i = 0; i < segmentSpan.Length; i++)");
+                            Emit("                    {");
+                            Emit("                        result.Add(segmentSpan[i]);");
+                            Emit("                    }");
                             Emit("#endif");
+                            Emit("                }");
                             Emit("            }");
                         }
                         else
                         {
-                            Emit("            var span_T_RequiredBinaryMemberName_ = _T_RequiredBinaryMemberName_.Span;");
-                            Emit("            result.Add(span_T_RequiredBinaryMemberName_.Length);");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("            result.AddBytes(span_T_RequiredBinaryMemberName_);");
-                            Emit("#else");
-                            Emit("            for (int i = 0; i < span_T_RequiredBinaryMemberName_.Length; i++)");
+                            Emit("            result.Add(_T_RequiredBinaryMemberName_.Length);");
+                            Emit("            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
                             Emit("            {");
-                            Emit("                result.Add(span_T_RequiredBinaryMemberName_[i]);");
-                            Emit("            }");
+                            Emit("#if NET8_0_OR_GREATER");
+                            Emit("                result.AddBytes(segment.Span);");
+                            Emit("#else");
+                            Emit("                var segmentSpan = segment.Span;");
+                            Emit("                for (int i = 0; i < segmentSpan.Length; i++)");
+                            Emit("                {");
+                            Emit("                    result.Add(segmentSpan[i]);");
+                            Emit("                }");
                             Emit("#endif");
+                            Emit("            }");
                         }
                         break;
                     case MemberKind.String:
@@ -968,14 +961,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (source.T_NullableBinaryMemberName_ is null)");
-                            Emit("                _T_NullableBinaryMemberName_ = null;");
-                            Emit("            else");
-                            Emit("                _T_NullableBinaryMemberName_ = source.T_NullableBinaryMemberName_.AsMemory();");
+                            Emit("            _T_NullableBinaryMemberName_ = source.T_NullableBinaryMemberName_;");
                         }
                         else
                         {
-                            Emit("            _T_RequiredBinaryMemberName_ = source.T_RequiredBinaryMemberName_.AsMemory();");
+                            Emit("            _T_RequiredBinaryMemberName_ = source.T_RequiredBinaryMemberName_;");
                         }
                         break;
                     case MemberKind.String:
@@ -1114,41 +1104,31 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         if (member.IsNullable)
                         {
                             Emit("        [IgnoreMember]");
-                            Emit("        private ReadOnlyMemory<byte>? _T_NullableBinaryMemberName_;");
+                            Emit("        private Octets? _T_NullableBinaryMemberName_;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
                             Emit("        [Key(T_NullableBinaryMemberKey_)]");
-                            Emit("        public ReadOnlyMemory<byte>? T_NullableBinaryMemberName_");
+                            Emit("        public Octets? T_NullableBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_NullableBinaryMemberName_;");
                             Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);");
-                            Emit("        }");
-                            Emit("        Octets? T_IntfNameSpace_.T_EntityIntfName_.T_NullableBinaryMemberName_");
-                            Emit("        {");
-                            Emit("            get => _T_NullableBinaryMemberName_ is null ? null : Octets.UnsafeWrap(_T_NullableBinaryMemberName_.Value);");
-                            Emit("            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value is null ? null : value.AsMemory());");
                             Emit("        }");
                         }
                         else
                         {
                             Emit("        [IgnoreMember]");
-                            Emit("        private ReadOnlyMemory<byte> _T_RequiredBinaryMemberName_ = ReadOnlyMemory<byte>.Empty;");
+                            Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
                             Emit("        [Key(T_RequiredBinaryMemberKey_)]");
-                            Emit("        public ReadOnlyMemory<byte> T_RequiredBinaryMemberName_");
+                            Emit("        public Octets T_RequiredBinaryMemberName_");
                             Emit("        {");
                             Emit("            get => _T_RequiredBinaryMemberName_;");
                             Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);");
-                            Emit("        }");
-                            Emit("        Octets T_IntfNameSpace_.T_EntityIntfName_.T_RequiredBinaryMemberName_");
-                            Emit("        {");
-                            Emit("            get => Octets.UnsafeWrap(_T_RequiredBinaryMemberName_);");
-                            Emit("            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value.AsMemory());");
                             Emit("        }");
                         }
                         break;
@@ -1313,30 +1293,42 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (_T_NullableBinaryMemberName_.HasValue)");
+                            Emit("            if (_T_NullableBinaryMemberName_ is not null)");
                             Emit("            {");
-                            Emit("                var span_T_NullableBinaryMemberName_ = _T_NullableBinaryMemberName_.Value.Span;");
-                            Emit("                result.Add(span_T_NullableBinaryMemberName_.Length);");
+                            Emit("                result.Add(_T_NullableBinaryMemberName_.Length);");
                             Emit("#if NET8_0_OR_GREATER");
-                            Emit("                result.AddBytes(span_T_NullableBinaryMemberName_);");
-                            Emit("#else");
-                            Emit("                for (int i = 0; i < span_T_NullableBinaryMemberName_.Length; i++)");
+                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
                             Emit("                {");
-                            Emit("                    result.Add(span_T_NullableBinaryMemberName_[i]);");
+                            Emit("                    result.AddBytes(segment.Span);");
+                            Emit("                }");
+                            Emit("#else");
+                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
+                            Emit("                {");
+                            Emit("                    var segmentSpan = segment.Span;");
+                            Emit("                    for (int i = 0; i < segmentSpan.Length; i++)");
+                            Emit("                    {");
+                            Emit("                        result.Add(segmentSpan[i]);");
+                            Emit("                    }");
                             Emit("                }");
                             Emit("#endif");
                             Emit("            }");
                         }
                         else
                         {
-                            Emit("            var span_T_RequiredBinaryMemberName_ = _T_RequiredBinaryMemberName_.Span;");
-                            Emit("            result.Add(span_T_RequiredBinaryMemberName_.Length);");
+                            Emit("            result.Add(_T_RequiredBinaryMemberName_.Length);");
                             Emit("#if NET8_0_OR_GREATER");
-                            Emit("            result.AddBytes(span_T_RequiredBinaryMemberName_);");
+                            Emit("                foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
+                            Emit("                {");
+                            Emit("                    result.AddBytes(segment.Span);");
+                            Emit("                }");
                             Emit("#else");
-                            Emit("            for (int i = 0; i < span_T_RequiredBinaryMemberName_.Length; i++)");
+                            Emit("            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
                             Emit("            {");
-                            Emit("                result.Add(span_T_RequiredBinaryMemberName_[i]);");
+                            Emit("                var segmentSpan = segment.Span;");
+                            Emit("                for (int i = 0; i < segmentSpan.Length; i++)");
+                            Emit("                {");
+                            Emit("                    result.Add(segmentSpan[i]);");
+                            Emit("                }");
                             Emit("            }");
                             Emit("#endif");
                         }

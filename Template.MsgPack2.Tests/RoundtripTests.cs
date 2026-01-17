@@ -129,7 +129,7 @@ namespace Template_MessagePack.Tests
             orig.T_RequiredStringMemberName_ = "abc";
             orig.T_NullableStringMemberName_ = "def";
             orig.T_RequiredBinaryMemberName_ = largeBinary;
-            orig.T_NullableBinaryMemberName_ = smallBinary;
+            orig.T_NullableBinaryMemberName_ = null;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.Freeze();
@@ -156,7 +156,7 @@ namespace Template_MessagePack.Tests
             orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_() { Field1 = 456L };
             orig.T_RequiredBinaryMemberName_ = largeBinary;
-            orig.T_NullableBinaryMemberName_ = smallBinary;
+            orig.T_NullableBinaryMemberName_ = null;
             orig.Freeze();
 
             ReadOnlyMemory<byte> buffer = orig.SerializeToMessagePack<T_BaseImplNameSpace_.T_BaseImplName_>();

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using DataFac.Memory;
+using MessagePack;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -43,11 +44,11 @@ namespace DTOMaker.Runtime.MsgPack2
         public override bool Equals(object? obj) => obj is EntityBase;
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
-        protected static bool BinaryValuesAreEqual(ReadOnlyMemory<byte>? left, ReadOnlyMemory<byte>? right)
+        protected static bool BinaryValuesAreEqual(Octets? left, Octets? right)
         {
             if (left is null) return (right is null);
             if (right is null) return false;
-            return left.Value.Span.SequenceEqual(right.Value.Span);
+            return left.Equals(right);
         }
 
     }

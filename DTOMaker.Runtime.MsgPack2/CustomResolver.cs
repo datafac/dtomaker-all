@@ -21,6 +21,10 @@ namespace DTOMaker.Runtime.MsgPack2
                 return new UInt128Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
             }
 #endif
+            if (typeof(T) == typeof(Octets))
+            {
+                return new OctetsFormatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
+            }
             if (typeof(T) == typeof(PairOfInt64))
             {
                 return new PairOfInt64Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
