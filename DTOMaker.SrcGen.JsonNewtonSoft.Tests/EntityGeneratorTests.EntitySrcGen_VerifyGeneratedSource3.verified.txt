@@ -7,11 +7,10 @@
 using DataFac.Memory;
 using DTOMaker.Runtime;
 using DTOMaker.Runtime.JsonNewtonSoft;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
-
 namespace MyOrg.Model3.JsonNewtonSoft
 {
     public partial class MyDTO : DTOMaker.Runtime.JsonNewtonSoft.EntityBase, MyOrg.Model3.IMyDTO, IEquatable<MyDTO>

@@ -8,12 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DataFac.Memory" Version="0.16.14" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\DTOMaker.Runtime.MemBlocks\DTOMaker.Runtime.MemBlocks.csproj" />
-	  <ProjectReference Include="..\Template.Common\Template.Common.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
 	</ItemGroup>
 
 </Project>

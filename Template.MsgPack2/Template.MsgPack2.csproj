@@ -16,6 +16,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\DTOMaker.Runtime.MsgPack2\DTOMaker.Runtime.MsgPack2.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
+	  <ProjectReference Include="..\Template.Common\Template.Common.csproj" />
 	</ItemGroup>
 
 </Project>

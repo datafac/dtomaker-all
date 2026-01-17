@@ -40,13 +40,6 @@ namespace DataFac.Memory
         public static void WriteToSpan(Span<byte> source, T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
     }
 }
-namespace T_MemberTypeIntfSpace_
-{
-    public interface T_MemberTypeIntfName_
-    {
-        Int64 Field1 { get; set; }
-    }
-}
 namespace T_MemberTypeImplSpace_
 {
     public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_
@@ -122,13 +115,6 @@ namespace T_MemberTypeImplSpace_
             get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
             set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
         }
-    }
-}
-namespace T_BaseIntfNameSpace_
-{
-    public interface T_BaseIntfName_ : IEntityBase
-    {
-        T_NativeMemberType_ BaseField1 { get; set; }
     }
 }
 namespace T_BaseImplNameSpace_
@@ -230,16 +216,6 @@ namespace T_BaseImplNameSpace_
         }
         public override bool Equals(object? obj) => obj is T_BaseImplName_ other && Equals(other);
         public override int GetHashCode() => base.GetHashCode();
-    }
-}
-namespace T_ConverterSpace_
-{
-    public class T_ConverterName_ : DTOMaker.Runtime.Converters.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
-    {
-        public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;
-        public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;
-        public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;
-        public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;
     }
 }
 namespace T_IntfNameSpace_

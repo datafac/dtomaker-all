@@ -16,6 +16,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\DTOMaker.Runtime.JsonSystemText\DTOMaker.Runtime.JsonSystemText.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
+	  <ProjectReference Include="..\Template.Common\Template.Common.csproj" />
 	</ItemGroup>
 
 </Project>

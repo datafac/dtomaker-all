@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MemBlocks.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MemBlocks.IntTests", "DTOMaker.SrcGen.MemBlocks.IntTests\DTOMaker.SrcGen.MemBlocks.IntTests.csproj", "{BDF3F259-5016-FDC8-2322-644DABA74C3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Common", "Template.Common\Template.Common.csproj", "{DB6CF781-598A-426B-87D0-8A0855F0EA85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +193,10 @@ Global
 		{BDF3F259-5016-FDC8-2322-644DABA74C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDF3F259-5016-FDC8-2322-644DABA74C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDF3F259-5016-FDC8-2322-644DABA74C3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
