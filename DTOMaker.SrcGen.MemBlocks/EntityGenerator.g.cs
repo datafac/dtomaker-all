@@ -235,15 +235,18 @@ public partial class EntityGenerator
             Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
             Emit("}");
-            Emit("namespace T_IntfNameSpace_");
+            Emit("namespace T_ConverterSpace_");
             Emit("{");
-            Emit("    public class T_StructConverter_ : IStructConverter<T_CustomMemberType_, T_NativeMemberType_>");
+            Emit("    public class T_ConverterName_ : DTOMaker.Runtime.Converters.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>");
             Emit("    {");
             Emit("        public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;");
             Emit("        public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;");
             Emit("        public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;");
             Emit("        public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;");
             Emit("    }");
+            Emit("}");
+            Emit("namespace T_IntfNameSpace_");
+            Emit("{");
             Emit("    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_");
             Emit("    {");
             Emit("        //T_MemberType_? T_NullableStructMemberName_ { get; set; }");
@@ -772,8 +775,8 @@ public partial class EntityGenerator
                     {
                         Emit("        public T_CustomMemberType_ T_RequiredCustomStructMemberName_");
                         Emit("        {");
-                        Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span));");
-                        Emit("            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value)));");
+                        Emit("            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span));");
+                        Emit("            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value)));");
                         Emit("        }");
                     }
                     else

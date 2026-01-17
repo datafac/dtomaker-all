@@ -232,15 +232,18 @@ namespace T_BaseImplNameSpace_
         public override int GetHashCode() => base.GetHashCode();
     }
 }
-namespace T_IntfNameSpace_
+namespace T_ConverterSpace_
 {
-    public class T_StructConverter_ : IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
+    public class T_ConverterName_ : DTOMaker.Runtime.Converters.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
     {
         public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;
         public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;
         public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;
         public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;
     }
+}
+namespace T_IntfNameSpace_
+{
     public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_
     {
         //T_MemberType_? T_NullableStructMemberName_ { get; set; }
@@ -656,8 +659,8 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         public T_CustomMemberType_ T_RequiredCustomStructMemberName_
         {
-            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span));
-            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value)));
+            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span));
+            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value)));
         }
         //##} else {
         public T_NativeMemberType_ T_RequiredNativeStructMemberName_

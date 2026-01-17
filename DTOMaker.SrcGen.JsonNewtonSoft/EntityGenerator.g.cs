@@ -125,15 +125,18 @@ public partial class EntityGenerator
             Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
             Emit("}");
-            Emit("namespace T_IntfNameSpace_");
+            Emit("namespace T_ConverterSpace_");
             Emit("{");
-            Emit("    public class T_StructConverter_ : IStructConverter<T_CustomMemberType_, T_NativeMemberType_>");
+            Emit("    public class T_ConverterName_ : DTOMaker.Runtime.Converters.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>");
             Emit("    {");
             Emit("        public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;");
             Emit("        public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;");
             Emit("        public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;");
             Emit("        public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;");
             Emit("    }");
+            Emit("}");
+            Emit("namespace T_IntfNameSpace_");
+            Emit("{");
             Emit("    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_");
             Emit("    {");
             Emit("        T_NativeMemberType_? T_NullableNativeStructMemberName_ { get; set; }");
@@ -260,7 +263,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("            _T_NullableCustomStructMemberName_ = T_IntfNameSpace_.T_StructConverter_.ToNative(source.T_NullableCustomStructMemberName_);");
+                            Emit("            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_NullableCustomStructMemberName_);");
                         }
                         else
                         {
@@ -271,7 +274,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("            _T_RequiredCustomStructMemberName_ = T_IntfNameSpace_.T_StructConverter_.ToNative(source.T_RequiredCustomStructMemberName_);");
+                            Emit("            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);");
                         }
                         else
                         {
@@ -402,8 +405,8 @@ public partial class EntityGenerator
                             Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_? T_NullableCustomStructMemberName_");
                             Emit("        {");
-                            Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_NullableCustomStructMemberName_);");
-                            Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));");
+                            Emit("            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_NullableCustomStructMemberName_);");
+                            Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));");
                             Emit("        }");
                         }
                         else
@@ -435,8 +438,8 @@ public partial class EntityGenerator
                             Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_ T_RequiredCustomStructMemberName_");
                             Emit("        {");
-                            Emit("            get => T_IntfNameSpace_.T_StructConverter_.ToCustom(_T_RequiredCustomStructMemberName_);");
-                            Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_IntfNameSpace_.T_StructConverter_.ToNative(value));");
+                            Emit("            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_RequiredCustomStructMemberName_);");
+                            Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));");
                             Emit("        }");
                         }
                         else

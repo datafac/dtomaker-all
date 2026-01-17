@@ -155,9 +155,10 @@ namespace DTOMaker.SrcGen.Core
                 tokens["MemberType"] = memberType;
                 tokens["NativeMemberType"] = memberType;
             }
-            if (member.ConverterName is not null)
+            if (member.ConverterSpace is not null && member.ConverterNameqqq is not null)
             {
-                tokens["StructConverter"] = member.ConverterName;
+                tokens["ConverterSpace"] = member.ConverterSpace;
+                tokens["ConverterName"] = member.ConverterNameqqq;
             }
 
             // ---------- MemBlocks tokens ----------

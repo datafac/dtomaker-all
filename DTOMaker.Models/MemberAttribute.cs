@@ -7,18 +7,19 @@ public class MemberAttribute : Attribute
 {
     public readonly int Sequence;
     public readonly NativeType NativeType;
-    public readonly string? StructConverter;
+    public readonly string? ConverterFullName;
 
     public MemberAttribute(int sequence)
     {
         Sequence = sequence;
-        StructConverter = null;
+        NativeType = NativeType.Undefined;
+        ConverterFullName = null;
     }
 
-    public MemberAttribute(int sequence, NativeType nativeType, string structConverter)
+    public MemberAttribute(int sequence, NativeType nativeType, string converterFullName)
     {
         Sequence = sequence;
         NativeType = nativeType;
-        StructConverter = structConverter;
+        ConverterFullName = converterFullName;
     }
 }

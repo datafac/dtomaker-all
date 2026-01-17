@@ -65,8 +65,8 @@ namespace MyOrg.Models.JsonSystemText
         public MyDTO() { }
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
-            _Field1 = MyOrg.Models.DayOfWeekConverter.ToNative(source.Field1);
-            _Field2 = MyOrg.Models.DayOfWeekConverter.ToNative(source.Field2);
+            _Field1 = DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(source.Field1);
+            _Field2 = DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(source.Field2);
         }
         public MyDTO(MyDTO source) : base(source)
         {
@@ -80,8 +80,8 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         public System.DayOfWeek Field1
         {
-            get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field1);
-            set => _Field1 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Runtime.Converters.DayOfWeekConverter.ToCustom(_Field1);
+            set => _Field1 = IfNotFrozen(DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(value));
         }
 
         [JsonPropertyName("field2")]
@@ -90,8 +90,8 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         public System.DayOfWeek? Field2
         {
-            get => MyOrg.Models.DayOfWeekConverter.ToCustom(_Field2);
-            set => _Field2 = IfNotFrozen(MyOrg.Models.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Runtime.Converters.DayOfWeekConverter.ToCustom(_Field2);
+            set => _Field2 = IfNotFrozen(DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(value));
         }
 
 

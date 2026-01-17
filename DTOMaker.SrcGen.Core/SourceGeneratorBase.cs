@@ -183,7 +183,9 @@ namespace DTOMaker.SrcGen.Core
             bool isBigEndian = false;
             bool isExternal = false;
             NativeType nativeType = NativeType.Undefined;
-            string? structConverter = null;
+            string? converterFullName = null;
+            string? converterSpace = null;
+            string? converterName = null;
 
             // Loop through all of the attributes on the interface
             foreach (AttributeData attributeData in propSymbol.GetAttributes())
@@ -202,7 +204,7 @@ namespace DTOMaker.SrcGen.Core
                             1 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; }),
                             3 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
                                  ?? TryGetAttributeOptionalArgumentValue<int>(attributeData, location, 1, (value) => { nativeType = (NativeType)value; })
-                                 ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 2, (value) => { structConverter = value; }),
+                                 ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 2, (value) => { converterFullName = value; }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;
@@ -245,9 +247,12 @@ namespace DTOMaker.SrcGen.Core
             }
 
             // adjust for custom structs
-            if (tfn.MemberKind == MemberKind.Undefined && nativeType != NativeType.Undefined && structConverter is not null)
+            if (tfn.MemberKind == MemberKind.Undefined && nativeType != NativeType.Undefined && converterFullName is not null)
             {
                 tfn = new TypeFullName(tfn, MemberKind.Struct, true, nativeType);
+                var cpn = new ParsedName(converterFullName);
+                converterSpace = cpn.Space;
+                converterName = cpn.Name;
             }
 
             if (fieldLength == 0)
@@ -274,7 +279,8 @@ namespace DTOMaker.SrcGen.Core
                 FieldLength = fieldLength,
                 IsBigEndian = isBigEndian,
                 IsExternal = isExternal,
-                ConverterName = structConverter,
+                ConverterSpace = converterSpace,
+                ConverterNameqqq = converterName,
             };
 
             result = OnCustomizeParsedMember(result, location);
@@ -479,7 +485,8 @@ namespace DTOMaker.SrcGen.Core
                         FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
                         IsExternal = member.IsExternal,
-                        ConverterName = member.ConverterName,
+                        ConverterSpace = member.ConverterSpace,
+                        ConverterNameqqq = member.ConverterNameqqq,
                     });
                 }
                 else

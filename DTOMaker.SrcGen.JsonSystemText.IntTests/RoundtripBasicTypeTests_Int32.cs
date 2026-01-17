@@ -41,20 +41,27 @@ public class RoundtripBasicTypeTests_Int32
 }
 
 // ---------- custom structs ----------
-//[Entity(31, LayoutMethod.Linear)]
-//public interface IData_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek Value { get; } }
+[Entity(41, LayoutMethod.Linear)]
+public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek Value { get; } }
 
-public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, int>
+public class RoundtripBasicTypeTests_Custom_DayOfWeek
 {
-    public static DayOfWeek ToCustom(int native) => (DayOfWeek)native;
-    public static DayOfWeek? ToCustom(int? native) => native.HasValue ? (DayOfWeek)native.Value : null;
-    public static int ToNative(DayOfWeek custom) => (int)custom;
-    public static int? ToNative(DayOfWeek? custom) => custom.HasValue ? (int)custom.Value : null;
+    public string Roundtrip_DayOfWeek(DayOfWeek reqValue)
+    {
+        var orig = new SimpleDTO_DayOfWeek { Value = reqValue };
+        orig.Freeze();
+        orig.Value.ShouldBe(reqValue);
+        var json = orig.SerializeToJson();
+        var copy = json.DeserializeFromJson<SimpleDTO_DayOfWeek>();
+        copy.ShouldNotBeNull();
+        copy.ShouldBe(orig);
+        copy.Value.ShouldBe(reqValue);
+        return json;
+    }
+
+    [Fact] public async Task Roundtrip_DayOfWeek_Defaults() => await Verifier.Verify(Roundtrip_DayOfWeek(default));
+    [Fact] public async Task Roundtrip_DayOfWeek_OneValue() => await Verifier.Verify(Roundtrip_DayOfWeek(DayOfWeek.Monday));
+    [Fact] public async Task Roundtrip_DayOfWeek_MaxValue() => await Verifier.Verify(Roundtrip_DayOfWeek(DayOfWeek.Saturday));
+
 }
 
-//[Entity(23)]
-//public interface ISimpleDTO_DayOfWeek : IEntityBase
-//{
-//    [Member(1, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek Field1 { get; set; }
-//    [Member(2, NativeType.Int32, "DayOfWeekConverter")] DayOfWeek? Field2 { get; set; }
-//}
