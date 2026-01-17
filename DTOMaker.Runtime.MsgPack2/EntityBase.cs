@@ -44,12 +44,5 @@ namespace DTOMaker.Runtime.MsgPack2
         public override bool Equals(object? obj) => obj is EntityBase;
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
-        protected static bool BinaryValuesAreEqual(Octets? left, Octets? right)
-        {
-            if (left is null) return (right is null);
-            if (right is null) return false;
-            return left.Equals(right);
-        }
-
     }
 }

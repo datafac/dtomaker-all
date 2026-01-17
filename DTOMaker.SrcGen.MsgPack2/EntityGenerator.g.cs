@@ -612,11 +612,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (!BinaryValuesAreEqual(_T_NullableBinaryMemberName_, other._T_NullableBinaryMemberName_)) return false;");
+                            Emit("            if (_T_NullableBinaryMemberName_ != other._T_NullableBinaryMemberName_) return false;");
                         }
                         else
                         {
-                            Emit("            if (!BinaryValuesAreEqual(_T_RequiredBinaryMemberName_, other. _T_RequiredBinaryMemberName_)) return false;");
+                            Emit("            if (_T_RequiredBinaryMemberName_ != other. _T_RequiredBinaryMemberName_) return false;");
                         }
                         break;
                     case MemberKind.String:
@@ -1218,11 +1218,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (!BinaryValuesAreEqual(_T_NullableBinaryMemberName_, other._T_NullableBinaryMemberName_)) return false;");
+                            Emit("            if (_T_NullableBinaryMemberName_ != other._T_NullableBinaryMemberName_) return false;");
                         }
                         else
                         {
-                            Emit("            if (!BinaryValuesAreEqual(_T_RequiredBinaryMemberName_, other._T_RequiredBinaryMemberName_)) return false;");
+                            Emit("            if (_T_RequiredBinaryMemberName_ != other._T_RequiredBinaryMemberName_) return false;");
                         }
                         break;
                     case MemberKind.String:

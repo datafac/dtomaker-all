@@ -510,9 +510,9 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            if (!BinaryValuesAreEqual(_T_NullableBinaryMemberName_, other._T_NullableBinaryMemberName_)) return false;
+            if (_T_NullableBinaryMemberName_ != other._T_NullableBinaryMemberName_) return false;
             //##} else {
-            if (!BinaryValuesAreEqual(_T_RequiredBinaryMemberName_, other. _T_RequiredBinaryMemberName_)) return false;
+            if (_T_RequiredBinaryMemberName_ != other. _T_RequiredBinaryMemberName_) return false;
             //##}
             //##break;
             //##case MemberKind.String:
@@ -998,9 +998,9 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            if (!BinaryValuesAreEqual(_T_NullableBinaryMemberName_, other._T_NullableBinaryMemberName_)) return false;
+            if (_T_NullableBinaryMemberName_ != other._T_NullableBinaryMemberName_) return false;
             //##} else {
-            if (!BinaryValuesAreEqual(_T_RequiredBinaryMemberName_, other._T_RequiredBinaryMemberName_)) return false;
+            if (_T_RequiredBinaryMemberName_ != other._T_RequiredBinaryMemberName_) return false;
             //##}
             //##break;
             //##case MemberKind.String:
