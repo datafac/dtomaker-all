@@ -17,8 +17,8 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek Field1 { get; set; }
-                    [Member(2, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek? Field2 { get; set; }
+                    [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                    [Member(2, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek? Field2 { get; set; }
                 }
             }
             """;

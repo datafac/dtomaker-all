@@ -19,7 +19,7 @@ public class ConverterTests_Complex
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.PairOfInt64, "DTOMaker.Runtime.Converters.ComplexConverter")] Complex Field1 { get; set; }
+                    [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Runtime.Converters.ComplexConverter))] Complex Field1 { get; set; }
                 }
             }
             """;

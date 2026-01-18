@@ -183,6 +183,7 @@ namespace DTOMaker.SrcGen.Core
             bool isBigEndian = false;
             bool isExternal = false;
             NativeType nativeType = NativeType.Undefined;
+            //object? converterTypeObj = null;
             string? converterFullName = null;
             string? converterSpace = null;
             string? converterName = null;
@@ -204,7 +205,7 @@ namespace DTOMaker.SrcGen.Core
                             1 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; }),
                             3 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
                                  ?? TryGetAttributeOptionalArgumentValue<int>(attributeData, location, 1, (value) => { nativeType = (NativeType)value; })
-                                 ?? TryGetAttributeOptionalArgumentValue<string>(attributeData, location, 2, (value) => { converterFullName = value; }),
+                                 ?? TryGetAttributeOptionalArgumentValue<INamedTypeSymbol>(attributeData, location, 2, (value) => { converterFullName = value.ToDisplayString(); }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
                         break;

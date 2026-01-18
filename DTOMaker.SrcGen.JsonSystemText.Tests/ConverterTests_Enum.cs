@@ -12,13 +12,14 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             using DataFac.Memory;
             using DTOMaker.Models;
             using DTOMaker.Runtime;
+            using DTOMaker.Runtime.Converters;
             namespace MyOrg.Models
             {
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek Field1 { get; set; }
-                    [Member(2, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek? Field2 { get; set; }
+                    [Member(1, NativeType.Int32, typeof(DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                    [Member(2, NativeType.Int32, typeof(DayOfWeekConverter))] DayOfWeek? Field2 { get; set; }
                 }
             }
             """;

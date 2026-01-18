@@ -12,7 +12,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
 [Entity(42, LayoutMethod.Linear)]
-public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, "DTOMaker.Runtime.Converters.ComplexConverter")] Complex Value { get; } }
+public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Runtime.Converters.ComplexConverter))] Complex Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Complex
 {

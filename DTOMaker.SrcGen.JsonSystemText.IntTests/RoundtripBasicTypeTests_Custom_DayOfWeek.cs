@@ -11,7 +11,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
 
 [Entity(41, LayoutMethod.Linear)]
-public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek Value { get; } }
+public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek
 {
