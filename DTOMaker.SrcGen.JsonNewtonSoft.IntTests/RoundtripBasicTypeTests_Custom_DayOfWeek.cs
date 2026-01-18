@@ -1,10 +1,8 @@
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.Runtime.JsonNewtonSoft;
 using DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft;
 using Shouldly;
 using System;
-using System.Numerics;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
@@ -12,7 +10,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
 [Entity(41, LayoutMethod.Linear)]
-public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Value { get; } }
+public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek
 {

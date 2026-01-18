@@ -21,7 +21,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("#pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required");
         Emit("#nullable enable");
         Emit("using DataFac.Memory;");
-        Emit("using DTOMaker.Runtime;");
+        Emit("using DTOMaker.Models;");
         Emit("using DTOMaker.Runtime.MsgPack2;");
         Emit("using MessagePack;");
         Emit("using System;");

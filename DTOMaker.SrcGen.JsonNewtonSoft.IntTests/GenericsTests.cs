@@ -1,5 +1,3 @@
-using DTOMaker.Models;
-
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests
 {
     //[Entity(1)]

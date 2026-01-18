@@ -4,8 +4,9 @@ namespace DTOMaker.SrcGen.Core
 {
     internal static class SpecialName
     {
-        public const string RuntimeNamespace = "DTOMaker.Runtime";
+        public const string RuntimeBaseIntfSpace = "DTOMaker.Models";
         public const string RuntimeBaseIntfName = "IEntityBase";
+        public const string RuntimeBaseImplSpace = "DTOMaker.Runtime";
         public const string RuntimeBaseImplName = "EntityBase";
     }
     internal static class DiagnosticsEN

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DTOMaker.Models;
+using Newtonsoft.Json;
 using System;
 using System.Runtime.CompilerServices;
 

@@ -1,7 +1,6 @@
-﻿using DataFac.Memory;
-using System;
+﻿using System;
 
-namespace DTOMaker.Runtime.Converters;
+namespace DTOMaker.Models;
 
 public sealed class TimeSpanConverter : IStructConverter<TimeSpan, long>
 {

@@ -10,7 +10,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             """
             using System;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
                 [Entity(1, LayoutMethod.Linear)]

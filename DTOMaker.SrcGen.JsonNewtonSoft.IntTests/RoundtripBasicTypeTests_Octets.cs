@@ -1,6 +1,5 @@
 using DataFac.Memory;
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.Runtime.JsonNewtonSoft;
 using DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft;
 using Shouldly;

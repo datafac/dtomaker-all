@@ -12,14 +12,12 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             using System.Numerics;
             using DataFac.Memory;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
-            using DTOMaker.Runtime.Converters;
             namespace MyOrg.Models
             {
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Runtime.Converters.ComplexConverter))] Complex Field1 { get; set; }
+                    [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Field1 { get; set; }
                 }
             }
             """;

@@ -14,7 +14,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(0, LayoutMethod.Linear)]
@@ -35,7 +34,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 : IEntityBase { }
@@ -54,7 +52,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 { }
@@ -72,7 +69,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     public interface IMyDTO1 : IEntityBase { }
@@ -93,7 +89,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -115,7 +110,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)] [Length(8000)]
@@ -137,7 +131,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -159,7 +152,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -181,7 +173,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -203,7 +194,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -225,7 +215,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Linear)]
@@ -248,7 +237,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using System;
                 using DataFac.Memory;
                 using DTOMaker.Models;
-                using DTOMaker.Runtime;
                 namespace MyOrg.Models
                 {
                     [Entity(1, LayoutMethod.Explicit)]

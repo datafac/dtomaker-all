@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DTOMaker.Runtime.Converters;
+namespace DTOMaker.Models;
 
 public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, int>
 {

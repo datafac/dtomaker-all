@@ -1,6 +1,4 @@
-using DataFac.Storage;
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.SrcGen.MemBlocks.IntTests.MemBlocks;
 using Shouldly;
 using System;
@@ -12,7 +10,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
 [Entity(42, LayoutMethod.Linear)]
-public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Runtime.Converters.ComplexConverter))] Complex Value { get; } }
+public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Complex
 {

@@ -5,7 +5,7 @@
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 #nullable enable
 using DataFac.Memory;
-using DTOMaker.Runtime;
+using DTOMaker.Models;
 using DTOMaker.Runtime.MsgPack2;
 using MessagePack;
 using System;
@@ -73,8 +73,8 @@ namespace MyOrg.Models.MsgPack2
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
-            _Field1 = DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(source.Field1);
-            _Field2 = DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(source.Field2);
+            _Field1 = DTOMaker.Models.DayOfWeekConverter.ToNative(source.Field1);
+            _Field2 = DTOMaker.Models.DayOfWeekConverter.ToNative(source.Field2);
         }
 
         [IgnoreMember]
@@ -82,8 +82,8 @@ namespace MyOrg.Models.MsgPack2
         [Key(1)]
         public System.DayOfWeek Field1
         {
-            get => DTOMaker.Runtime.Converters.DayOfWeekConverter.ToCustom(_Field1);
-            set => _Field1 = IfNotFrozen(DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(_Field1);
+            set => _Field1 = IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value));
         }
 
         [IgnoreMember]
@@ -91,8 +91,8 @@ namespace MyOrg.Models.MsgPack2
         [Key(2)]
         public System.DayOfWeek? Field2
         {
-            get => DTOMaker.Runtime.Converters.DayOfWeekConverter.ToCustom(_Field2);
-            set => _Field2 = IfNotFrozen(DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(_Field2);
+            set => _Field2 = IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value));
         }
 
 

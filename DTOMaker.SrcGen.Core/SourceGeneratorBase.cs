@@ -409,7 +409,7 @@ namespace DTOMaker.SrcGen.Core
 
             // special case for IEntityBase
             if (thisEntity.BaseTFN.Value.Intf.Name == SpecialName.RuntimeBaseIntfName
-                && thisEntity.BaseTFN.Value.Intf.Space == SpecialName.RuntimeNamespace) return true;
+                && thisEntity.BaseTFN.Value.Intf.Space == SpecialName.RuntimeBaseIntfSpace) return true;
 
             var baseEntity = allEntities.FirstOrDefault(e => e.TFN.Intf == thisEntity.BaseTFN?.Intf);
             if (baseEntity is null)

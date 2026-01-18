@@ -31,8 +31,6 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                             // types for local tests
                             MetadataReference.CreateFromFile(typeof(DataFac.Memory.Octets).GetTypeInfo().Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(DTOMaker.Models.EntityAttribute).GetTypeInfo().Assembly.Location),
-                            MetadataReference.CreateFromFile(typeof(DTOMaker.Runtime.IEntityBase).GetTypeInfo().Assembly.Location),
-                            MetadataReference.CreateFromFile(typeof(DTOMaker.Runtime.Converters.IStructConverter<,>).GetTypeInfo().Assembly.Location),
                         };
 
             PortableExecutableReference[] metadataReferences = commonReferences.Concat(additionalReferences).ToArray();

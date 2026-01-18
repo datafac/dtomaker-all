@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using DTOMaker.Models;
-using DTOMaker.Runtime;
-using DTOMaker.Runtime.Converters;
 using DTOMaker.Runtime.JsonSystemText;
 using Shouldly;
 using VerifyXunit;
@@ -34,8 +32,7 @@ public sealed class OrderIdConverter : IStructConverter<OrderId, long>
 [Entity(43, LayoutMethod.Linear)]
 public interface IOrderLine : IEntityBase
 {
-    [Member(1, NativeType.Int64, typeof(DTOMaker.SrcGen.JsonSystemText.IntTests.OrderIdConverter))] OrderId Id { get; set; }
-    //[Member(2, typeof(OrderIdConverter))] OrderId Id2 { get; set; }
+    [Member(1, NativeType.Int64, typeof(OrderIdConverter))] OrderId Id { get; set; }
 }
 
 public class RoundtripBasicTypeTests_Custom_OrderId

@@ -20,7 +20,7 @@ public partial class EntityGenerator
         Emit("#pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required");
         Emit("#nullable enable");
         Emit("using DataFac.Memory;");
-        Emit("using DTOMaker.Runtime;");
+        Emit("using DTOMaker.Models;");
         Emit("using DTOMaker.Runtime.MemBlocks;");
         Emit("using DataFac.Storage;");
         Emit("using System;");

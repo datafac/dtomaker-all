@@ -11,7 +11,6 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             using System;
             using DataFac.Memory;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
                 [Entity(1)]

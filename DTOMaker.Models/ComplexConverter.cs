@@ -2,7 +2,7 @@
 using System;
 using System.Numerics;
 
-namespace DTOMaker.Runtime.Converters;
+namespace DTOMaker.Models;
 
 public sealed class ComplexConverter : IStructConverter<Complex, PairOfInt64>
 {

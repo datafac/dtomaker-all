@@ -1,4 +1,5 @@
 ﻿using DataFac.Memory;
+using DTOMaker.Models;
 using MessagePack;
 using System;
 using System.Runtime.CompilerServices;

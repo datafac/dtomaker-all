@@ -1,4 +1,4 @@
-﻿using DTOMaker.Runtime;
+﻿using DTOMaker.Models;
 using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace T_MemberTypeIntfSpace_
@@ -10,7 +10,7 @@ namespace T_MemberTypeIntfSpace_
 }
 namespace T_ConverterSpace_
 {
-    public class T_ConverterName_ : DTOMaker.Runtime.Converters.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
+    public class T_ConverterName_ : DTOMaker.Models.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
     {
         public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;
         public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;

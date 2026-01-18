@@ -5,7 +5,7 @@
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 #nullable enable
 using DataFac.Memory;
-using DTOMaker.Runtime;
+using DTOMaker.Models;
 using DTOMaker.Runtime.MemBlocks;
 using DataFac.Storage;
 using System;
@@ -141,8 +141,8 @@ namespace MyOrg.Models.MemBlocks
 
         public System.Numerics.Complex Field1
         {
-            get => DTOMaker.Runtime.Converters.ComplexConverter.ToCustom(Codec_PairOfInt64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 16).Span));
-            set => Codec_PairOfInt64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 16).Span, IfNotFrozen(DTOMaker.Runtime.Converters.ComplexConverter.ToNative(value)));
+            get => DTOMaker.Models.ComplexConverter.ToCustom(Codec_PairOfInt64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 16).Span));
+            set => Codec_PairOfInt64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 16).Span, IfNotFrozen(DTOMaker.Models.ComplexConverter.ToNative(value)));
         }
 
 

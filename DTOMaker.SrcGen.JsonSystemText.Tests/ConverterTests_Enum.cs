@@ -11,8 +11,6 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             using System;
             using DataFac.Memory;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
-            using DTOMaker.Runtime.Converters;
             namespace MyOrg.Models
             {
                 [Entity(1)]

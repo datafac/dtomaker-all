@@ -11,13 +11,12 @@ public class ConverterTests_Enum
             using System;
             using DataFac.Memory;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
                 [Entity(1, LayoutMethod.Linear)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                    [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
                 }
             }
             """;

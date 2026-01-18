@@ -1,5 +1,4 @@
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.Runtime.MsgPack2;
 using DTOMaker.SrcGen.MsgPack2.IntTests.MsgPack2;
 using Shouldly;
@@ -11,7 +10,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
 [Entity(41, LayoutMethod.Linear)]
-public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Value { get; } }
+public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek
 {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DTOMaker.Runtime.Converters;
+﻿using DataFac.Memory;
+namespace DTOMaker.Models;
 
 public interface IStructConverter<TCustom, TNative>
     where TCustom : struct

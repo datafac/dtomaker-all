@@ -28,7 +28,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 		<ProjectReference Include="..\DTOMaker.Runtime.JsonNewtonSoft\DTOMaker.Runtime.JsonNewtonSoft.csproj" />
-		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.JsonNewtonSoft\DTOMaker.SrcGen.JsonNewtonSoft.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 

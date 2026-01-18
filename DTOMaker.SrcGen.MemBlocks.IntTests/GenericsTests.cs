@@ -1,5 +1,3 @@
-using DTOMaker.Models;
-
 namespace DTOMaker.SrcGen.MemBlocks.IntTests
 {
     //[Entity(1)]

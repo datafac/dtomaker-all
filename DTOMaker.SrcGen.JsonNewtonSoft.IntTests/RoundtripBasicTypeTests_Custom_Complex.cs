@@ -1,5 +1,4 @@
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.Runtime.JsonNewtonSoft;
 using DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft;
 using Shouldly;
@@ -12,7 +11,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
 [Entity(42, LayoutMethod.Linear)]
-public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Runtime.Converters.ComplexConverter))] Complex Value { get; } }
+public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Complex
 {

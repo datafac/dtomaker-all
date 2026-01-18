@@ -28,7 +28,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 		<ProjectReference Include="..\DTOMaker.Runtime.JsonSystemText\DTOMaker.Runtime.JsonSystemText.csproj" />
-		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.JsonSystemText\DTOMaker.SrcGen.JsonSystemText.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 

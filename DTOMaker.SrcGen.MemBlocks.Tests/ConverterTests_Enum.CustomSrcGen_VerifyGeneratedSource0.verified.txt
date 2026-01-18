@@ -5,7 +5,7 @@
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 #nullable enable
 using DataFac.Memory;
-using DTOMaker.Runtime;
+using DTOMaker.Models;
 using DTOMaker.Runtime.MemBlocks;
 using DataFac.Storage;
 using System;
@@ -141,8 +141,8 @@ namespace MyOrg.Models.MemBlocks
 
         public System.DayOfWeek Field1
         {
-            get => DTOMaker.Runtime.Converters.DayOfWeekConverter.ToCustom(Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, IfNotFrozen(DTOMaker.Runtime.Converters.DayOfWeekConverter.ToNative(value)));
+            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
+            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value)));
         }
 
 

@@ -11,14 +11,13 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             using System;
             using DataFac.Memory;
             using DTOMaker.Models;
-            using DTOMaker.Runtime;
             namespace MyOrg.Models
             {
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
-                    [Member(2, NativeType.Int32, typeof(DTOMaker.Runtime.Converters.DayOfWeekConverter))] DayOfWeek? Field2 { get; set; }
+                    [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                    [Member(2, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek? Field2 { get; set; }
                 }
             }
             """;

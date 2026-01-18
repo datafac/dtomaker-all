@@ -1,5 +1,3 @@
-using DTOMaker.Models;
-
 namespace DTOMaker.SrcGen.MsgPack2.IntTests
 {
     //[Entity(1)]

@@ -20,7 +20,7 @@
 #pragma warning disable CS0109 // Member does not hide an inherited member; new keyword is not required
 #nullable enable
 using DataFac.Memory;
-using DTOMaker.Runtime;
+using DTOMaker.Models;
 using DTOMaker.Runtime.MsgPack2;
 using MessagePack;
 using System;

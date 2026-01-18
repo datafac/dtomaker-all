@@ -48,7 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
+		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 	</ItemGroup>
 
 </Project>
