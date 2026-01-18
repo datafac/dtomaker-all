@@ -60,11 +60,10 @@ in the MyModels.JsonSystemText namespace.
 
 # Development
 ## In progress
-- custom type members (to avoid primitive obsession)
+- custom value type converters
 
 ## Coming soon
-- global interface equality comparer
-- reservation (hidden members)
+- more custom (ref and value) type converters
 
 ## Coming later
 - MessagePack 3.x serialization
