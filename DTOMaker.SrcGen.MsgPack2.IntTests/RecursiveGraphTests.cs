@@ -45,7 +45,7 @@ namespace DTOMaker.SrcGen.MsgPack2.IntTests
             var result = new StringBuilder();
             for (int i = 0; i < buffer.Length; i++)
             {
-                if (i % 16 == 0)
+                if (i % 32 == 0)
                 {
                     if (i > 0) result.AppendLine();
                 }

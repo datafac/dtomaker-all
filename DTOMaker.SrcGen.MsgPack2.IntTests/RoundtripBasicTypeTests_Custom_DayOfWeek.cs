@@ -1,14 +1,14 @@
 using DTOMaker.Models;
 using DTOMaker.Runtime;
-using DTOMaker.Runtime.JsonSystemText;
-using DTOMaker.SrcGen.JsonSystemText.IntTests.JsonSystemText;
+using DTOMaker.Runtime.MsgPack2;
+using DTOMaker.SrcGen.MsgPack2.IntTests.MsgPack2;
 using Shouldly;
 using System;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
-namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
+namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
 [Entity(41, LayoutMethod.Linear)]
 public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, "DTOMaker.Runtime.Converters.DayOfWeekConverter")] DayOfWeek Value { get; } }
@@ -20,12 +20,12 @@ public class RoundtripBasicTypeTests_Custom_DayOfWeek
         var orig = new SimpleDTO_DayOfWeek { Value = reqValue };
         orig.Freeze();
         orig.Value.ShouldBe(reqValue);
-        var json = orig.SerializeToJson();
-        var copy = json.DeserializeFromJson<SimpleDTO_DayOfWeek>();
+        ReadOnlyMemory<byte> buffer = orig.SerializeToMessagePack();
+        var copy = buffer.DeserializeFromMessagePack<SimpleDTO_DayOfWeek>();
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Value.ShouldBe(reqValue);
-        return json;
+        return buffer.Span.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_DayOfWeek_Defaults() => await Verifier.Verify(Roundtrip_DayOfWeek(default));
@@ -33,3 +33,4 @@ public class RoundtripBasicTypeTests_Custom_DayOfWeek
     [Fact] public async Task Roundtrip_DayOfWeek_MaxValue() => await Verifier.Verify(Roundtrip_DayOfWeek(DayOfWeek.Saturday));
 
 }
+

@@ -4,6 +4,7 @@ using DTOMaker.Runtime.MsgPack2;
 using DTOMaker.SrcGen.MsgPack2.IntTests.MsgPack2;
 using Shouldly;
 using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
