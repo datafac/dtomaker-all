@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataFac.Memory;
+using System;
 
 namespace DTOMaker.Models;
 
