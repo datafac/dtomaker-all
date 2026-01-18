@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Shouldly;
 using System;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
@@ -26,10 +27,12 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
                             MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
                             //MetadataReference.CreateFromFile(typeof(Attribute).GetTypeInfo().Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(Memory<>).GetTypeInfo().Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(Complex).GetTypeInfo().Assembly.Location),
                             // types for local tests
                             MetadataReference.CreateFromFile(typeof(DataFac.Memory.Octets).GetTypeInfo().Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(DTOMaker.Models.EntityAttribute).GetTypeInfo().Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(DTOMaker.Runtime.IEntityBase).GetTypeInfo().Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(DTOMaker.Runtime.Converters.IStructConverter<,>).GetTypeInfo().Assembly.Location),
                         };
 
             PortableExecutableReference[] metadataReferences = commonReferences.Concat(additionalReferences).ToArray();

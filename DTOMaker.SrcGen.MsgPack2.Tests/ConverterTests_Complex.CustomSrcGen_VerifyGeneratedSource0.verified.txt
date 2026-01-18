@@ -6,17 +6,17 @@
 #nullable enable
 using DataFac.Memory;
 using DTOMaker.Runtime;
-using DTOMaker.Runtime.JsonNewtonSoft;
-using Newtonsoft.Json;
+using DTOMaker.Runtime.MsgPack2;
+using MessagePack;
 using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-namespace MyOrg.Models.JsonNewtonSoft
+
+namespace MyOrg.Models.MsgPack2
 {
-    public partial class MyDTO : DTOMaker.Runtime.JsonNewtonSoft.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
+    [MessagePackObject]
+    public sealed partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
-        protected override int OnGetEntityId() => 1;
+        public new const int EntityId = 1;
 
         private static MyDTO CreateEmpty()
         {
@@ -29,30 +29,29 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static MyDTO CreateFrom(MyDTO source)
         {
-            if (source.IsFrozen) return source;
-            return source switch
-            {
-                _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
-            };
+            if (source.IsFrozen)
+                return source;
+            else
+                return new MyDTO(source);
         }
 
         public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
-            return source switch
-            {
-                _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
-            };
+            if (source is MyDTO concrete && concrete.IsFrozen)
+                return concrete;
+            else
+                return new MyDTO(source);
         }
 
-        public new static MyDTO CreateNewFromId(int entityId)
+        public new static MyDTO CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
-            if (entityId == 1) return new MyDTO();
-            return entityId switch
-            {
-                _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
-            };
+            if (entityId == MyOrg.Models.MsgPack2.MyDTO.EntityId)
+                return buffer.DeserializeFromMessagePack<MyOrg.Models.MsgPack2.MyDTO>();
+            else
+                throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);
         }
+
+        protected override int OnGetEntityId() => 1;
 
         protected override void OnFreeze()
         {
@@ -61,19 +60,24 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
+        [SerializationConstructor]
         public MyDTO() { }
-        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
-        {
-            _Field1 = DTOMaker.Runtime.Converters.ComplexConverter.ToNative(source.Field1);
-        }
+
         public MyDTO(MyDTO source) : base(source)
         {
+            if (source is null) throw new ArgumentNullException(nameof(source));
             _Field1 = source._Field1;
         }
 
-        [JsonProperty("field1")]
-        private PairOfInt64 _Field1 = default;
-        [JsonIgnore]
+        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
+        {
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            _Field1 = DTOMaker.Runtime.Converters.ComplexConverter.ToNative(source.Field1);
+        }
+
+        [IgnoreMember]
+        private PairOfInt64 _Field1;
+        [Key(1)]
         public System.Numerics.Complex Field1
         {
             get => DTOMaker.Runtime.Converters.ComplexConverter.ToCustom(_Field1);
@@ -83,8 +87,8 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public bool Equals(MyDTO? other)
         {
-            if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
             if (!base.Equals(other)) return false;
             if (_Field1 != other._Field1) return false;
             return true;
@@ -102,6 +106,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             return result.ToHashCode();
         }
 
+        [IgnoreMember]
         private int? _hashCode;
         public override int GetHashCode()
         {
