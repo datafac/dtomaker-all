@@ -69,12 +69,12 @@ in the MyModels.JsonSystemText namespace.
 - MessagePack 3.x serialization
 - Orleans serialization
 - Protobuf.Net serialization
-- generic entities
 - model.json generation
 - command-line alternative
 - variant native type support
 - variable length arrays
 - logical value equality
+- common pattern extensions
 
 ## How to sponsor
 If you find these tools useful, please consider sponsoring my work on GitHub 
