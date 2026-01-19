@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace DTOMaker.Models
-{
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
-    public class DomainAttribute : Attribute
-    {
-        public DomainAttribute()
-        {
-        }
+namespace DTOMaker.Models;
 
-        public string Version => ThisAssembly.AssemblyFileVersion;
-    }
-}
+//[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
+//public class DomainAttribute : Attribute
+//{
+//    public DomainAttribute()
+//    {
+//    }
+
+//    public string Version => ThisAssembly.AssemblyFileVersion;
+//}
