@@ -4,6 +4,11 @@ using System.Numerics;
 
 namespace DTOMaker.Models;
 
+/// <summary>
+/// When used in a <see cref="DTOMaker.Models.MemberAttribute"/>, this 
+/// converter allows <see cref="System.Numerics.Complex"/> properties to be internally 
+/// stored and serialized as <see cref="DataFac.Memory.PairOfInt64"/> values.
+/// </summary>
 public sealed class ComplexConverter : IStructConverter<Complex, PairOfInt64>
 {
     public static Complex ToCustom(PairOfInt64 native) => new Complex(BitConverter.Int64BitsToDouble(native.A), BitConverter.Int64BitsToDouble(native.B));

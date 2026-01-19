@@ -22,6 +22,12 @@ public readonly struct OrderId : IEquatable<OrderId>
     public static bool operator !=(OrderId left, OrderId right) => !left.Equals(right);
     #endregion
 }
+
+/// <summary>
+/// When used in a <see cref="DTOMaker.Models.MemberAttribute"/>, this 
+/// converter allows <see cref="OrderId"/> properties to be internally 
+/// stored and serialized as <see cref="System.Int64"/> values.
+/// </summary>
 public sealed class OrderIdConverter : IStructConverter<OrderId, long>
 {
     public static OrderId ToCustom(long native) => new OrderId(native);
