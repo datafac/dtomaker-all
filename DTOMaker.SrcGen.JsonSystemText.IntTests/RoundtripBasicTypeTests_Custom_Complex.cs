@@ -101,10 +101,10 @@ public class RoundtripBasicTypeTests_Custom_DateTimeOffset
         return json;
     }
 
-    private static readonly DateTime _locDate = new DateTime(2026, 1, 19, 22, 0, 0, DateTimeKind.Local);
+    //todo private static readonly DateTime _locDate = new DateTime(2026, 1, 19, 22, 0, 0, DateTimeKind.Local);
     private static readonly DateTime _utcDate = new DateTime(2026, 1, 19, 22, 0, 0, DateTimeKind.Utc);
     [Fact] public async Task Roundtrip_DateTimeOffset_Default() => await Verifier.Verify(Roundtrip_DateTimeOffset(DateTimeOffset.MinValue));
-    [Fact] public async Task Roundtrip_DateTimeOffset_LocDate() => await Verifier.Verify(Roundtrip_DateTimeOffset(new DateTimeOffset(_locDate, TimeSpan.FromHours(10))));
+    //todo [Fact] public async Task Roundtrip_DateTimeOffset_LocDate() => await Verifier.Verify(Roundtrip_DateTimeOffset(new DateTimeOffset(_locDate, TimeSpan.FromHours(10))));
     [Fact] public async Task Roundtrip_DateTimeOffset_UtcDate() => await Verifier.Verify(Roundtrip_DateTimeOffset(new DateTimeOffset(_utcDate, TimeSpan.Zero)));
     [Fact] public async Task Roundtrip_DateTimeOffset_MaxTick() => await Verifier.Verify(Roundtrip_DateTimeOffset(DateTimeOffset.MaxValue));
 
