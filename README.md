@@ -9,32 +9,29 @@
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
 Model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
-supporting various serialization protocols:
-- JSON (System.Text.Json)
-- JSON (Newtonsoft.Json)
-- MessagePack 2.x
-- MemBlocks
+supporting various serialization protocols.
 
-## Workflow
-```mermaid
-flowchart TB
-    def(Define models e.g. IMyDTO.cs)
-    ref1(Reference DTOMaker.Models)
-    ref2(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
-    ref3(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
-    bld(Build/Run)
-    ref1-->def
-    def-->ref2
-    ref2-->ref3
-    ref3-->bld
-```
+## Features
+- Models defined via C# interfaces with attributes.
+  - Source generators create implementations at compile time.
+- Properties can be basic .NET types such as integers, floats, strings, Guid.
+  - Raw byte arrays are supported using the built-in Octets type.
+  - Other common types such as DateTime, DateTimeOffset, TimeSpan are supported by built-in converters.
+  - User-defined value types can be supported via user-defined converters to built-in types.
+- Nullable types.
+- Polymorphic types.
+- Freezability: DTO instances are mutable until frozen, after which they become immutable.
+- Serialization protocols:
+  - JSON via System.Text.Json
+  - JSON via Newtonsoft.Json
+  - MessagePack 2.x
+  - MemBlocks
+- Collections. Collections based on balanced binary trees are supported.
 
-Models are defined as C# interfaces with additional attributes. So let's start with a non-trivial model. 
-Here's how to define a polymorphic, recursive tree type:
+## Example
 
 ```C#
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 namespace MyModels;
 [Entity(1)] public interface INode : IEntityBase
 {
@@ -55,13 +52,22 @@ namespace MyModels;
     [Member(3)] INode? Node  { get; set; }
 }
 ```
-When you add a reference to the DTOMaker.SrcGen.JsonSystemText package, the implmentations will be generated 
-in the MyModels.JsonSystemText namespace.
+
+## Workflow
+```mermaid
+flowchart TB
+    def(Define models e.g. IMyDTO.cs)
+    ref1(Reference DTOMaker.Models)
+    ref2(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
+    ref3(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
+    bld(Build/Run)
+    ref1-->def
+    def-->ref2
+    ref2-->ref3
+    ref3-->bld
+```
 
 # Development
-## In progress
-- custom value type converters
-
 ## Coming soon
 - more custom (ref and value) type converters
 
