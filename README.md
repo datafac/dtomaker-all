@@ -1,8 +1,8 @@
 # DTOMaker
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
-![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Runtime)
-![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Runtime)
+![NuGet Version](https://img.shields.io/nuget/v/DTOMaker.Models)
+![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 
