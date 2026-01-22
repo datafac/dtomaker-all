@@ -5,27 +5,22 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
-		<Deterministic>true</Deterministic>
-		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/datafac/dtomaker-all</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/datafac/dtomaker-all</RepositoryUrl>
 		<Company>DataFac</Company>
 		<Product>DTOMaker</Product>
 		<Authors>DataFac Contributors</Authors>
+		<Title>DTOMaker Models</Title>
+		<Description>Interface and extension methods for managing binary tree structures.</Description>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\SigningKey.snk</AssemblyOriginatorKeyFile>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-
-		<!--settings for NuGet packages-->
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageTags>DTOMaker; generator; roslyn</PackageTags>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Title>DTOMaker Runtime</Title>
-		<Description>Runtime types for generated entities</Description>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\SigningKey.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -36,20 +31,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Memory" Version="0.16.14" />
-		<PackageReference Include="DataFac.Storage" Version="2.0.8" />
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Memory" Version="4.6.3" />
-		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
-		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
+	  <ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 	</ItemGroup>
 
 </Project>

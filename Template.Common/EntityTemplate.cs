@@ -25,3 +25,4 @@ namespace T_BaseIntfNameSpace_
         T_NativeMemberType_ BaseField1 { get; set; }
     }
 }
+// todo move template entity interface here

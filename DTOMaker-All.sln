@@ -77,6 +77,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.SrcGen.MemBlocks.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Common", "Template.Common\Template.Common.csproj", "{DB6CF781-598A-426B-87D0-8A0855F0EA85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Runtime", "DTOMaker.Runtime\DTOMaker.Runtime.csproj", "{07D88E46-10A8-4AF5-84FE-9A99426215BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Models.BinaryTree", "DTOMaker.Models.BinaryTree\DTOMaker.Models.BinaryTree.csproj", "{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +195,14 @@ Global
 		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB6CF781-598A-426B-87D0-8A0855F0EA85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07D88E46-10A8-4AF5-84FE-9A99426215BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07D88E46-10A8-4AF5-84FE-9A99426215BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07D88E46-10A8-4AF5-84FE-9A99426215BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07D88E46-10A8-4AF5-84FE-9A99426215BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
