@@ -81,6 +81,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Runtime", "DTOMake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Models.BinaryTree", "DTOMaker.Models.BinaryTree\DTOMaker.Models.BinaryTree.csproj", "{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Models.BinaryTree.Tests", "DTOMaker.Models.BinaryTree.Tests\DTOMaker.Models.BinaryTree.Tests.csproj", "{D7C21C09-4F87-462B-BAFB-1CA8F182C1F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -203,6 +205,10 @@ Global
 		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8340A273-1F0E-47D4-85CA-E8C2AB21DA00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C21C09-4F87-462B-BAFB-1CA8F182C1F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C21C09-4F87-462B-BAFB-1CA8F182C1F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C21C09-4F87-462B-BAFB-1CA8F182C1F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C21C09-4F87-462B-BAFB-1CA8F182C1F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
