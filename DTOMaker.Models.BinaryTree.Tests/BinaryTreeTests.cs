@@ -14,7 +14,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
             return kind switch
             {
                 ImplKind.JsonSystemText => new TestOrg.TestApp.Models.JsonSystemText.MyBinaryTree(),
-                //ImplKind.MemBlocks => new nodeFactory_MemBlocks(),
+                ImplKind.MemBlocks => new TestOrg.TestApp.Models.MemBlocks.MyBinaryTree(),
                 ImplKind.MsgPack2 => new TestOrg.TestApp.Models.MsgPack2.MyBinaryTree(),
                 _ => throw new NotSupportedException($"Unsupported implementation kind: {kind}"),
             };
@@ -33,7 +33,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         [InlineData(ImplKind.JsonSystemText, "dbacfeg", 3)]
         [InlineData(ImplKind.JsonSystemText, "abcdefg", 3)]
         [InlineData(ImplKind.MsgPack2, "abcdefg", 3)]
-        //[InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
+        [InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
         public void AddValues(ImplKind impl, string order, byte maxDepth)
         {
             // todo max depth tests
@@ -95,6 +95,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         [InlineData(ImplKind.JsonSystemText, "dbfaceg", "acegbfd", 0)]
         // other serializers
         [InlineData(ImplKind.MsgPack2, "dbfaceg", "acegbfd", 0)]
+        [InlineData(ImplKind.MemBlocks, "dbfaceg", "acegbfd", 0)]
         public void RemoveValues(ImplKind impl, string addOrder, string removeOrder, byte maxDepth)
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();

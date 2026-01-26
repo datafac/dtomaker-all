@@ -4,7 +4,6 @@ namespace DTOMaker.Models.BinaryTree.Tests
     {
         JsonSystemText,
         MsgPack2,
-        //MemBlocks,
-        //CSPoco,
+        MemBlocks,
     }
 }
