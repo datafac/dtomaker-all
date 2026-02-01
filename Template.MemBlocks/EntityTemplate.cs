@@ -661,7 +661,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _T_NullableEntityMemberName_ = null;
             if (blob is not null)
@@ -698,7 +698,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             if (blob is null)
             {
@@ -758,7 +758,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_NullableVarLenBinaryMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _T_NullableVarLenBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);
         }
@@ -802,7 +802,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_RequiredVarLenBinaryMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _T_RequiredVarLenBinaryMemberName_ = blob is null ? Octets.Empty : Octets.UnsafeWrap(blob.Value);
 
@@ -855,7 +855,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_NullableVarLenStringMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
             _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);
@@ -908,7 +908,7 @@ namespace T_ImplNameSpace_
         }
         private async ValueTask T_RequiredVarLenStringMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
             _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);

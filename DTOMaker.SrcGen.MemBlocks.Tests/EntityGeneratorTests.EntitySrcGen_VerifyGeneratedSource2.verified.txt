@@ -161,7 +161,7 @@ namespace MyOrg.Model2.MemBlocks
         }
         private async ValueTask Field31_Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             if (blob is null)
             {
@@ -198,7 +198,7 @@ namespace MyOrg.Model2.MemBlocks
         }
         private async ValueTask Field32_Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(64, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _Field32 = null;
             if (blob is not null)

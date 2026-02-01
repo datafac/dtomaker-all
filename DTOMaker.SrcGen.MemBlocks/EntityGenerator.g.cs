@@ -780,7 +780,7 @@ public partial class EntityGenerator
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64));");
+                        Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);");
                         Emit("            var blob = await dataStore.GetBlob(blobId);");
                         Emit("            _T_NullableEntityMemberName_ = null;");
                         Emit("            if (blob is not null)");
@@ -820,7 +820,7 @@ public partial class EntityGenerator
                         Emit("        }");
                         Emit("        private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64));");
+                        Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64).Span);");
                         Emit("            var blob = await dataStore.GetBlob(blobId);");
                         Emit("            if (blob is null)");
                         Emit("            {");
@@ -886,7 +886,7 @@ public partial class EntityGenerator
                             Emit("        }");
                             Emit("        private async ValueTask T_NullableVarLenBinaryMemberName__Unpack(IDataStore dataStore)");
                             Emit("        {");
-                            Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64));");
+                            Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64).Span);");
                             Emit("            var blob = await dataStore.GetBlob(blobId);");
                             Emit("            _T_NullableVarLenBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);");
                             Emit("        }");
@@ -937,7 +937,7 @@ public partial class EntityGenerator
                             Emit("        }");
                             Emit("        private async ValueTask T_RequiredVarLenBinaryMemberName__Unpack(IDataStore dataStore)");
                             Emit("        {");
-                            Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64));");
+                            Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64).Span);");
                             Emit("            var blob = await dataStore.GetBlob(blobId);");
                             Emit("            _T_RequiredVarLenBinaryMemberName_ = blob is null ? Octets.Empty : Octets.UnsafeWrap(blob.Value);");
                             Emit("");
@@ -996,7 +996,7 @@ public partial class EntityGenerator
                             Emit("        }");
                             Emit("        private async ValueTask T_NullableVarLenStringMemberName__Unpack(IDataStore dataStore)");
                             Emit("        {");
-                            Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64));");
+                            Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64).Span);");
                             Emit("            var blob = await dataStore.GetBlob(blobId);");
                             Emit("#if NET8_0_OR_GREATER");
                             Emit("            _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);");
@@ -1056,7 +1056,7 @@ public partial class EntityGenerator
                             Emit("        }");
                             Emit("        private async ValueTask T_RequiredVarLenStringMemberName__Unpack(IDataStore dataStore)");
                             Emit("        {");
-                            Emit("            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64));");
+                            Emit("            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64).Span);");
                             Emit("            var blob = await dataStore.GetBlob(blobId);");
                             Emit("#if NET8_0_OR_GREATER");
                             Emit("            _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);");

@@ -155,7 +155,7 @@ namespace MyOrg.Models.MemBlocks
         }
         private async ValueTask Field11_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
             _Field11 = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
@@ -179,7 +179,7 @@ namespace MyOrg.Models.MemBlocks
         }
         private async ValueTask Field12_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(64, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
             _Field12 = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);

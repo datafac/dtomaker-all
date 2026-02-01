@@ -154,7 +154,7 @@ namespace MyOrg.Model3.MemBlocks
         }
         private async ValueTask Field41_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(0, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _Field41 = blob is null ? Octets.Empty : Octets.UnsafeWrap(blob.Value);
 
@@ -175,7 +175,7 @@ namespace MyOrg.Model3.MemBlocks
         }
         private async ValueTask Field42_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.UnsafeWrap(_readonlyLocalBlock.Slice(64, 64));
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
             _Field42 = blob is null ? null : Octets.UnsafeWrap(blob.Value);
         }
