@@ -14,13 +14,13 @@ supporting various serialization protocols.
 ## Features
 - Models defined via C# interfaces with attributes.
   - Source generators create implementations at compile time.
-- Properties can be basic .NET types such as integers, floats, strings, Guid.
+- Properties can be basic .NET types such as integers, floats, strings, Guid, etc.
   - Raw byte arrays are supported using the built-in Octets type.
   - Other common types such as DateTime, DateTimeOffset, TimeSpan are supported by built-in converters.
   - User-defined value types can be supported via user-defined converters to built-in types.
 - Nullable types.
 - Polymorphic types.
-- Freezability: DTO instances are mutable until frozen, after which they become immutable.
+- Freezable types: Instances are mutable until frozen.
 - Serialization protocols:
   - JSON via System.Text.Json
   - JSON via Newtonsoft.Json
@@ -72,6 +72,7 @@ flowchart TB
 - more custom (ref and value) type converters
 
 ## Coming later
+- incremental serialization
 - MessagePack 3.x serialization
 - Orleans serialization
 - Protobuf.Net serialization
