@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Memory" Version="0.18.10-dev" />
+		<PackageReference Include="DataFac.Memory" Version="0.18.11" />
 		<PackageReference Include="MessagePack" Version="2.5.198" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 	</ItemGroup>
