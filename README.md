@@ -6,10 +6,15 @@
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 
-*Warning: This is pre-release software under active development. Breaking changes may occur.*
-
-Model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
+This project contains model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
 supporting various serialization protocols.
+
+*Note: We are changing the terms of use for this project soon. When V1.0 of these tools are released, revenue-generating 
+use of the source code and published binaries will require payment of an Open Source Maintenance Fee. Non-revenure-generating
+use of the source code and published binaries will never require payment of the fee.
+Please see the Open Source Maintenance Fee section below for details.*
+
+*Warning: This is pre-release software under active development. Breaking changes may occur.*
 
 ## Features
 - Models defined via C# interfaces with attributes.
@@ -22,8 +27,8 @@ supporting various serialization protocols.
 - Polymorphic types.
 - Freezable types: Instances are mutable until frozen.
 - Serialization protocols:
-  - JSON via System.Text.Json
-  - JSON via Newtonsoft.Json
+  - JSON (System.Text.Json)
+  - JSON (Newtonsoft.Json)
   - MessagePack 2.x
   - MemBlocks
 - Collections. Collections based on balanced binary trees are supported.
@@ -83,10 +88,33 @@ flowchart TB
 - logical value equality
 - common pattern extensions
 
-## How to sponsor
-If you find these tools useful, please consider sponsoring my work on GitHub 
-at https://github.com/sponsors/Psiman62
-or buy me a coffee at https://www.buymeacoffee.com/psiman62
+## Open Source Maintenance Fee Introduction
+
+To ensure the long-term sustainability of this project, we are introducing
+an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). This
+fee is required to be paid by all users of this project who generate revenue.
+You can [pay via GitHub Sponsors](https://github.com/sponsors/<YOURORGNAME>).
+
+We plan to enforce the maintenance fee starting on date-to-be-advised. At that time, a
+EULA on binary releases requires payment of the Maintenance Fee.
+
+## Open Source Maintenance Fee
+
+This project participates in the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org).
+
+The source code is freely available under the terms of the LICENSE. To
+support sustainable maintenance, use of the project’s official releases
+in revenue-generating activities requires adherence to the
+[Open Source Maintenance Fee](./OSMFEULA.txt).
+
+In short: if you use this project as part of generating revenue, the
+Maintenance Fee applies. The fee directly supports the people maintaining
+the project and helps ensure its long-term health.
+
+To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
+
+Alternatively, you can buy me a coffee at https://www.buymeacoffee.com/psiman62
+
 
 ## License
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
