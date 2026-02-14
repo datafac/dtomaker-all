@@ -123,6 +123,7 @@ namespace DTOMaker.SrcGen.Core
 
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
+            string memberJsonName = member.FieldJsonName ?? $"_f{member.Height}_{member.Sequence:D3}";
             ILanguage language = _parameters.Language;
             var tokens = new Dictionary<string, object?>
             {
