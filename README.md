@@ -121,3 +121,6 @@ Maintenance Fee applies. The fee directly supports the people maintaining
 the project and helps ensure its long-term health.
 
 To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
+
+## Miscellaneous
+- This readme was last updated 14th Feb 2026.
