@@ -1,3 +1,5 @@
+![Icon](GreenPrinterIcon256.jpg)
+
 # DTOMaker
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
@@ -6,17 +8,29 @@
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 
-This project contains model-driven compile-time source generators for quickly creating polymorphic, freezable DTOs (Data Transport Objects) 
-supporting various serialization protocols.
-
-*Note: We are changing the terms of use for this project soon. When V1.0 of these tools are released, revenue-generating 
-use of the source code and published binaries will require payment of an Open Source Maintenance Fee. Non-revenure-generating
-use of the source code and published binaries will never require payment of the fee.
-Please see the Open Source Maintenance Fee section below for details.*
-
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
-## Features
+This project contains model-driven compile-time source generators for quickly creating 
+and maintaining polymorphic, freezable DTOs (Data Transport Objects) supporting various
+serialization protocols.
+
+## Open Source Maintenance Fee Introduction
+
+To ensure the long-term sustainability of this project, we are introducing
+an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). This
+fee is required to be paid by all users of this project who generate revenue
+above defined thresholds. Non-revenue-generating use of the project, such as by 
+hobbyists, charities and other non-profit organisations, any any organisation with
+reveune below the minimum threshold, are not required to pay the fee.
+
+You can [pay via GitHub Sponsors](https://github.com/sponsors/Psiman62).
+
+We plan to enforce the maintenance fee starting with the release of V2.0 binaries. At that 
+time, a EULA on binary releases requires payment of the Maintenance Fee.
+
+Please see the Open Source Maintenance Fee section below for more information.
+
+## V1.0 Features
 - Models defined via C# interfaces with attributes.
   - Source generators create implementations at compile time.
 - Properties can be basic .NET types such as integers, floats, strings, Guid, etc.
@@ -72,11 +86,11 @@ flowchart TB
     ref3-->bld
 ```
 
-# Development
-## Coming soon
+# Ongoing Development
+## Coming soon in V1.x
 - more custom (ref and value) type converters
 
-## Coming later
+## Coming later in V2.0+
 - incremental serialization
 - MessagePack 3.x serialization
 - Orleans serialization
@@ -88,17 +102,12 @@ flowchart TB
 - logical value equality
 - common pattern extensions
 
-## Open Source Maintenance Fee Introduction
-
-To ensure the long-term sustainability of this project, we are introducing
-an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). This
-fee is required to be paid by all users of this project who generate revenue.
-You can [pay via GitHub Sponsors](https://github.com/sponsors/<YOURORGNAME>).
-
-We plan to enforce the maintenance fee starting on date-to-be-advised. At that time, a
-EULA on binary releases requires payment of the Maintenance Fee.
+# License
+This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Open Source Maintenance Fee
+
+![OSMF](osmf-192.png)
 
 This project participates in the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org).
 
@@ -112,9 +121,3 @@ Maintenance Fee applies. The fee directly supports the people maintaining
 the project and helps ensure its long-term health.
 
 To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
-
-Alternatively, you can buy me a coffee at https://www.buymeacoffee.com/psiman62
-
-
-## License
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
