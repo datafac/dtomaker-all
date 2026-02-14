@@ -66,7 +66,7 @@ namespace T_MemberTypeImplSpace_
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }
         protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
 
-        [JsonProperty("field1")]
+        [JsonProperty("_f01_001")]
         public long Field1 { get; set; }
 
         public override int GetHashCode() => HashCode.Combine(Field1);

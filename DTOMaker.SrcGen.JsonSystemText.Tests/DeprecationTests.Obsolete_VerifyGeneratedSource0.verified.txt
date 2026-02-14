@@ -79,7 +79,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field1 = default;
         [Obsolete("", false)]
-        [JsonPropertyName("field1")]
+        [JsonPropertyName("_f01_001")]
         public Double Field1
         {
             get => _Field1;
@@ -89,7 +89,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field2 = default;
         [Obsolete("Removed", false)]
-        [JsonPropertyName("field2")]
+        [JsonPropertyName("_f01_002")]
         public Double Field2
         {
             get => _Field2;
@@ -99,7 +99,7 @@ namespace MyOrg.Models.JsonSystemText
         [JsonIgnore]
         private Double _Field3 = default;
         [Obsolete("Removed", true)]
-        [JsonPropertyName("field3")]
+        [JsonPropertyName("_f01_003")]
         public Double Field3
         {
             get => _Field3;

@@ -21,6 +21,7 @@ namespace DTOMaker.SrcGen.Core
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
         public const string LengthAttribute = nameof(LengthAttribute);
+        public const string NameAttribute = nameof(NameAttribute);
         public const string OffsetAttribute = nameof(OffsetAttribute);
         public const string EndianAttribute = nameof(EndianAttribute);
         public const int BlobIdV1Size = 64;
@@ -183,7 +184,7 @@ namespace DTOMaker.SrcGen.Core
             bool isBigEndian = false;
             bool isExternal = false;
             NativeType nativeType = NativeType.Undefined;
-            //object? converterTypeObj = null;
+            string? fieldJsonName = null;
             string? converterFullName = null;
             string? converterSpace = null;
             string? converterName = null;
@@ -224,6 +225,11 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { fieldLength = value; });
+                        break;
+                    case NameAttribute: // used by JSON
+                        diagnostic
+                            = CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeRequiredArgumentValue<string>(attributeData, location, 0, (value) => { fieldJsonName = value; });
                         break;
                     case OffsetAttribute: // used by MemBlocks
                         diagnostic
@@ -281,7 +287,8 @@ namespace DTOMaker.SrcGen.Core
                 IsBigEndian = isBigEndian,
                 IsExternal = isExternal,
                 ConverterSpace = converterSpace,
-                ConverterNameqqq = converterName,
+                ConverterName = converterName,
+                FieldJsonName = fieldJsonName,
             };
 
             result = OnCustomizeParsedMember(result, location);
@@ -487,7 +494,8 @@ namespace DTOMaker.SrcGen.Core
                         IsBigEndian = member.IsBigEndian,
                         IsExternal = member.IsExternal,
                         ConverterSpace = member.ConverterSpace,
-                        ConverterNameqqq = member.ConverterNameqqq,
+                        ConverterName = member.ConverterName,
+                        FieldJsonName = member.FieldJsonName,
                     });
                 }
                 else

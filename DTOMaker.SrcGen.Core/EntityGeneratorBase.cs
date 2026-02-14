@@ -84,7 +84,7 @@ namespace DTOMaker.SrcGen.Core
             _builder.AppendLine(ReplaceTokens(line));
         }
 
-        private static string ToCamelCase(string value)
+        private static string ToCamelCase_notUsed(string value)
         {
             ReadOnlySpan<char> input = value.AsSpan();
             Span<char> output = stackalloc char[input.Length];
@@ -123,7 +123,7 @@ namespace DTOMaker.SrcGen.Core
 
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
-            string memberJsonName = member.FieldJsonName ?? $"_f{member.Height}_{member.Sequence:D3}";
+            string memberJsonName = member.FieldJsonName ?? $"_f{entity.ClassHeight:D2}_{member.Sequence:D3}";
             ILanguage language = _parameters.Language;
             var tokens = new Dictionary<string, object?>
             {
@@ -137,11 +137,11 @@ namespace DTOMaker.SrcGen.Core
                 ["MemberIsNullable"] = member.IsNullable,
                 ["MemberSequence"] = member.Sequence,
                 ["MemberName"] = member.Name,
-                ["MemberJsonName"] = ToCamelCase(member.Name),
+                ["MemberJsonName"] = memberJsonName,
                 ["MemberDefaultValue"] = language.GetDefaultValue(member.MemberType)
             };
             tokens[BuildTokenName(member, "MemberName")] = member.Name;
-            tokens[BuildTokenName(member, "MemberJsonName")] = ToCamelCase(member.Name);
+            tokens[BuildTokenName(member, "MemberJsonName")] = memberJsonName;
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
 
             string memberType = language.GetDataTypeToken(member.MemberType);
@@ -156,10 +156,10 @@ namespace DTOMaker.SrcGen.Core
                 tokens["MemberType"] = memberType;
                 tokens["NativeMemberType"] = memberType;
             }
-            if (member.ConverterSpace is not null && member.ConverterNameqqq is not null)
+            if (member.ConverterSpace is not null && member.ConverterName is not null)
             {
                 tokens["ConverterSpace"] = member.ConverterSpace;
-                tokens["ConverterName"] = member.ConverterNameqqq;
+                tokens["ConverterName"] = member.ConverterName;
             }
 
             // ---------- MemBlocks tokens ----------

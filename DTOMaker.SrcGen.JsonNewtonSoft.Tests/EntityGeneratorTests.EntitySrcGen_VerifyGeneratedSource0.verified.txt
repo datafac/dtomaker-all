@@ -78,7 +78,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private Int32 _Field1 = default;
-        [JsonProperty("field1")]
+        [JsonProperty("_f01_001")]
         public Int32 Field1
         {
             get => _Field1;
@@ -87,7 +87,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private Int32? _Field2;
-        [JsonProperty("field2")]
+        [JsonProperty("_f01_002")]
         public Int32? Field2
         {
             get => _Field2;

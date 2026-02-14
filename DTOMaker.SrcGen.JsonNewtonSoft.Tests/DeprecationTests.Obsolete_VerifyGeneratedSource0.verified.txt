@@ -78,7 +78,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field1 = default;
         [Obsolete("", false)]
-        [JsonProperty("field1")]
+        [JsonProperty("_f01_001")]
         public Double Field1
         {
             get => _Field1;
@@ -88,7 +88,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field2 = default;
         [Obsolete("Removed", false)]
-        [JsonProperty("field2")]
+        [JsonProperty("_f01_002")]
         public Double Field2
         {
             get => _Field2;
@@ -98,7 +98,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         [JsonIgnore]
         private Double _Field3 = default;
         [Obsolete("Removed", true)]
-        [JsonProperty("field3")]
+        [JsonProperty("_f01_003")]
         public Double Field3
         {
             get => _Field3;

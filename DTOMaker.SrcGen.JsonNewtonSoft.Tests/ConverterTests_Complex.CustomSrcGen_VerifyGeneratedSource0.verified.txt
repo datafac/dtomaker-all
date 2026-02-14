@@ -71,7 +71,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             _Field1 = source._Field1;
         }
 
-        [JsonProperty("field1")]
+        [JsonProperty("_f01_001")]
         private PairOfInt64 _Field1 = default;
         [JsonIgnore]
         public System.Numerics.Complex Field1

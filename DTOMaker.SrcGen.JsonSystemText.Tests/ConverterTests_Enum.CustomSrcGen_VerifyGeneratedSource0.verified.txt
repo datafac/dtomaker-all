@@ -74,7 +74,7 @@ namespace MyOrg.Models.JsonSystemText
             _Field2 = source._Field2;
         }
 
-        [JsonPropertyName("field1")]
+        [JsonPropertyName("_f01_001")]
         [JsonInclude]
         private Int32 _Field1 = default;
         [JsonIgnore]
@@ -84,7 +84,7 @@ namespace MyOrg.Models.JsonSystemText
             set => _Field1 = IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value));
         }
 
-        [JsonPropertyName("field2")]
+        [JsonPropertyName("_f01_002")]
         [JsonInclude]
         private Int32? _Field2;
         [JsonIgnore]

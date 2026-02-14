@@ -75,7 +75,7 @@ namespace MyOrg.Models.JsonSystemText
 
         [JsonIgnore]
         private MyOrg.Models.JsonSystemText.MyDTO? _Field1;
-        [JsonPropertyName("field1")]
+        [JsonPropertyName("_f01_001")]
         public MyOrg.Models.JsonSystemText.MyDTO? Field1
         {
             get => _Field1;

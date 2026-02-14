@@ -75,7 +75,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private string _Field11 = string.Empty;
-        [JsonProperty("field11")]
+        [JsonProperty("_f02_001")]
         public string Field11
         {
             get => _Field11;
@@ -84,7 +84,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private string? _Field12;
-        [JsonProperty("field12")]
+        [JsonProperty("_f02_002")]
         public string? Field12
         {
             get => _Field12;

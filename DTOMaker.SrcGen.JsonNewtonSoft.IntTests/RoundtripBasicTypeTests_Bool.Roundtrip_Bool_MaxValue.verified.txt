@@ -1,4 +1,4 @@
 ﻿{
-  "field1": true,
-  "field2": true
+  "_f01_001": true,
+  "_f01_002": true
 }

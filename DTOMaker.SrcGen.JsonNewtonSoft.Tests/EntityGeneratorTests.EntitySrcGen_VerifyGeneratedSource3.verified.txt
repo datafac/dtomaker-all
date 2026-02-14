@@ -73,7 +73,7 @@ namespace MyOrg.Model3.JsonNewtonSoft
             _Field42 = source._Field42;
         }
 
-        [JsonProperty("field41")]
+        [JsonProperty("_f01_001")]
         private byte[] _Field41 = Array.Empty<byte>();
         [JsonIgnore]
         public Octets Field41
@@ -82,7 +82,7 @@ namespace MyOrg.Model3.JsonNewtonSoft
             set => _Field41 = IfNotFrozen(value.ToByteArray());
         }
 
-        [JsonProperty("field42")]
+        [JsonProperty("_f01_002")]
         private byte[]? _Field42;
         [JsonIgnore]
         public Octets? Field42

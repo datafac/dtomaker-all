@@ -11,6 +11,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact] public void ObsoleteAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.ObsoleteAttribute.ShouldBe(nameof(System.ObsoleteAttribute));
         [Fact] public void KeyOffsetAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.KeyOffsetAttribute.ShouldBe(nameof(DTOMaker.Models.KeyOffsetAttribute));
         [Fact] public void LengthAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.LengthAttribute.ShouldBe(nameof(DTOMaker.Models.LengthAttribute));
+        [Fact] public void NameAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.NameAttribute.ShouldBe(nameof(DTOMaker.Models.NameAttribute));
         [Fact] public void OffsetAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.OffsetAttribute.ShouldBe(nameof(DTOMaker.Models.OffsetAttribute));
         [Fact] public void EndianAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.EndianAttribute.ShouldBe(nameof(DTOMaker.Models.EndianAttribute));
         [Fact] public void LayoutMethod_Undefined() => ((int)DTOMaker.SrcGen.Core.LayoutAlgo.Default).ShouldBe((int)DTOMaker.Models.LayoutMethod.Undefined);

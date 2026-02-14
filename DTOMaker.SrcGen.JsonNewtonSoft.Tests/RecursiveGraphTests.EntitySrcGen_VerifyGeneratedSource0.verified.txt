@@ -74,7 +74,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private MyOrg.Models.JsonNewtonSoft.MyDTO? _Field1;
-        [JsonProperty("field1")]
+        [JsonProperty("_f01_001")]
         public MyOrg.Models.JsonNewtonSoft.MyDTO? Field1
         {
             get => _Field1;

@@ -72,7 +72,7 @@ namespace MyOrg.Models.JsonSystemText
             _Field1 = source._Field1;
         }
 
-        [JsonPropertyName("field1")]
+        [JsonPropertyName("_f01_001")]
         [JsonInclude]
         private PairOfInt64 _Field1 = default;
         [JsonIgnore]

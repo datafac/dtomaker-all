@@ -20,7 +20,8 @@ namespace DTOMaker.SrcGen.Core
         public bool IsExternal { get; init; }
         public bool IsEmbedded => !IsExternal;
         public string? ConverterSpace { get; init; }
-        public string? ConverterNameqqq { get; init; }
+        public string? ConverterName { get; init; }
+        public string? FieldJsonName { get; init; }
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     }
 }

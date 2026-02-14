@@ -78,7 +78,7 @@ namespace MyOrg.Model2.JsonSystemText
 
         [JsonIgnore]
         private MyOrg.Model2.JsonSystemText.MyDTO _Field31 = MyOrg.Model2.JsonSystemText.MyDTO.Empty;
-        [JsonPropertyName("field31")]
+        [JsonPropertyName("_f01_001")]
         public MyOrg.Model2.JsonSystemText.MyDTO Field31
         {
             get => _Field31;
@@ -93,7 +93,7 @@ namespace MyOrg.Model2.JsonSystemText
 
         [JsonIgnore]
         private MyOrg.Model2.JsonSystemText.MyDTO? _Field32;
-        [JsonPropertyName("field32")]
+        [JsonPropertyName("_f01_002")]
         public MyOrg.Model2.JsonSystemText.MyDTO? Field32
         {
             get => _Field32;

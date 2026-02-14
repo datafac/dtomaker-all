@@ -77,7 +77,7 @@ namespace MyOrg.Model2.JsonNewtonSoft
 
         [JsonIgnore]
         private MyOrg.Model2.JsonNewtonSoft.MyDTO _Field31 = MyOrg.Model2.JsonNewtonSoft.MyDTO.Empty;
-        [JsonProperty("field31")]
+        [JsonProperty("_f01_001")]
         public MyOrg.Model2.JsonNewtonSoft.MyDTO Field31
         {
             get => _Field31;
@@ -92,7 +92,7 @@ namespace MyOrg.Model2.JsonNewtonSoft
 
         [JsonIgnore]
         private MyOrg.Model2.JsonNewtonSoft.MyDTO? _Field32;
-        [JsonProperty("field32")]
+        [JsonProperty("_f01_002")]
         public MyOrg.Model2.JsonNewtonSoft.MyDTO? Field32
         {
             get => _Field32;

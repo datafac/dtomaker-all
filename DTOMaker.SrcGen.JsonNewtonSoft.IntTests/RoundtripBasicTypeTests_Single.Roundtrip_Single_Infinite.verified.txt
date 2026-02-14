@@ -1,4 +1,4 @@
 ﻿{
-  "field1": "Infinity",
-  "field2": "-Infinity"
+  "_f01_001": "Infinity",
+  "_f01_002": "-Infinity"
 }

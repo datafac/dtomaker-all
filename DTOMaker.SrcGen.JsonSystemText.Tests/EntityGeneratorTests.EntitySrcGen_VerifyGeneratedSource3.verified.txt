@@ -74,7 +74,7 @@ namespace MyOrg.Model3.JsonSystemText
             _Field42 = source._Field42;
         }
 
-        [JsonPropertyName("field41")]
+        [JsonPropertyName("_f01_001")]
         [JsonInclude]
         private byte[] _Field41 = Array.Empty<byte>();
         [JsonIgnore]
@@ -84,7 +84,7 @@ namespace MyOrg.Model3.JsonSystemText
             set => _Field41 = IfNotFrozen(value.ToByteArray());
         }
 
-        [JsonPropertyName("field42")]
+        [JsonPropertyName("_f01_002")]
         [JsonInclude]
         private byte[]? _Field42;
         [JsonIgnore]

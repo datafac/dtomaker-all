@@ -12,27 +12,27 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests
     [Entity(30)]
     public interface INode : IEntityBase
     {
-        [Member(1)] String K { get; set; }
+        [Member(1)][Name("key")] String Key { get; set; }
     }
 
     [Entity(31)]
     public interface IStringNode : INode
     {
-        [Member(1)] String V { get; set; }
+        [Member(1)][Name("sVal")] String V { get; set; }
     }
 
     [Entity(32)]
     public interface INumberNode : INode
     {
-        [Member(1)] Int64 V { get; set; }
+        [Member(1)][Name("nVal")] Int64 V { get; set; }
     }
 
     [Entity(33)]
     public interface ITree : IEntityBase
     {
-        [Member(1)] ITree? L { get; set; }
-        [Member(2)] ITree? R { get; set; }
-        [Member(3)] INode? N { get; set; }
+        [Member(1)][Name("left")] ITree? L { get; set; }
+        [Member(2)][Name("right")] ITree? R { get; set; }
+        [Member(3)][Name("node")] INode? N { get; set; }
     }
 
     public class RecursiveGraphTests
@@ -57,7 +57,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests
                 {
                     N = new StringNode
                     {
-                        K = "L",
+                        Key = "L",
                         V = "LStr"
                     }
                 },
@@ -65,13 +65,13 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests
                 {
                     N = new NumberNode
                     {
-                        K = "R",
+                        Key = "R",
                         V = 314L
                     }
                 },
                 N = new StringNode
                 {
-                    K = "M",
+                    Key = "M",
                     V = "MStr"
                 }
             };

@@ -81,7 +81,7 @@ namespace MyOrg.Models.JsonSystemText
 
         [JsonIgnore]
         private Int32 _Field1 = default;
-        [JsonPropertyName("field1")]
+        [JsonPropertyName("_f01_001")]
         public Int32 Field1
         {
             get => _Field1;
@@ -90,7 +90,7 @@ namespace MyOrg.Models.JsonSystemText
 
         [JsonIgnore]
         private Int32? _Field2;
-        [JsonPropertyName("field2")]
+        [JsonPropertyName("_f01_002")]
         public Int32? Field2
         {
             get => _Field2;
