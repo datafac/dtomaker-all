@@ -11,7 +11,7 @@
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
 This project contains model-driven compile-time source generators for quickly creating 
-and maintaining polymorphic, freezable DTOs (Data Transport Objects) supporting various
+and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
 serialization protocols.
 
 ## Open Source Maintenance Fee Introduction
