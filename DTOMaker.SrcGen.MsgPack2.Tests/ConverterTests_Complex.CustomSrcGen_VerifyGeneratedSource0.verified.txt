@@ -78,10 +78,16 @@ namespace MyOrg.Models.MsgPack2
         [IgnoreMember]
         private PairOfInt64 _Field1;
         [Key(1)]
+        public PairOfInt64 Native_Field1
+        {
+            get => _Field1;
+            set => _Field1 = IfNotFrozen(value);
+        }
+        [IgnoreMember]
         public System.Numerics.Complex Field1
         {
-            get => DTOMaker.Models.ComplexConverter.ToCustom(_Field1);
-            set => _Field1 = IfNotFrozen(DTOMaker.Models.ComplexConverter.ToNative(value));
+            get => DTOMaker.Models.ComplexConverter.ToCustom(Native_Field1);
+            set => Native_Field1 = DTOMaker.Models.ComplexConverter.ToNative(value);
         }
 
 

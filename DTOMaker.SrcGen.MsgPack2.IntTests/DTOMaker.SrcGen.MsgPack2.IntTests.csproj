@@ -27,6 +27,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\DTOMaker.Converters.Numerics\DTOMaker.Converters.Numerics.csproj" />
 		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 		<ProjectReference Include="..\DTOMaker.Runtime.MsgPack2\DTOMaker.Runtime.MsgPack2.csproj" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.MsgPack2\DTOMaker.SrcGen.MsgPack2.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

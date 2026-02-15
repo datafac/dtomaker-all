@@ -1,3 +1,4 @@
+using DTOMaker.Converters.Numerics;
 using DTOMaker.Models;
 using DTOMaker.SrcGen.MemBlocks.IntTests.MemBlocks;
 using Shouldly;
@@ -9,8 +10,8 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(42, LayoutMethod.Linear)]
-public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Value { get; } }
+[Entity(50, LayoutMethod.Linear)]
+public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(ComplexConverter))] Complex Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Complex
 {
@@ -33,3 +34,4 @@ public class RoundtripBasicTypeTests_Custom_Complex
     [Fact] public async Task Roundtrip_Complex_OthValue() => await Verifier.Verify(await Roundtrip_ComplexAsync(Complex.ImaginaryOne));
 
 }
+

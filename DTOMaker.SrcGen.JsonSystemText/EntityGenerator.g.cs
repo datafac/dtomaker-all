@@ -69,7 +69,7 @@ public partial class EntityGenerator
             Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
             Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
             Emit("");
-            Emit("        [JsonPropertyName(\"field1\")]");
+            Emit("        [JsonPropertyName(\"_f01_001\")]");
             Emit("        public long Field1 { get; set; }");
             Emit("");
             Emit("        public override int GetHashCode() => HashCode.Combine(Field1);");

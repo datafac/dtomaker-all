@@ -80,19 +80,31 @@ namespace MyOrg.Models.MsgPack2
         [IgnoreMember]
         private Int32 _Field1;
         [Key(1)]
+        public Int32 Native_Field1
+        {
+            get => _Field1;
+            set => _Field1 = IfNotFrozen(value);
+        }
+        [IgnoreMember]
         public System.DayOfWeek Field1
         {
-            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(_Field1);
-            set => _Field1 = IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(Native_Field1);
+            set => Native_Field1 = DTOMaker.Models.DayOfWeekConverter.ToNative(value);
         }
 
         [IgnoreMember]
         private Int32? _Field2;
         [Key(2)]
+        public Int32? Native_Field2
+        {
+            get => _Field2;
+            set => _Field2 = IfNotFrozen(value);
+        }
+        [IgnoreMember]
         public System.DayOfWeek? Field2
         {
-            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(_Field2);
-            set => _Field2 = IfNotFrozen(DTOMaker.Models.DayOfWeekConverter.ToNative(value));
+            get => DTOMaker.Models.DayOfWeekConverter.ToCustom(Native_Field2);
+            set => Native_Field2 = DTOMaker.Models.DayOfWeekConverter.ToNative(value);
         }
 
 
