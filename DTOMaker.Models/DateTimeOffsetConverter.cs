@@ -5,6 +5,8 @@ namespace DTOMaker.Models;
 
 public sealed class DateTimeOffsetConverter : IStructConverter<DateTimeOffset, PairOfInt64>
 {
+    public NativeType NativeType => NativeType.PairOfInt64;
+
     public static DateTimeOffset ToCustom(PairOfInt64 native)
     {
         var dt = DateTime.FromBinary(native.A);
@@ -12,10 +14,6 @@ public sealed class DateTimeOffsetConverter : IStructConverter<DateTimeOffset, P
         return new DateTimeOffset(dt, ts);
     }
 
-    public static DateTimeOffset? ToCustom(PairOfInt64? native)
-        => native.HasValue
-            ? new DateTimeOffset(DateTime.FromBinary(native.Value.A), TimeSpan.FromTicks(native.Value.B))
-            : null;
     public static PairOfInt64 ToNative(DateTimeOffset custom)
     {
         var a = custom.DateTime.ToBinary();
@@ -23,9 +21,7 @@ public sealed class DateTimeOffsetConverter : IStructConverter<DateTimeOffset, P
         return new PairOfInt64(a, b);
     }
 
-    public static PairOfInt64? ToNative(DateTimeOffset? custom)
-        => custom.HasValue
-            ? new PairOfInt64(custom.Value.DateTime.ToBinary(), custom.Value.TimeOfDay.Ticks)
-            : null;
+    public static DateTimeOffset? ToCustom(PairOfInt64? native) => native.HasValue ? ToCustom(native.Value): null;
+    public static PairOfInt64? ToNative(DateTimeOffset? custom) => custom.HasValue ? ToNative(custom.Value) : null;
 }
 

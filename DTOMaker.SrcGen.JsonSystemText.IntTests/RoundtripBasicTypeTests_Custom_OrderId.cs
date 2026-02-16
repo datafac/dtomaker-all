@@ -30,6 +30,7 @@ public readonly struct OrderId : IEquatable<OrderId>
 /// </summary>
 public sealed class OrderIdConverter : IStructConverter<OrderId, long>
 {
+    public NativeType NativeType => NativeType.Int64;
     public static OrderId ToCustom(long native) => new OrderId(native);
     public static OrderId? ToCustom(long? native) => native.HasValue ? new OrderId(native.Value) : null;
     public static long ToNative(OrderId custom) => custom.Value;

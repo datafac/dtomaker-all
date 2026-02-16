@@ -9,9 +9,10 @@ namespace DTOMaker.Models;
 /// </summary>
 public sealed class DateTimeConverter : IStructConverter<DateTime, long>
 {
+    public NativeType NativeType => NativeType.Int64;
     public static DateTime ToCustom(long native) => DateTime.FromBinary(native);
-    public static DateTime? ToCustom(long? native) => native.HasValue ? DateTime.FromBinary(native.Value) : null;
     public static long ToNative(DateTime custom) => custom.ToBinary();
-    public static long? ToNative(DateTime? custom) => custom.HasValue ? custom.Value.ToBinary() : null;
+    public static DateTime? ToCustom(long? native) => native.HasValue ? ToCustom(native.Value) : null;
+    public static long? ToNative(DateTime? custom) => custom.HasValue ? ToNative(custom.Value) : null;
 }
 

@@ -23,6 +23,7 @@
         public const string MemoryOctets = "DataFac.Memory.Octets";
         public const string PairOfInt16 = "DataFac.Memory.PairOfInt16";
         public const string PairOfInt32 = "DataFac.Memory.PairOfInt32";
-        public const string PairOfInt64 = "DataFac.Memory.PairOfInt64";
+        public const string PairOfInt64qqq = "DataFac.Memory.PairOfInt64";
+        public const string QuadOfInt32 = "DataFac.Memory.QuadOfInt32";
     }
 }

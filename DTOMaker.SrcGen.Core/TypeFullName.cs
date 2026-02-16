@@ -46,7 +46,8 @@ namespace DTOMaker.SrcGen.Core
                 // custom types
                 NativeType.PairOfInt16 => KnownType.PairOfInt16,
                 NativeType.PairOfInt32 => KnownType.PairOfInt32,
-                NativeType.PairOfInt64 => KnownType.PairOfInt64,
+                NativeType.PairOfInt64qqq => KnownType.PairOfInt64qqq,
+                NativeType.QuadOfInt32 => KnownType.QuadOfInt32,
                 NativeType.Binary => KnownType.MemoryOctets,
                 _ => "System.Undefined",
             };
@@ -77,7 +78,8 @@ namespace DTOMaker.SrcGen.Core
                 // custom types
                 KnownType.PairOfInt16 => (MemberKind.Struct, NativeType.PairOfInt16),
                 KnownType.PairOfInt32 => (MemberKind.Struct, NativeType.PairOfInt32),
-                KnownType.PairOfInt64 => (MemberKind.Struct, NativeType.PairOfInt64),
+                KnownType.PairOfInt64qqq => (MemberKind.Struct, NativeType.PairOfInt64qqq),
+                KnownType.QuadOfInt32 => (MemberKind.Struct, NativeType.QuadOfInt32),
                 KnownType.MemoryOctets => (MemberKind.Binary, NativeType.Binary),
                 _ => (MemberKind.Undefined, NativeType.Undefined),
             };
@@ -106,10 +108,11 @@ namespace DTOMaker.SrcGen.Core
                 NativeType.Decimal => 9017,
                 NativeType.String => 9018,
                 // custom types
-                NativeType.PairOfInt16 => 9096,
-                NativeType.PairOfInt32 => 9097,
-                NativeType.PairOfInt64 => 9098,
                 NativeType.Binary => 9099,
+                NativeType.PairOfInt64qqq => 9098,
+                NativeType.PairOfInt32 => 9097,
+                NativeType.PairOfInt16 => 9096,
+                NativeType.QuadOfInt32 => 9095,
                 _ => 0,
             };
         }

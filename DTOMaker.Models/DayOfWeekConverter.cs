@@ -9,6 +9,7 @@ namespace DTOMaker.Models;
 /// </summary>
 public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, int>
 {
+    public NativeType NativeType => NativeType.Int32;
     public static DayOfWeek ToCustom(int native) => (DayOfWeek)native;
     public static DayOfWeek? ToCustom(int? native) => native.HasValue ? (DayOfWeek)native.Value : null;
     public static int ToNative(DayOfWeek custom) => (int)custom;

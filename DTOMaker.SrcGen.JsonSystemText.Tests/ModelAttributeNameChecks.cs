@@ -41,6 +41,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact] public void NativeType_Binary() => ((int)DTOMaker.SrcGen.Core.NativeType.Binary).ShouldBe((int)DTOMaker.Models.NativeType.Binary);
         [Fact] public void NativeType_PairOfInt16() => ((int)DTOMaker.SrcGen.Core.NativeType.PairOfInt16).ShouldBe((int)DTOMaker.Models.NativeType.PairOfInt16);
         [Fact] public void NativeType_PairOfInt32() => ((int)DTOMaker.SrcGen.Core.NativeType.PairOfInt32).ShouldBe((int)DTOMaker.Models.NativeType.PairOfInt32);
-        [Fact] public void NativeType_PairOfInt64() => ((int)DTOMaker.SrcGen.Core.NativeType.PairOfInt64).ShouldBe((int)DTOMaker.Models.NativeType.PairOfInt64);
+        [Fact] public void NativeType_PairOfInt64() => ((int)DTOMaker.SrcGen.Core.NativeType.PairOfInt64qqq).ShouldBe((int)DTOMaker.Models.NativeType.PairOfInt64);
+        [Fact] public void NativeType_QuadOfInt32() => ((int)DTOMaker.SrcGen.Core.NativeType.QuadOfInt32).ShouldBe((int)DTOMaker.Models.NativeType.QuadOfInt32);
     }
 }

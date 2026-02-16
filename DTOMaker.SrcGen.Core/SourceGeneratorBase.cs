@@ -140,7 +140,8 @@ namespace DTOMaker.SrcGen.Core
                 case KnownType.SystemUInt128:
                 case KnownType.SystemGuid:
                 case KnownType.SystemDecimal:
-                case KnownType.PairOfInt64:
+                case KnownType.PairOfInt64qqq:
+                case KnownType.QuadOfInt32:
                     return 16;
                 default:
                     return 0;

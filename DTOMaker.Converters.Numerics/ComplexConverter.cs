@@ -12,6 +12,7 @@ namespace DTOMaker.Converters.Numerics;
 /// </summary>
 public sealed class ComplexConverter : IStructConverter<Complex, PairOfInt64>
 {
+    public NativeType NativeType => NativeType.PairOfInt64;
     public static Complex ToCustom(PairOfInt64 native) => new Complex(BitConverter.Int64BitsToDouble(native.A), BitConverter.Int64BitsToDouble(native.B));
     public static PairOfInt64 ToNative(Complex custom) => new PairOfInt64(BitConverter.DoubleToInt64Bits(custom.Real), BitConverter.DoubleToInt64Bits(custom.Imaginary));
     public static Complex? ToCustom(PairOfInt64? native) => native.HasValue ? ToCustom(native.Value) : null;

@@ -5,6 +5,7 @@ public interface IStructConverter<TCustom, TNative>
     where TCustom : struct
     where TNative : struct
 {
+    NativeType NativeType { get; }
 #if NET8_0_OR_GREATER
     static abstract TNative ToNative(TCustom custom);
     static abstract TNative? ToNative(TCustom? custom);

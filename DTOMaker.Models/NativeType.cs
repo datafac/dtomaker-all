@@ -23,6 +23,7 @@ public enum NativeType
     Guid,
     Decimal,
     PairOfInt64,
+    QuadOfInt32,
     Binary,
     String,
 }

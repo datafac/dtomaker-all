@@ -12,14 +12,14 @@ namespace DTOMaker.Converters.Numerics;
 /// </summary>
 public sealed class Vector2Converter : IStructConverter<Vector2, PairOfInt32>
 {
+    public NativeType NativeType => NativeType.PairOfInt32;
     public static Vector2 ToCustom(PairOfInt32 native)
     {
 #if NET8_0_OR_GREATER
         return new Vector2(BitConverter.Int32BitsToSingle(native.A), BitConverter.Int32BitsToSingle(native.B));
 #else
         BlockB008 block = default;
-        block.A.Int32ValueLE = native.A;
-        block.B.Int32ValueLE = native.B;
+        block.PairOfInt32LE = native;
         float x = block.A.SingleValueLE;
         float y = block.B.SingleValueLE;
         return new Vector2(x, y);
@@ -34,9 +34,7 @@ public sealed class Vector2Converter : IStructConverter<Vector2, PairOfInt32>
         BlockB008 block = default;
         block.A.SingleValueLE = custom.X;
         block.B.SingleValueLE = custom.Y;
-        int a = block.A.Int32ValueLE;
-        int b = block.B.Int32ValueLE;
-        return new PairOfInt32(a, b);
+        return block.PairOfInt32LE;
 #endif
     }
 
