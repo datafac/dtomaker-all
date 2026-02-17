@@ -33,4 +33,3 @@ public class RoundtripBasicTypeTests_Custom_Vector2
     [Fact] public async Task Roundtrip_Vector2_OthValue() => await Verifier.Verify(Roundtrip_Vector2(Vector2.UnitY));
 
 }
-

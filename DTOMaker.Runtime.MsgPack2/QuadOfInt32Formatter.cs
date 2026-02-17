@@ -4,9 +4,9 @@ using MessagePack.Formatters;
 
 namespace DTOMaker.Runtime.MsgPack2;
 
-internal sealed class PairOfInt32Formatter : IMessagePackFormatter<PairOfInt32>
+internal sealed class QuadOfInt32Formatter : IMessagePackFormatter<QuadOfInt32>
 {
-    public PairOfInt32 Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+    public QuadOfInt32 Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         if (reader.TryReadNil())
         {
@@ -15,7 +15,7 @@ internal sealed class PairOfInt32Formatter : IMessagePackFormatter<PairOfInt32>
         else
         {
             int count = reader.ReadArrayHeader();
-            if (count != 2)
+            if (count != 4)
             {
                 throw new MessagePackSerializationException("Invalid array header");
             }
@@ -24,7 +24,9 @@ internal sealed class PairOfInt32Formatter : IMessagePackFormatter<PairOfInt32>
             {
                 var a = reader.ReadInt32();
                 var b = reader.ReadInt32();
-                return new PairOfInt32(a, b);
+                var c = reader.ReadInt32();
+                var d = reader.ReadInt32();
+                return new QuadOfInt32(a, b, c, d);
             }
             finally
             {
@@ -32,7 +34,7 @@ internal sealed class PairOfInt32Formatter : IMessagePackFormatter<PairOfInt32>
             }
         }
     }
-    public void Serialize(ref MessagePackWriter writer, PairOfInt32 value, MessagePackSerializerOptions options)
+    public void Serialize(ref MessagePackWriter writer, QuadOfInt32 value, MessagePackSerializerOptions options)
     {
         if (value == default)
         {
@@ -41,9 +43,11 @@ internal sealed class PairOfInt32Formatter : IMessagePackFormatter<PairOfInt32>
         }
         else
         {
-            writer.WriteArrayHeader(2);
+            writer.WriteArrayHeader(4);
             writer.Write(value.A);
             writer.Write(value.B);
+            writer.Write(value.C);
+            writer.Write(value.D);
         }
     }
 }

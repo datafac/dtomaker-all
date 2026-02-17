@@ -29,6 +29,10 @@ namespace DTOMaker.Runtime.MsgPack2
             {
                 return new PairOfInt64Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
             }
+            if (typeof(T) == typeof(QuadOfInt32))
+            {
+                return new QuadOfInt32Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;
+            }
             if (typeof(T) == typeof(PairOfInt32))
             {
                 return new PairOfInt32Formatter() is IMessagePackFormatter<T> typedFormatter ? typedFormatter : null;

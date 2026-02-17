@@ -15,6 +15,7 @@ namespace DTOMaker.Runtime.JsonSystemText
                 new PairOfInt16Converter(),
                 new PairOfInt32Converter(),
                 new PairOfInt64Converter(),
+                new QuadOfInt32Converter(),
             }
         };
 

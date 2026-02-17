@@ -2,6 +2,7 @@
 using DTOMaker.Models;
 using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace DTOMaker.Converters.Numerics;
 
@@ -15,30 +16,18 @@ public sealed class Vector3Converter : IStructConverter<Vector3, QuadOfInt32>
     public NativeType NativeType => NativeType.QuadOfInt32;
     public static Vector3 ToCustom(QuadOfInt32 native)
     {
-#if NET8_0_OR_GREATER
-        return new Vector3(BitConverter.Int32BitsToSingle(native.A), BitConverter.Int32BitsToSingle(native.B), BitConverter.Int32BitsToSingle(native.C));
-#else
-        BlockB016 block = default;
-        block.QuadOfInt32LE = native;
-        float x = block.A.A.SingleValueLE;
-        float y = block.A.B.SingleValueLE;
-        float z = block.B.A.SingleValueLE;
-        return new Vector3(x, y, z);
-#endif
+        var nativeA = native.A;
+        var nativeB = native.B;
+        var nativeC = native.C;
+        return new Vector3(Unsafe.As<int, float>(ref nativeA), Unsafe.As<int, float>(ref nativeB), Unsafe.As<int, float>(ref nativeC));
     }
 
     public static QuadOfInt32 ToNative(Vector3 custom)
     {
-#if NET8_0_OR_GREATER
-        return new QuadOfInt32(BitConverter.SingleToInt32Bits(custom.X), BitConverter.SingleToInt32Bits(custom.Y), BitConverter.SingleToInt32Bits(custom.Z), 0);
-#else
-        BlockB016 block = default;
-        block.A.A.SingleValueLE = custom.X;
-        block.A.B.SingleValueLE = custom.Y;
-        block.B.A.SingleValueLE = custom.Z;
-        block.B.A.SingleValueLE = 0F;
-        return block.QuadOfInt32LE;
-#endif
+        var customX = custom.X;
+        var customY = custom.Y;
+        var customZ = custom.Z;
+        return new QuadOfInt32(Unsafe.As<float, int>(ref customX), Unsafe.As<float, int>(ref customY), Unsafe.As<float, int>(ref customZ), 0);
     }
 
     public static Vector3? ToCustom(QuadOfInt32? native) => native.HasValue ? ToCustom(native.Value) : null;

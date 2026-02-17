@@ -30,7 +30,7 @@
         UInt128,
         Guid,
         Decimal,
-        PairOfInt64qqq,
+        PairOfInt64,
         QuadOfInt32,
         Binary,
         String,

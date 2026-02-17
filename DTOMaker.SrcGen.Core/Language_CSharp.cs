@@ -48,7 +48,7 @@
                 KnownType.MemoryOctets => "Octets",
                 KnownType.PairOfInt16 => "PairOfInt16",
                 KnownType.PairOfInt32 => "PairOfInt32",
-                KnownType.PairOfInt64qqq => "PairOfInt64",
+                KnownType.PairOfInt64 => "PairOfInt64",
                 KnownType.QuadOfInt32 => "QuadOfInt32",
                 _ => typeFullName.ShortImplName
             };

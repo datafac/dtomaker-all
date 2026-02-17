@@ -1,7 +1,7 @@
 ﻿using DataFac.Memory;
 using DTOMaker.Models;
-using System;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace DTOMaker.Converters.Numerics;
 
@@ -15,27 +15,16 @@ public sealed class Vector2Converter : IStructConverter<Vector2, PairOfInt32>
     public NativeType NativeType => NativeType.PairOfInt32;
     public static Vector2 ToCustom(PairOfInt32 native)
     {
-#if NET8_0_OR_GREATER
-        return new Vector2(BitConverter.Int32BitsToSingle(native.A), BitConverter.Int32BitsToSingle(native.B));
-#else
-        BlockB008 block = default;
-        block.PairOfInt32LE = native;
-        float x = block.A.SingleValueLE;
-        float y = block.B.SingleValueLE;
-        return new Vector2(x, y);
-#endif
+        var nativeA = native.A;
+        var nativeB = native.B;
+        return new Vector2(Unsafe.As<int, float>(ref nativeA), Unsafe.As<int, float>(ref nativeB));
     }
 
     public static PairOfInt32 ToNative(Vector2 custom)
     {
-#if NET8_0_OR_GREATER
-        return new PairOfInt32(BitConverter.SingleToInt32Bits(custom.X), BitConverter.SingleToInt32Bits(custom.Y));
-#else
-        BlockB008 block = default;
-        block.A.SingleValueLE = custom.X;
-        block.B.SingleValueLE = custom.Y;
-        return block.PairOfInt32LE;
-#endif
+        var customX = custom.X;
+        var customY = custom.Y;
+        return new PairOfInt32(Unsafe.As<float, int>(ref customX), Unsafe.As<float, int>(ref customY));
     }
 
     public static Vector2? ToCustom(PairOfInt32? native) => native.HasValue ? ToCustom(native.Value) : null;
