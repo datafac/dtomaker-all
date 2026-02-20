@@ -88,7 +88,7 @@ flowchart TB
 
 # Ongoing Development
 ## Coming soon in V1.x
-- more custom (ref and value) type converters
+- ref type converters
 
 ## Coming later in V2.0+
 - incremental serialization
