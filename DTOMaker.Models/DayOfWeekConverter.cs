@@ -11,7 +11,7 @@ public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, int>
 {
     public NativeType NativeType => NativeType.Int32;
     public static DayOfWeek ToCustom(int native) => (DayOfWeek)native;
-    public static DayOfWeek? ToCustom(int? native) => native.HasValue ? (DayOfWeek)native.Value : null;
     public static int ToNative(DayOfWeek custom) => (int)custom;
-    public static int? ToNative(DayOfWeek? custom) => custom.HasValue ? (int)custom.Value : null;
+    public static DayOfWeek? ToCustom(int? native) => native.HasValue ? ToCustom(native.Value) : null;
+    public static int? ToNative(DayOfWeek? custom) => custom.HasValue ? ToNative(custom.Value) : null;
 }
