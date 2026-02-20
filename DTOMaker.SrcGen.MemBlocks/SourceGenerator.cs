@@ -123,21 +123,18 @@ namespace DTOMaker.SrcGen.MemBlocks
         protected override ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location)
         {
             bool updated = false;
-            bool isExternal = false;
             int fieldLength = parsedMember.FieldLength;
 
             // set default length for external (variable length) Octets and String
-            if (fieldLength == 0 && (parsedMember.MemberType.MemberKind == MemberKind.String || parsedMember.MemberType.MemberKind == MemberKind.Binary))
+            if (parsedMember.MemberType.MemberKind == MemberKind.String || parsedMember.MemberType.MemberKind == MemberKind.Binary)
             {
                 fieldLength = BlobIdV1Size;
-                isExternal = true;
                 updated = true;
             }
             // set default length for entities
             if (parsedMember.MemberType.MemberKind == MemberKind.Entity)
             {
                 fieldLength = BlobIdV1Size;
-                isExternal = true;
                 updated = true;
             }
 
@@ -164,7 +161,6 @@ namespace DTOMaker.SrcGen.MemBlocks
                 return parsedMember with
                 {
                     FieldLength = fieldLength,
-                    IsExternal = isExternal,
                     Diagnostics = new EquatableArray<Diagnostic>(parsedMember.Diagnostics.Concat(newDiagnostics)),
                 };
             }

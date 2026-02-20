@@ -227,14 +227,10 @@ namespace T_IntfNameSpace_
         T_CustomMemberType_ T_RequiredCustomStructMemberName_ { get; set; }
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
-        Octets? T_NullableFixLenBinaryMemberName_ { get; set; }
-        Octets? T_NullableVarLenBinaryMemberName_ { get; set; }
-        Octets T_RequiredFixLenBinaryMemberName_ { get; set; }
-        Octets T_RequiredVarLenBinaryMemberName_ { get; set; }
-        String? T_NullableFixLenStringMemberName_ { get; set; }
-        String? T_NullableVarLenStringMemberName_ { get; set; }
-        String T_RequiredFixLenStringMemberName_ { get; set; }
-        String T_RequiredVarLenStringMemberName_ { get; set; }
+        Octets? T_NullableBinaryMemberName_ { get; set; }
+        Octets T_RequiredBinaryMemberName_ { get; set; }
+        String? T_NullableStringMemberName_ { get; set; }
+        String T_RequiredStringMemberName_ { get; set; }
     }
 }
 //##}
@@ -362,32 +358,16 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            T_NullableFixLenBinaryMemberName__Pack();
+            await T_NullableBinaryMemberName__Pack(dataStore);
             //##} else {
-            await T_NullableVarLenBinaryMemberName__Pack(dataStore);
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            T_RequiredFixLenBinaryMemberName__Pack();
-            //##} else {
-            await T_RequiredVarLenBinaryMemberName__Pack(dataStore);
-            //##}
+            await T_RequiredBinaryMemberName__Pack(dataStore);
             //##}
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            T_NullableFixLenStringMemberName__Pack();
+            await T_NullableStringMemberName__Pack(dataStore);
             //##} else {
-            await T_NullableVarLenStringMemberName__Pack(dataStore);
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            T_RequiredFixLenStringMemberName__Pack();
-            //##} else {
-            await T_RequiredVarLenStringMemberName__Pack(dataStore);
-            //##}
+            await T_RequiredStringMemberName__Pack(dataStore);
             //##}
             //##break;
             //##default:
@@ -414,32 +394,16 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            T_NullableFixLenBinaryMemberName__Unpack();
+            await T_NullableBinaryMemberName__Unpack(dataStore);
             //##} else {
-            await T_NullableVarLenBinaryMemberName__Unpack(dataStore);
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            T_RequiredFixLenBinaryMemberName__Unpack();
-            //##} else {
-            await T_RequiredVarLenBinaryMemberName__Unpack(dataStore);
-            //##}
+            await T_RequiredBinaryMemberName__Unpack(dataStore);
             //##}
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            T_NullableFixLenStringMemberName__Unpack();
+            await T_NullableStringMemberName__Unpack(dataStore);
             //##} else {
-            await T_NullableVarLenStringMemberName__Unpack(dataStore);
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            T_RequiredFixLenStringMemberName__Unpack();
-            //##} else {
-            await T_RequiredVarLenStringMemberName__Unpack(dataStore);
-            //##}
+            await T_RequiredStringMemberName__Unpack(dataStore);
             //##}
             //##break;
             //##default:
@@ -489,32 +453,16 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            _T_NullableFixLenBinaryMemberName_ = source._T_NullableFixLenBinaryMemberName_;
+            _T_NullableBinaryMemberName_ = source._T_NullableBinaryMemberName_;
             //##} else {
-            _T_NullableVarLenBinaryMemberName_ = source._T_NullableVarLenBinaryMemberName_;
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            _T_RequiredFixLenBinaryMemberName_ = source._T_RequiredFixLenBinaryMemberName_;
-            //##} else {
-            _T_RequiredVarLenBinaryMemberName_ = source._T_RequiredVarLenBinaryMemberName_;
-            //##}
+            _T_RequiredBinaryMemberName_ = source._T_RequiredBinaryMemberName_;
             //##}
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            _T_NullableFixLenStringMemberName_ = source._T_NullableFixLenStringMemberName_;
+            _T_NullableStringMemberName_ = source._T_NullableStringMemberName_;
             //##} else {
-            _T_NullableVarLenStringMemberName_ = source._T_NullableVarLenStringMemberName_;
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            _T_RequiredFixLenStringMemberName_ = source._T_RequiredFixLenStringMemberName_;
-            //##} else {
-            _T_RequiredVarLenStringMemberName_ = source._T_RequiredVarLenStringMemberName_;
-            //##}
+            _T_RequiredStringMemberName_ = source._T_RequiredStringMemberName_;
             //##}
             //##break;
             //##default:
@@ -547,32 +495,16 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            _T_NullableFixLenBinaryMemberName_ = source.T_NullableFixLenBinaryMemberName_;
+            _T_NullableBinaryMemberName_ = source.T_NullableBinaryMemberName_;
             //##} else {
-            _T_NullableVarLenBinaryMemberName_ = source.T_NullableVarLenBinaryMemberName_;
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            _T_RequiredFixLenBinaryMemberName_ = source.T_RequiredFixLenBinaryMemberName_;
-            //##} else {
-            _T_RequiredVarLenBinaryMemberName_ = source.T_RequiredVarLenBinaryMemberName_;
-            //##}
+            _T_RequiredBinaryMemberName_ = source.T_RequiredBinaryMemberName_;
             //##}
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            //##if (member.IsEmbedded) {
-            _T_NullableFixLenStringMemberName_ = source.T_NullableFixLenStringMemberName_;
+            _T_NullableStringMemberName_ = source.T_NullableStringMemberName_;
             //##} else {
-            _T_NullableVarLenStringMemberName_ = source.T_NullableVarLenStringMemberName_;
-            //##}
-            //##} else {
-            //##if (member.IsEmbedded) {
-            _T_RequiredFixLenStringMemberName_ = source.T_RequiredFixLenStringMemberName_;
-            //##} else {
-            _T_RequiredVarLenStringMemberName_ = source.T_RequiredVarLenStringMemberName_;
-            //##}
+            _T_RequiredStringMemberName_ = source.T_RequiredStringMemberName_;
             //##}
             //##break;
             //##default:
@@ -606,21 +538,12 @@ namespace T_ImplNameSpace_
         private const int T_RequiredCustomStructFieldOffset_ = 4;
         private const int T_NullableEntityFieldOffset_ = 64;
         private const int T_RequiredEntityFieldOffset_ = 128;
-        private const int T_NullableFixLenBinaryFieldOffset_ = 192;
-        private const int T_NullableFixLenBinaryFieldLength_ = 32;
-        private const int T_RequiredFixLenBinaryFieldOffset_ = 224;
-        private const int T_RequiredFixLenBinaryFieldLength_ = 32;
 
-        private const int T_NullableVarLenBinaryFieldOffset_ = 256;
-        private const int T_RequiredVarLenBinaryFieldOffset_ = 320;
+        private const int T_NullableBinaryFieldOffset_ = 256;
+        private const int T_RequiredBinaryFieldOffset_ = 320;
 
-        private const int T_NullableFixLenStringFieldOffset_ = 384;
-        private const int T_NullableFixLenStringFieldLength_ = 32;
-        private const int T_RequiredFixLenStringFieldOffset_ = 416;
-        private const int T_RequiredFixLenStringFieldLength_ = 32;
-
-        private const int T_NullableVarLenStringFieldOffset_ = 448;
-        private const int T_RequiredVarLenStringFieldOffset_ = 512;
+        private const int T_NullableStringFieldOffset_ = 448;
+        private const int T_RequiredStringFieldOffset_ = 512;
 
         private const int T_FieldLength_ = 4;
         private const bool T_IsBigEndian_ = false;
@@ -728,204 +651,108 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.Binary:
         //##if (member.IsNullable) {
-        //##if (member.IsEmbedded) {
-        private void T_NullableFixLenBinaryMemberName__Pack()
+        private async ValueTask T_NullableBinaryMemberName__Pack(IDataStore dataStore)
         {
-            Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_NullableFixLenBinaryFieldOffset_, T_NullableFixLenBinaryFieldLength_),
-                _T_NullableFixLenBinaryMemberName_ is null ? (ReadOnlyMemory<byte>?)null : _T_NullableFixLenBinaryMemberName_.AsMemory());
-        }
-        private void T_NullableFixLenBinaryMemberName__Unpack()
-        {
-            ReadOnlyMemory<byte>? memory = Codec_Memory_NE.ReadFromMemory(_readonlyLocalBlock.Slice(T_NullableFixLenBinaryFieldOffset_, T_NullableFixLenBinaryFieldLength_));
-            _T_NullableFixLenBinaryMemberName_ = memory is null ? null : Octets.UnsafeWrap(memory.Value);
-        }
-        private Octets? _T_NullableFixLenBinaryMemberName_;
-        //##if(member.IsObsolete) {
-        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
-        //##}
-        public Octets? T_NullableFixLenBinaryMemberName_
-        {
-            get => IfUnpacked(_T_NullableFixLenBinaryMemberName_);
-            set => _T_NullableFixLenBinaryMemberName_ = IfNotFrozen(value);
-        }
-        //##} else {
-        private async ValueTask T_NullableVarLenBinaryMemberName__Pack(IDataStore dataStore)
-        {
-            BlobIdV1 blobId = _T_NullableVarLenBinaryMemberName_ is null
+            BlobIdV1 blobId = _T_NullableBinaryMemberName_ is null
                 ? default
-                : await dataStore.PutBlob(_T_NullableVarLenBinaryMemberName_.Sequence);
-            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64).Span);
+                : await dataStore.PutBlob(_T_NullableBinaryMemberName_.Sequence);
+            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);
         }
-        private async ValueTask T_NullableVarLenBinaryMemberName__Unpack(IDataStore dataStore)
+        private async ValueTask T_NullableBinaryMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenBinaryFieldOffset_, 64).Span);
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
-            _T_NullableVarLenBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);
+            _T_NullableBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);
         }
-        private Octets? _T_NullableVarLenBinaryMemberName_;
+        private Octets? _T_NullableBinaryMemberName_;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public Octets? T_NullableVarLenBinaryMemberName_
+        public Octets? T_NullableBinaryMemberName_
         {
-            get => IfUnpacked(_T_NullableVarLenBinaryMemberName_);
-            set => _T_NullableVarLenBinaryMemberName_ = IfNotFrozen(value);
-        }
-        //##}
-        //##} else {
-        //##if (member.IsEmbedded) {
-        private void T_RequiredFixLenBinaryMemberName__Pack()
-        {
-            Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredFixLenBinaryFieldOffset_, T_RequiredFixLenBinaryFieldLength_),
-                _T_RequiredFixLenBinaryMemberName_.AsMemory());
-        }
-        private void T_RequiredFixLenBinaryMemberName__Unpack()
-        {
-            ReadOnlyMemory<byte>? memory = Codec_Memory_NE.ReadFromMemory(_readonlyLocalBlock.Slice(T_RequiredFixLenBinaryFieldOffset_, T_RequiredFixLenBinaryFieldLength_));
-            _T_RequiredFixLenBinaryMemberName_ = memory is null ? Octets.Empty : Octets.UnsafeWrap(memory.Value);
-        }
-        private Octets _T_RequiredFixLenBinaryMemberName_ = Octets.Empty;
-        //##if(member.IsObsolete) {
-        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
-        //##}
-        public Octets T_RequiredFixLenBinaryMemberName_
-        {
-            get => IfUnpacked(_T_RequiredFixLenBinaryMemberName_);
-            set => _T_RequiredFixLenBinaryMemberName_ = IfNotFrozen(value);
+            get => IfUnpacked(_T_NullableBinaryMemberName_);
+            set => _T_NullableBinaryMemberName_ = IfNotFrozen(value);
         }
         //##} else {
-        private async ValueTask T_RequiredVarLenBinaryMemberName__Pack(IDataStore dataStore)
+        private async ValueTask T_RequiredBinaryMemberName__Pack(IDataStore dataStore)
         {
-            var buffers = _T_RequiredVarLenBinaryMemberName_.Sequence;
+            var buffers = _T_RequiredBinaryMemberName_.Sequence;
             BlobIdV1 blobId = await dataStore.PutBlob(buffers);
-            blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64).Span);
+            blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64).Span);
         }
-        private async ValueTask T_RequiredVarLenBinaryMemberName__Unpack(IDataStore dataStore)
+        private async ValueTask T_RequiredBinaryMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenBinaryFieldOffset_, 64).Span);
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
-            _T_RequiredVarLenBinaryMemberName_ = blob is null ? Octets.Empty : Octets.UnsafeWrap(blob.Value);
+            _T_RequiredBinaryMemberName_ = blob is null ? Octets.Empty : Octets.UnsafeWrap(blob.Value);
 
         }
-        private Octets _T_RequiredVarLenBinaryMemberName_ = Octets.Empty;
+        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public Octets T_RequiredVarLenBinaryMemberName_
+        public Octets T_RequiredBinaryMemberName_
         {
-            get => IfUnpacked(_T_RequiredVarLenBinaryMemberName_);
-            set => _T_RequiredVarLenBinaryMemberName_ = IfNotFrozen(value);
+            get => IfUnpacked(_T_RequiredBinaryMemberName_);
+            set => _T_RequiredBinaryMemberName_ = IfNotFrozen(value);
         }
-        //##}
         //##}
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
-        //##if (member.IsEmbedded) {
-        private void T_NullableFixLenStringMemberName__Pack()
+        private async ValueTask T_NullableStringMemberName__Pack(IDataStore dataStore)
         {
-            Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_NullableFixLenStringFieldOffset_, T_NullableFixLenStringFieldLength_),
-                _T_NullableFixLenStringMemberName_ is null ? (ReadOnlyMemory<byte>?)null : System.Text.Encoding.UTF8.GetBytes(_T_NullableFixLenStringMemberName_));
-        }
-        private void T_NullableFixLenStringMemberName__Unpack()
-        {
-            ReadOnlyMemory<byte>? memory = Codec_Memory_NE.ReadFromMemory(_readonlyLocalBlock.Slice(T_NullableFixLenStringFieldOffset_, T_NullableFixLenStringFieldLength_));
-#if NET8_0_OR_GREATER
-            _T_NullableFixLenStringMemberName_ = memory is null ? null : System.Text.Encoding.UTF8.GetString(memory.Value.Span);
-#else
-            _T_NullableFixLenStringMemberName_ = memory is null ? null : System.Text.Encoding.UTF8.GetString(memory.Value.ToArray());
-#endif
-        }
-        private string? _T_NullableFixLenStringMemberName_;
-        //##if(member.IsObsolete) {
-        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
-        //##}
-        public string? T_NullableFixLenStringMemberName_
-        {
-            get => IfUnpacked(_T_NullableFixLenStringMemberName_);
-            set => _T_NullableFixLenStringMemberName_ = IfNotFrozen(value);
-        }
-        //##} else {
-        private async ValueTask T_NullableVarLenStringMemberName__Pack(IDataStore dataStore)
-        {
-            BlobIdV1 blobId = _T_NullableVarLenStringMemberName_ is null
+            BlobIdV1 blobId = _T_NullableStringMemberName_ is null
                 ? default
-                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableVarLenStringMemberName_)));
-            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64).Span);
+                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));
+            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);
         }
-        private async ValueTask T_NullableVarLenStringMemberName__Unpack(IDataStore dataStore)
+        private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableVarLenStringFieldOffset_, 64).Span);
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);
+            _T_NullableStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
-            _T_NullableVarLenStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
+            _T_NullableStringMemberName_ = blob is null ? null : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif
         }
-        private string? _T_NullableVarLenStringMemberName_;
+        private string? _T_NullableStringMemberName_;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public string? T_NullableVarLenStringMemberName_
+        public string? T_NullableStringMemberName_
         {
-            get => IfUnpacked(_T_NullableVarLenStringMemberName_);
-            set => _T_NullableVarLenStringMemberName_ = IfNotFrozen(value);
-        }
-        //##}
-        //##} else {
-        //##if (member.IsEmbedded) {
-        private void T_RequiredFixLenStringMemberName__Pack()
-        {
-            Codec_Memory_NE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredFixLenStringFieldOffset_, T_RequiredFixLenStringFieldLength_),
-                System.Text.Encoding.UTF8.GetBytes(_T_RequiredFixLenStringMemberName_));
-        }
-        private void T_RequiredFixLenStringMemberName__Unpack()
-        {
-            ReadOnlyMemory<byte>? memory = Codec_Memory_NE.ReadFromMemory(_readonlyLocalBlock.Slice(T_RequiredFixLenStringFieldOffset_, T_RequiredFixLenStringFieldLength_));
-#if NET8_0_OR_GREATER
-            _T_RequiredFixLenStringMemberName_ = memory is null ? string.Empty : System.Text.Encoding.UTF8.GetString(memory.Value.Span);
-#else
-            _T_RequiredFixLenStringMemberName_ = memory is null ? string.Empty : System.Text.Encoding.UTF8.GetString(memory.Value.ToArray());
-#endif
-        }
-        private string _T_RequiredFixLenStringMemberName_ = string.Empty;
-        //##if(member.IsObsolete) {
-        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
-        //##}
-        public string T_RequiredFixLenStringMemberName_
-        {
-            get => IfUnpacked(_T_RequiredFixLenStringMemberName_);
-            set => _T_RequiredFixLenStringMemberName_ = IfNotFrozen(value);
+            get => IfUnpacked(_T_NullableStringMemberName_);
+            set => _T_NullableStringMemberName_ = IfNotFrozen(value);
         }
         //##} else {
-        private async ValueTask T_RequiredVarLenStringMemberName__Pack(IDataStore dataStore)
+        private async ValueTask T_RequiredStringMemberName__Pack(IDataStore dataStore)
         {
             BlobIdV1 blobId = default;
-            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_RequiredVarLenStringMemberName_));
+            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_RequiredStringMemberName_));
             blobId = await dataStore.PutBlob(buffers);
-            blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64).Span);
+            blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64).Span);
         }
-        private async ValueTask T_RequiredVarLenStringMemberName__Unpack(IDataStore dataStore)
+        private async ValueTask T_RequiredStringMemberName__Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredVarLenStringFieldOffset_, 64).Span);
+            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(T_RequiredStringFieldOffset_, 64).Span);
             var blob = await dataStore.GetBlob(blobId);
 #if NET8_0_OR_GREATER
-            _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
+            _T_RequiredStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
 #else
-            _T_RequiredVarLenStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
+            _T_RequiredStringMemberName_ = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
 #endif
         }
-        private string _T_RequiredVarLenStringMemberName_ = string.Empty;
+        private string _T_RequiredStringMemberName_ = string.Empty;
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public string T_RequiredVarLenStringMemberName_
+        public string T_RequiredStringMemberName_
         {
-            get => IfUnpacked(_T_RequiredVarLenStringMemberName_);
-            set => _T_RequiredVarLenStringMemberName_ = IfNotFrozen(value);
+            get => IfUnpacked(_T_RequiredStringMemberName_);
+            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
         }
-        //##}
         //##}
         //##break;
         //##default:

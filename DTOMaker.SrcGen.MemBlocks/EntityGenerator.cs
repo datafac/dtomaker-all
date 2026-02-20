@@ -17,10 +17,6 @@ public sealed partial class EntityGenerator : EntityGeneratorBase
         {
             sb.Append(member.IsCustom ? "Custom" : "Native");
         }
-        if (member.Kind == MemberKind.String || member.Kind == MemberKind.Binary)
-        {
-            sb.Append(member.IsEmbedded ? "FixLen" : "VarLen");
-        }
         sb.Append(member.Kind switch
         {
             MemberKind.Struct => "Struct",

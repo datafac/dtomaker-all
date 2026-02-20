@@ -103,48 +103,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
         }
 
         [Fact]
-        public void InvalidEntityLength()
-        {
-            string modelSource =
-                """
-                using System;
-                using DataFac.Memory;
-                using DTOMaker.Models;
-                namespace MyOrg.Models
-                {
-                    [Entity(1, LayoutMethod.Linear)] [Length(8000)]
-                    public interface IMyDTO : IEntityBase
-                    {
-                        [Member(1)] string  Field1 { get; set; }
-                    }
-                }
-                """;
-
-            modelSource.GenerateAndCheckLength(1, "DME05");
-        }
-
-        [Fact]
-        public void InvalidMemberLength()
-        {
-            string modelSource =
-                """
-                using System;
-                using DataFac.Memory;
-                using DTOMaker.Models;
-                namespace MyOrg.Models
-                {
-                    [Entity(1, LayoutMethod.Linear)]
-                    public interface IMyDTO : IEntityBase
-                    {
-                        [Member(1)][Length(15)] string  Field1 { get; set; }
-                    }
-                }
-                """;
-
-            modelSource.GenerateAndCheckLength(1, "DME06");
-        }
-
-        [Fact]
         public void InvalidNullableMember()
         {
             string modelSource =

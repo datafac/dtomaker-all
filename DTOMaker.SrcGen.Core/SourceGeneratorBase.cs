@@ -20,7 +20,6 @@ namespace DTOMaker.SrcGen.Core
         public const string MemberAttribute = nameof(MemberAttribute);
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
-        public const string LengthAttribute = nameof(LengthAttribute);
         public const string NameAttribute = nameof(NameAttribute);
         public const string OffsetAttribute = nameof(OffsetAttribute);
         public const string EndianAttribute = nameof(EndianAttribute);
@@ -183,7 +182,6 @@ namespace DTOMaker.SrcGen.Core
             int fieldOffset = 0;
             int fieldLength = 0;
             bool isBigEndian = false;
-            bool isExternal = false;
             NativeType nativeType = NativeType.Undefined;
             string? fieldJsonName = null;
             string? converterFullName = null;
@@ -221,11 +219,6 @@ namespace DTOMaker.SrcGen.Core
                                 ?? TryGetAttributeRequiredArgumentValue<bool>(attributeData, location, 1, (value) => { obsoleteIsError = value; }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };
-                        break;
-                    case LengthAttribute: // used by MemBlocks
-                        diagnostic
-                            = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { fieldLength = value; });
                         break;
                     case NameAttribute: // used by JSON
                         diagnostic
@@ -286,7 +279,6 @@ namespace DTOMaker.SrcGen.Core
                 FieldOffset = fieldOffset,
                 FieldLength = fieldLength,
                 IsBigEndian = isBigEndian,
-                IsExternal = isExternal,
                 ConverterSpace = converterSpace,
                 ConverterName = converterName,
                 FieldJsonName = fieldJsonName,
@@ -366,11 +358,6 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic =
                             CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { keyOffset = value; });
-                        break;
-                    case LengthAttribute: // used by MemBlocks
-                        diagnostic
-                            = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { blockLength = value; });
                         break;
                     default:
                         // ignore other attributes
@@ -493,7 +480,6 @@ namespace DTOMaker.SrcGen.Core
                         FieldOffset = member.FieldOffset,
                         FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
-                        IsExternal = member.IsExternal,
                         ConverterSpace = member.ConverterSpace,
                         ConverterName = member.ConverterName,
                         FieldJsonName = member.FieldJsonName,

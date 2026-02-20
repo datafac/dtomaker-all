@@ -17,8 +17,6 @@ namespace DTOMaker.SrcGen.Core
         public int FieldOffset { get; init; }
         public int FieldLength { get; init; }
         public bool IsBigEndian { get; init; }
-        public bool IsExternal { get; init; }
-        public bool IsEmbedded => !IsExternal;
         public string? ConverterSpace { get; init; }
         public string? ConverterName { get; init; }
         public string? FieldJsonName { get; init; }
