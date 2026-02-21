@@ -3,8 +3,16 @@ using System.Runtime.CompilerServices;
 
 namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
-public class BinaryMap
+public record BinaryMap
 {
+    public Fill State { get; }
+    public BinaryMap? A { get; }
+    public BinaryMap? B { get; }
+
+    private readonly sbyte _lenLog2;
+    public int SizeInBits => PowerOf2(_lenLog2);
+    public (int ByteCount, int BitsRemain) Sizes => (SizeInBits / 8, SizeInBits % 8);
+
     private readonly struct Result
     {
         public readonly bool Found;
@@ -42,21 +50,11 @@ public class BinaryMap
         return result;
     }
 
-    private readonly sbyte _lenLog2;
-    public Fill State { get; }
-
-    public int SizeInBits { get; }
-    public (int ByteCount, int BitsRemain) Sizes => (SizeInBits / 8, SizeInBits % 8);
-
-    public readonly BinaryMap? A = null;
-    public readonly BinaryMap? B = null;
-
     private BinaryMap(sbyte lenLog2, Fill fill, BinaryMap? a, BinaryMap? b)
     {
         if (lenLog2 < 0)
             throw new ArgumentOutOfRangeException(nameof(lenLog2), lenLog2, $"Must be >= 0");
         _lenLog2 = lenLog2;
-        SizeInBits = PowerOf2(_lenLog2);
         A = a;
         B = b;
         State = fill;
@@ -129,11 +127,11 @@ public class BinaryMap
     /// <returns>An updated map conatining the assignment.</returns>
     public (bool, BinaryMap, int) AssignField(int lengthInBits)
     {
-        const int maxLengthInBits = 64 * 1024 * 8; // 64KiB * 8 bits
+        const int maxLengthInBits = 8 * 1024 * 8; // 64KiB * 8 bits
         if (lengthInBits <= 0)
             throw new ArgumentOutOfRangeException(nameof(lengthInBits), lengthInBits, $"Must be > 0");
         if (lengthInBits > maxLengthInBits)
-            throw new InvalidOperationException($"Cannot add fields larger than 64KiB (yet)");
+            throw new InvalidOperationException($"Cannot add fields larger than 8KiB (yet)");
         sbyte lengthLog2 = Log2(lengthInBits);
         bool found = false;
         BinaryMap? map = this;
