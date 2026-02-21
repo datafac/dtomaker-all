@@ -29,7 +29,6 @@ public class BlockMapBuilderTests
 
             var response = new BlockMapBuilder(null).AddRequests(commands).Build();
         });
-        ex.Message.ShouldStartWith("NativeType(99)");
     }
 
     [Theory]
@@ -67,8 +66,8 @@ public class BlockMapBuilderTests
         blockMap.BlockSize.ShouldBe(expectedLength);
         blockMap.Fields.Count.ShouldBe(1);
         FieldDef field0 = blockMap.Fields.Array[0];
-        field0.FieldOffset.ShouldBe(0);
-        field0.FieldLength.ShouldBe(expectedLength);
+        field0.Offset.ShouldBe(0);
+        field0.Length.ShouldBe(expectedLength);
         blockMap.IsValid(true).ShouldBeTrue();
     }
 
@@ -118,11 +117,11 @@ public class BlockMapBuilderTests
         blockMap.BlockSize.ShouldBe(expectedBlockSize);
         blockMap.Fields.Count.ShouldBe(2);
         FieldDef field0 = blockMap.Fields.Array[0];
-        field0.FieldOffset.ShouldBe(0);
-        field0.FieldLength.ShouldBe(1);
+        field0.Offset.ShouldBe(0);
+        field0.Length.ShouldBe(1);
         FieldDef field1 = blockMap.Fields.Array[1];
-        field1.FieldOffset.ShouldBe(expectedOffset);
-        field1.FieldLength.ShouldBe(expectedLength);
+        field1.Offset.ShouldBe(expectedOffset);
+        field1.Length.ShouldBe(expectedLength);
         blockMap.IsValid(true).ShouldBeTrue();
     }
 
@@ -142,39 +141,39 @@ public class BlockMapBuilderTests
         blockMap.BlockSize.ShouldBe(128);
         blockMap.Fields.Count.ShouldBe(7);
         var field0 = blockMap.Fields.Array[0];
-        field0.FieldOffset.ShouldBe(0);
-        field0.FieldLength.ShouldBe(1);
-        field0.FieldName.ShouldBe("Reserved0");
+        field0.Offset.ShouldBe(0);
+        field0.Length.ShouldBe(1);
+        field0.Name.ShouldBe("Reserved0");
 
         var field1 = blockMap.Fields.Array[1];
-        field1.FieldOffset.ShouldBe(1);
-        field1.FieldLength.ShouldBe(1);
-        field1.FieldName.ShouldBe("Reserved1");
+        field1.Offset.ShouldBe(1);
+        field1.Length.ShouldBe(1);
+        field1.Name.ShouldBe("Reserved1");
 
         var field2 = blockMap.Fields.Array[2];
-        field2.FieldOffset.ShouldBe(2);
-        field2.FieldLength.ShouldBe(1);
-        field2.FieldName.ShouldBe("Logical1");
+        field2.Offset.ShouldBe(2);
+        field2.Length.ShouldBe(1);
+        field2.Name.ShouldBe("Logical1");
 
         var field3 = blockMap.Fields.Array[3];
-        field3.FieldOffset.ShouldBe(4);
-        field3.FieldLength.ShouldBe(4);
-        field3.FieldName.ShouldBe("Numeric1");
+        field3.Offset.ShouldBe(4);
+        field3.Length.ShouldBe(4);
+        field3.Name.ShouldBe("Numeric1");
 
         var field4 = blockMap.Fields.Array[4];
-        field4.FieldOffset.ShouldBe(8);
-        field4.FieldLength.ShouldBe(8);
-        field4.FieldName.ShouldBe("Numeric2");
+        field4.Offset.ShouldBe(8);
+        field4.Length.ShouldBe(8);
+        field4.Name.ShouldBe("Numeric2");
 
         var field5 = blockMap.Fields.Array[5];
-        field5.FieldOffset.ShouldBe(64);
-        field5.FieldLength.ShouldBe(64);
-        field5.FieldName.ShouldBe("Textual1");
+        field5.Offset.ShouldBe(64);
+        field5.Length.ShouldBe(64);
+        field5.Name.ShouldBe("Textual1");
 
         var field6 = blockMap.Fields.Array[6];
-        field6.FieldOffset.ShouldBe(16);
-        field6.FieldLength.ShouldBe(4);
-        field6.FieldName.ShouldBe("NativeType");
+        field6.Offset.ShouldBe(16);
+        field6.Length.ShouldBe(4);
+        field6.Name.ShouldBe("NativeType");
 
         blockMap.IsValid(true).ShouldBeTrue();
 
@@ -192,8 +191,8 @@ public class BlockMapBuilderTests
     {
         var blockSize = blockMap.BlockSize;
         var field = blockMap.Fields.Array[fieldIndex];
-        var fieldLength = field.FieldLength;
-        var offset = field.FieldOffset;
+        var fieldLength = field.Length;
+        var offset = field.Offset;
         string result = "";
         while (fieldLength < blockSize)
         {

@@ -255,7 +255,7 @@ namespace DTOMaker.SrcGen.MemBlocks
                 {
                     map[fd.Sequence] = map[fd.Sequence] with
                     {
-                        FieldOffset = fd.FieldOffset,
+                        FieldOffset = fd.Offset,
                     };
                 }
                 int blockLength = blockMap.BlockSize;

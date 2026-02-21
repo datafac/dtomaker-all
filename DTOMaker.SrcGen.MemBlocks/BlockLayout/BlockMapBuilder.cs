@@ -15,7 +15,7 @@ public class BlockMapBuilder
         if (initialMap is null) return;
         foreach (FieldDef fd in initialMap.Fields)
         {
-            AddField(fd.Sequence, fd.FieldName!, fd.FieldLength);
+            AddField(fd.Sequence, fd.Name!, fd.Length);
         }
     }
 
@@ -33,9 +33,9 @@ public class BlockMapBuilder
             _fields.Add(new FieldDef()
             {
                 Sequence = sequence,
-                FieldOffset = byteOffset,
-                FieldLength = fieldLength,
-                FieldName = fieldName,
+                Offset = byteOffset,
+                Length = fieldLength,
+                Name = fieldName,
             });
         }
         else
@@ -92,7 +92,7 @@ public class BlockMapBuilder
             //    return 128;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, $"{nameof(NativeType)}({fieldType})");
+                throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null);
         }
     }
 

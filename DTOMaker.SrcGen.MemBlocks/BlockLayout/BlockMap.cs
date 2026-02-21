@@ -34,19 +34,19 @@ public record BlockMap
         foreach (FieldDef field in Fields)
         {
             // check alignment
-            if (field.FieldOffset % field.FieldLength != 0)
+            if (field.Offset % field.Length != 0)
                 return
-                    $"Field '{field.FieldName}' incorrectly aligned (BlockOffset={field.FieldOffset},FieldLength={field.FieldLength})";
+                    $"Field '{field.Name}' incorrectly aligned (Offset={field.Offset},Length={field.Length})";
 
             // check memory overlaps
-            var bytesNeeded = field.FieldLength;
-            if (Vacant(map, field.FieldOffset, bytesNeeded))
+            var bytesNeeded = field.Length;
+            if (Vacant(map, field.Offset, bytesNeeded))
             {
-                Reserve(map, field.FieldOffset, bytesNeeded);
+                Reserve(map, field.Offset, bytesNeeded);
             }
             else
             {
-                return $"Field '{field.FieldName}' incorrectly mapped (BlockOffset={field.FieldOffset},FieldLength={field.FieldLength})";
+                return $"Field '{field.Name}' incorrectly mapped (Offset={field.Offset},Length={field.Length})";
             }
         }
 
