@@ -1,4 +1,5 @@
 ﻿using DTOMaker.SrcGen.Core;
+using DTOMaker.SrcGen.MemBlocks.BlockLayout;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -92,7 +93,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
             // check layout algo
             var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear)
+            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
@@ -239,6 +240,29 @@ namespace DTOMaker.SrcGen.MemBlocks
                 {
                     BlockLength = blockLength,
                     Members = new EquatableArray<OutputMember>(updatedMembers),
+                };
+            }
+            else if (entity.Layout == LayoutAlgo.Compact)
+            {
+                // calculate field offsets for Compact layout
+                var map = members.ToDictionary(m => m.Sequence);
+                BlockMap blockMap = new BlockMapBuilder(null)
+                    .AddRequests(members
+                        .OrderBy(m => m.Sequence)
+                        .Select(m => new BlockMapRequest(m.Sequence, m.Name, m.MemberType.NativeType)))
+                    .Build();
+                foreach(var fd in blockMap.Fields.Array)
+                {
+                    map[fd.Sequence] = map[fd.Sequence] with
+                    {
+                        FieldOffset = fd.FieldOffset,
+                    };
+                }
+                int blockLength = blockMap.BlockSize;
+                result = entity with
+                {
+                    BlockLength = blockLength,
+                    Members = new EquatableArray<OutputMember>(map.Values.OrderBy(m => m.Sequence)),
                 };
             }
 

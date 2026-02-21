@@ -24,10 +24,10 @@ public class BlockMapBuilderTests
     {
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            var commands = ImmutableList<FieldCommand>.Empty
-                .Add(new AddFieldCommand( 1,"Field1",(NativeType)99,false));
+            var commands = ImmutableList<BlockMapRequest>.Empty
+                .Add(new BlockMapRequest(1, "Field1", (NativeType)99));
 
-            var response = new BlockMapBuilder(null).AddCommands(commands).Build();
+            var response = new BlockMapBuilder(null).AddRequests(commands).Build();
         });
         ex.Message.ShouldStartWith("NativeType(99)");
     }
@@ -60,14 +60,14 @@ public class BlockMapBuilderTests
     //[InlineData(NativeType.RawB80, 128)]
     public void Add1stField(NativeType fieldType, int expectedLength)
     {
-        var commands = ImmutableList<FieldCommand>.Empty
-            .Add(new AddFieldCommand(1,"Field1",fieldType, false));
+        var commands = ImmutableList<BlockMapRequest>.Empty
+            .Add(new BlockMapRequest(1, "Field1", fieldType));
 
-        BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
+        BlockMap blockMap = new BlockMapBuilder(null).AddRequests(commands).Build();
         blockMap.BlockSize.ShouldBe(expectedLength);
         blockMap.Fields.Count.ShouldBe(1);
         FieldDef field0 = blockMap.Fields.Array[0];
-        field0.BlockOffset.ShouldBe(0);
+        field0.FieldOffset.ShouldBe(0);
         field0.FieldLength.ShouldBe(expectedLength);
         blockMap.IsValid(true).ShouldBeTrue();
     }
@@ -75,8 +75,8 @@ public class BlockMapBuilderTests
     [Fact]
     public void ProcessEmptyModifyBlockMapRequest()
     {
-        var commands = ImmutableList<FieldCommand>.Empty;
-        BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
+        var commands = ImmutableList<BlockMapRequest>.Empty;
+        BlockMap blockMap = new BlockMapBuilder(null).AddRequests(commands).Build();
         blockMap.BlockSize.ShouldBe(1);
         blockMap.Fields.Count.ShouldBe(0);
         blockMap.IsValid(true).ShouldBeTrue();
@@ -110,18 +110,18 @@ public class BlockMapBuilderTests
     //[InlineData(NativeType.RawB80, 256, 128, 128)]
     public void Add2ndField(NativeType fieldType, int expectedBlockSize, int expectedOffset, int expectedLength)
     {
-        var commands = ImmutableList<FieldCommand>.Empty
-            .Add(new AddFieldCommand(1,"Field1",NativeType.Boolean,false))
-            .Add(new AddFieldCommand(2,"Field2",fieldType,false));
+        var commands = ImmutableList<BlockMapRequest>.Empty
+            .Add(new BlockMapRequest(1, "Field1", NativeType.Boolean))
+            .Add(new BlockMapRequest(2, "Field2", fieldType));
 
-        BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
+        BlockMap blockMap = new BlockMapBuilder(null).AddRequests(commands).Build();
         blockMap.BlockSize.ShouldBe(expectedBlockSize);
         blockMap.Fields.Count.ShouldBe(2);
         FieldDef field0 = blockMap.Fields.Array[0];
-        field0.BlockOffset.ShouldBe(0);
+        field0.FieldOffset.ShouldBe(0);
         field0.FieldLength.ShouldBe(1);
         FieldDef field1 = blockMap.Fields.Array[1];
-        field1.BlockOffset.ShouldBe(expectedOffset);
+        field1.FieldOffset.ShouldBe(expectedOffset);
         field1.FieldLength.ShouldBe(expectedLength);
         blockMap.IsValid(true).ShouldBeTrue();
     }
@@ -129,59 +129,52 @@ public class BlockMapBuilderTests
     [Fact]
     public void Define_FieldDef()
     {
-        var commands = ImmutableList<FieldCommand>.Empty
-            .Add(new AddFieldCommand(1, "Reserved0", NativeType.Byte, false))
-            .Add(new AddFieldCommand(2, "Reserved1", NativeType.Byte, false))
-            .Add(new AddFieldCommand(3, "Logical1", NativeType.Boolean, false))
-            .Add(new AddFieldCommand(4, "Numeric1", NativeType.Int32, false))
-            .Add(new AddFieldCommand(5, "Numeric2", NativeType.Int64, false))
-            .Add(new AddFieldCommand(6, "Textual1", NativeType.String, false))
-            .Add(new AddFieldCommand(7, "NativeType", NativeType.Int32, false));
-        BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
+        var commands = ImmutableList<BlockMapRequest>.Empty
+            .Add(new BlockMapRequest(1, "Reserved0", NativeType.Byte))
+            .Add(new BlockMapRequest(2, "Reserved1", NativeType.Byte))
+            .Add(new BlockMapRequest(3, "Logical1", NativeType.Boolean))
+            .Add(new BlockMapRequest(4, "Numeric1", NativeType.Int32))
+            .Add(new BlockMapRequest(5, "Numeric2", NativeType.Int64))
+            .Add(new BlockMapRequest(6, "Textual1", NativeType.String))
+            .Add(new BlockMapRequest(7, "NativeType", NativeType.Int32));
+        BlockMap blockMap = new BlockMapBuilder(null).AddRequests(commands).Build();
 
         blockMap.BlockSize.ShouldBe(128);
         blockMap.Fields.Count.ShouldBe(7);
         var field0 = blockMap.Fields.Array[0];
-        field0.BlockOffset.ShouldBe(0);
+        field0.FieldOffset.ShouldBe(0);
         field0.FieldLength.ShouldBe(1);
         field0.FieldName.ShouldBe("Reserved0");
-        field0.NativeType.ShouldBe(NativeType.Byte);
 
         var field1 = blockMap.Fields.Array[1];
-        field1.BlockOffset.ShouldBe(1);
+        field1.FieldOffset.ShouldBe(1);
         field1.FieldLength.ShouldBe(1);
         field1.FieldName.ShouldBe("Reserved1");
-        field1.NativeType.ShouldBe(NativeType.Byte);
 
         var field2 = blockMap.Fields.Array[2];
-        field2.BlockOffset.ShouldBe(2);
+        field2.FieldOffset.ShouldBe(2);
         field2.FieldLength.ShouldBe(1);
         field2.FieldName.ShouldBe("Logical1");
-        field2.NativeType.ShouldBe(NativeType.Boolean);
 
         var field3 = blockMap.Fields.Array[3];
-        field3.BlockOffset.ShouldBe(4);
+        field3.FieldOffset.ShouldBe(4);
         field3.FieldLength.ShouldBe(4);
         field3.FieldName.ShouldBe("Numeric1");
-        field3.NativeType.ShouldBe(NativeType.Int32);
 
         var field4 = blockMap.Fields.Array[4];
-        field4.BlockOffset.ShouldBe(8);
+        field4.FieldOffset.ShouldBe(8);
         field4.FieldLength.ShouldBe(8);
         field4.FieldName.ShouldBe("Numeric2");
-        field4.NativeType.ShouldBe(NativeType.Int64);
 
         var field5 = blockMap.Fields.Array[5];
-        field5.BlockOffset.ShouldBe(64);
+        field5.FieldOffset.ShouldBe(64);
         field5.FieldLength.ShouldBe(64);
         field5.FieldName.ShouldBe("Textual1");
-        field5.NativeType.ShouldBe(NativeType.String);
 
         var field6 = blockMap.Fields.Array[6];
-        field6.BlockOffset.ShouldBe(16);
+        field6.FieldOffset.ShouldBe(16);
         field6.FieldLength.ShouldBe(4);
         field6.FieldName.ShouldBe("NativeType");
-        field6.NativeType.ShouldBe(NativeType.Int32);
 
         blockMap.IsValid(true).ShouldBeTrue();
 
@@ -200,7 +193,7 @@ public class BlockMapBuilderTests
         var blockSize = blockMap.BlockSize;
         var field = blockMap.Fields.Array[fieldIndex];
         var fieldLength = field.FieldLength;
-        var offset = field.BlockOffset;
+        var offset = field.FieldOffset;
         string result = "";
         while (fieldLength < blockSize)
         {
@@ -225,17 +218,17 @@ public class BlockMapBuilderTests
     public void AddTooManyFieldsThrows()
     {
         const int MaxFields = (8 * 1024) / 64; // size of Binary field type is 64 bytes
-        var commands = ImmutableList<FieldCommand>.Empty
+        var commands = ImmutableList<BlockMapRequest>.Empty
             .AddRange(
                 Enumerable.Range(0, MaxFields)
-                .Select<int, FieldCommand>(i => new AddFieldCommand(1, $"Field{i:D5}", NativeType.Binary, false)));
-        BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
+                .Select<int, BlockMapRequest>(i => new BlockMapRequest(1, $"Field{i:D5}", NativeType.Binary)));
+        BlockMap blockMap = new BlockMapBuilder(null).AddRequests(commands).Build();
 
         var ex = Assert.Throws<InvalidOperationException>(() =>
         {
-            var moreCommands = ImmutableList<FieldCommand>.Empty
-                .Add(new AddFieldCommand(1, "Field99999", NativeType.Boolean, false));
-            BlockMap extendedMap = new BlockMapBuilder(blockMap).AddCommands(moreCommands).Build();
+            var moreCommands = ImmutableList<BlockMapRequest>.Empty
+                .Add(new BlockMapRequest(1, "Field99999", NativeType.Boolean));
+            BlockMap extendedMap = new BlockMapBuilder(blockMap).AddRequests(moreCommands).Build();
         });
         ex.Message.ShouldBe("Cannot expand block map beyond 8KiB (yet)");
     }

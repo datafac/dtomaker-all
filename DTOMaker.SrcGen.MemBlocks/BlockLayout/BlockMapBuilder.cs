@@ -15,11 +15,11 @@ public class BlockMapBuilder
         if (initialMap is null) return;
         foreach (FieldDef fd in initialMap.Fields)
         {
-            AddField(fd.FieldName!, fd.NativeType, fd.Nullable, fd.FieldLength, fd.BigEndian);
+            AddField(fd.Sequence, fd.FieldName!, fd.FieldLength);
         }
     }
 
-    private void AddField(string fieldName, NativeType fieldType, bool nullable, int fieldLength, bool bigEndian)
+    private void AddField(int sequence, string fieldName, int fieldLength)
     {
         int lengthInBits = fieldLength * 8;
         (bool found, BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
@@ -32,17 +32,15 @@ public class BlockMapBuilder
             _map = newMap;
             _fields.Add(new FieldDef()
             {
-                BigEndian = bigEndian,
-                BlockOffset = byteOffset,
+                Sequence = sequence,
+                FieldOffset = byteOffset,
                 FieldLength = fieldLength,
                 FieldName = fieldName,
-                NativeType = fieldType,
-                Nullable = nullable,
             });
         }
         else
         {
-            throw new InvalidOperationException($"Cannot add: {fieldType}({fieldLength}) {fieldName}; ");
+            throw new InvalidOperationException($"Cannot add field '{fieldName}' (Length={fieldLength})");
         }
     }
 
@@ -98,21 +96,12 @@ public class BlockMapBuilder
         }
     }
 
-    public BlockMapBuilder AddCommands(IEnumerable<FieldCommand> commands)
+    public BlockMapBuilder AddRequests(IEnumerable<BlockMapRequest> requests)
     {
-        foreach (FieldCommand command in commands)
+        foreach (var request in requests)
         {
-            switch (command)
-            {
-                case AddFieldCommand addCommand:
-                    {
-                        int fieldLength = GetFieldLength(addCommand.NativeType);
-                        AddField(addCommand.FieldName!, addCommand.NativeType, addCommand.Nullable, fieldLength, addCommand.BigEndian);
-                        break;
-                    }
-                default:
-                    throw new InvalidOperationException($"Unknown FieldCommand: {command}");
-            }
+            int fieldLength = GetFieldLength(request.NativeType);
+            AddField(request.Sequence, request.FieldName!, fieldLength);
         }
         return this;
     }
