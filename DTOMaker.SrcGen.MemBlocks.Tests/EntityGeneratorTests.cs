@@ -6,6 +6,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
 {
     public class EntityGeneratorTests
     {
+        // todo nullable value types
         private static readonly string modelSource =
             """
             using System;
