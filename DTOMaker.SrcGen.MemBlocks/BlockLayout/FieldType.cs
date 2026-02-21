@@ -2,28 +2,39 @@
 
 public enum FieldType
 {
-    None = 0,
-    Bool01 = 17,
-    SInt01 = 18,
-    UInt01 = 19,
-    Real02 = 33,
-    SInt02 = 34,
-    UInt02 = 35,
-    Char02 = 36,
-    Real04 = 49,
-    SInt04 = 50,
-    UInt04 = 51,
-    Real08 = 65,
-    SInt08 = 66,
-    UInt08 = 67,
-    Deci10 = 81,
-    SInt10 = 82,
-    UInt10 = 83,
-    Guid10 = 84,
+    Undefined = 0,
+    Boolean = 17,
+    SByte = 18,
+    Byte = 19,
+    // 2 bytes
+    Half = 33,
+    Int16 = 34,
+    UInt16 = 35,
+    Char = 36,
+    // 4 bytes
+    Single = 49,
+    Int32 = 50,
+    UInt32 = 51,
+    PairOfInt16 = 52,
+    // 8 bytes
+    Double = 65,
+    Int64 = 66,
+    UInt64 = 67,
+    PairOfInt32 = 68,
+    // 16 bytes
+    Decimal = 81,
+    Int128 = 82,
+    UInt128 = 83,
+    Guid = 84,
+    PairOfInt64 = 85,
+    QuadOfInt32 = 86,
+    RawB10 = 95,
+    // 32 bytes
+    RawB20 = 111,
+    // 64 bytes
     String = 241,
     Binary = 242,
-    RawB10 = 95,    // 16 bytes
-    RawB20 = 111,   // 32 bytes
-    RawB40 = 127,   // 64 bytes
-    RawB80 = 143,   // 128 bytes
+    RawB40 = 127,
+    // 128 bytes
+    RawB80 = 143,
 }

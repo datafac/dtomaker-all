@@ -50,31 +50,35 @@ public class BlockMapBuilder
     {
         switch (fieldType)
         {
-            case FieldType.Bool01:
-            case FieldType.UInt01:
-            case FieldType.SInt01:
+            case FieldType.Boolean:
+            case FieldType.Byte:
+            case FieldType.SByte:
                 return 1;
 
-            case FieldType.SInt02:
-            case FieldType.UInt02:
-            case FieldType.Char02:
-            case FieldType.Real02:
+            case FieldType.Int16:
+            case FieldType.UInt16:
+            case FieldType.Char:
+            case FieldType.Half:
                 return 2;
 
-            case FieldType.SInt04:
-            case FieldType.UInt04:
-            case FieldType.Real04:
+            case FieldType.Int32:
+            case FieldType.UInt32:
+            case FieldType.PairOfInt16:
+            case FieldType.Single:
                 return 4;
 
-            case FieldType.SInt08:
-            case FieldType.UInt08:
-            case FieldType.Real08:
+            case FieldType.Int64:
+            case FieldType.UInt64:
+            case FieldType.PairOfInt32:
+            case FieldType.Double:
                 return 8;
 
-            case FieldType.Deci10:
-            case FieldType.SInt10:
-            case FieldType.UInt10:
-            case FieldType.Guid10:
+            case FieldType.Decimal:
+            case FieldType.Int128:
+            case FieldType.UInt128:
+            case FieldType.PairOfInt64:
+            case FieldType.QuadOfInt32:
+            case FieldType.Guid:
             case FieldType.RawB10:
                 return 16;
 

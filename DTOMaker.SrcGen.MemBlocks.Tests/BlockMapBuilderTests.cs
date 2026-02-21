@@ -32,23 +32,27 @@ public class BlockMapBuilderTests
     }
 
     [Theory]
-    [InlineData(FieldType.SInt01, 1)]
-    [InlineData(FieldType.UInt01, 1)]
-    [InlineData(FieldType.Bool01, 1)]
-    [InlineData(FieldType.SInt02, 2)]
-    [InlineData(FieldType.UInt02, 2)]
-    [InlineData(FieldType.Char02, 2)]
-    [InlineData(FieldType.Real02, 2)]
-    [InlineData(FieldType.SInt04, 4)]
-    [InlineData(FieldType.UInt04, 4)]
-    [InlineData(FieldType.Real04, 4)]
-    [InlineData(FieldType.SInt08, 8)]
-    [InlineData(FieldType.UInt08, 8)]
-    [InlineData(FieldType.Real08, 8)]
-    [InlineData(FieldType.SInt10, 16)]
-    [InlineData(FieldType.UInt10, 16)]
-    [InlineData(FieldType.Guid10, 16)]
-    [InlineData(FieldType.Deci10, 16)]
+    [InlineData(FieldType.SByte, 1)]
+    [InlineData(FieldType.Byte, 1)]
+    [InlineData(FieldType.Boolean, 1)]
+    [InlineData(FieldType.Int16, 2)]
+    [InlineData(FieldType.UInt16, 2)]
+    [InlineData(FieldType.Char, 2)]
+    [InlineData(FieldType.Half, 2)]
+    [InlineData(FieldType.Int32, 4)]
+    [InlineData(FieldType.UInt32, 4)]
+    [InlineData(FieldType.PairOfInt16, 4)]
+    [InlineData(FieldType.Single, 4)]
+    [InlineData(FieldType.Int64, 8)]
+    [InlineData(FieldType.UInt64, 8)]
+    [InlineData(FieldType.PairOfInt32, 8)]
+    [InlineData(FieldType.Double, 8)]
+    [InlineData(FieldType.Int128, 16)]
+    [InlineData(FieldType.UInt128, 16)]
+    [InlineData(FieldType.PairOfInt64, 16)]
+    [InlineData(FieldType.QuadOfInt32, 16)]
+    [InlineData(FieldType.Guid, 16)]
+    [InlineData(FieldType.Decimal, 16)]
     [InlineData(FieldType.RawB10, 16)]
     [InlineData(FieldType.RawB20, 32)]
     [InlineData(FieldType.RawB40, 64)]
@@ -78,23 +82,27 @@ public class BlockMapBuilderTests
     }
 
     [Theory]
-    [InlineData(FieldType.SInt01, 2, 1, 1)]
-    [InlineData(FieldType.UInt01, 2, 1, 1)]
-    [InlineData(FieldType.Bool01, 2, 1, 1)]
-    [InlineData(FieldType.SInt02, 4, 2, 2)]
-    [InlineData(FieldType.UInt02, 4, 2, 2)]
-    [InlineData(FieldType.Char02, 4, 2, 2)]
-    [InlineData(FieldType.Real02, 4, 2, 2)]
-    [InlineData(FieldType.SInt04, 8, 4, 4)]
-    [InlineData(FieldType.UInt04, 8, 4, 4)]
-    [InlineData(FieldType.Real04, 8, 4, 4)]
-    [InlineData(FieldType.SInt08, 16, 8, 8)]
-    [InlineData(FieldType.UInt08, 16, 8, 8)]
-    [InlineData(FieldType.Real08, 16, 8, 8)]
-    [InlineData(FieldType.SInt10, 32, 16, 16)]
-    [InlineData(FieldType.UInt10, 32, 16, 16)]
-    [InlineData(FieldType.Guid10, 32, 16, 16)]
-    [InlineData(FieldType.Deci10, 32, 16, 16)]
+    [InlineData(FieldType.SByte, 2, 1, 1)]
+    [InlineData(FieldType.Byte, 2, 1, 1)]
+    [InlineData(FieldType.Boolean, 2, 1, 1)]
+    [InlineData(FieldType.Int16, 4, 2, 2)]
+    [InlineData(FieldType.UInt16, 4, 2, 2)]
+    [InlineData(FieldType.Char, 4, 2, 2)]
+    [InlineData(FieldType.Half, 4, 2, 2)]
+    [InlineData(FieldType.Int32, 8, 4, 4)]
+    [InlineData(FieldType.UInt32, 8, 4, 4)]
+    [InlineData(FieldType.PairOfInt16, 8, 4, 4)]
+    [InlineData(FieldType.Single, 8, 4, 4)]
+    [InlineData(FieldType.Int64, 16, 8, 8)]
+    [InlineData(FieldType.UInt64, 16, 8, 8)]
+    [InlineData(FieldType.PairOfInt32, 16, 8, 8)]
+    [InlineData(FieldType.Double, 16, 8, 8)]
+    [InlineData(FieldType.Int128, 32, 16, 16)]
+    [InlineData(FieldType.UInt128, 32, 16, 16)]
+    [InlineData(FieldType.PairOfInt64, 32, 16, 16)]
+    [InlineData(FieldType.QuadOfInt32, 32, 16, 16)]
+    [InlineData(FieldType.Guid, 32, 16, 16)]
+    [InlineData(FieldType.Decimal, 32, 16, 16)]
     [InlineData(FieldType.RawB10, 32, 16, 16)]
     [InlineData(FieldType.RawB20, 64, 32, 32)]
     [InlineData(FieldType.RawB40, 128, 64, 64)]
@@ -102,7 +110,7 @@ public class BlockMapBuilderTests
     public void Add2ndField(FieldType fieldType, int expectedBlockSize, int expectedOffset, int expectedLength)
     {
         var commands = ImmutableList<FieldCommand>.Empty
-            .Add(new AddFieldCommand(1,"Field1",FieldType.Bool01,false))
+            .Add(new AddFieldCommand(1,"Field1",FieldType.Boolean,false))
             .Add(new AddFieldCommand(2,"Field2",fieldType,false));
 
         BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
@@ -121,13 +129,13 @@ public class BlockMapBuilderTests
     public void Define_FieldDef()
     {
         var commands = ImmutableList<FieldCommand>.Empty
-            .Add(new AddFieldCommand(1, "Reserved0", FieldType.UInt01, false))
-            .Add(new AddFieldCommand(2, "Reserved1", FieldType.UInt01, false))
-            .Add(new AddFieldCommand(3, "Logical1", FieldType.Bool01, false))
-            .Add(new AddFieldCommand(4, "Numeric1", FieldType.SInt04, false))
-            .Add(new AddFieldCommand(5, "Numeric2", FieldType.SInt08, false))
+            .Add(new AddFieldCommand(1, "Reserved0", FieldType.Byte, false))
+            .Add(new AddFieldCommand(2, "Reserved1", FieldType.Byte, false))
+            .Add(new AddFieldCommand(3, "Logical1", FieldType.Boolean, false))
+            .Add(new AddFieldCommand(4, "Numeric1", FieldType.Int32, false))
+            .Add(new AddFieldCommand(5, "Numeric2", FieldType.Int64, false))
             .Add(new AddFieldCommand(6, "Textual1", FieldType.String, false))
-            .Add(new AddFieldCommand(7, "FieldType", FieldType.SInt04, false));
+            .Add(new AddFieldCommand(7, "FieldType", FieldType.Int32, false));
         BlockMap blockMap = new BlockMapBuilder(null).AddCommands(commands).Build();
 
         blockMap.BlockSize.ShouldBe(128);
@@ -136,31 +144,31 @@ public class BlockMapBuilderTests
         field0.BlockOffset.ShouldBe(0);
         field0.FieldLength.ShouldBe(1);
         field0.FieldName.ShouldBe("Reserved0");
-        field0.FieldType.ShouldBe(FieldType.UInt01);
+        field0.FieldType.ShouldBe(FieldType.Byte);
 
         var field1 = blockMap.Fields.Array[1];
         field1.BlockOffset.ShouldBe(1);
         field1.FieldLength.ShouldBe(1);
         field1.FieldName.ShouldBe("Reserved1");
-        field1.FieldType.ShouldBe(FieldType.UInt01);
+        field1.FieldType.ShouldBe(FieldType.Byte);
 
         var field2 = blockMap.Fields.Array[2];
         field2.BlockOffset.ShouldBe(2);
         field2.FieldLength.ShouldBe(1);
         field2.FieldName.ShouldBe("Logical1");
-        field2.FieldType.ShouldBe(FieldType.Bool01);
+        field2.FieldType.ShouldBe(FieldType.Boolean);
 
         var field3 = blockMap.Fields.Array[3];
         field3.BlockOffset.ShouldBe(4);
         field3.FieldLength.ShouldBe(4);
         field3.FieldName.ShouldBe("Numeric1");
-        field3.FieldType.ShouldBe(FieldType.SInt04);
+        field3.FieldType.ShouldBe(FieldType.Int32);
 
         var field4 = blockMap.Fields.Array[4];
         field4.BlockOffset.ShouldBe(8);
         field4.FieldLength.ShouldBe(8);
         field4.FieldName.ShouldBe("Numeric2");
-        field4.FieldType.ShouldBe(FieldType.SInt08);
+        field4.FieldType.ShouldBe(FieldType.Int64);
 
         var field5 = blockMap.Fields.Array[5];
         field5.BlockOffset.ShouldBe(64);
@@ -172,7 +180,7 @@ public class BlockMapBuilderTests
         field6.BlockOffset.ShouldBe(16);
         field6.FieldLength.ShouldBe(4);
         field6.FieldName.ShouldBe("FieldType");
-        field6.FieldType.ShouldBe(FieldType.SInt04);
+        field6.FieldType.ShouldBe(FieldType.Int32);
 
         blockMap.IsValid(true).ShouldBeTrue();
 
@@ -225,7 +233,7 @@ public class BlockMapBuilderTests
         var ex = Assert.Throws<InvalidOperationException>(() =>
         {
             var moreCommands = ImmutableList<FieldCommand>.Empty
-                .Add(new AddFieldCommand(1, "Field99999", FieldType.Bool01, false));
+                .Add(new AddFieldCommand(1, "Field99999", FieldType.Boolean, false));
             BlockMap extendedMap = new BlockMapBuilder(blockMap).AddCommands(moreCommands).Build();
         });
         ex.Message.ShouldBe("Cannot expand block map beyond 8KiB (yet)");
