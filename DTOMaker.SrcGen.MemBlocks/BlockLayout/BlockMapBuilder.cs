@@ -15,11 +15,11 @@ public class BlockMapBuilder
         if (initialMap is null) return;
         foreach (FieldDef fd in initialMap.Fields)
         {
-            AddField(fd.FieldName!, fd.FieldType, fd.Nullable, fd.FieldLength, fd.BigEndian);
+            AddField(fd.FieldName!, fd.NativeType, fd.Nullable, fd.FieldLength, fd.BigEndian);
         }
     }
 
-    private void AddField(string fieldName, FieldType fieldType, bool nullable, int fieldLength, bool bigEndian)
+    private void AddField(string fieldName, NativeType fieldType, bool nullable, int fieldLength, bool bigEndian)
     {
         int lengthInBits = fieldLength * 8;
         (bool found, BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
@@ -36,7 +36,7 @@ public class BlockMapBuilder
                 BlockOffset = byteOffset,
                 FieldLength = fieldLength,
                 FieldName = fieldName,
-                FieldType = fieldType,
+                NativeType = fieldType,
                 Nullable = nullable,
             });
         }
@@ -46,55 +46,55 @@ public class BlockMapBuilder
         }
     }
 
-    private static int GetFieldLength(FieldType fieldType)
+    private static int GetFieldLength(NativeType fieldType)
     {
         switch (fieldType)
         {
-            case FieldType.Boolean:
-            case FieldType.Byte:
-            case FieldType.SByte:
+            case NativeType.Boolean:
+            case NativeType.Byte:
+            case NativeType.SByte:
                 return 1;
 
-            case FieldType.Int16:
-            case FieldType.UInt16:
-            case FieldType.Char:
-            case FieldType.Half:
+            case NativeType.Int16:
+            case NativeType.UInt16:
+            case NativeType.Char:
+            case NativeType.Half:
                 return 2;
 
-            case FieldType.Int32:
-            case FieldType.UInt32:
-            case FieldType.PairOfInt16:
-            case FieldType.Single:
+            case NativeType.Int32:
+            case NativeType.UInt32:
+            case NativeType.PairOfInt16:
+            case NativeType.Single:
                 return 4;
 
-            case FieldType.Int64:
-            case FieldType.UInt64:
-            case FieldType.PairOfInt32:
-            case FieldType.Double:
+            case NativeType.Int64:
+            case NativeType.UInt64:
+            case NativeType.PairOfInt32:
+            case NativeType.Double:
                 return 8;
 
-            case FieldType.Decimal:
-            case FieldType.Int128:
-            case FieldType.UInt128:
-            case FieldType.PairOfInt64:
-            case FieldType.QuadOfInt32:
-            case FieldType.Guid:
-            case FieldType.RawB10:
+            case NativeType.Decimal:
+            case NativeType.Int128:
+            case NativeType.UInt128:
+            case NativeType.PairOfInt64:
+            case NativeType.QuadOfInt32:
+            case NativeType.Guid:
+            //case NativeType.RawB10:
                 return 16;
 
-            case FieldType.RawB20:
-                return 32;
+            //case NativeType.RawB20:
+            //    return 32;
 
-            case FieldType.String:
-            case FieldType.Binary:
-            case FieldType.RawB40:
+            case NativeType.String:
+            case NativeType.Binary:
+            //case NativeType.RawB40:
                 return 64;
 
-            case FieldType.RawB80:
-                return 128;
+            //case NativeType.RawB80:
+            //    return 128;
 
             default:
-                throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, $"{nameof(FieldType)}({fieldType})");
+                throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, $"{nameof(NativeType)}({fieldType})");
         }
     }
 
@@ -106,8 +106,8 @@ public class BlockMapBuilder
             {
                 case AddFieldCommand addCommand:
                     {
-                        int fieldLength = GetFieldLength(addCommand.FieldType);
-                        AddField(addCommand.FieldName!, addCommand.FieldType, addCommand.Nullable, fieldLength, addCommand.BigEndian);
+                        int fieldLength = GetFieldLength(addCommand.NativeType);
+                        AddField(addCommand.FieldName!, addCommand.NativeType, addCommand.Nullable, fieldLength, addCommand.BigEndian);
                         break;
                     }
                 default:

@@ -36,7 +36,7 @@ public record BlockMap
             // check alignment
             if (field.BlockOffset % field.FieldLength != 0)
                 return
-                    $"Field '{field.FieldName}' ({field.FieldType}) incorrectly aligned (BlockOffset={field.BlockOffset},FieldLength={field.FieldLength})";
+                    $"Field '{field.FieldName}' ({field.NativeType}) incorrectly aligned (BlockOffset={field.BlockOffset},FieldLength={field.FieldLength})";
 
             // check memory overlaps
             var bytesNeeded = field.FieldLength;
@@ -47,7 +47,7 @@ public record BlockMap
             else
             {
                 return
-                    $"Field '{field.FieldName}' ({field.FieldType}) incorrectly mapped (BlockOffset={field.BlockOffset},FieldLength={field.FieldLength})";
+                    $"Field '{field.FieldName}' ({field.NativeType}) incorrectly mapped (BlockOffset={field.BlockOffset},FieldLength={field.FieldLength})";
             }
         }
 
