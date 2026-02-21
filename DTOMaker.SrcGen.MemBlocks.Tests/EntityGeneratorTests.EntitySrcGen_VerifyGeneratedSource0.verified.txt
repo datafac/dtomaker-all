@@ -98,8 +98,9 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0     4  LE    Int32   Field1
+        //     1     0     1  LE    Boolean Field1
         //     2     8     8  LE    Int64   Field2
+        //     3     4     4  LE    Int32   Field3
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -116,6 +117,7 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
             this.Field2 = source.Field2;
+            this.Field3 = source.Field3;
         }
         public MyDTO(MyDTO source) : this(_header, source) { }
 
@@ -124,6 +126,7 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
             this.Field2 = source.Field2;
+            this.Field3 = source.Field3;
         }
         public MyDTO(MyOrg.Models.IMyDTO source) : this(_header, source) { }
 
@@ -145,16 +148,22 @@ namespace MyOrg.Models.MemBlocks
         internal MyDTO(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
         public MyDTO(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
-        public Int32 Field1
+        public Boolean Field1
         {
-            get => Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span);
-            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, IfNotFrozen(value));
+            get => Codec_Boolean_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 1).Span);
+            set => Codec_Boolean_LE.WriteToSpan(_writableLocalBlock.Slice(0, 1).Span, IfNotFrozen(value));
         }
 
         public Int64 Field2
         {
             get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
             set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, IfNotFrozen(value));
+        }
+
+        public Int32 Field3
+        {
+            get => Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
+            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, IfNotFrozen(value));
         }
 
 

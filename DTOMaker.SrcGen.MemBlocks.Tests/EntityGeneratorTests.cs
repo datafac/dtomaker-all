@@ -14,11 +14,12 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Models;
             namespace MyOrg.Models
             {
-                [Entity(1, LayoutMethod.Linear)]
+                [Entity(1, LayoutMethod.Compact)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1)] int  Field1 { get; set; }
+                    [Member(1)] bool Field1 { get; set; }
                     [Member(2)] long Field2 { get; set; }
+                    [Member(3)] int  Field3 { get; set; }
                 }
                 [Entity(2, LayoutMethod.Linear)]
                 public interface IDerived : IMyDTO
