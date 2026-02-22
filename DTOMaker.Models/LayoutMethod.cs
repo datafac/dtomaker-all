@@ -20,7 +20,7 @@ public enum LayoutMethod : int
     /// c) each member data type must be a non-nullable value type or fixed length
     /// array of these, or string.
     /// </summary>
-    Explicit = 1,
+    //Explicit = 1,
 
     /// <summary>
     /// Member memory layout is automatic and is assigned in sequence order.

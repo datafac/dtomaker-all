@@ -27,9 +27,6 @@ namespace DTOMaker.SrcGen.MemBlocks
         private static readonly DiagnosticDescriptor DME07 = new DiagnosticDescriptor(nameof(DME07),
             "Invalid member offset", "The member offset must be zero or greater", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        //private static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08),
-        //    "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
-
         private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13),
             "Member layout issue", "Member (value) overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
@@ -96,7 +93,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
             // check layout algo
             var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
+            if (layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
