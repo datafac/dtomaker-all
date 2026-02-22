@@ -96,7 +96,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
             // check layout algo
             var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linearqqq && layoutAlgo != LayoutAlgo.Compact)
+            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
@@ -232,9 +232,9 @@ namespace DTOMaker.SrcGen.MemBlocks
         {
             List<Diagnostic> newDiagnostics = new();
             Phase1Entity result = entity;
-            if (entity.Layout == LayoutAlgo.Linearqqq)
+            if (entity.Layout == LayoutAlgo.Linear)
             {
-                // calculate field offsets for Linearqqq layout
+                // calculate field offsets for Linear layout
                 List<OutputMember> updatedMembers = new();
                 int blockLength = entity.BlockLength;
                 blockLength = 0;

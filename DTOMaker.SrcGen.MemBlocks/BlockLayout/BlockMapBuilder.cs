@@ -78,7 +78,7 @@ public class BlockMapBuilder
     {
         foreach (var request in requests)
         {
-            int fieldLength = GetFieldLength(request.MemberKind, request.NativeTypeqqq);
+            int fieldLength = GetFieldLength(request.MemberKind, request.NativeType);
             if (fieldLength > 0)
             {
                 AddField(request.Sequence, request.FieldName!, fieldLength, request.IsFlagsByte);
