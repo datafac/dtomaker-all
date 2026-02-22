@@ -98,9 +98,10 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0     1  LE    Boolean Field1
-        //     2     8     8  LE    Int64   Field2
-        //     3     4     4  LE    Int32   Field3
+        //     1     0     8  LE    Int64   Field1
+        //           8     1        Byte    Field1 (flags)
+        //     2    12     4  LE    Int32   Field2
+        //           9     1        Byte    Field2 (flags)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -117,7 +118,6 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
             this.Field2 = source.Field2;
-            this.Field3 = source.Field3;
         }
         public MyDTO(MyDTO source) : this(_header, source) { }
 
@@ -126,7 +126,6 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
             this.Field2 = source.Field2;
-            this.Field3 = source.Field3;
         }
         public MyDTO(MyOrg.Models.IMyDTO source) : this(_header, source) { }
 
@@ -148,22 +147,42 @@ namespace MyOrg.Models.MemBlocks
         internal MyDTO(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
         public MyDTO(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
-        public Boolean Field1
+        public Int64 Field1
         {
-            get => Codec_Boolean_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 1).Span);
-            set => Codec_Boolean_LE.WriteToSpan(_writableLocalBlock.Slice(0, 1).Span, IfNotFrozen(value));
+            get
+            {
+                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(8, 1).Span, 1);
+                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, value);
+            }
         }
 
-        public Int64 Field2
+        public Int32? Field2
         {
-            get => Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
-            set => Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, IfNotFrozen(value));
-        }
-
-        public Int32 Field3
-        {
-            get => Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
-            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, IfNotFrozen(value));
+            get
+            {
+                byte flags = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(9, 1).Span);
+                if (flags == 0) return null;
+                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(12, 4).Span);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                if (value.HasValue)
+                {
+                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 1);
+                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(12, 4).Span, value.Value);
+                }
+                else
+                {
+                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 0);
+                    _writableLocalBlock.Slice(12, 4).Span.Clear();
+                }
+            }
         }
 
 

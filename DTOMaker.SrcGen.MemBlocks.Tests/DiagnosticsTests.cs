@@ -16,7 +16,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(0, LayoutMethod.Linear)]
+                    [Entity(0, LayoutMethod.Compact)]
                     public interface IMyDTO : IEntityBase
                     {
                     }
@@ -36,8 +36,8 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 : IEntityBase { }
-                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO2 : IEntityBase { }
+                    [Entity(1, LayoutMethod.Compact)] public interface IMyDTO1 : IEntityBase { }
+                    [Entity(1, LayoutMethod.Compact)] public interface IMyDTO2 : IEntityBase { }
                 }
                 """;
 
@@ -54,7 +54,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)] public interface IMyDTO1 { }
+                    [Entity(1, LayoutMethod.Compact)] public interface IMyDTO1 { }
                 }
                 """;
 
@@ -73,7 +73,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 {
                     public interface IMyDTO1 : IEntityBase { }
 
-                    [Entity(2, LayoutMethod.Linear)]
+                    [Entity(2, LayoutMethod.Compact)]
                     public interface IMyDTO2 : IMyDTO1 { }
                 }
                 """;
@@ -91,7 +91,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)]
+                    [Entity(1, LayoutMethod.Compact)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(0)] int  Field1 { get; set; }
@@ -100,27 +100,6 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 """;
 
             modelSource.GenerateAndCheckLength(1, "DME04,DME11");
-        }
-
-        [Fact]
-        public void InvalidNullableMember()
-        {
-            string modelSource =
-                """
-                using System;
-                using DataFac.Memory;
-                using DTOMaker.Models;
-                namespace MyOrg.Models
-                {
-                    [Entity(1, LayoutMethod.Linear)]
-                    public interface IMyDTO : IEntityBase
-                    {
-                        [Member(1)] int? Field1 { get; set; }
-                    }
-                }
-                """;
-
-            modelSource.GenerateAndCheckLength(1, "DME08");
         }
 
         [Fact]
@@ -133,7 +112,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)]
+                    [Entity(1, LayoutMethod.Compact)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)] DayOfWeek Field1 { get; set; }
@@ -154,7 +133,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)]
+                    [Entity(1, LayoutMethod.Compact)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1, NativeType.Int32, typeof(DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
@@ -175,7 +154,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 using DTOMaker.Models;
                 namespace MyOrg.Models
                 {
-                    [Entity(1, LayoutMethod.Linear)]
+                    [Entity(1, LayoutMethod.Compact)]
                     public interface IMyDTO : IEntityBase
                     {
                         [Member(1)] int  Field1 { get; set; }

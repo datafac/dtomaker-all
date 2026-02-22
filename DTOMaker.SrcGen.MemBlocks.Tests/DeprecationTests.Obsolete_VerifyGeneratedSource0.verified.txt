@@ -96,8 +96,11 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     0     8  LE    Double  Field1
-        //     2     8     8  LE    Double  Field2
-        //     3    16     8  LE    Double  Field3
+        //           8     1        Byte    Field1 (flags)
+        //     2    16     8  LE    Double  Field2
+        //           9     1        Byte    Field2 (flags)
+        //     3    24     8  LE    Double  Field3
+        //          10     1        Byte    Field3 (flags)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -148,22 +151,46 @@ namespace MyOrg.Models.MemBlocks
         [Obsolete("", false)]
         public Double Field1
         {
-            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
-            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, IfNotFrozen(value));
+            get
+            {
+                return Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(8, 1).Span, 1);
+                Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, value);
+            }
         }
 
         [Obsolete("Removed", false)]
         public Double Field2
         {
-            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
-            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, IfNotFrozen(value));
+            get
+            {
+                return Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(16, 8).Span);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 1);
+                Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(16, 8).Span, value);
+            }
         }
 
         [Obsolete("Removed", true)]
         public Double Field3
         {
-            get => Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(16, 8).Span);
-            set => Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(16, 8).Span, IfNotFrozen(value));
+            get
+            {
+                return Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(24, 8).Span);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(10, 1).Span, 1);
+                Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(24, 8).Span, value);
+            }
         }
 
 

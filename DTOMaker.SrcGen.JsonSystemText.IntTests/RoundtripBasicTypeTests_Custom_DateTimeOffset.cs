@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
 
-[Entity(46, LayoutMethod.Linear)]
+[Entity(46, LayoutMethod.Compact)]
 public interface ISimpleDTO_DateTimeOffset : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.DateTimeOffsetConverter))] DateTimeOffset Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DateTimeOffset

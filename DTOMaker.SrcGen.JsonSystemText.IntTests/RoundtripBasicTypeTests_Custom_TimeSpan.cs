@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
 
-[Entity(45, LayoutMethod.Linear)]
+[Entity(45, LayoutMethod.Compact)]
 public interface ISimpleDTO_TimeSpan : IEntityBase { [Member(1, NativeType.Int64, typeof(DTOMaker.Models.TimeSpanConverter))] TimeSpan Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_TimeSpan

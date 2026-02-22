@@ -165,10 +165,12 @@ namespace DTOMaker.SrcGen.Core
             // ---------- MemBlocks tokens ----------
             tokens[BuildTokenName(member, "FieldOffset")] = member.FieldOffset;
             tokens["FieldLength"] = member.FieldLength;
+            tokens[BuildTokenName(member, "FlagsOffset")] = member.FlagsOffset;
             //tokens["IsBigEndian"] = member.IsBigEndian;
             tokens["MemberSequenceR4"] = member.Sequence.ToString().PadLeft(4);
             tokens["FieldOffsetR4"] = member.FieldOffset.ToString().PadLeft(4);
             tokens["FieldLengthR4"] = member.FieldLength.ToString().PadLeft(4);
+            tokens["FlagsOffsetR4"] = member.FlagsOffset.ToString().PadLeft(4);
             tokens["MemberBELE"] = member.IsBigEndian ? "BE" : "LE";
             tokens["MemberTypeL7"] = memberType.PadRight(7);
 

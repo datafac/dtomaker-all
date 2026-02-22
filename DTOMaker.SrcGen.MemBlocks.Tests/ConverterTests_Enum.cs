@@ -13,7 +13,7 @@ public class ConverterTests_Enum
             using DTOMaker.Models;
             namespace MyOrg.Models
             {
-                [Entity(1, LayoutMethod.Linear)]
+                [Entity(1, LayoutMethod.Compact)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }

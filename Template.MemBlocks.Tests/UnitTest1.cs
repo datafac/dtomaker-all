@@ -98,9 +98,9 @@ namespace Template.MemBlocks.Tests
 
             var orig = new T_ImplNameSpace_.T_EntityImplName_();
             orig.T_RequiredNativeStructMemberName_ = 123;
-            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
-            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
@@ -123,9 +123,9 @@ namespace Template.MemBlocks.Tests
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
-            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
-            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredStringMemberName_ = "def";
             orig.T_NullableStringMemberName_ = null;
             orig.T_RequiredBinaryMemberName_ = largeBinary;

@@ -15,11 +15,11 @@ public class BlockMapBuilder
         if (initialMap is null) return;
         foreach (FieldDef fd in initialMap.Fields)
         {
-            AddField(fd.Sequence, fd.Name!, fd.Length);
+            AddField(fd.Sequence, fd.Name!, fd.Length, fd.IsFlagsByte);
         }
     }
 
-    private void AddField(int sequence, string fieldName, int fieldLength)
+    private void AddField(int sequence, string fieldName, int fieldLength, bool isFlagsByte)
     {
         int lengthInBits = fieldLength * 8;
         (bool found, BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
@@ -30,13 +30,7 @@ public class BlockMapBuilder
                 throw new InvalidOperationException($"Can't do bit offsets yet");
             int byteOffset = bitOffset / 8;
             _map = newMap;
-            _fields.Add(new FieldDef()
-            {
-                Sequence = sequence,
-                Offset = byteOffset,
-                Length = fieldLength,
-                Name = fieldName,
-            });
+            _fields.Add(new FieldDef(sequence, fieldName, byteOffset, fieldLength, isFlagsByte));
         }
         else
         {
@@ -44,78 +38,62 @@ public class BlockMapBuilder
         }
     }
 
-    private static int GetFieldLength(NativeType fieldType)
+    private static int GetFieldLength(MemberKind kind, NativeType fieldType)
     {
-        switch (fieldType)
+        return kind switch
         {
-            case NativeType.Boolean:
-            case NativeType.Byte:
-            case NativeType.SByte:
-                return 1;
-
-            case NativeType.Int16:
-            case NativeType.UInt16:
-            case NativeType.Char:
-            case NativeType.Half:
-                return 2;
-
-            case NativeType.Int32:
-            case NativeType.UInt32:
-            case NativeType.PairOfInt16:
-            case NativeType.Single:
-                return 4;
-
-            case NativeType.Int64:
-            case NativeType.UInt64:
-            case NativeType.PairOfInt32:
-            case NativeType.Double:
-                return 8;
-
-            case NativeType.Decimal:
-            case NativeType.Int128:
-            case NativeType.UInt128:
-            case NativeType.PairOfInt64:
-            case NativeType.QuadOfInt32:
-            case NativeType.Guid:
-            //case NativeType.RawB10:
-                return 16;
-
-            //case NativeType.RawB20:
-            //    return 32;
-
-            case NativeType.String:
-            case NativeType.Binary:
-            //case NativeType.RawB40:
-                return 64;
-
-            //case NativeType.RawB80:
-            //    return 128;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(fieldType), fieldType, null);
-        }
+            MemberKind.Entity or MemberKind.String or MemberKind.Binary => 64,
+            MemberKind.Struct => fieldType switch
+            {
+                NativeType.Boolean 
+                    or NativeType.Byte 
+                    or NativeType.SByte => 1,
+                NativeType.Int16 
+                    or NativeType.UInt16 
+                    or NativeType.Char 
+                    or NativeType.Half => 2,
+                NativeType.Int32 
+                    or NativeType.UInt32 
+                    or NativeType.PairOfInt16 
+                    or NativeType.Single => 4,
+                NativeType.Int64 
+                    or NativeType.UInt64 
+                    or NativeType.PairOfInt32 
+                    or NativeType.Double => 8,
+                NativeType.Decimal 
+                    or NativeType.Int128 
+                    or NativeType.UInt128 
+                    or NativeType.PairOfInt64 
+                    or NativeType.QuadOfInt32 
+                    or NativeType.Guid => 16,
+                NativeType.String 
+                    or NativeType.Binary => 64,
+                _ => 0,
+            },
+            _ => 0,
+        };
     }
 
     public BlockMapBuilder AddRequests(IEnumerable<BlockMapRequest> requests)
     {
         foreach (var request in requests)
         {
-            int fieldLength = GetFieldLength(request.NativeType);
-            AddField(request.Sequence, request.FieldName!, fieldLength);
+            int fieldLength = GetFieldLength(request.MemberKind, request.NativeTypeqqq);
+            if (fieldLength > 0)
+            {
+                AddField(request.Sequence, request.FieldName!, fieldLength, request.IsFlagsByte);
+            }
         }
         return this;
     }
 
     public BlockMap Build()
     {
-        var sizes = _map.Sizes;
-        if (sizes.BitsRemain != 0)
+        if (_map.Sizes.BitsRemain != 0)
             throw new InvalidOperationException($"Cannot build maps with bit remainders (yet)");
-        return new BlockMap
-        {
-            BlockSize = sizes.ByteCount,
-            Fields = new EquatableArray<FieldDef>(_fields),
-        };
-    }
 
+        return _map.State == Fill.Zero
+            ? new BlockMap() { BlockSize = 0 }
+            : new BlockMap() { BlockSize = _map.Sizes.ByteCount, Fields = new EquatableArray<FieldDef>(_fields) };
+    }
 }

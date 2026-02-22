@@ -3,7 +3,7 @@ using DTOMaker.Models.BinaryTree;
 
 namespace TestOrg.TestApp.Models
 {
-    [Entity(1, LayoutMethod.Linear)]
+    [Entity(1, LayoutMethod.Compact)]
     public interface IMyBinaryTree : IEntityBase
     {
         [Member(1)] int Count { get; set; }

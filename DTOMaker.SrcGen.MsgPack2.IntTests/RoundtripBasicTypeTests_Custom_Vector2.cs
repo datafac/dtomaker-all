@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity(51, LayoutMethod.Linear)]
+[Entity(51, LayoutMethod.Compact)]
 public interface ISimpleDTO_Vector2 : IEntityBase { [Member(1, NativeType.PairOfInt32, typeof(Vector2Converter))] Vector2 Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Vector2

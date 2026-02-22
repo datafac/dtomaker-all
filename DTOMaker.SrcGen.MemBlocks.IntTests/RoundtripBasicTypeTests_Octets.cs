@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(12, LayoutMethod.Linear)]
+[Entity(12, LayoutMethod.Compact)]
 public interface ISimpleDTO_Octets : IEntityBase
 {
     [Member(1)] Octets Field1 { get; set; }

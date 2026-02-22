@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(18, LayoutMethod.Linear)]
+[Entity(18, LayoutMethod.Compact)]
 public interface ISimpleDTO_PairOfInt64 : IEntityBase
 {
     [Member(1)] PairOfInt64 Field1 { get; set; }

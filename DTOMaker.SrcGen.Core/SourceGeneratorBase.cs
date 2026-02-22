@@ -478,6 +478,7 @@ namespace DTOMaker.SrcGen.Core
                         ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,
                         FieldOffset = member.FieldOffset,
+                        FlagsOffset = 0,
                         FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
                         ConverterSpace = member.ConverterSpace,

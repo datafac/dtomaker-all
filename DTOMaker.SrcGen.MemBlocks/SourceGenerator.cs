@@ -27,11 +27,14 @@ namespace DTOMaker.SrcGen.MemBlocks
         private static readonly DiagnosticDescriptor DME07 = new DiagnosticDescriptor(nameof(DME07),
             "Invalid member offset", "The member offset must be zero or greater", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        private static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08),
-            "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+        //private static readonly DiagnosticDescriptor DME08 = new DiagnosticDescriptor(nameof(DME08),
+        //    "Invalid nullability", "Nullable<T> fields are not supported in MemBlocks", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13),
-            "Member layout issue", "Member overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+            "Member layout issue", "Member (value) overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+
+        private static readonly DiagnosticDescriptor DME14 = new DiagnosticDescriptor(nameof(DME14),
+            "Member layout issue", "Member (flags) overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
@@ -93,7 +96,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
             // check layout algo
             var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
+            if (layoutAlgo != LayoutAlgo.Explicit && layoutAlgo != LayoutAlgo.Linearqqq && layoutAlgo != LayoutAlgo.Compact)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
@@ -151,11 +154,11 @@ namespace DTOMaker.SrcGen.MemBlocks
                 newDiagnostics.Add(Diagnostic.Create(DME07, location));
                 updated = true;
             }
-            if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Struct)
-            {
-                newDiagnostics.Add(Diagnostic.Create(DME08, location));
-                updated = true;
-            }
+            //if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Struct)
+            //{
+            //    newDiagnostics.Add(Diagnostic.Create(DME08, location));
+            //    updated = true;
+            //}
 
             if (updated)
             {
@@ -198,6 +201,29 @@ namespace DTOMaker.SrcGen.MemBlocks
                     // not assigned
                     blockMap.Set(offset, true);
                 }
+
+                // check flags byte for structs only
+                if (member.Kind == MemberKind.Struct)
+                {
+                    if (member.FlagsOffset + 1 > blockLength)
+                    {
+                        return Diagnostic.Create(DME14, member.Location);
+                    }
+
+                    if (member.FieldLength > 0 && (member.FlagsOffset % 1 != 0))
+                    {
+                        return Diagnostic.Create(DME14, member.Location);
+                    }
+
+                    int offset = member.FlagsOffset;
+                    if (blockMap.Get(offset))
+                    {
+                        return Diagnostic.Create(DME14, member.Location);
+                    }
+
+                    // not assigned
+                    blockMap.Set(offset, true);
+                }
             }
             return null;
         }
@@ -206,9 +232,9 @@ namespace DTOMaker.SrcGen.MemBlocks
         {
             List<Diagnostic> newDiagnostics = new();
             Phase1Entity result = entity;
-            if (entity.Layout == LayoutAlgo.Linear)
+            if (entity.Layout == LayoutAlgo.Linearqqq)
             {
-                // calculate field offsets for Linear layout
+                // calculate field offsets for Linearqqq layout
                 List<OutputMember> updatedMembers = new();
                 int blockLength = entity.BlockLength;
                 blockLength = 0;
@@ -245,24 +271,44 @@ namespace DTOMaker.SrcGen.MemBlocks
             else if (entity.Layout == LayoutAlgo.Compact)
             {
                 // calculate field offsets for Compact layout
-                var map = members.ToDictionary(m => m.Sequence);
-                BlockMap blockMap = new BlockMapBuilder(null)
-                    .AddRequests(members
-                        .OrderBy(m => m.Sequence)
-                        .Select(m => new BlockMapRequest(m.Sequence, m.Name, m.MemberType.NativeType)))
-                    .Build();
+                var memberMap = members.ToDictionary(m => m.Sequence);
+                List<BlockMapRequest> mapRequests = new();
+                foreach (var member in members.OrderBy(m => m.Sequence))
+                {
+                    if (member.Kind == MemberKind.Struct)
+                    {
+                        // allocate flags byte for all structs to support nullability and future features
+                        mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Value", member.Kind, member.MemberType.NativeType));
+                        mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Flags", member.Kind, NativeType.Byte, true));
+                    }
+                    else
+                    {
+                        mapRequests.Add(new BlockMapRequest(member.Sequence, member.Name, member.Kind, member.MemberType.NativeType));
+                    }
+                }
+                BlockMap blockMap = new BlockMapBuilder(null).AddRequests(mapRequests).Build();
                 foreach(var fd in blockMap.Fields.Array)
                 {
-                    map[fd.Sequence] = map[fd.Sequence] with
+                    if (fd.IsFlagsByte)
                     {
-                        FieldOffset = fd.Offset,
-                    };
+                        memberMap[fd.Sequence] = memberMap[fd.Sequence] with
+                        {
+                            FlagsOffset = fd.Offset,
+                        };
+                    }
+                    else
+                    {
+                        memberMap[fd.Sequence] = memberMap[fd.Sequence] with
+                        {
+                            FieldOffset = fd.Offset,
+                        };
+                    }
                 }
                 int blockLength = blockMap.BlockSize;
                 result = entity with
                 {
                     BlockLength = blockLength,
-                    Members = new EquatableArray<OutputMember>(map.Values.OrderBy(m => m.Sequence)),
+                    Members = new EquatableArray<OutputMember>(memberMap.Values.OrderBy(m => m.Sequence)),
                 };
             }
 

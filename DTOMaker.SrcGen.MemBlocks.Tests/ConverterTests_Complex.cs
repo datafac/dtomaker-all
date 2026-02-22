@@ -14,7 +14,7 @@ public class ConverterTests_Complex
             using DTOMaker.Models;
             namespace MyOrg.Models
             {
-                [Entity(1, LayoutMethod.Linear)]
+                [Entity(1, LayoutMethod.Compact)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Field1 { get; set; }

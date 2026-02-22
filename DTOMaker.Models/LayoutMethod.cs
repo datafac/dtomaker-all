@@ -32,7 +32,7 @@ public enum LayoutMethod : int
     /// method, the entity memory block length can be limited, or left undefined
     /// to allow automatic growth.
     /// </summary>
-    Linear = 2,
+    Linearqqq = 2,
 
     /// <summary>
     /// Member memory layout is automatic and is assigned in sequence order.

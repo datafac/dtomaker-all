@@ -9,6 +9,7 @@ public sealed partial class EntityGenerator : EntityGeneratorBase
 {
     public EntityGenerator(SourceGeneratorParameters parameters) : base(parameters) { }
 
+    // todo remove this override
     protected override string OnBuildTokenName(OutputMember member, string name)
     {
         StringBuilder sb = new StringBuilder();

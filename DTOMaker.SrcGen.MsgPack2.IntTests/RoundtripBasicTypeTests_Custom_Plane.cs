@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity(54, LayoutMethod.Linear)]
+[Entity(54, LayoutMethod.Compact)]
 public interface ISimpleDTO_Plane : IEntityBase { [Member(1, NativeType.QuadOfInt32, typeof(PlaneConverter))] Plane Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Plane

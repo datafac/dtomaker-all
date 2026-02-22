@@ -16,6 +16,7 @@ namespace DTOMaker.SrcGen.Core
         public bool IsObsolete => ObsoleteInfo is not null;
         public int FieldOffset { get; init; }
         public int FieldLength { get; init; }
+        public int FlagsOffset { get; init; }
         public bool IsBigEndian { get; init; }
         public string? ConverterSpace { get; init; }
         public string? ConverterName { get; init; }

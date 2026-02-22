@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity(41, LayoutMethod.Linear)]
+[Entity(41, LayoutMethod.Compact)]
 public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek

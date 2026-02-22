@@ -9,7 +9,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
 #if NET7_0_OR_GREATER
-[Entity(15, LayoutMethod.Linear)]
+[Entity(15, LayoutMethod.Compact)]
 public interface ISimpleDTO_Half : IEntityBase
 {
     [Member(1)] Half Field1 { get; set; }

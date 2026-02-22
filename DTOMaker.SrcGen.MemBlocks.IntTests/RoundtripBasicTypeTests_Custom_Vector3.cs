@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(52, LayoutMethod.Linear)]
+[Entity(52, LayoutMethod.Compact)]
 public interface ISimpleDTO_Vector3 : IEntityBase { [Member(1, NativeType.QuadOfInt32, typeof(Vector3Converter))] Vector3 Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Vector3
