@@ -93,7 +93,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
             // check layout algo
             var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Linear && layoutAlgo != LayoutAlgo.Compact)
+            if (layoutAlgo != LayoutAlgo.Compact)
             {
                 newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
@@ -229,43 +229,7 @@ namespace DTOMaker.SrcGen.MemBlocks
         {
             List<Diagnostic> newDiagnostics = new();
             Phase1Entity result = entity;
-            if (entity.Layout == LayoutAlgo.Linear)
-            {
-                // calculate field offsets for Linear layout
-                List<OutputMember> updatedMembers = new();
-                int blockLength = entity.BlockLength;
-                blockLength = 0;
-                int nextFieldOffset = 0;
-                foreach (var member in members.OrderBy(m => m.Sequence))
-                {
-                    // calculate this offset
-                    while (member.FieldLength > 0 && nextFieldOffset % member.FieldLength != 0)
-                    {
-                        nextFieldOffset++;
-                    }
-                    int fieldOffset = nextFieldOffset;
-
-                    // calc next offset
-                    nextFieldOffset = nextFieldOffset + member.FieldLength;
-                    while (nextFieldOffset > blockLength)
-                    {
-                        blockLength = blockLength == 0 ? 1 : blockLength * 2;
-                    }
-
-                    // emit updated member
-                    updatedMembers.Add(member with
-                    {
-                        FieldOffset = fieldOffset,
-                    });
-                }
-
-                result = entity with
-                {
-                    BlockLength = blockLength,
-                    Members = new EquatableArray<OutputMember>(updatedMembers),
-                };
-            }
-            else if (entity.Layout == LayoutAlgo.Compact)
+            if (entity.Layout == LayoutAlgo.Compact)
             {
                 // calculate field offsets for Compact layout
                 var memberMap = members.ToDictionary(m => m.Sequence);
