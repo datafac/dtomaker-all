@@ -30,14 +30,14 @@ time, a EULA on binary releases requires payment of the Maintenance Fee.
 
 Please see the Open Source Maintenance Fee section below for more information.
 
-## V1.0 Features
+## Features
 - Models defined via C# interfaces with attributes.
   - Source generators create implementations at compile time.
 - Properties can be basic .NET types such as integers, floats, strings, Guid, etc.
   - Raw byte arrays are supported using the built-in Octets type.
   - Other common types such as DateTime, DateTimeOffset, TimeSpan are supported by built-in converters.
   - User-defined value types can be supported via user-defined converters to built-in types.
-- Nullable types.
+- Nullable value types.
 - Polymorphic types.
 - Freezable types: Instances are mutable until frozen.
 - Serialization protocols:
@@ -87,10 +87,12 @@ flowchart TB
 ```
 
 # Ongoing Development
-## Coming soon in V1.x
-- ref type converters
+## Coming next in V2.0
+- common interface support across all serializers
+- BitSet type
 
-## Coming later in V2.0+
+## Coming later in V2.1+
+- ref type converters
 - incremental serialization
 - MessagePack 3.x serialization
 - Orleans serialization
