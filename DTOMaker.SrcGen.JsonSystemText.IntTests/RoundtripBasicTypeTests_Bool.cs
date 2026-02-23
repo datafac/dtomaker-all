@@ -2,12 +2,14 @@ using DTOMaker.Models;
 using DTOMaker.Runtime.JsonSystemText;
 using DTOMaker.SrcGen.JsonSystemText.IntTests.JsonSystemText;
 using Shouldly;
-using System;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
+
+// unused entity ids:
+// [Entity(23)]
 
 [Entity(9)]
 public interface ISimpleDTO_Bool : IEntityBase
@@ -29,6 +31,7 @@ public class RoundtripBasicTypeTests_Bool
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
+        copy.Field2.ShouldBe(optValue);
         return json;
     }
 

@@ -46,7 +46,7 @@ namespace Template.MemBlocks.Tests
             // signature
             outgoing.A.A.A.A.ByteValue = (byte)'|';
             outgoing.A.A.A.B.ByteValue = (byte)'_';
-            outgoing.A.A.B.A.ByteValue = (byte)1;
+            outgoing.A.A.B.A.ByteValue = (byte)2;
             outgoing.A.A.B.B.ByteValue = (byte)1;
             // entity id
             outgoing.A.B.A.Int16ValueLE = 4;
@@ -58,7 +58,7 @@ namespace Template.MemBlocks.Tests
             written.ShouldBeTrue();
 
             BlockHeader incoming = BlockHeader.ParseFrom(buffer);
-            incoming.SignatureBits.ShouldBe(0x01015f7c);
+            incoming.SignatureBits.ShouldBe(0x01025f7c);
             incoming.StructureBits.ShouldBe(0x61);
             incoming.EntityId.ShouldBe(4);
         }
@@ -75,11 +75,11 @@ namespace Template.MemBlocks.Tests
 
             buffer.Span[0].ShouldBe((byte)'|');  // marker byte 0
             buffer.Span[1].ShouldBe((byte)'_');  // marker byte 1
-            buffer.Span[2].ShouldBe((byte)1);    // major version
+            buffer.Span[2].ShouldBe((byte)2);    // major version
             buffer.Span[3].ShouldBe((byte)1);    // minor version
 
             BlockHeader parsed = BlockHeader.ParseFrom(buffer);
-            parsed.SignatureBits.ShouldBe(0x01015f7c);
+            parsed.SignatureBits.ShouldBe(0x01025f7c);
             parsed.StructureBits.ShouldBe(0x51);
             parsed.EntityId.ShouldBe(4);
         }

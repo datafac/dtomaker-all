@@ -6,16 +6,16 @@ namespace DTOMaker.Runtime.MemBlocks;
 public readonly struct BlockHeader
 {
     public const int HeaderSize = 16;
-    private const int SignatureV11 = 0x01015f7c; // 1,1,_,|
+    private const int SignatureV21 = 0x01025f7c; // 1,2,_,|
 
     public static BlockHeader CreateNew(int entityId, long structureBits)
     {
         Memory<byte> memory = new byte[HeaderSize];
         Span<byte> headerSpan = memory.Span;
-        Codec_Int32_LE.WriteToSpan(headerSpan.Slice(0, 4), SignatureV11);
+        Codec_Int32_LE.WriteToSpan(headerSpan.Slice(0, 4), SignatureV21);
         Codec_Int32_LE.WriteToSpan(headerSpan.Slice(4, 4), entityId);
         Codec_Int64_LE.WriteToSpan(headerSpan.Slice(8, 8), structureBits);
-        return new BlockHeader(SignatureV11, entityId, structureBits, memory);
+        return new BlockHeader(SignatureV21, entityId, structureBits, memory);
     }
 
     public static BlockHeader ParseFrom(ReadOnlyMemory<byte> buffer)
