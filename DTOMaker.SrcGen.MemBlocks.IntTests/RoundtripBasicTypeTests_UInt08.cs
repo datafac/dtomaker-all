@@ -12,7 +12,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 public interface ISimpleDTO_UInt08 : IEntityBase
 {
     [Member(1)] Byte Field1 { get; set; }
-    // todo [Member(2)] Byte? Field2 { get; set; }
+    [Member(2)] Byte? Field2 { get; set; }
 }
 
 public class RoundtripBasicTypeTests_UInt08

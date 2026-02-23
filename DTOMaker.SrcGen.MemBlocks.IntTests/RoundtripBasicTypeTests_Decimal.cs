@@ -12,7 +12,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 public interface ISimpleDTO_Decimal : IEntityBase
 {
     [Member(1)] Decimal Field1 { get; set; }
-    // todo [Member(2)] Decimal? Field2 { get; set; }
+    [Member(2)] Decimal? Field2 { get; set; }
 }
 
 public class RoundtripBasicTypeTests_Decimal

@@ -12,7 +12,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 public interface ISimpleDTO_Guid : IEntityBase
 {
     [Member(1)] Guid Field1 { get; set; }
-    // todo [Member(2)] Guid? Field2 { get; set; }
+    [Member(2)] Guid? Field2 { get; set; }
 }
 
 public class RoundtripBasicTypeTests_Guid

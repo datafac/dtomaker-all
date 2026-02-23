@@ -13,7 +13,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 public interface ISimpleDTO_Half : IEntityBase
 {
     [Member(1)] Half Field1 { get; set; }
-    // todo [Member(2)] Half? Field2 { get; set; }
+    [Member(2)] Half? Field2 { get; set; }
 }
 
 public class RoundtripBasicTypeTests_Half

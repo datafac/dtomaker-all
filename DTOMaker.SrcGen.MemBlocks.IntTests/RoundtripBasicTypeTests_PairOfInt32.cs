@@ -13,7 +13,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 public interface ISimpleDTO_PairOfInt32 : IEntityBase
 {
     [Member(1)] PairOfInt32 Field1 { get; set; }
-    // todo [Member(2)] PairOfInt32? Field2 { get; set; }
+    [Member(2)] PairOfInt32? Field2 { get; set; }
 }
 
 public class RoundtripBasicTypeTests_PairOfInt32
