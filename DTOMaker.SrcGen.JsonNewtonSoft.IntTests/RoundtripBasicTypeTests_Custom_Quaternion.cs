@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity(55, LayoutMethod.Compact)]
+[Entity(55)]
 public interface ISimpleDTO_Quaternion : IEntityBase { [Member(1, NativeType.QuadOfInt32, typeof(QuaternionConverter))] Quaternion Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Quaternion

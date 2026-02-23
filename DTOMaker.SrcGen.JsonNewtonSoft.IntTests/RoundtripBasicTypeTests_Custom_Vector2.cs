@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity(51, LayoutMethod.Compact)]
+[Entity(51)]
 public interface ISimpleDTO_Vector2 : IEntityBase { [Member(1, NativeType.PairOfInt32, typeof(Vector2Converter))] Vector2 Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Vector2

@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;
 
-[Entity(44, LayoutMethod.Compact)]
+[Entity(44)]
 public interface ISimpleDTO_DateTime : IEntityBase { [Member(1, NativeType.Int64, typeof(DTOMaker.Models.DateTimeConverter))] DateTime Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DateTime

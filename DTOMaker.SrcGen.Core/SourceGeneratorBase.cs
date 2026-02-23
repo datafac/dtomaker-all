@@ -337,7 +337,6 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
-            LayoutAlgo layoutAlgo = LayoutAlgo.Default;
             int blockLength = 0;
 
             // Loop through all of the attributes on the interface
@@ -350,9 +349,8 @@ namespace DTOMaker.SrcGen.Core
                     case EntityAttribute:
                         // get entity id and layout algo
                         diagnostic =
-                            CheckAttributeArguments(attributeData, location, 2)
-                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; })
-                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 1, (value) => { layoutAlgo = (LayoutAlgo)value; });
+                            CheckAttributeArguments(attributeData, location, 1)
+                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { entityId = value; });
                         break;
                     case KeyOffsetAttribute: // used by MessagePack 
                         diagnostic =
@@ -382,7 +380,6 @@ namespace DTOMaker.SrcGen.Core
             {
                 KeyOffset = keyOffset,
                 BlockLength = blockLength,
-                Layout = layoutAlgo,
             };
 
             result = OnCustomizeParsedEntity(result, location);
@@ -513,7 +510,6 @@ namespace DTOMaker.SrcGen.Core
                     : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
-                Layout = entity.Layout,
             };
 
             result = OnCustomizePhase1Entity(result, entity.Location, outputMembers);
@@ -549,7 +545,6 @@ namespace DTOMaker.SrcGen.Core
                     : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
                 BlockLength = entity.BlockLength,
-                Layout = entity.Layout,
             };
         }
 

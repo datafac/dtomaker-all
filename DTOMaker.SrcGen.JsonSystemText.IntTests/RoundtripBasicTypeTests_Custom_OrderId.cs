@@ -37,7 +37,7 @@ public sealed class OrderIdConverter : IStructConverter<OrderId, long>
     public static long? ToNative(OrderId? custom) => custom.HasValue ? custom.Value.Value : null;
 }
 
-[Entity(43, LayoutMethod.Compact)]
+[Entity(43)]
 public interface IOrderLine : IEntityBase
 {
     [Member(1, NativeType.Int64, typeof(OrderIdConverter))] OrderId Id { get; set; }

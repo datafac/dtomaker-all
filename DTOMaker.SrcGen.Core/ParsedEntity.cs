@@ -14,7 +14,6 @@ namespace DTOMaker.SrcGen.Core
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
         public int KeyOffset { get; init; }
         public int BlockLength { get; init; }
-        public LayoutAlgo Layout { get; init; }
 
         public ParsedEntity(Location location, TypeFullName tfn, int entityId, TypeFullName? baseTFN, IEnumerable<Diagnostic> diagnostics)
         {

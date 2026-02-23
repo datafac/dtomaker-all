@@ -17,7 +17,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KnownType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Language_CSharp.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LayoutAlgo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MemberKind.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OutputEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OutputMember.cs" />

@@ -12,7 +12,7 @@ public class DeprecationTests
         using DTOMaker.Models;
         namespace MyOrg.Models
         {
-            [Entity(1, LayoutMethod.Compact)]
+            [Entity(1)]
             public interface IMyDTO : IEntityBase
             {
                 [Obsolete]                  [Member(1)] double Field1 { get; set; }

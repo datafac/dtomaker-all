@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(9, LayoutMethod.Compact)]
+[Entity(9)]
 public interface ISimpleDTO_Bool : IEntityBase
 {
     [Member(1)] bool Field1 { get; set; }

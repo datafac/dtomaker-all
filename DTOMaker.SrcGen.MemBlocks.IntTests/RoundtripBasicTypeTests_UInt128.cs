@@ -9,7 +9,7 @@ using Xunit;
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
 #if NET7_0_OR_GREATER
-[Entity(22, LayoutMethod.Compact)]
+[Entity(22)]
 public interface ISimpleDTO_UInt128 : IEntityBase
 {
     [Member(1)] UInt128 Field1 { get; set; }

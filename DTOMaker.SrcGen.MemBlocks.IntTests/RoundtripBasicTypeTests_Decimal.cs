@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(19, LayoutMethod.Compact)]
+[Entity(19)]
 public interface ISimpleDTO_Decimal : IEntityBase
 {
     [Member(1)] Decimal Field1 { get; set; }

@@ -18,9 +18,6 @@ namespace DTOMaker.SrcGen.MemBlocks
         private static readonly DiagnosticDescriptor DME05 = new DiagnosticDescriptor(nameof(DME05),
             "Invalid entity length", "The entity length must be a whole power of 2 between 0 and 8192", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
-        private static readonly DiagnosticDescriptor DME09 = new DiagnosticDescriptor(nameof(DME09),
-            "Invalid layout method", "Entity layout method must be defined", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
-
         private static readonly DiagnosticDescriptor DME06 = new DiagnosticDescriptor(nameof(DME06),
             "Invalid member length", "The member length must be a whole power of 2 between 1 and 1024", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
@@ -90,12 +87,6 @@ namespace DTOMaker.SrcGen.MemBlocks
             if (!IsValidBlockLength(parsedEntity.BlockLength))
             {
                 newDiagnostics.Add(Diagnostic.Create(DME05, location));
-            }
-            // check layout algo
-            var layoutAlgo = parsedEntity.Layout;
-            if (layoutAlgo != LayoutAlgo.Compact)
-            {
-                newDiagnostics.Add(Diagnostic.Create(DME09, location));
             }
 
             if (newDiagnostics.Count == 0) return parsedEntity;
@@ -228,50 +219,46 @@ namespace DTOMaker.SrcGen.MemBlocks
         protected override Phase1Entity OnCustomizePhase1Entity(Phase1Entity entity, Location location, IReadOnlyList<OutputMember> members)
         {
             List<Diagnostic> newDiagnostics = new();
-            Phase1Entity result = entity;
-            if (entity.Layout == LayoutAlgo.Compact)
+            // calculate field offsets
+            var memberMap = members.ToDictionary(m => m.Sequence);
+            List<BlockMapRequest> mapRequests = new();
+            foreach (var member in members.OrderBy(m => m.Sequence))
             {
-                // calculate field offsets for Compact layout
-                var memberMap = members.ToDictionary(m => m.Sequence);
-                List<BlockMapRequest> mapRequests = new();
-                foreach (var member in members.OrderBy(m => m.Sequence))
+                if (member.Kind == MemberKind.Struct)
                 {
-                    if (member.Kind == MemberKind.Struct)
-                    {
-                        // allocate flags byte for all structs to support nullability and future features
-                        mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Value", member.Kind, member.MemberType.NativeType));
-                        mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Flags", member.Kind, NativeType.Byte, true));
-                    }
-                    else
-                    {
-                        mapRequests.Add(new BlockMapRequest(member.Sequence, member.Name, member.Kind, member.MemberType.NativeType));
-                    }
+                    // allocate flags byte for all structs to support nullability and future features
+                    mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Value", member.Kind, member.MemberType.NativeType));
+                    mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Flags", member.Kind, NativeType.Byte, true));
                 }
-                BlockMap blockMap = new BlockMapBuilder(null).AddRequests(mapRequests).Build();
-                foreach(var fd in blockMap.Fields.Array)
+                else
                 {
-                    if (fd.IsFlagsByte)
-                    {
-                        memberMap[fd.Sequence] = memberMap[fd.Sequence] with
-                        {
-                            FlagsOffset = fd.Offset,
-                        };
-                    }
-                    else
-                    {
-                        memberMap[fd.Sequence] = memberMap[fd.Sequence] with
-                        {
-                            FieldOffset = fd.Offset,
-                        };
-                    }
+                    mapRequests.Add(new BlockMapRequest(member.Sequence, member.Name, member.Kind, member.MemberType.NativeType));
                 }
-                int blockLength = blockMap.BlockSize;
-                result = entity with
-                {
-                    BlockLength = blockLength,
-                    Members = new EquatableArray<OutputMember>(memberMap.Values.OrderBy(m => m.Sequence)),
-                };
             }
+            BlockMap blockMap = new BlockMapBuilder(null).AddRequests(mapRequests).Build();
+            foreach (var fd in blockMap.Fields.Array)
+            {
+                if (fd.IsFlagsByte)
+                {
+                    memberMap[fd.Sequence] = memberMap[fd.Sequence] with
+                    {
+                        FlagsOffset = fd.Offset,
+                    };
+                }
+                else
+                {
+                    memberMap[fd.Sequence] = memberMap[fd.Sequence] with
+                    {
+                        FieldOffset = fd.Offset,
+                    };
+                }
+            }
+            int blockLength = blockMap.BlockSize;
+            Phase1Entity result = entity with
+            {
+                BlockLength = blockLength,
+                Members = new EquatableArray<OutputMember>(memberMap.Values.OrderBy(m => m.Sequence)),
+            };
 
             // check for layout issues
             var newDiagnostic = CheckMemberLayout(result.BlockLength, result.Members);

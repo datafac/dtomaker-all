@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(20, LayoutMethod.Compact)]
+[Entity(20)]
 public interface ISimpleDTO_Guid : IEntityBase
 {
     [Member(1)] Guid Field1 { get; set; }

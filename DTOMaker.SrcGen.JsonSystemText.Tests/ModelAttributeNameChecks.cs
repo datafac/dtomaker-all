@@ -13,8 +13,6 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
         [Fact] public void NameAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.NameAttribute.ShouldBe(nameof(DTOMaker.Models.NameAttribute));
         [Fact] public void OffsetAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.OffsetAttribute.ShouldBe(nameof(DTOMaker.Models.OffsetAttribute));
         [Fact] public void EndianAttributeName() => DTOMaker.SrcGen.Core.SourceGeneratorBase.EndianAttribute.ShouldBe(nameof(DTOMaker.Models.EndianAttribute));
-        [Fact] public void LayoutMethod_Undefined() => ((int)DTOMaker.SrcGen.Core.LayoutAlgo.Default).ShouldBe((int)DTOMaker.Models.LayoutMethod.Undefined);
-        [Fact] public void LayoutMethod_Compact() => ((int)DTOMaker.SrcGen.Core.LayoutAlgo.Compact).ShouldBe((int)DTOMaker.Models.LayoutMethod.Compact);
         [Fact] public void NativeType_Undefined() => ((int)DTOMaker.SrcGen.Core.NativeType.Undefined).ShouldBe((int)DTOMaker.Models.NativeType.Undefined);
         [Fact] public void NativeType_SByte() => ((int)DTOMaker.SrcGen.Core.NativeType.SByte).ShouldBe((int)DTOMaker.Models.NativeType.SByte);
         [Fact] public void NativeType_Byte() => ((int)DTOMaker.SrcGen.Core.NativeType.Byte).ShouldBe((int)DTOMaker.Models.NativeType.Byte);

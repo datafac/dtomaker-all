@@ -8,7 +8,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(14, LayoutMethod.Compact)]
+[Entity(14)]
 public interface ISimpleDTO_Single : IEntityBase
 {
     [Member(1)] Single Field1 { get; set; }

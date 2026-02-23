@@ -11,25 +11,25 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests
 {
-    [Entity(30, LayoutMethod.Compact)]
+    [Entity(30)]
     public interface INode : IEntityBase
     {
         [Member(1)] String K { get; set; }
     }
 
-    [Entity(31, LayoutMethod.Compact)]
+    [Entity(31)]
     public interface IStringNode : INode
     {
         [Member(1)] String V { get; set; }
     }
 
-    [Entity(32, LayoutMethod.Compact)]
+    [Entity(32)]
     public interface INumberNode : INode
     {
         [Member(1)] Int64 V { get; set; }
     }
 
-    [Entity(33, LayoutMethod.Compact)]
+    [Entity(33)]
     public interface ITree : IEntityBase
     {
         [Member(1)] ITree? L { get; set; }

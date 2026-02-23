@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MsgPack2.IntTests;
 
-[Entity(41, LayoutMethod.Compact)]
+[Entity(41)]
 public interface ISimpleDTO_DayOfWeek : IEntityBase { [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek

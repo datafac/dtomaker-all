@@ -12,7 +12,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             using DTOMaker.Models;
             namespace MyOrg.Models
             {
-                [Entity(1, LayoutMethod.Compact)]
+                [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
                     [Member(1)] IMyDTO? Field1 { get; set; }

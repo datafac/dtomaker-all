@@ -9,7 +9,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
-[Entity(54, LayoutMethod.Compact)]
+[Entity(54)]
 public interface ISimpleDTO_Plane : IEntityBase { [Member(1, NativeType.QuadOfInt32, typeof(PlaneConverter))] Plane Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Plane

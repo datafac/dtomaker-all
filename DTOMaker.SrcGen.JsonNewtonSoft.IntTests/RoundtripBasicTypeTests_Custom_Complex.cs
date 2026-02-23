@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.IntTests;
 
-[Entity(50, LayoutMethod.Compact)]
+[Entity(50)]
 public interface ISimpleDTO_Complex : IEntityBase { [Member(1, NativeType.PairOfInt64, typeof(ComplexConverter))] Complex Value { get; } }
 
 public class RoundtripBasicTypeTests_Custom_Complex
