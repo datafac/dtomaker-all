@@ -6,11 +6,11 @@ namespace DTOMaker.Models;
 /// Defines the offset within the memory block of the member.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public class OffsetAttribute : Attribute
+public class OffsetAttributeNotUsed : Attribute
 {
     public readonly int FieldOffset;
 
-    public OffsetAttribute(int fieldOffset)
+    public OffsetAttributeNotUsed(int fieldOffset)
     {
         FieldOffset = fieldOffset;
     }

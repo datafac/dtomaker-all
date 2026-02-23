@@ -21,7 +21,7 @@ namespace DTOMaker.SrcGen.Core
         public const string ObsoleteAttribute = nameof(ObsoleteAttribute);
         public const string KeyOffsetAttribute = nameof(KeyOffsetAttribute);
         public const string NameAttribute = nameof(NameAttribute);
-        public const string OffsetAttribute = nameof(OffsetAttribute);
+        //public const string OffsetAttribute = nameof(OffsetAttribute);
         public const string EndianAttribute = nameof(EndianAttribute);
         public const int BlobIdV1Size = 64;
 
@@ -224,11 +224,6 @@ namespace DTOMaker.SrcGen.Core
                         diagnostic
                             = CheckAttributeArguments(attributeData, location, 1)
                             ?? TryGetAttributeRequiredArgumentValue<string>(attributeData, location, 0, (value) => { fieldJsonName = value; });
-                        break;
-                    case OffsetAttribute: // used by MemBlocks
-                        diagnostic
-                            = CheckAttributeArguments(attributeData, location, 1)
-                            ?? TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { fieldOffset = value; });
                         break;
                     case EndianAttribute: // used by MemBlocks
                         diagnostic

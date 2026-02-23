@@ -11,7 +11,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
         [Fact] public void MemberAttributeName() => SourceGeneratorBase.MemberAttribute.ShouldBe(nameof(DTOMaker.Models.MemberAttribute));
         [Fact] public void ObsoleteAttributeName() => SourceGeneratorBase.ObsoleteAttribute.ShouldBe(nameof(System.ObsoleteAttribute));
         [Fact] public void KeyOffsetAttributeName() => SourceGeneratorBase.KeyOffsetAttribute.ShouldBe(nameof(DTOMaker.Models.KeyOffsetAttribute));
-        [Fact] public void OffsetAttributeName() => SourceGeneratorBase.OffsetAttribute.ShouldBe(nameof(DTOMaker.Models.OffsetAttribute));
+        //[Fact] public void OffsetAttributeName() => SourceGeneratorBase.OffsetAttribute.ShouldBe(nameof(DTOMaker.Models.OffsetAttribute));
         [Fact] public void EndianAttributeName() => SourceGeneratorBase.EndianAttribute.ShouldBe(nameof(DTOMaker.Models.EndianAttribute));
     }
 }

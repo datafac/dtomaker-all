@@ -2,6 +2,9 @@
 
 namespace DTOMaker.Models;
 
+/// <summary>
+/// Specifies the key offset for MessagePack model members.
+/// </summary>
 [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false)]
 public class KeyOffsetAttribute : Attribute
 {
