@@ -125,7 +125,7 @@ public record BinaryMap
     /// </summary>
     /// <param name="lengthInBits">The length of the field to assign (eg. byte = 8 bits, Int32 = 32 bits)</param>
     /// <returns>An updated map conatining the assignment.</returns>
-    public (bool, BinaryMap, int) AssignField(int lengthInBits)
+    public (BinaryMap, int) AssignField(int lengthInBits)
     {
         const int maxLengthInBits = 8 * 1024 * 8; // 64KiB * 8 bits
         if (lengthInBits <= 0)
@@ -150,6 +150,6 @@ public record BinaryMap
                 map = map.Expand();
             }
         }
-        return (true, map!, offset);
+        return (map!, offset);
     }
 }

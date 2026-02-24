@@ -96,18 +96,21 @@ namespace Template.MemBlocks.Tests
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
-            var orig = new T_ImplNameSpace_.T_EntityImplName_();
+            var orig = new T_EntityImplName_();
+            orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
             orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
             orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
+            orig.T_RequiredStringMemberName_ = "def";
+            orig.T_NullableStringMemberName_ = null;
             orig.T_RequiredBinaryMemberName_ = largeBinary;
+            orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            //orig.Freeze();
             await orig.Pack(dataStore);
 
-            var copy = new T_ImplNameSpace_.T_EntityImplName_(orig);
+            var copy = new T_EntityImplName_(orig);
             await copy.Pack(dataStore);
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
@@ -153,9 +156,9 @@ namespace Template.MemBlocks.Tests
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
-            //orig.T_NullableNativeStructMemberName_ = 456;
+            orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
-            //orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
+            orig.T_NullableCustomStructMemberName_ = DayOfWeek.Thursday;
             orig.T_RequiredStringMemberName_ = "def";
             orig.T_NullableStringMemberName_ = null;
             orig.T_RequiredBinaryMemberName_ = largeBinary;

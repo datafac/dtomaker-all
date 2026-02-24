@@ -95,8 +95,8 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0    16  LE    PairOfInt64 Field1
-        //          16     1        Byte    Field1 (flags)
+        //     1    16    16  LE    PairOfInt64 Field1
+        //           0     0                Field1 (hasValue)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -144,15 +144,14 @@ namespace MyOrg.Models.MemBlocks
         {
             get
             {
-                PairOfInt64 nativeValue = Codec_PairOfInt64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 16).Span);
+                PairOfInt64 nativeValue = Codec_PairOfInt64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(16, 16).Span);
                 return DTOMaker.Models.ComplexConverter.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(16, 1).Span, 1);
                 PairOfInt64 nativeValue = DTOMaker.Models.ComplexConverter.ToNative(value);
-                Codec_PairOfInt64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 16).Span, nativeValue);
+                Codec_PairOfInt64_LE.WriteToSpan(_writableLocalBlock.Slice(16, 16).Span, nativeValue);
             }
         }
 

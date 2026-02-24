@@ -30,13 +30,11 @@ public class BinaryMapTests
     public void CreateAndAdd1Bit()
     {
         var map = BinaryMap.Empty;
-        bool found;
         int offset;
         map.SizeInBits.ShouldBe(8);
         map.State.ShouldBe(Fill.Zero);
         {
-            (found, map, offset) = map.AssignField(1);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(1);
             map.SizeInBits.ShouldBe(8);
             map.State.ShouldBe(Fill.Part);
             offset.ShouldBe(0);
@@ -47,14 +45,12 @@ public class BinaryMapTests
     public void CreateAndAdd8Bits()
     {
         var map = BinaryMap.Empty;
-        bool found;
         int offset;
         map.SizeInBits.ShouldBe(8);
         map.State.ShouldBe(Fill.Zero);
         for (int i = 0; i < 8; i++)
         {
-            (found, map, offset) = map.AssignField(1);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(1);
             map.SizeInBits.ShouldBe(8);
             offset.ShouldBe(i);
         }
@@ -65,14 +61,12 @@ public class BinaryMapTests
     public void CreateAndAutoExpand()
     {
         var map = BinaryMap.Empty;
-        bool found;
         int offset;
         map.SizeInBits.ShouldBe(8);
         map.Sizes.ShouldBe((1, 0));
         {
             // add a 1 bit field
-            (found, map, offset) = map.AssignField(1);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(1);
             map.SizeInBits.ShouldBe(8);
             map.Sizes.ShouldBe((1, 0));
             map.State.ShouldBe(Fill.Part);
@@ -80,32 +74,28 @@ public class BinaryMapTests
         }
         {
             // add a 4 bit field
-            (found, map, offset) = map.AssignField(4);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(4);
             map.SizeInBits.ShouldBe(8);
             map.State.ShouldBe(Fill.Part);
             offset.ShouldBe(4);
         }
         {
             // add a 2 bit field
-            (found, map, offset) = map.AssignField(2);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(2);
             map.SizeInBits.ShouldBe(8);
             map.State.ShouldBe(Fill.Part);
             offset.ShouldBe(2);
         }
         {
             // add a 1 bit field
-            (found, map, offset) = map.AssignField(1);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(1);
             map.SizeInBits.ShouldBe(8);
             map.State.ShouldBe(Fill.Full);
             offset.ShouldBe(1);
         }
         {
             // add a 1 byte field
-            (found, map, offset) = map.AssignField(8);
-            found.ShouldBeTrue();
+            (map, offset) = map.AssignField(8);
             map.SizeInBits.ShouldBe(16);
             map.State.ShouldBe(Fill.Full);
             offset.ShouldBe(8);

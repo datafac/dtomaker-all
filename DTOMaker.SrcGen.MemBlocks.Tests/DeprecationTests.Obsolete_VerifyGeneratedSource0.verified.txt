@@ -95,12 +95,12 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0     8  LE    Double  Field1
-        //           8     1        Byte    Field1 (flags)
+        //     1     8     8  LE    Double  Field1
+        //           0     0                Field1 (hasValue)
         //     2    16     8  LE    Double  Field2
-        //           9     1        Byte    Field2 (flags)
+        //           0     1                Field2 (hasValue)
         //     3    24     8  LE    Double  Field3
-        //          10     1        Byte    Field3 (flags)
+        //           0     2                Field3 (hasValue)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -153,13 +153,12 @@ namespace MyOrg.Models.MemBlocks
         {
             get
             {
-                return Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
+                return Codec_Double_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(8, 1).Span, 1);
-                Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, value);
+                Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, value);
             }
         }
 
@@ -173,7 +172,6 @@ namespace MyOrg.Models.MemBlocks
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 1);
                 Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(16, 8).Span, value);
             }
         }
@@ -188,7 +186,6 @@ namespace MyOrg.Models.MemBlocks
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(10, 1).Span, 1);
                 Codec_Double_LE.WriteToSpan(_writableLocalBlock.Slice(24, 8).Span, value);
             }
         }

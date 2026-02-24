@@ -420,8 +420,8 @@ namespace T_ImplNameSpace_
         //##foreach (var member in entity.Members) {
         //##using var _ = NewScope(entity, member);
         //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_MemberBELE_    T_MemberTypeL7_ T_MemberName_
-        //##if(member.Kind == MemberKind.Struct) {
-        //        T_FlagsOffsetR4_     1        Byte    T_MemberName_ (flags)
+        //##if(member.NullAddress is not null) {
+        //        T_BitsFieldOffsetR4_  T_NullBitPositionR4_                T_MemberName_ (hasValue)
         //##}
         //##}
         // ------------------------------------------------------------
@@ -558,10 +558,6 @@ namespace T_ImplNameSpace_
         private const int T_RequiredCustomStructFieldOffset_ = 4;
         private const int T_NullableCustomStructFieldOffset_ = 8;
         private const int T_NullableNativeStructFieldOffset_ = 12;
-        private const int T_RequiredCustomStructFlagsOffset_ = 16;
-        private const int T_RequiredNativeStructFlagsOffset_ = 17;
-        private const int T_NullableCustomStructFlagsOffset_ = 18;
-        private const int T_NullableNativeStructFlagsOffset_ = 19;
 
         private const int T_NullableEntityFieldOffset_ = 64;
         private const int T_RequiredEntityFieldOffset_ = 128;
@@ -574,6 +570,9 @@ namespace T_ImplNameSpace_
 
         private const int T_FieldLength_ = 4;
         private const bool T_IsBigEndian_ = false;
+        private const int T_BitsFieldOffset_ = 0;
+        private const int T_BitsFieldLength_ = 4;
+        private const int T_NullBitPosition_ = 0;
         //##}
         //##foreach (var member in entity.Members) {
         //##using var _ = NewScope(entity, member);
@@ -588,23 +587,27 @@ namespace T_ImplNameSpace_
         {
             get
             {
-                byte flags = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFlagsOffset_, 1).Span);
-                if (flags == 0) return null;
+                bool hasValue = ((new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span)))).GetBit(T_NullBitPosition_);
+                if (!hasValue) return null;
                 T_NativeMemberType_ nativeValue = Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span);
                 return T_ConverterSpace_.T_ConverterName_.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
+                Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
+                if (newBits != oldBits)
+                {
+                    Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);
+                }
                 if (value.HasValue)
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_NullableCustomStructFlagsOffset_, 1).Span, 1);
                     T_NativeMemberType_ nativeValue = T_ConverterSpace_.T_ConverterName_.ToNative(value.Value);
                     Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
                 }
                 else
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_NullableCustomStructFlagsOffset_, 1).Span, 0);
                     _writableLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span.Clear();
                 }
             }
@@ -617,21 +620,26 @@ namespace T_ImplNameSpace_
         {
             get
             {
-                byte flags = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFlagsOffset_, 1).Span);
-                if (flags == 0) return null;
+                var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
+                bool hasValue = bits.GetBit(T_NullBitPosition_);
+                if (!hasValue) return null;
                 return Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span);
             }
             set
             {
                 ThrowIfFrozen();
+                Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
+                if (newBits != oldBits)
+                {
+                    Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);
+                }
                 if (value.HasValue)
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_NullableNativeStructFlagsOffset_, 1).Span, 1);
                     Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span, value.Value);
                 }
                 else
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_NullableNativeStructFlagsOffset_, 1).Span, 0);
                     _writableLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span.Clear();
                 }
             }
@@ -652,7 +660,6 @@ namespace T_ImplNameSpace_
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFlagsOffset_, 1).Span, 1);
                 T_NativeMemberType_ nativeValue = T_ConverterSpace_.T_ConverterName_.ToNative(value);
                 Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
             }
@@ -670,7 +677,6 @@ namespace T_ImplNameSpace_
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(T_RequiredNativeStructFlagsOffset_, 1).Span, 1);
                 Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span, value);
             }
         }

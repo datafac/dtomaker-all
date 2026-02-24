@@ -2,19 +2,36 @@
 
 namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
-public record FieldDef
+public abstract record FieldDef
 {
-    public int Sequence { get; init; }
-    public string Name { get; init; } = string.Empty;
+    public string Nameqqq { get; init; } = string.Empty;
     public int Offset { get; init; }
     public int Length { get; init; }
-    public bool IsFlagsByte { get; init; }
-    public FieldDef(int sequence, string name, int offset, int length, bool isFlagsByte)
+    public FieldDef(string name, int offset, int length)
     {
-        Sequence = sequence;
-        Name = name;
+        Nameqqq = name;
         Offset = offset;
         Length = length;
-        IsFlagsByte = isFlagsByte;
+    }
+
+}
+
+public record ExternalFieldDef : FieldDef
+{
+    public int Sequence { get; init; }
+    public BitAddress? NullAddress { get; init; }
+    public ExternalFieldDef(string name, int offset, int length, int sequence, BitAddress? nullAddress) : base(name, offset, length)
+    {
+        Sequence = sequence;
+        NullAddress = nullAddress;
+    }
+}
+
+public record InternalFieldDef : FieldDef
+{
+    public int Instance { get; init; }
+    public InternalFieldDef(string name, int offset, int length, int instance) : base(name, offset, length)
+    {
+        Instance = instance;
     }
 }

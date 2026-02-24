@@ -6,9 +6,6 @@ namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
 public record BlockMap
 {
-    public int BlockSize { get; init; }
-    public EquatableArray<FieldDef> Fields { get; init; } = EquatableArray<FieldDef>.Empty;
-
     public static bool Vacant(BitArray map, int position, int length)
     {
         for (int i = position; i < (position + length); i++)
@@ -28,6 +25,16 @@ public record BlockMap
         }
     }
 
+    public int BlockSize { get; init; }
+    public EquatableArray<FieldDef> Fields { get; init; } = EquatableArray<FieldDef>.Empty;
+
+    public BlockMapBuilder ToBuilder()
+    {
+        var builder = new BlockMapBuilder();
+        builder.AddFields(Fields);
+        return builder;
+    }
+
     private string? GetFirstValidationError()
     {
         var map = new BitArray(BlockSize);
@@ -36,7 +43,7 @@ public record BlockMap
             // check alignment
             if (field.Offset % field.Length != 0)
                 return
-                    $"Field '{field.Name}' incorrectly aligned (Offset={field.Offset},Length={field.Length})";
+                    $"Field incorrectly aligned (Offset={field.Offset},Length={field.Length})";
 
             // check memory overlaps
             var bytesNeeded = field.Length;
@@ -46,7 +53,7 @@ public record BlockMap
             }
             else
             {
-                return $"Field '{field.Name}' incorrectly mapped (Offset={field.Offset},Length={field.Length})";
+                return $"Field incorrectly mapped (Offset={field.Offset},Length={field.Length})";
             }
         }
 

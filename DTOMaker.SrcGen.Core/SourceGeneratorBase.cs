@@ -111,42 +111,6 @@ namespace DTOMaker.SrcGen.Core
             return Diagnostic.Create(DiagnosticsEN.DME01, location);
         }
 
-        private static int GetFieldLength(TypeFullName tfn)
-        {
-            string typeName = tfn.Impl.FullName;
-            switch (typeName)
-            {
-                case KnownType.SystemBoolean:
-                case KnownType.SystemByte:
-                case KnownType.SystemSByte:
-                    return 1;
-                case KnownType.SystemInt16:
-                case KnownType.SystemUInt16:
-                case KnownType.SystemChar:
-                case KnownType.SystemHalf:
-                    return 2;
-                case KnownType.SystemInt32:
-                case KnownType.SystemUInt32:
-                case KnownType.SystemSingle:
-                case KnownType.PairOfInt16:
-                    return 4;
-                case KnownType.SystemInt64:
-                case KnownType.SystemUInt64:
-                case KnownType.SystemDouble:
-                case KnownType.PairOfInt32:
-                    return 8;
-                case KnownType.SystemInt128:
-                case KnownType.SystemUInt128:
-                case KnownType.SystemGuid:
-                case KnownType.SystemDecimal:
-                case KnownType.PairOfInt64:
-                case KnownType.QuadOfInt32:
-                    return 16;
-                default:
-                    return 0;
-            }
-        }
-
         protected abstract ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location);
 
         private ParsedMember? GetParsedMember(GeneratorAttributeSyntaxContext ctx, SourceGeneratorParameters srcGenParams)
@@ -179,8 +143,6 @@ namespace DTOMaker.SrcGen.Core
             bool isObsolete = false;
             string obsoleteMessage = string.Empty;
             bool obsoleteIsError = false;
-            int fieldOffset = 0;
-            int fieldLength = 0;
             bool isBigEndian = false;
             NativeType nativeType = NativeType.Undefined;
             string? fieldJsonName = null;
@@ -251,11 +213,6 @@ namespace DTOMaker.SrcGen.Core
                 converterName = cpn.Name;
             }
 
-            if (fieldLength == 0)
-            {
-                fieldLength = GetFieldLength(tfn);
-            }
-
             if (sequence <= 0)
             {
                 diagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME04, location));
@@ -271,8 +228,6 @@ namespace DTOMaker.SrcGen.Core
                 ObsoleteInfo = isObsolete
                     ? new ObsoleteInformation() { Message = obsoleteMessage, IsError = obsoleteIsError }
                     : null,
-                FieldOffset = fieldOffset,
-                FieldLength = fieldLength,
                 IsBigEndian = isBigEndian,
                 ConverterSpace = converterSpace,
                 ConverterName = converterName,
@@ -470,7 +425,7 @@ namespace DTOMaker.SrcGen.Core
                         ObsoleteInfo = member.ObsoleteInfo,
                         Diagnostics = member.Diagnostics,
                         FieldOffset = member.FieldOffset,
-                        FlagsOffset = 0,
+                        NullAddress = null,
                         FieldLength = member.FieldLength,
                         IsBigEndian = member.IsBigEndian,
                         ConverterSpace = member.ConverterSpace,

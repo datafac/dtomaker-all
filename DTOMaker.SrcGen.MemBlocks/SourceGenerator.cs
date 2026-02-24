@@ -112,54 +112,82 @@ namespace DTOMaker.SrcGen.MemBlocks
             }
         }
 
+        private static int GetFieldLengthNotUsed(TypeFullName tfn)
+        {
+            string typeName = tfn.Impl.FullName;
+            switch (typeName)
+            {
+                case KnownType.SystemBoolean:
+                case KnownType.SystemByte:
+                case KnownType.SystemSByte:
+                    return 1;
+                case KnownType.SystemInt16:
+                case KnownType.SystemUInt16:
+                case KnownType.SystemChar:
+                case KnownType.SystemHalf:
+                    return 2;
+                case KnownType.SystemInt32:
+                case KnownType.SystemUInt32:
+                case KnownType.SystemSingle:
+                case KnownType.PairOfInt16:
+                    return 4;
+                case KnownType.SystemInt64:
+                case KnownType.SystemUInt64:
+                case KnownType.SystemDouble:
+                case KnownType.PairOfInt32:
+                    return 8;
+                case KnownType.SystemInt128:
+                case KnownType.SystemUInt128:
+                case KnownType.SystemGuid:
+                case KnownType.SystemDecimal:
+                case KnownType.PairOfInt64:
+                case KnownType.QuadOfInt32:
+                    return 16;
+                default:
+                    return 0;
+            }
+        }
+
+        private static int GetFieldLength(MemberKind kind, NativeType fieldType)
+        {
+            return kind switch
+            {
+                MemberKind.Entity or MemberKind.String or MemberKind.Binary => 64,
+                MemberKind.Struct => fieldType switch
+                {
+                    NativeType.Boolean
+                        or NativeType.Byte
+                        or NativeType.SByte => 1,
+                    NativeType.Int16
+                        or NativeType.UInt16
+                        or NativeType.Char
+                        or NativeType.Half => 2,
+                    NativeType.Int32
+                        or NativeType.UInt32
+                        or NativeType.PairOfInt16
+                        or NativeType.Single => 4,
+                    NativeType.Int64
+                        or NativeType.UInt64
+                        or NativeType.PairOfInt32
+                        or NativeType.Double => 8,
+                    NativeType.Decimal
+                        or NativeType.Int128
+                        or NativeType.UInt128
+                        or NativeType.PairOfInt64
+                        or NativeType.QuadOfInt32
+                        or NativeType.Guid => 16,
+                    NativeType.String
+                        or NativeType.Binary => 64,
+                    _ => 0,
+                },
+                _ => 0,
+            };
+        }
+
         protected override ParsedMember OnCustomizeParsedMember(ParsedMember parsedMember, Location location)
         {
-            bool updated = false;
-            int fieldLength = parsedMember.FieldLength;
-
-            // set default length for external (variable length) Octets and String
-            if (parsedMember.MemberType.MemberKind == MemberKind.String || parsedMember.MemberType.MemberKind == MemberKind.Binary)
-            {
-                fieldLength = BlobIdV1Size;
-                updated = true;
-            }
-            // set default length for entities
-            if (parsedMember.MemberType.MemberKind == MemberKind.Entity)
-            {
-                fieldLength = BlobIdV1Size;
-                updated = true;
-            }
-
-            // checks
-            List<Diagnostic> newDiagnostics = new();
-            if (!IsValidFieldLength(fieldLength))
-            {
-                newDiagnostics.Add(Diagnostic.Create(DME06, location));
-                updated = true;
-            }
-            if (parsedMember.FieldOffset < 0)
-            {
-                newDiagnostics.Add(Diagnostic.Create(DME07, location));
-                updated = true;
-            }
-            //if (parsedMember.IsNullable && parsedMember.MemberType.MemberKind == MemberKind.Struct)
-            //{
-            //    newDiagnostics.Add(Diagnostic.Create(DME08, location));
-            //    updated = true;
-            //}
-
-            if (updated)
-            {
-                return parsedMember with
-                {
-                    FieldLength = fieldLength,
-                    Diagnostics = new EquatableArray<Diagnostic>(parsedMember.Diagnostics.Concat(newDiagnostics)),
-                };
-            }
-            else
-            {
-                return parsedMember;
-            }
+            // nothing to do yet
+            return parsedMember;
         }
 
         private static Diagnostic? CheckMemberLayout(int blockLength, IEnumerable<OutputMember> members)
@@ -167,15 +195,14 @@ namespace DTOMaker.SrcGen.MemBlocks
             BitArray blockMap = new BitArray(blockLength);
             foreach (var member in members.OrderBy(m => m.Sequence))
             {
+                if (member.FieldOffset < 0)
+                    return Diagnostic.Create(DME07, member.Location);
+
                 if (member.FieldOffset + member.FieldLength > blockLength)
-                {
                     return Diagnostic.Create(DME13, member.Location);
-                }
 
                 if (member.FieldLength > 0 && (member.FieldOffset % member.FieldLength != 0))
-                {
                     return Diagnostic.Create(DME13, member.Location);
-                }
 
                 // check value bytes layout
                 for (var i = 0; i < member.FieldLength; i++)
@@ -189,29 +216,6 @@ namespace DTOMaker.SrcGen.MemBlocks
                     // not assigned
                     blockMap.Set(offset, true);
                 }
-
-                // check flags byte for structs only
-                if (member.Kind == MemberKind.Struct)
-                {
-                    if (member.FlagsOffset + 1 > blockLength)
-                    {
-                        return Diagnostic.Create(DME14, member.Location);
-                    }
-
-                    if (member.FieldLength > 0 && (member.FlagsOffset % 1 != 0))
-                    {
-                        return Diagnostic.Create(DME14, member.Location);
-                    }
-
-                    int offset = member.FlagsOffset;
-                    if (blockMap.Get(offset))
-                    {
-                        return Diagnostic.Create(DME14, member.Location);
-                    }
-
-                    // not assigned
-                    blockMap.Set(offset, true);
-                }
             }
             return null;
         }
@@ -220,37 +224,72 @@ namespace DTOMaker.SrcGen.MemBlocks
         {
             List<Diagnostic> newDiagnostics = new();
             // calculate field offsets
+            int flagBitsFieldLength = GetFieldLength(MemberKind.Struct, NativeType.UInt32);
+            int lastFlagBitsInstance = -1;
+            int lastFlagBitsPosition = 31;
             var memberMap = members.ToDictionary(m => m.Sequence);
-            List<BlockMapRequest> mapRequests = new();
+            var builder = new BlockMapBuilder();
             foreach (var member in members.OrderBy(m => m.Sequence))
             {
-                if (member.Kind == MemberKind.Struct)
+                int fieldLength = GetFieldLength(member.Kind, member.MemberType.NativeType);
+                if (!IsValidFieldLength(fieldLength))
                 {
-                    // allocate flags byte for all structs to support nullability and future features
-                    mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Value", member.Kind, member.MemberType.NativeType));
-                    mapRequests.Add(new BlockMapRequest(member.Sequence, $"{member.Name}_Flags", member.Kind, NativeType.Byte, true));
+                    newDiagnostics.Add(Diagnostic.Create(DME06, member.Location));
                 }
                 else
                 {
-                    mapRequests.Add(new BlockMapRequest(member.Sequence, member.Name, member.Kind, member.MemberType.NativeType));
+                    if (member.Kind == MemberKind.Struct)
+                    {
+                        // allocate null bit for all structs to support nullability
+                        lastFlagBitsPosition++;
+                        if (lastFlagBitsPosition >= 32)
+                        {
+                            lastFlagBitsInstance++;
+                            builder.AddField(
+                                new InternalFieldDef($"_NullBitsField{lastFlagBitsInstance:D2}", 0, flagBitsFieldLength, lastFlagBitsInstance));
+                            lastFlagBitsPosition = 0;
+                        }
+                        BitAddress nullAddress = new BitAddress(lastFlagBitsInstance, lastFlagBitsPosition, 0, 0);
+                        builder.AddField(
+                            new ExternalFieldDef(member.Name, 0, fieldLength, member.Sequence, nullAddress));
+                    }
+                    else
+                    {
+                        builder.AddField(
+                            new ExternalFieldDef(member.Name, 0, fieldLength, member.Sequence, null));
+                    }
                 }
             }
-            BlockMap blockMap = new BlockMapBuilder(null).AddRequests(mapRequests).Build();
-            foreach (var fd in blockMap.Fields.Array)
+            BlockMap blockMap = builder.Build();
+            Dictionary<int, InternalFieldDef> internalFieldDefs = new Dictionary<int, InternalFieldDef>();
+            foreach (FieldDef fd in blockMap.Fields.Array)
             {
-                if (fd.IsFlagsByte)
+                switch(fd)
                 {
-                    memberMap[fd.Sequence] = memberMap[fd.Sequence] with
-                    {
-                        FlagsOffset = fd.Offset,
-                    };
-                }
-                else
-                {
-                    memberMap[fd.Sequence] = memberMap[fd.Sequence] with
-                    {
-                        FieldOffset = fd.Offset,
-                    };
+                    case InternalFieldDef ifd:
+                        internalFieldDefs[ifd.Instance] = ifd;
+                        break;
+                    case ExternalFieldDef efd:
+                        BitAddress? nullAddr = efd.NullAddress;
+                        if (nullAddr is not null)
+                        {
+                            InternalFieldDef ifd = internalFieldDefs[nullAddr.Instance];
+                            memberMap[efd.Sequence] = memberMap[efd.Sequence] with
+                            {
+                                FieldOffset = fd.Offset,
+                                FieldLength = fd.Length,
+                                NullAddress = nullAddr with { FieldOffset = ifd.Offset, FieldLength = ifd.Length },
+                            };
+                        }
+                        else
+                        {
+                            memberMap[efd.Sequence] = memberMap[efd.Sequence] with
+                            {
+                                FieldOffset = fd.Offset,
+                                FieldLength = fd.Length,
+                            };
+                        }
+                        break;
                 }
             }
             int blockLength = blockMap.BlockSize;

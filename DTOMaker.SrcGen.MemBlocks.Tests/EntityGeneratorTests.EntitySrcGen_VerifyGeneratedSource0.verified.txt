@@ -98,10 +98,10 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0     8  LE    Int64   Field1
-        //           8     1        Byte    Field1 (flags)
-        //     2    12     4  LE    Int32   Field2
-        //           9     1        Byte    Field2 (flags)
+        //     1     8     8  LE    Int64   Field1
+        //           0     0                Field1 (hasValue)
+        //     2     4     4  LE    Int32   Field2
+        //           0     1                Field2 (hasValue)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -151,13 +151,12 @@ namespace MyOrg.Models.MemBlocks
         {
             get
             {
-                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 8).Span);
+                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(8, 1).Span, 1);
-                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(0, 8).Span, value);
+                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, value);
             }
         }
 
@@ -165,22 +164,27 @@ namespace MyOrg.Models.MemBlocks
         {
             get
             {
-                byte flags = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(9, 1).Span);
-                if (flags == 0) return null;
-                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(12, 4).Span);
+                var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
+                bool hasValue = bits.GetBit(1);
+                if (!hasValue) return null;
+                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
             }
             set
             {
                 ThrowIfFrozen();
+                Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
+                Bits32 newBits = oldBits.SetBit(1, value.HasValue);
+                if (newBits != oldBits)
+                {
+                    Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, newBits.Data);
+                }
                 if (value.HasValue)
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 1);
-                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(12, 4).Span, value.Value);
+                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, value.Value);
                 }
                 else
                 {
-                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(9, 1).Span, 0);
-                    _writableLocalBlock.Slice(12, 4).Span.Clear();
+                    _writableLocalBlock.Slice(4, 4).Span.Clear();
                 }
             }
         }
