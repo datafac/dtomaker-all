@@ -99,9 +99,9 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     8     8  LE    Int64   Field1
-        //           0     0                Field1 (hasValue)
+        //           0     0                Field1 (isNull bit)
         //     2     4     4  LE    Int32   Field2
-        //           0     1                Field2 (hasValue)
+        //           0     1                Field2 (isNull bit)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
@@ -165,15 +165,14 @@ namespace MyOrg.Models.MemBlocks
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                bool hasValue = bits.GetBit(1);
-                if (!hasValue) return null;
+                if (bits.GetBit(1)) return null;
                 return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
             }
             set
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                Bits32 newBits = oldBits.SetBit(1, value.HasValue);
+                Bits32 newBits = oldBits.SetBit(1, !value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, newBits.Data);

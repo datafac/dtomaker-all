@@ -21,10 +21,10 @@ public class RoundtripBasicTypeTests_Half
     public async Task<string> Roundtrip_HalfAsync(Half reqValue, Half? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_Half { Field1 = reqValue };
+        var orig = new SimpleDTO_Half { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
-        //orig.Field2.ShouldBe(optValue)
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_Half(buffers);
         copy.ShouldNotBeNull();
@@ -37,11 +37,11 @@ public class RoundtripBasicTypeTests_Half
             copy.ShouldBe(orig);
             copy.Field1.ShouldBe(reqValue);
         }
-        //copy.Field2.ShouldBe(optValue)
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 
-    [Fact] public async Task Roundtrip_Half_Defaults() => await Verifier.Verify(await Roundtrip_HalfAsync(default, default));
+    [Fact] public async Task Roundtrip_Half_Defaults() => await Verifier.Verify(await Roundtrip_HalfAsync(default, null));
     [Fact] public async Task Roundtrip_Half_Infinite() => await Verifier.Verify(await Roundtrip_HalfAsync(Half.PositiveInfinity, Half.NegativeInfinity));
     [Fact] public async Task Roundtrip_Half_UnitVals() => await Verifier.Verify(await Roundtrip_HalfAsync(Half.One, Half.NegativeOne));
     [Fact] public async Task Roundtrip_Half_Maximums_Net70() => await Verifier.Verify(await Roundtrip_HalfAsync(Half.MaxValue, Half.MinValue));

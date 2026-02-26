@@ -96,7 +96,7 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1    16    16  LE    PairOfInt64 Field1
-        //           0     0                Field1 (hasValue)
+        //           0     0                Field1 (isNull bit)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)

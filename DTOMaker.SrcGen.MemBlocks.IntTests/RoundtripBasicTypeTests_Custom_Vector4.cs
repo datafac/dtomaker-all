@@ -10,28 +10,32 @@ using Xunit;
 namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 
 [Entity(53)]
-public interface ISimpleDTO_Vector4 : IEntityBase { [Member(1, NativeType.QuadOfInt32, typeof(Vector4Converter))] Vector4 Value { get; } }
+public interface ISimpleDTO_Vector4 : IEntityBase
+{
+    [Member(1, NativeType.QuadOfInt32, typeof(DTOMaker.Converters.Numerics.Vector4Converter))] Vector4 Field1 { get; }
+    [Member(2, NativeType.QuadOfInt32, typeof(DTOMaker.Converters.Numerics.Vector4Converter))] Vector4? Field2 { get; }
+}
 
 public class RoundtripBasicTypeTests_Custom_Vector4
 {
-    public async Task<string> Roundtrip_Vector4Async(Vector4 reqValue)
+    public async Task<string> Roundtrip_Vector4Async(Vector4 reqValue, Vector4? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_Vector4 { Value = reqValue };
+        var orig = new SimpleDTO_Vector4 { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
-        orig.Value.ShouldBe(reqValue);
+        orig.Field1.ShouldBe(reqValue);
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_Vector4(buffers);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
-        copy.Value.ShouldBe(reqValue);
+        copy.Equals(orig).ShouldBeTrue();
+        copy.Field1.ShouldBe(reqValue);
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 
-    [Fact] public async Task Roundtrip_Vector4_Defaults() => await Verifier.Verify(Roundtrip_Vector4Async(default));
-    [Fact] public async Task Roundtrip_Vector4_Value001() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitX));
-    [Fact] public async Task Roundtrip_Vector4_Value002() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitY));
-    [Fact] public async Task Roundtrip_Vector4_Value003() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitZ));
-    [Fact] public async Task Roundtrip_Vector4_Value004() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitW));
+    [Fact] public async Task Roundtrip_Vector4_Defaults() => await Verifier.Verify(Roundtrip_Vector4Async(default, null));
+    [Fact] public async Task Roundtrip_Vector4_Value001() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitX, Vector4.UnitY));
+    [Fact] public async Task Roundtrip_Vector4_Value002() => await Verifier.Verify(Roundtrip_Vector4Async(Vector4.UnitZ, Vector4.UnitW));
 }
-

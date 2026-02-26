@@ -421,7 +421,7 @@ namespace T_ImplNameSpace_
         //##using var _ = NewScope(entity, member);
         //  T_MemberSequenceR4_  T_FieldOffsetR4_  T_FieldLengthR4_  T_MemberBELE_    T_MemberTypeL7_ T_MemberName_
         //##if(member.NullAddress is not null) {
-        //        T_BitsFieldOffsetR4_  T_NullBitPositionR4_                T_MemberName_ (hasValue)
+        //        T_BitsFieldOffsetR4_  T_NullBitPositionR4_                T_MemberName_ (isNull bit)
         //##}
         //##}
         // ------------------------------------------------------------
@@ -587,8 +587,8 @@ namespace T_ImplNameSpace_
         {
             get
             {
-                bool hasValue = ((new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span)))).GetBit(T_NullBitPosition_);
-                if (!hasValue) return null;
+                var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
+                if (bits.GetBit(T_NullBitPosition_)) return null;
                 T_NativeMemberType_ nativeValue = Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span);
                 return T_ConverterSpace_.T_ConverterName_.ToCustom(nativeValue);
             }
@@ -596,7 +596,7 @@ namespace T_ImplNameSpace_
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, !value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);
@@ -621,15 +621,14 @@ namespace T_ImplNameSpace_
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                bool hasValue = bits.GetBit(T_NullBitPosition_);
-                if (!hasValue) return null;
+                if (bits.GetBit(T_NullBitPosition_)) return null;
                 return Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span);
             }
             set
             {
                 ThrowIfFrozen();
                 Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
-                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, value.HasValue);
+                Bits32 newBits = oldBits.SetBit(T_NullBitPosition_, !value.HasValue);
                 if (newBits != oldBits)
                 {
                     Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span, newBits.Data);

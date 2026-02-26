@@ -20,10 +20,10 @@ public class RoundtripBasicTypeTests_Single
     public async Task<string> Roundtrip_SingleAsync(Single reqValue, Single? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_Single { Field1 = reqValue };
+        var orig = new SimpleDTO_Single { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
-        //orig.Field2.ShouldBe(optValue)
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_Single(buffers);
         copy.ShouldNotBeNull();
@@ -36,11 +36,11 @@ public class RoundtripBasicTypeTests_Single
             copy.ShouldBe(orig);
             copy.Field1.ShouldBe(reqValue);
         }
-        //copy.Field2.ShouldBe(optValue)
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 
-    [Fact] public async Task Roundtrip_Single_Defaults() => await Verifier.Verify(await Roundtrip_SingleAsync(default, default));
+    [Fact] public async Task Roundtrip_Single_Defaults() => await Verifier.Verify(await Roundtrip_SingleAsync(default, null));
     [Fact] public async Task Roundtrip_Single_Infinite() => await Verifier.Verify(await Roundtrip_SingleAsync(Single.PositiveInfinity, Single.NegativeInfinity));
     [Fact] public async Task Roundtrip_Single_UnitVals() => await Verifier.Verify(await Roundtrip_SingleAsync(1, -1));
 #if NET7_0_OR_GREATER

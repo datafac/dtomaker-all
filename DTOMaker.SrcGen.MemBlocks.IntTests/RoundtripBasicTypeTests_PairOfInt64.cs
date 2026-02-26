@@ -21,19 +21,20 @@ public class RoundtripBasicTypeTests_PairOfInt64
     public async Task<string> Roundtrip_PairOfInt64Async(PairOfInt64 reqValue, PairOfInt64? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_PairOfInt64 { Field1 = reqValue };
+        var orig = new SimpleDTO_PairOfInt64 { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
-        //orig.Field2.ShouldBe(optValue)
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_PairOfInt64(buffers);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 
-    [Fact] public async Task Roundtrip_PairOfInt64_Defaults() => await Verifier.Verify(await Roundtrip_PairOfInt64Async(default, default));
+    [Fact] public async Task Roundtrip_PairOfInt64_Defaults() => await Verifier.Verify(await Roundtrip_PairOfInt64Async(default, null));
     [Fact]
     public async Task Roundtrip_PairOfInt64_Maximums()
         => await Verifier.Verify(await Roundtrip_PairOfInt64Async(

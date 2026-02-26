@@ -21,19 +21,20 @@ public class RoundtripBasicTypeTests_PairOfInt32
     public async Task<string> Roundtrip_PairOfInt32Async(PairOfInt32 reqValue, PairOfInt32? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_PairOfInt32 { Field1 = reqValue };
+        var orig = new SimpleDTO_PairOfInt32 { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
-        //orig.Field2.ShouldBe(optValue)
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_PairOfInt32(buffers);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 
-    [Fact] public async Task Roundtrip_PairOfInt32_Defaults() => await Verifier.Verify(await Roundtrip_PairOfInt32Async(default, default));
+    [Fact] public async Task Roundtrip_PairOfInt32_Defaults() => await Verifier.Verify(await Roundtrip_PairOfInt32Async(default, null));
     [Fact]
     public async Task Roundtrip_PairOfInt32_Maximums()
         => await Verifier.Verify(await Roundtrip_PairOfInt32Async(

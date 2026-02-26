@@ -20,13 +20,15 @@ To ensure the long-term sustainability of this project, we are introducing
 an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). This
 fee is required to be paid by all users of this project who generate revenue
 above defined thresholds. Non-revenue-generating use of the project, such as by 
-hobbyists, charities and other non-profit organisations, any any organisation with
-reveune below the minimum threshold, are not required to pay the fee.
+hobbyists, charities and other non-profit organisations, and any organisation with
+revenue below the minimum threshold, are not required to pay the fee.
 
 You can [pay via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 
-We plan to enforce the maintenance fee starting with the release of V2.0 binaries. At that 
-time, a EULA on binary releases requires payment of the Maintenance Fee.
+We plan to enforce the maintenance fee starting with the next release, V2.0, which is 
+currently in development and pre-released. At that time, a EULA on binary releases 
+requires payment of the Maintenance Fee. The last version not affected by the 
+Maintenance will be V1.10. 
 
 Please see the Open Source Maintenance Fee section below for more information.
 
@@ -125,4 +127,4 @@ the project and helps ensure its long-term health.
 To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
 
 ## Miscellaneous
-- This readme was last updated 20th Feb 2026.
+- This readme was last updated 26th Feb 2026.

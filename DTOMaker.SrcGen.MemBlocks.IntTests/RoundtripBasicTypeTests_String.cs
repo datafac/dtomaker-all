@@ -20,16 +20,17 @@ public class RoundtripBasicTypeTests_String
     public async Task<string> Roundtrip_StringAsync(String reqValue, String? optValue)
     {
         using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-        var orig = new SimpleDTO_String { Field1 = reqValue };
+        var orig = new SimpleDTO_String { Field1 = reqValue, Field2 = optValue };
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
-        //orig.Field2.ShouldBe(optValue)
+        orig.Field2.ShouldBe(optValue);
         var buffers = orig.GetBuffers();
         var copy = new SimpleDTO_String(buffers);
         copy.ShouldNotBeNull();
         await copy.UnpackAll(dataStore);
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
+        copy.Field2.ShouldBe(optValue);
         return buffers.ToDisplay();
     }
 

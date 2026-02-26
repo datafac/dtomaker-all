@@ -96,11 +96,11 @@ namespace MyOrg.Models.MemBlocks
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
         //     1     8     8  LE    Double  Field1
-        //           0     0                Field1 (hasValue)
+        //           0     0                Field1 (isNull bit)
         //     2    16     8  LE    Double  Field2
-        //           0     1                Field2 (hasValue)
+        //           0     1                Field2 (isNull bit)
         //     3    24     8  LE    Double  Field3
-        //           0     2                Field3 (hasValue)
+        //           0     2                Field3 (isNull bit)
         // ------------------------------------------------------------
 
         protected MyDTO(BlockHeader header) : base(header)
