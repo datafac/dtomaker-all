@@ -127,4 +127,4 @@ the project and helps ensure its long-term health.
 To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
 
 ## Miscellaneous
-- This readme was last updated 26th Feb 2026.
+- This readme was last updated 27th Feb 2026.
