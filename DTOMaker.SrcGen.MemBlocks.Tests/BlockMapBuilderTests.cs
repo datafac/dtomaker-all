@@ -91,16 +91,17 @@ public class BlockMapBuilderTests
     [InlineData(NativeType.QuadOfInt32, 32, 16, 16)]
     [InlineData(NativeType.Guid, 32, 16, 16)]
     [InlineData(NativeType.Decimal, 32, 16, 16)]
-    // todo entity, string and binary
+    [InlineData(NativeType.String, 128, 64, 64)]
+    [InlineData(NativeType.Binary, 128, 64, 64)]
     //[InlineData(NativeType.RawB10, 32, 16, 16)]
     //[InlineData(NativeType.RawB20, 64, 32, 32)]
     //[InlineData(NativeType.RawB40, 128, 64, 64)]
     //[InlineData(NativeType.RawB80, 256, 128, 128)]
-    public void Add2ndField(NativeType fieldType, int expectedBlockSize, int expectedOffset, int fieldLength)
+    public void Add2ndField(NativeType fieldType, int expectedBlockSize, int expectedOffset, int expectedLength)
     {
         var commands = ImmutableList<ExternalFieldDef>.Empty
             .Add(new ExternalFieldDef("Field1", 0, 1, 1, null))
-            .Add(new ExternalFieldDef("Field2", 0, fieldLength, 2, null));
+            .Add(new ExternalFieldDef("Field2", 0, expectedLength, 2, null));
 
         BlockMap blockMap = new BlockMapBuilder().AddFields(commands).Build();
         blockMap.BlockSize.ShouldBe(expectedBlockSize);
@@ -110,7 +111,7 @@ public class BlockMapBuilderTests
         field0.Length.ShouldBe(1);
         FieldDef field1 = blockMap.Fields.Array[1];
         field1.Offset.ShouldBe(expectedOffset);
-        field1.Length.ShouldBe(fieldLength);
+        field1.Length.ShouldBe(expectedLength);
         blockMap.IsValid(true).ShouldBeTrue();
     }
 

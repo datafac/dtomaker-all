@@ -163,11 +163,6 @@ namespace DTOMaker.SrcGen.Core
             }
 
             // ---------- MemBlocks tokens ----------
-            // todo
-            //private const int T_BitsFieldOffset_ = 0;
-            //private const int T_BitsFieldLength_ = 4;
-            //private const int T_NullBitPosition_ = 0;
-            // end todo
             tokens["FieldLength"] = member.FieldLength;
             tokens[BuildTokenName(member, "FieldOffset")] = member.FieldOffset;
             tokens["BitsFieldOffset"] = member.NullAddress?.FieldOffset ?? -1;

@@ -36,8 +36,6 @@ namespace DTOMaker.Models.BinaryTree.Tests
         [InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
         public void AddValues(ImplKind impl, string order, byte maxDepth)
         {
-            // todo max depth tests
-
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
 
             IBinaryTree<string, long>? tree = null;
