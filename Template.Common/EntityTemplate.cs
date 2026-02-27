@@ -27,3 +27,4 @@ namespace T_BaseIntfNameSpace_
     }
 }
 // todo move template entity interface here
+
