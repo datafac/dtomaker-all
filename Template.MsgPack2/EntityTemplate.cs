@@ -86,6 +86,7 @@ namespace T_BaseImplNameSpace_
 //##}
 namespace T_ImplNameSpace_
 {
+    //##if (entity.DerivedEntities.Count > 0) {
     [MessagePackObject]
     //##foreach (var derived in entity.DerivedEntities) {
     //##using var _ = NewScope(derived);
@@ -93,7 +94,6 @@ namespace T_ImplNameSpace_
     [Union(T_ConcreteEntity_.EntityId, typeof(T_ConcreteEntity_))]
     //##}
     //##}
-    //##if (entity.DerivedEntities.Count > 0) {
     public abstract partial class T_AbstractEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_AbstractEntity_>
     {
         //##if (false) {
@@ -608,6 +608,7 @@ namespace T_ImplNameSpace_
 
     }
     //##} else {
+    [MessagePackObject]
     public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>
     {
         //##if (false) {

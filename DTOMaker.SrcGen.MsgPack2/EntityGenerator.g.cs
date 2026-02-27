@@ -88,17 +88,17 @@ public sealed class EntityGenerator : EntityGeneratorBase
         }
         Emit("namespace T_ImplNameSpace_");
         Emit("{");
-        Emit("    [MessagePackObject]");
-        foreach (var derived in entity.DerivedEntities)
-        {
-            using var _ = NewScope(derived);
-            if (derived.DerivedEntities.Count == 0)
-            {
-                Emit("    [Union(T_ConcreteEntity_.EntityId, typeof(T_ConcreteEntity_))]");
-            }
-        }
         if (entity.DerivedEntities.Count > 0)
         {
+            Emit("    [MessagePackObject]");
+            foreach (var derived in entity.DerivedEntities)
+            {
+                using var _ = NewScope(derived);
+                if (derived.DerivedEntities.Count == 0)
+                {
+                    Emit("    [Union(T_ConcreteEntity_.EntityId, typeof(T_ConcreteEntity_))]");
+                }
+            }
             Emit("    public abstract partial class T_AbstractEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_AbstractEntity_>");
             Emit("    {");
             if (false)
@@ -739,6 +739,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         }
         else
         {
+            Emit("    [MessagePackObject]");
             Emit("    public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>");
             Emit("    {");
             if (false)
