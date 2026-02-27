@@ -23,7 +23,7 @@
             return value switch
             {
                 null => "null",
-                string s => s, // todo? identifers vs. literals
+                string s => s,
                 bool b => b ? "true" : "false",
                 char c => $"'{c}'",
                 float f => $"{f}F",
@@ -35,7 +35,7 @@
                 long l => $"{l}L",
                 ulong ul => $"{ul}UL",
                 decimal m => $"{m}M",
-                System.Guid g => $"new Guid(\"{(g.ToString("D"))}\")",
+                System.Guid g => $"new Guid(\"{g:D}\")",
                 _ => $"{value}"
             };
         }

@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 
 namespace DTOMaker.Runtime.MsgPack2
 {
-    [MessagePackObject]
     public abstract class EntityBase : IEntityBase, IEquatable<EntityBase>
     {
         public const int EntityId = 0;
