@@ -1,4 +1,5 @@
-﻿using DTOMaker.Models;
+﻿using DataFac.Memory;
+using DTOMaker.Models;
 using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace T_MemberTypeIntfSpace_
@@ -26,5 +27,20 @@ namespace T_BaseIntfNameSpace_
         T_NativeMemberType_ BaseField1 { get; set; }
     }
 }
-// todo move template entity interface here
+namespace T_IntfNameSpace_
+{
+    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_
+    {
+        T_NativeMemberType_? T_NullableNativeStructMemberName_ { get; set; }
+        T_NativeMemberType_ T_RequiredNativeStructMemberName_ { get; set; }
+        T_CustomMemberType_? T_NullableCustomStructMemberName_ { get; set; }
+        T_CustomMemberType_ T_RequiredCustomStructMemberName_ { get; set; }
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
+        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
+        Octets? T_NullableBinaryMemberName_ { get; set; }
+        Octets T_RequiredBinaryMemberName_ { get; set; }
+        string? T_NullableStringMemberName_ { get; set; }
+        string T_RequiredStringMemberName_ { get; set; }
+    }
+}
 

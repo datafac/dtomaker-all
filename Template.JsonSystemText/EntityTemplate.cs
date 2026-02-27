@@ -121,22 +121,6 @@ namespace T_BaseImplNameSpace_
         public override int GetHashCode() => base.GetHashCode();
     }
 }
-namespace T_IntfNameSpace_
-{
-    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_
-    {
-        T_NativeMemberType_? T_NullableNativeStructMemberName_ { get; set; }
-        T_NativeMemberType_ T_RequiredNativeStructMemberName_ { get; set; }
-        T_CustomMemberType_? T_NullableCustomStructMemberName_ { get; set; }
-        T_CustomMemberType_ T_RequiredCustomStructMemberName_ { get; set; }
-        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }
-        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
-        Octets? T_NullableBinaryMemberName_ { get; set; }
-        Octets T_RequiredBinaryMemberName_ { get; set; }
-        string? T_NullableStringMemberName_ { get; set; }
-        string T_RequiredStringMemberName_ { get; set; }
-    }
-}
 //##}
 namespace T_ImplNameSpace_
 {

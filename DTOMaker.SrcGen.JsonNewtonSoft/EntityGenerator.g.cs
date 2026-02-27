@@ -120,22 +120,6 @@ public partial class EntityGenerator
             Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
             Emit("}");
-            Emit("namespace T_IntfNameSpace_");
-            Emit("{");
-            Emit("    public interface T_EntityIntfName_ : T_BaseIntfNameSpace_.T_BaseIntfName_");
-            Emit("    {");
-            Emit("        T_NativeMemberType_? T_NullableNativeStructMemberName_ { get; set; }");
-            Emit("        T_NativeMemberType_ T_RequiredNativeStructMemberName_ { get; set; }");
-            Emit("        T_CustomMemberType_? T_NullableCustomStructMemberName_ { get; set; }");
-            Emit("        T_CustomMemberType_ T_RequiredCustomStructMemberName_ { get; set; }");
-            Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? T_NullableEntityMemberName_ { get; set; }");
-            Emit("        T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }");
-            Emit("        Octets? T_NullableBinaryMemberName_ { get; set; }");
-            Emit("        Octets T_RequiredBinaryMemberName_ { get; set; }");
-            Emit("        string? T_NullableStringMemberName_ { get; set; }");
-            Emit("        string T_RequiredStringMemberName_ { get; set; }");
-            Emit("    }");
-            Emit("}");
         }
         Emit("namespace T_ImplNameSpace_");
         Emit("{");
