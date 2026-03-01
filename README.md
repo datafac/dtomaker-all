@@ -17,11 +17,11 @@ serialization protocols.
 ## Open Source Maintenance Fee Introduction
 
 To ensure the long-term sustainability of this project, we are introducing
-an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). This
-fee is required to be paid by all users of this project who generate revenue
-above defined thresholds. Non-revenue-generating use of the project, such as by 
-hobbyists, charities and other non-profit organisations, and any organisation with
-revenue below the minimum threshold, are not required to pay the fee.
+an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). 
+
+The Fee applies only to Users that use the Software as part of revenue-generating
+activities and have an annual gross revenue greater than or equal to US$10,000. 
+Users whose annual gross revenue is less than US$10,000 are exempt from this Fee. 
 
 You can [pay via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 

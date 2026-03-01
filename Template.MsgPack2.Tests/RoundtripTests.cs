@@ -104,8 +104,8 @@ namespace Template_MessagePack.Tests
             orig.Data1 = new Octets(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
             orig.Data2 = new Octets(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
 
-            ReadOnlyMemory<byte> buffer = MessagePackSerializer.Serialize(orig);
-            var copy  = MessagePackSerializer.Deserialize<SanboxDTO>(buffer);
+            ReadOnlyMemory<byte> buffer = MessagePackSerializer.Serialize(orig, null, TestContext.Current.CancellationToken);
+            var copy  = MessagePackSerializer.Deserialize<SanboxDTO>(buffer, null, TestContext.Current.CancellationToken);
 
             copy.ShouldNotBeNull();
             copy.Equals(orig).ShouldBeTrue();
