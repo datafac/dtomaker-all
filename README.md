@@ -10,27 +10,27 @@
 
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
 
+## TLDR
+
 This project contains model-driven compile-time source generators for quickly creating 
 and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
 serialization protocols.
 
-## Open Source Maintenance Fee Introduction
+## Open Source Declaration
 
-To ensure the long-term sustainability of this project, we are introducing
-an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org). 
+This is an open source project. This means that you are free to use the source code
+and released binaries within the terms of the license. Use of such constitutes agreement
+to the license terms.
 
-The Fee applies only to Users that use the Software as part of revenue-generating
-activities and have an annual gross revenue greater than or equal to US$10,000. 
-Users whose annual gross revenue is less than US$10,000 are exempt from this Fee. 
+This project is maintained by developers who enjoy doing this. Please remember that we
+are not paid to do this, and that developers are real humans that  families, homes, 
+vehicles and other expenses.
 
-You can [pay via GitHub Sponsors](https://github.com/sponsors/Psiman62).
+If you find this project useful in any way, including generating revenue for your
+organisation, we ask that you consider sponsoring this project financially. We leave
+it up to you to decide how much. Any amount is appreciated.
 
-We plan to enforce the maintenance fee starting with the next release, V2.0, which is 
-currently in development and pre-released. At that time, a EULA on binary releases 
-requires payment of the Maintenance Fee. The last version not affected by the 
-Maintenance will be V1.10. 
-
-Please see the Open Source Maintenance Fee section below for more information.
+You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 
 ## Features
 - Models defined via C# interfaces with attributes.
@@ -109,22 +109,5 @@ flowchart TB
 # License
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
-## Open Source Maintenance Fee
-
-![OSMF](osmf-192.png)
-
-This project participates in the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org).
-
-The source code is freely available under the terms of the LICENSE. To
-support sustainable maintenance, use of the project’s official releases
-in revenue-generating activities requires adherence to the
-[Open Source Maintenance Fee](./OSMFEULA.txt).
-
-In short: if you use this project as part of generating revenue, the
-Maintenance Fee applies. The fee directly supports the people maintaining
-the project and helps ensure its long-term health.
-
-To pay the Maintenance Fee, [become a Sponsor](https://github.com/sponsors/Psiman62).
-
 ## Miscellaneous
-- This readme was last updated 27th Feb 2026.
+- This readme was last updated 3rd Mar 2026.
