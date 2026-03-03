@@ -7,14 +7,17 @@
 ![NuGet Downloads](https://img.shields.io/nuget/dt/DTOMaker.Models)
 ![GitHub License](https://img.shields.io/github/license/Datafac/dtomaker-all)
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
+![GitHub Repo stars](https://img.shields.io/github/stars/datafac/dtomaker-all)
 
 *Warning: This is pre-release software under active development. Breaking changes may occur.*
-
-## TLDR
 
 This project contains model-driven compile-time source generators for quickly creating 
 and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
 serialization protocols.
+
+The objective of these generators is to improve developer productivity, saving time and 
+reducing errors incurred maintaining boilerplate DTO code, by allowing developers to focus
+on the more interesting data model design, rather than on coding the implementations.
 
 ## Open Source Declaration
 
@@ -22,9 +25,9 @@ This is an open source project. This means that you are free to use the source c
 and released binaries within the terms of the license. Use of such constitutes agreement
 to the license terms.
 
-This project is maintained by developers who enjoy doing this. Please remember that we
-are not paid to do this, and that developers are real humans that  families, homes, 
-vehicles and other expenses.
+This project is maintained by unpaid developers who enjoy doing this. Please remember that 
+developers are ordinary people, probably much like you, that have families, homes, vehicles 
+and other everyday expenses.
 
 If you find this project useful in any way, including generating revenue for your
 organisation, we ask that you consider sponsoring this project financially. We leave

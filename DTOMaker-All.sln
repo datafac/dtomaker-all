@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
-		OSMFEULA.txt = OSMFEULA.txt
 		projscan.json = projscan.json
 		README.md = README.md
 		t2g.cmd = t2g.cmd
