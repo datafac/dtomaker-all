@@ -5,20 +5,20 @@ using System;
 namespace TestOrg.TestApp.Models
 {
     [Entity(2)]
-    public interface INamedVariantSet : IEntityBase
+    public interface IVarSet : IEntityBase
     {
-        [Member(1)] INamedVariantNode RootNode { get; set; }
+        [Member(1)][Name("set")] IVarSetNode Root { get; set; }
     }
 
     [Entity(3)]
-    public interface INamedVariantNode : IEntityBase
+    public interface IVarSetNode : IEntityBase
     {
-        [Member(1)] int Count { get; set; }
-        [Member(2)] byte Depth { get; set; }
-        [Member(3)] string Key { get; set; }
-        [Member(4)] IVarBase Value { get; set; }
-        [Member(5)] INamedVariantNode? Left { get; set; }
-        [Member(6)] INamedVariantNode? Right { get; set; }
+        [Member(1)][Name("N")] int Count { get; set; }
+        [Member(2)][Name("D")] byte Depth { get; set; }
+        [Member(3)][Name("key")] string Key { get; set; }
+        [Member(4)][Name("val")] IVarBase Value { get; set; }
+        [Member(5)][Name("L")] IVarSetNode? Left { get; set; }
+        [Member(6)][Name("R")] IVarSetNode? Right { get; set; }
     }
 
     [Entity(4)]
@@ -29,27 +29,42 @@ namespace TestOrg.TestApp.Models
     [Entity(5)]
     public interface IVarBoolean : IVarBase
     {
-        [Member(1)] Boolean Value { get; set; }
+        [Member(1)][Name("val")] Boolean Value { get; set; }
     }
 
     [Entity(6)]
     public interface IVarString : IVarBase
     {
-        [Member(1)] String Value { get; set; }
+        [Member(1)][Name("val")] String Value { get; set; }
     }
 
     [Entity(7)]
     public interface IVarInt64 : IVarBase
     {
-        [Member(1)] Int64 Value { get; set; }
+        [Member(1)][Name("val")] Int64 Value { get; set; }
     }
 }
 
+namespace TestOrg.TestApp.Models.JsonNewtonSoft
+{
+    public partial class VarSetNode : IBinaryTree<string, IVarBase, VarSetNode>
+    {
+        IVarBase IBinaryTree<string, IVarBase, VarSetNode>.Value
+        {
+            get => Value;
+            set => Value = value is VarBase concrete
+                    ? VarBase.CreateFrom(concrete)
+                    : value is IVarBase contract
+                        ? VarBase.CreateFrom(contract)
+                        : throw new ArgumentException($"Unexpected argument: '{value}' [{value.GetType().Name}]", nameof(value));
+        }
+    }
+}
 namespace TestOrg.TestApp.Models.JsonSystemText
 {
-    public partial class NamedVariantNode : IBinaryTree<string, IVarBase, NamedVariantNode>
+    public partial class VarSetNode : IBinaryTree<string, IVarBase, VarSetNode>
     {
-        IVarBase IBinaryTree<string, IVarBase, NamedVariantNode>.Value
+        IVarBase IBinaryTree<string, IVarBase, VarSetNode>.Value
         {
             get => Value;
             set => Value = value is VarBase concrete
@@ -62,9 +77,9 @@ namespace TestOrg.TestApp.Models.JsonSystemText
 }
 namespace TestOrg.TestApp.Models.MsgPack2
 {
-    public partial class NamedVariantNode : IBinaryTree<string, IVarBase, NamedVariantNode>
+    public partial class VarSetNode : IBinaryTree<string, IVarBase, VarSetNode>
     {
-        IVarBase IBinaryTree<string, IVarBase, NamedVariantNode>.Value
+        IVarBase IBinaryTree<string, IVarBase, VarSetNode>.Value
         {
             get => Value;
             set => Value = value is VarBase concrete
@@ -77,9 +92,9 @@ namespace TestOrg.TestApp.Models.MsgPack2
 }
 namespace TestOrg.TestApp.Models.MemBlocks
 {
-    public partial class NamedVariantNode : IBinaryTree<string, IVarBase, NamedVariantNode>
+    public partial class VarSetNode : IBinaryTree<string, IVarBase, VarSetNode>
     {
-        IVarBase IBinaryTree<string, IVarBase, NamedVariantNode>.Value
+        IVarBase IBinaryTree<string, IVarBase, VarSetNode>.Value
         {
             get => Value;
             set => Value = value is VarBase concrete

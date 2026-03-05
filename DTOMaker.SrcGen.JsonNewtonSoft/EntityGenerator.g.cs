@@ -217,7 +217,34 @@ public partial class EntityGenerator
         Emit("");
         Emit("        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);");
         Emit("");
-        Emit("        public T_EntityImplName_() { }");
+        Emit("        public T_EntityImplName_()");
+        Emit("        {");
+        foreach (var member in entity.Members)
+        {
+            using var _ = NewScope(entity, member);
+            switch (member.Kind)
+            {
+                case MemberKind.Struct:
+                    break;
+                case MemberKind.Entity:
+                    if (member.IsNullable)
+                    {
+                    }
+                    else
+                    {
+                        Emit("            _T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_(); //.CreateFrom(source.T_RequiredEntityMemberName_);");
+                    }
+                    break;
+                case MemberKind.Binary:
+                    break;
+                case MemberKind.String:
+                    break;
+                default:
+                    Emit($"#error Implementation for {member.Name}.MemberKind '{member.Kind}' is missing");
+                    break;
+            } // switch
+        } // foreach
+        Emit("        }");
         Emit("        public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)");
         Emit("        {");
         foreach (var member in entity.Members)
@@ -451,7 +478,7 @@ public partial class EntityGenerator
                     else
                     {
                         Emit("        [JsonIgnore]");
-                        Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
+                        Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_; // = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");

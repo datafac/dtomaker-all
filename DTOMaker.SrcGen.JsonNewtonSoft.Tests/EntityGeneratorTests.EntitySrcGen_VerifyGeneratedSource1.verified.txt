@@ -64,7 +64,9 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         protected override IEntityBase OnPartCopy() => new Derived(this);
 
-        public Derived() { }
+        public Derived()
+        {
+        }
         public Derived(MyOrg.Models.IDerived source) : base(source)
         {
             _Field11 = source.Field11;

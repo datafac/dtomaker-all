@@ -1,0 +1,64 @@
+﻿{
+  "set": {
+    "N": 7,
+    "D": 3,
+    "key": "d",
+    "val": {
+      "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarInt64, DTOMaker.Models.BinaryTree.Tests",
+      "val": 234567
+    },
+    "L": {
+      "N": 3,
+      "D": 2,
+      "key": "b",
+      "val": {
+        "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarBoolean, DTOMaker.Models.BinaryTree.Tests",
+        "val": true
+      },
+      "L": {
+        "N": 1,
+        "D": 1,
+        "key": "a",
+        "val": {
+          "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarString, DTOMaker.Models.BinaryTree.Tests",
+          "val": "abcdef"
+        }
+      },
+      "R": {
+        "N": 1,
+        "D": 1,
+        "key": "c",
+        "val": {
+          "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarInt64, DTOMaker.Models.BinaryTree.Tests",
+          "val": 123456
+        }
+      }
+    },
+    "R": {
+      "N": 3,
+      "D": 2,
+      "key": "f",
+      "val": {
+        "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarBoolean, DTOMaker.Models.BinaryTree.Tests"
+      },
+      "L": {
+        "N": 1,
+        "D": 1,
+        "key": "e",
+        "val": {
+          "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarString, DTOMaker.Models.BinaryTree.Tests",
+          "val": "ghijkl"
+        }
+      },
+      "R": {
+        "N": 1,
+        "D": 1,
+        "key": "g",
+        "val": {
+          "$type": "TestOrg.TestApp.Models.JsonNewtonSoft.VarInt64, DTOMaker.Models.BinaryTree.Tests",
+          "val": 345678
+        }
+      }
+    }
+  }
+}

@@ -39,12 +39,14 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         /// <param name="_">The EntityBase instance to copy values from. Cannot be null.</param>
         public EntityBase(EntityBase _) { }
 
-        private volatile bool _frozen;
+        [JsonIgnore]
+        private volatile bool _frozenqqq;
 
         /// <summary>
         /// Gets a value indicating whether the object is in a frozen (read-only) state.
         /// </summary>
-        [JsonIgnore] public bool IsFrozen => _frozen;
+        [JsonIgnore]
+        public bool IsFrozen => _frozenqqq;
 
         /// <summary>
         /// Performs actions when the object is being frozen.
@@ -58,9 +60,9 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         /// exceptions. Calling this method multiple times has no additional effect.</remarks>
         public void Freeze()
         {
-            if (_frozen) return;
+            if (_frozenqqq) return;
             OnFreeze();
-            _frozen = true;
+            _frozenqqq = true;
         }
 
         /// <summary>
@@ -89,7 +91,7 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected T IfNotFrozen<T>(T value, [CallerMemberName] string? methodName = null)
         {
-            if (_frozen) ThrowIsFrozenException(methodName);
+            if (_frozenqqq) ThrowIsFrozenException(methodName);
             return value;
         }
 

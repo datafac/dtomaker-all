@@ -64,7 +64,9 @@ namespace MyOrg.Model3.JsonNewtonSoft
 
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
-        public MyDTO() { }
+        public MyDTO()
+        {
+        }
         public MyDTO(MyOrg.Model3.IMyDTO source) : base(source)
         {
             _Field41 = source.Field41.ToByteArray();

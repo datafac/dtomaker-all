@@ -64,7 +64,9 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
-        public MyDTO() { }
+        public MyDTO()
+        {
+        }
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
             _Field1 = DTOMaker.Models.ComplexConverter.ToNative(source.Field1);

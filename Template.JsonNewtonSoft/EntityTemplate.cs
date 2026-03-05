@@ -207,7 +207,29 @@ namespace T_ImplNameSpace_
 
         protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);
 
-        public T_EntityImplName_() { }
+        public T_EntityImplName_()
+        {
+            //##foreach (var member in entity.Members) {
+            //##using var _ = NewScope(entity, member);
+            //##switch(member.Kind) {
+            //##case MemberKind.Struct:
+            //##break;
+            //##case MemberKind.Entity:
+            //##if (member.IsNullable) {
+            //##} else {
+            _T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_(); //.CreateFrom(source.T_RequiredEntityMemberName_);
+            //##}
+            //##break;
+            //##case MemberKind.Binary:
+            //##break;
+            //##case MemberKind.String:
+            //##break;
+            //##default:
+            //##Emit($"#error Implementation for {member.Name}.MemberKind '{member.Kind}' is missing");
+            //##break;
+            //##} // switch
+            //##} // foreach
+        }
         public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)
         {
             //##foreach (var member in entity.Members) {
@@ -382,7 +404,7 @@ namespace T_ImplNameSpace_
         }
         //##} else {
         [JsonIgnore]
-        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
+        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_; // = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
