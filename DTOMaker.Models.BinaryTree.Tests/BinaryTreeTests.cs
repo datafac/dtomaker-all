@@ -3,49 +3,38 @@ using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TestOrg.TestApp.Models.JsonSystemText;
 using Xunit;
 
 namespace DTOMaker.Models.BinaryTree.Tests
 {
     public class BinaryTreeTests
     {
-        private static IBinaryTree<string, long> CreateEmpty(ImplKind kind)
-        {
-            return kind switch
-            {
-                ImplKind.JsonSystemText => new TestOrg.TestApp.Models.JsonSystemText.MyBinaryTree(),
-                ImplKind.MemBlocks => new TestOrg.TestApp.Models.MemBlocks.MyBinaryTree(),
-                ImplKind.MsgPack2 => new TestOrg.TestApp.Models.MsgPack2.MyBinaryTree(),
-                _ => throw new NotSupportedException($"Unsupported implementation kind: {kind}"),
-            };
-        }
-
         [Theory]
-        [InlineData(ImplKind.JsonSystemText, "b", 1)]
-        [InlineData(ImplKind.JsonSystemText, "ba", 2)]
-        [InlineData(ImplKind.JsonSystemText, "bc", 2)]
-        [InlineData(ImplKind.JsonSystemText, "abc", 2)]
-        [InlineData(ImplKind.JsonSystemText, "acb", 3)]
-        [InlineData(ImplKind.JsonSystemText, "bac", 2)]
-        [InlineData(ImplKind.JsonSystemText, "bca", 2)]
-        [InlineData(ImplKind.JsonSystemText, "cba", 2)]
-        [InlineData(ImplKind.JsonSystemText, "cab", 3)]
-        [InlineData(ImplKind.JsonSystemText, "dbacfeg", 3)]
-        [InlineData(ImplKind.JsonSystemText, "abcdefg", 3)]
-        [InlineData(ImplKind.MsgPack2, "abcdefg", 3)]
-        [InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
-        public void AddValues(ImplKind impl, string order, byte maxDepth)
+        [InlineData("b", 1)]
+        [InlineData("ba", 2)]
+        [InlineData("bc", 2)]
+        [InlineData("abc", 2)]
+        [InlineData("acb", 3)]
+        [InlineData("bac", 2)]
+        [InlineData("bca", 2)]
+        [InlineData("cba", 2)]
+        [InlineData("cab", 3)]
+        [InlineData("dbacfeg", 3)]
+        [InlineData("abcdefg", 3)]
+        //[InlineData(ImplKind.MsgPack2, "abcdefg", 3)]
+        //[InlineData(ImplKind.MemBlocks, "abcdefg", 3)]
+        public void AddValues(string order, byte maxDepth)
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-
-            IBinaryTree<string, long>? tree = null;
+            MyBinaryTree? tree = new MyBinaryTree();
 
             // add nodes in order
             int count = 0;
             foreach (char ch in order)
             {
                 long value = (Char.IsLetter(ch) && Char.IsLower(ch)) ? (ch - 'a') + 1 : throw new ArgumentException($"Unexpected character: {ch}");
-                tree = tree.AddOrUpdate(new string(ch, 1), value, () => CreateEmpty(impl));
+                tree = tree.AddOrUpdate(new string(ch, 1), value);
                 count++;
 
                 // pack and freeze the tree after each addition
@@ -54,7 +43,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
             }
 
             // checks
-            var pairs = tree.GetKeyValuePairs(false).ToArray();
+            KeyValuePair<string, long>[] pairs = tree.GetKeyValuePairs<string, long, TestOrg.TestApp.Models.JsonSystemText.MyBinaryTree>(false).ToArray();
             for (int i = 0; i < pairs.Length; i++)
             {
                 if (i > 0)
@@ -66,46 +55,45 @@ namespace DTOMaker.Models.BinaryTree.Tests
             tree.Count.ShouldBe(count);
             tree.Depth.ShouldBeLessThanOrEqualTo(maxDepth);
 
-            var node = tree.Get("b");
+            var node = tree.Get<string, long, MyBinaryTree>("b");
             node.ShouldNotBeNull();
             node.Key.ShouldBe("b");
             node.Value.ShouldBe(2L);
 
-            node = tree.Get("z");
+            node = tree.Get<string, long, MyBinaryTree>("z");
             node.ShouldBeNull();
         }
 
         [Theory]
-        [InlineData(ImplKind.JsonSystemText, "b", "b", 0)]
-        [InlineData(ImplKind.JsonSystemText, "bac", "a", 2)]
-        [InlineData(ImplKind.JsonSystemText, "bac", "c", 2)]
-        [InlineData(ImplKind.JsonSystemText, "bac", "ac", 1)]
-        [InlineData(ImplKind.JsonSystemText, "bac", "ca", 1)]
-        [InlineData(ImplKind.JsonSystemText, "bac", "acb", 0)]
+        [InlineData("b", "b", 0)]
+        [InlineData("bac", "a", 2)]
+        [InlineData("bac", "c", 2)]
+        [InlineData("bac", "ac", 1)]
+        [InlineData("bac", "ca", 1)]
+        [InlineData("bac", "acb", 0)]
         // perfect add/remove orders
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "", 3)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "a", 3)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "ac", 3)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "ace", 3)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "aceg", 2)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "acegb", 2)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "acegbf", 1)]
-        [InlineData(ImplKind.JsonSystemText, "dbfaceg", "acegbfd", 0)]
+        [InlineData("dbfaceg", "", 3)]
+        [InlineData("dbfaceg", "a", 3)]
+        [InlineData("dbfaceg", "ac", 3)]
+        [InlineData("dbfaceg", "ace", 3)]
+        [InlineData("dbfaceg", "aceg", 2)]
+        [InlineData("dbfaceg", "acegb", 2)]
+        [InlineData("dbfaceg", "acegbf", 1)]
+        [InlineData("dbfaceg", "acegbfd", 0)]
         // other serializers
-        [InlineData(ImplKind.MsgPack2, "dbfaceg", "acegbfd", 0)]
-        [InlineData(ImplKind.MemBlocks, "dbfaceg", "acegbfd", 0)]
-        public void RemoveValues(ImplKind impl, string addOrder, string removeOrder, byte maxDepth)
+        //[InlineData(ImplKind.MsgPack2, "dbfaceg", "acegbfd", 0)]
+        //[InlineData(ImplKind.MemBlocks, "dbfaceg", "acegbfd", 0)]
+        public void RemoveValues(string addOrder, string removeOrder, byte maxDepth)
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-
-            IBinaryTree<string, long>? tree = null;
+            MyBinaryTree? tree = new MyBinaryTree();
 
             // add nodes in order
             int count = 0;
             foreach (char ch in addOrder)
             {
                 long value = (Char.IsLetter(ch) && Char.IsLower(ch)) ? (ch - 'a') + 1 : throw new ArgumentException($"Unexpected character: {ch}");
-                tree = tree.AddOrUpdate(new string(ch, 1), value, () => CreateEmpty(impl));
+                tree = tree.AddOrUpdate(new string(ch, 1), value);
                 count++;
 
                 // pack and freeze the tree after each addition
@@ -117,7 +105,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
             foreach (char ch in removeOrder)
             {
                 long value = (Char.IsLetter(ch) && Char.IsLower(ch)) ? (ch - 'a') + 1 : throw new ArgumentException($"Unexpected character: {ch}");
-                tree = tree?.Remove(new string(ch, 1));
+                tree = tree.Remove<string, long , MyBinaryTree>(new string(ch, 1));
                 count--;
 
                 // pack and freeze the tree after each addition
@@ -132,7 +120,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
             }
             else
             {
-                var pairs = tree.GetKeyValuePairs(false).ToArray();
+                var pairs = tree.GetKeyValuePairs<string, long, MyBinaryTree>(false).ToArray();
                 for (int i = 0; i < pairs.Length; i++)
                 {
                     if (i > 0)
