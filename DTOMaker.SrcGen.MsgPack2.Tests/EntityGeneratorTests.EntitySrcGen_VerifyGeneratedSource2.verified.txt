@@ -128,6 +128,7 @@ namespace MyOrg.Model2.MsgPack2
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(MyDTO));
             result.Add(base.GetHashCode());
             result.Add(_Field31);
             result.Add(_Field32);

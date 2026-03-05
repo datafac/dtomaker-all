@@ -16,12 +16,13 @@ using System;
 namespace MyOrg.Models.MsgPack2
 {
     [MessagePackObject]
+    [Union(MyDTO.EntityId, typeof(MyDTO_Default))]
     [Union(Derived.EntityId, typeof(Derived))]
     public abstract partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
         public new const int EntityId = 1;
-
+        public static new MyDTO Empty => MyDTO_Default.Empty;
         public new static MyDTO CreateFrom(MyDTO source)
         {
             if (source.IsFrozen) return source;
@@ -110,6 +111,7 @@ namespace MyOrg.Models.MsgPack2
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(MyDTO));
             result.Add(base.GetHashCode());
             result.Add(_Field1);
             result.Add(_Field2);
@@ -126,5 +128,33 @@ namespace MyOrg.Models.MsgPack2
             return _hashCode.Value;
         }
 
+    }
+
+    [MessagePackObject]
+    internal sealed class MyDTO_Default : MyDTO, IEquatable<MyDTO_Default>
+    {
+        private static MyDTO_Default CreateEmpty()
+        {
+            var empty = new MyDTO_Default();
+            empty.Freeze();
+            return empty;
+        }
+        private static readonly MyDTO_Default _empty = CreateEmpty();
+        public static new MyDTO_Default Empty => _empty;
+        public MyDTO_Default() { }
+        public MyDTO_Default(MyDTO source) : base(source) { }
+        protected override IEntityBase OnPartCopy() => new MyDTO_Default(this);
+
+        public bool Equals(MyDTO_Default? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            return true;
+        }
+        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public static bool operator ==(MyDTO_Default? left, MyDTO_Default? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator !=(MyDTO_Default? left, MyDTO_Default? right) => left is not null ? !left.Equals(right) : (right is not null);
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

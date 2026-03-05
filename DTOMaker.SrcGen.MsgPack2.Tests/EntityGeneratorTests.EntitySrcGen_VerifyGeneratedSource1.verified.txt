@@ -116,6 +116,7 @@ namespace MyOrg.Models.MsgPack2
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(Derived));
             result.Add(base.GetHashCode());
             result.Add(_Field11);
             result.Add(_Field12);

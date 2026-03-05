@@ -89,6 +89,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
         if (entity.DerivedEntities.Count > 0)
         {
             Emit("    [MessagePackObject]");
+            Emit("    [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]");
             foreach (var derived in entity.DerivedEntities)
             {
                 using var _ = NewScope(derived);
@@ -119,7 +120,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             }
             Emit("");
             Emit("        public new const int EntityId = T_EntityId_;");
-            Emit("");
+            Emit("        public static new T_AbstractEntity_ Empty => T_AbstractEntity__Default.Empty;");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)");
             Emit("        {");
             Emit("            if (source.IsFrozen) return source;");
@@ -628,6 +629,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        private int CalcHashCode()");
             Emit("        {");
             Emit("            HashCode result = new HashCode();");
+            Emit("            result.Add(typeof(T_AbstractEntity_));");
             Emit("            result.Add(base.GetHashCode());");
             foreach (var member in entity.Members)
             {
@@ -734,6 +736,34 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        }");
             Emit("");
             Emit("    }");
+            Emit("");
+            Emit("    [MessagePackObject]");
+            Emit("    internal sealed class T_AbstractEntity__Default : T_AbstractEntity_, IEquatable<T_AbstractEntity__Default>");
+            Emit("    {");
+            Emit("        private static T_AbstractEntity__Default CreateEmpty()");
+            Emit("        {");
+            Emit("            var empty = new T_AbstractEntity__Default();");
+            Emit("            empty.Freeze();");
+            Emit("            return empty;");
+            Emit("        }");
+            Emit("        private static readonly T_AbstractEntity__Default _empty = CreateEmpty();");
+            Emit("        public static new T_AbstractEntity__Default Empty => _empty;");
+            Emit("        public T_AbstractEntity__Default() { }");
+            Emit("        public T_AbstractEntity__Default(T_AbstractEntity_ source) : base(source) { }");
+            Emit("        protected override IEntityBase OnPartCopy() => new T_AbstractEntity__Default(this);");
+            Emit("");
+            Emit("        public bool Equals(T_AbstractEntity__Default? other)");
+            Emit("        {");
+            Emit("            if (ReferenceEquals(this, other)) return true;");
+            Emit("            if (other is null) return false;");
+            Emit("            if (!base.Equals(other)) return false;");
+            Emit("            return true;");
+            Emit("        }");
+            Emit("        public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);");
+            Emit("        public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);");
+            Emit("        public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);");
+            Emit("        public override int GetHashCode() => base.GetHashCode();");
+            Emit("    }");
         }
         else
         {
@@ -744,7 +774,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             {
                 Emit("        private const string T_MemberObsoleteMessage_ = null;");
                 Emit("        private const bool T_MemberObsoleteIsError_ = false;");
-                Emit("        private const int T_EntityId_ = 2;");
+                Emit("        private const int T_EntityId_ = 3;");
                 Emit("        private const int KeyOffset = 10;");
                 Emit("        private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;");
                 Emit("        private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;");
@@ -1255,6 +1285,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        private int CalcHashCode()");
             Emit("        {");
             Emit("            HashCode result = new HashCode();");
+            Emit("            result.Add(typeof(T_ConcreteEntity_));");
             Emit("            result.Add(base.GetHashCode());");
             foreach (var member in entity.Members)
             {

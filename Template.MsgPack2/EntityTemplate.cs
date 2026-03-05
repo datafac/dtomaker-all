@@ -87,6 +87,7 @@ namespace T_ImplNameSpace_
 {
     //##if (entity.DerivedEntities.Count > 0) {
     [MessagePackObject]
+    [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]
     //##foreach (var derived in entity.DerivedEntities) {
     //##using var _ = NewScope(derived);
     //##if (derived.DerivedEntities.Count == 0) {
@@ -114,7 +115,7 @@ namespace T_ImplNameSpace_
         //##}
 
         public new const int EntityId = T_EntityId_;
-
+        public static new T_AbstractEntity_ Empty => T_AbstractEntity__Default.Empty;
         public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)
         {
             if (source.IsFrozen) return source;
@@ -520,6 +521,7 @@ namespace T_ImplNameSpace_
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(T_AbstractEntity_));
             result.Add(base.GetHashCode());
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
@@ -606,6 +608,34 @@ namespace T_ImplNameSpace_
         }
 
     }
+
+    [MessagePackObject]
+    internal sealed class T_AbstractEntity__Default : T_AbstractEntity_, IEquatable<T_AbstractEntity__Default>
+    {
+        private static T_AbstractEntity__Default CreateEmpty()
+        {
+            var empty = new T_AbstractEntity__Default();
+            empty.Freeze();
+            return empty;
+        }
+        private static readonly T_AbstractEntity__Default _empty = CreateEmpty();
+        public static new T_AbstractEntity__Default Empty => _empty;
+        public T_AbstractEntity__Default() { }
+        public T_AbstractEntity__Default(T_AbstractEntity_ source) : base(source) { }
+        protected override IEntityBase OnPartCopy() => new T_AbstractEntity__Default(this);
+
+        public bool Equals(T_AbstractEntity__Default? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            return true;
+        }
+        public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);
+        public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);
+        public override int GetHashCode() => base.GetHashCode();
+    }
     //##} else {
     [MessagePackObject]
     public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>
@@ -613,7 +643,7 @@ namespace T_ImplNameSpace_
         //##if (false) {
         private const string T_MemberObsoleteMessage_ = null;
         private const bool T_MemberObsoleteIsError_ = false;
-        private const int T_EntityId_ = 2;
+        private const int T_EntityId_ = 3;
         private const int KeyOffset = 10;
         private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;
         private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;
@@ -1027,6 +1057,7 @@ namespace T_ImplNameSpace_
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(T_ConcreteEntity_));
             result.Add(base.GetHashCode());
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);

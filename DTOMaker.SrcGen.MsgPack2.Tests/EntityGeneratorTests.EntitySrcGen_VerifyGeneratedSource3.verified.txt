@@ -116,6 +116,7 @@ namespace MyOrg.Model3.MsgPack2
         private int CalcHashCode()
         {
             HashCode result = new HashCode();
+            result.Add(typeof(MyDTO));
             result.Add(base.GetHashCode());
             result.Add(_Field41.Length);
 #if NET8_0_OR_GREATER
