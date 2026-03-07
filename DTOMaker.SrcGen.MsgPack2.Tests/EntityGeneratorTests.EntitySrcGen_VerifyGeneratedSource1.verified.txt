@@ -19,6 +19,9 @@ namespace MyOrg.Models.MsgPack2
     public sealed partial class Derived : MyOrg.Models.MsgPack2.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
 
+        /// <summary>
+        /// Represents the unique identifier for the entity type associated with this class.
+        /// </summary>
         public new const int EntityId = 2;
 
         private static Derived CreateEmpty()
@@ -28,8 +31,15 @@ namespace MyOrg.Models.MsgPack2
             return empty;
         }
         private static readonly Derived _empty = CreateEmpty();
+        /// <summary>
+        /// Gets an instance of the entity that represents an empty or default value.
+        /// </summary>
         public static new Derived Empty => _empty;
 
+        /// <summary>
+        /// Creates a new instance of the entity from the specified source, or returns the source if it is already
+        /// frozen.
+        /// </summary>
         public new static Derived CreateFrom(Derived source)
         {
             if (source.IsFrozen)
@@ -38,6 +48,10 @@ namespace MyOrg.Models.MsgPack2
                 return new Derived(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
+        /// is already a frozen concrete entity.
+        /// </summary>
         public new static Derived CreateFrom(MyOrg.Models.IDerived source)
         {
             if (source is Derived concrete && concrete.IsFrozen)
@@ -46,6 +60,10 @@ namespace MyOrg.Models.MsgPack2
                 return new Derived(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
+        /// identifier matches the expected value.
+        /// </summary>
         public new static Derived CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             if (entityId == MyOrg.Models.MsgPack2.Derived.EntityId)
@@ -54,8 +72,10 @@ namespace MyOrg.Models.MsgPack2
                 throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => 2;
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -63,9 +83,15 @@ namespace MyOrg.Models.MsgPack2
 
         protected override IEntityBase OnPartCopy() => new Derived(this);
 
+        /// <summary>
+        /// Initializes a new instance of the Derived class for deserialization purposes.
+        /// </summary>
         [SerializationConstructor]
         public Derived() { }
 
+        /// <summary>
+        /// Initializes a new instance of the Derived class by copying the values from the specified source.
+        /// </summary>
         public Derived(Derived source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -73,6 +99,10 @@ namespace MyOrg.Models.MsgPack2
             _Field12 = source._Field12;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Derived class by copying values from the specified source entity
+        /// interface.
+        /// </summary>
         public Derived(MyOrg.Models.IDerived source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -82,6 +112,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private string _Field11 = string.Empty;
+        /// <inheritdoc/>
         [Key(11)]
         public string Field11
         {
@@ -91,6 +122,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private string? _Field12;
+        /// <inheritdoc/>
         [Key(12)]
         public string? Field12
         {
@@ -99,6 +131,7 @@ namespace MyOrg.Models.MsgPack2
         }
 
 
+        /// <inheritdoc/>
         public bool Equals(Derived? other)
         {
             if (other is null) return false;
@@ -109,8 +142,11 @@ namespace MyOrg.Models.MsgPack2
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is Derived other && Equals(other);
+        /// <inheritdoc/>
         public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
@@ -125,6 +161,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private int? _hashCode;
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             if (!IsFrozen) return CalcHashCode();

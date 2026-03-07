@@ -171,8 +171,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            };");
             Emit("        }");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        protected override int OnGetEntityId() => T_EntityId_;");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        protected override void OnFreeze()");
             Emit("        {");
             Emit("            base.OnFreeze();");
@@ -356,6 +358,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -366,6 +369,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                                 Emit("            get => _T_NullableCustomStructMemberName_;");
                                 Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);");
                                 Emit("        }");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -381,6 +385,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_? _T_NullableNativeStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -399,6 +404,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -409,6 +415,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                                 Emit("            get => _T_RequiredCustomStructMemberName_;");
                                 Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);");
                                 Emit("        }");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -424,6 +431,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -442,6 +450,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -462,6 +471,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -486,6 +496,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             Emit("        private Octets? _T_NullableBinaryMemberName_;");
                             if (member.IsObsolete)
                             {
+                                Emit("        /// <inheritdoc/>");
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
                             }
                             Emit("        [Key(T_NullableBinaryMemberKey_)]");
@@ -499,6 +510,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -516,6 +528,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private string? _T_NullableStringMemberName_;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -531,6 +544,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private string _T_RequiredStringMemberName_ = string.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -550,6 +564,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 Emit("");
             }
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        public bool Equals(T_AbstractEntity_? other)");
             Emit("        {");
             Emit("            if (ReferenceEquals(this, other)) return true;");
@@ -622,8 +637,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            return true;");
             Emit("        }");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);");
+            Emit("        /// <inheritdoc/>");
             Emit("        public static bool operator ==(T_AbstractEntity_? left, T_AbstractEntity_? right) => left is not null ? left.Equals(right) : (right is null);");
+            Emit("        /// <inheritdoc/>");
             Emit("        public static bool operator !=(T_AbstractEntity_? left, T_AbstractEntity_? right) => left is not null ? !left.Equals(right) : (right is not null);");
             Emit("");
             Emit("        private int CalcHashCode()");
@@ -727,6 +745,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("");
             Emit("        [IgnoreMember]");
             Emit("        private int? _hashCode;");
+            Emit("        /// <inheritdoc/>");
             Emit("        public override int GetHashCode()");
             Emit("        {");
             Emit("            if (!IsFrozen) return CalcHashCode();");
@@ -789,6 +808,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 Emit("        private const int T_MemberDefaultValue_ = 0;");
             }
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Represents the unique identifier for the entity type associated with this class.");
+            Emit("        /// </summary>");
             Emit("        public new const int EntityId = T_EntityId_;");
             Emit("");
             Emit("        private static T_ConcreteEntity_ CreateEmpty()");
@@ -798,8 +820,15 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            return empty;");
             Emit("        }");
             Emit("        private static readonly T_ConcreteEntity_ _empty = CreateEmpty();");
+            Emit("        /// <summary>");
+            Emit("        /// Gets an instance of the entity that represents an empty or default value.");
+            Emit("        /// </summary>");
             Emit("        public static new T_ConcreteEntity_ Empty => _empty;");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the entity from the specified source, or returns the source if it is already");
+            Emit("        /// frozen.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)");
             Emit("        {");
             Emit("            if (source.IsFrozen)");
@@ -808,6 +837,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("                return new T_ConcreteEntity_(source);");
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it");
+            Emit("        /// is already a frozen concrete entity.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)");
             Emit("        {");
             Emit("            if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen)");
@@ -816,6 +849,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("                return new T_ConcreteEntity_(source);");
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity");
+            Emit("        /// identifier matches the expected value.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)");
             Emit("        {");
             Emit("            if (entityId == T_ImplNameSpace_.T_ConcreteEntity_.EntityId)");
@@ -824,8 +861,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("                throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);");
             Emit("        }");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        protected override int OnGetEntityId() => T_EntityId_;");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        protected override void OnFreeze()");
             Emit("        {");
             Emit("            base.OnFreeze();");
@@ -859,9 +898,15 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("");
             Emit("        protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_ConcreteEntity_ class for deserialization purposes.");
+            Emit("        /// </summary>");
             Emit("        [SerializationConstructor]");
             Emit("        public T_ConcreteEntity_() { }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_ConcreteEntity_ class by copying the values from the specified source.");
+            Emit("        /// </summary>");
             Emit("        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source)");
             Emit("        {");
             Emit("            if (source is null) throw new ArgumentNullException(nameof(source));");
@@ -931,6 +976,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             }
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_ConcreteEntity_ class by copying values from the specified source entity");
+            Emit("        /// interface.");
+            Emit("        /// </summary>");
             Emit("        public T_ConcreteEntity_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)");
             Emit("        {");
             Emit("            if (source is null) throw new ArgumentNullException(nameof(source));");
@@ -1012,6 +1061,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1022,6 +1072,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                                 Emit("            get => _T_NullableCustomStructMemberName_;");
                                 Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);");
                                 Emit("        }");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1037,6 +1088,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_? _T_NullableNativeStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1055,6 +1107,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1065,6 +1118,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                                 Emit("            get => _T_RequiredCustomStructMemberName_;");
                                 Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);");
                                 Emit("        }");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1080,6 +1134,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                             {
                                 Emit("        [IgnoreMember]");
                                 Emit("        private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;");
+                                Emit("        /// <inheritdoc/>");
                                 if (member.IsObsolete)
                                 {
                                     Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1098,6 +1153,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1118,6 +1174,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1140,6 +1197,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private Octets? _T_NullableBinaryMemberName_;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1155,6 +1213,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1172,6 +1231,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private string? _T_NullableStringMemberName_;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1187,6 +1247,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         {
                             Emit("        [IgnoreMember]");
                             Emit("        private string _T_RequiredStringMemberName_ = string.Empty;");
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -1206,6 +1267,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 Emit("");
             }
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        public bool Equals(T_ConcreteEntity_? other)");
             Emit("        {");
             Emit("            if (other is null) return false;");
@@ -1278,8 +1340,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            return true;");
             Emit("        }");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        public override bool Equals(object? obj) => obj is T_ConcreteEntity_ other && Equals(other);");
+            Emit("        /// <inheritdoc/>");
             Emit("        public static bool operator ==(T_ConcreteEntity_? left, T_ConcreteEntity_? right) => left is not null ? left.Equals(right) : (right is null);");
+            Emit("        /// <inheritdoc/>");
             Emit("        public static bool operator !=(T_ConcreteEntity_? left, T_ConcreteEntity_? right) => left is not null ? !left.Equals(right) : (right is not null);");
             Emit("");
             Emit("        private int CalcHashCode()");
@@ -1389,6 +1454,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("");
             Emit("        [IgnoreMember]");
             Emit("        private int? _hashCode;");
+            Emit("        /// <inheritdoc/>");
             Emit("        public override int GetHashCode()");
             Emit("        {");
             Emit("            if (!IsFrozen) return CalcHashCode();");

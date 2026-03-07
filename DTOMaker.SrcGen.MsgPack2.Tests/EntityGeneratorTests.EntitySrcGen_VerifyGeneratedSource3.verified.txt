@@ -19,6 +19,9 @@ namespace MyOrg.Model3.MsgPack2
     public sealed partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Model3.IMyDTO, IEquatable<MyDTO>
     {
 
+        /// <summary>
+        /// Represents the unique identifier for the entity type associated with this class.
+        /// </summary>
         public new const int EntityId = 4;
 
         private static MyDTO CreateEmpty()
@@ -28,8 +31,15 @@ namespace MyOrg.Model3.MsgPack2
             return empty;
         }
         private static readonly MyDTO _empty = CreateEmpty();
+        /// <summary>
+        /// Gets an instance of the entity that represents an empty or default value.
+        /// </summary>
         public static new MyDTO Empty => _empty;
 
+        /// <summary>
+        /// Creates a new instance of the entity from the specified source, or returns the source if it is already
+        /// frozen.
+        /// </summary>
         public new static MyDTO CreateFrom(MyDTO source)
         {
             if (source.IsFrozen)
@@ -38,6 +48,10 @@ namespace MyOrg.Model3.MsgPack2
                 return new MyDTO(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
+        /// is already a frozen concrete entity.
+        /// </summary>
         public new static MyDTO CreateFrom(MyOrg.Model3.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen)
@@ -46,6 +60,10 @@ namespace MyOrg.Model3.MsgPack2
                 return new MyDTO(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
+        /// identifier matches the expected value.
+        /// </summary>
         public new static MyDTO CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             if (entityId == MyOrg.Model3.MsgPack2.MyDTO.EntityId)
@@ -54,8 +72,10 @@ namespace MyOrg.Model3.MsgPack2
                 throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => 4;
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -63,9 +83,15 @@ namespace MyOrg.Model3.MsgPack2
 
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class for deserialization purposes.
+        /// </summary>
         [SerializationConstructor]
         public MyDTO() { }
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class by copying the values from the specified source.
+        /// </summary>
         public MyDTO(MyDTO source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -73,6 +99,10 @@ namespace MyOrg.Model3.MsgPack2
             _Field42 = source._Field42;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class by copying values from the specified source entity
+        /// interface.
+        /// </summary>
         public MyDTO(MyOrg.Model3.IMyDTO source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -82,6 +112,7 @@ namespace MyOrg.Model3.MsgPack2
 
         [IgnoreMember]
         private Octets _Field41 = Octets.Empty;
+        /// <inheritdoc/>
         [Key(1)]
         public Octets Field41
         {
@@ -91,6 +122,7 @@ namespace MyOrg.Model3.MsgPack2
 
         [IgnoreMember]
         private Octets? _Field42;
+        /// <inheritdoc/>
         [Key(2)]
         public Octets? Field42
         {
@@ -99,6 +131,7 @@ namespace MyOrg.Model3.MsgPack2
         }
 
 
+        /// <inheritdoc/>
         public bool Equals(MyDTO? other)
         {
             if (other is null) return false;
@@ -109,8 +142,11 @@ namespace MyOrg.Model3.MsgPack2
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        /// <inheritdoc/>
         public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
@@ -158,6 +194,7 @@ namespace MyOrg.Model3.MsgPack2
 
         [IgnoreMember]
         private int? _hashCode;
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             if (!IsFrozen) return CalcHashCode();

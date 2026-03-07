@@ -52,8 +52,10 @@ namespace MyOrg.Models.MsgPack2
             };
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => 1;
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -77,6 +79,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private Int32 _Field1;
+        /// <inheritdoc/>
         [Key(1)]
         public Int32 Field1
         {
@@ -86,6 +89,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private Int32? _Field2;
+        /// <inheritdoc/>
         [Key(2)]
         public Int32? Field2
         {
@@ -94,6 +98,7 @@ namespace MyOrg.Models.MsgPack2
         }
 
 
+        /// <inheritdoc/>
         public bool Equals(MyDTO? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -104,8 +109,11 @@ namespace MyOrg.Models.MsgPack2
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        /// <inheritdoc/>
         public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
@@ -120,6 +128,7 @@ namespace MyOrg.Models.MsgPack2
 
         [IgnoreMember]
         private int? _hashCode;
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             if (!IsFrozen) return CalcHashCode();

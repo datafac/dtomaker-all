@@ -160,8 +160,10 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => T_EntityId_;
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -296,6 +298,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [IgnoreMember]
         private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -305,6 +308,7 @@ namespace T_ImplNameSpace_
             get => _T_NullableCustomStructMemberName_;
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
         }
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -317,6 +321,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_NativeMemberType_? _T_NullableNativeStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -331,6 +336,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [IgnoreMember]
         private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -340,6 +346,7 @@ namespace T_ImplNameSpace_
             get => _T_RequiredCustomStructMemberName_;
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
         }
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -352,6 +359,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -368,6 +376,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [IgnoreMember]
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -385,6 +394,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -406,6 +416,7 @@ namespace T_ImplNameSpace_
         [IgnoreMember]
         private Octets? _T_NullableBinaryMemberName_;
         //##if (member.IsObsolete) {
+        /// <inheritdoc/>
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_NullableBinaryMemberKey_)]
@@ -417,6 +428,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -432,6 +444,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [IgnoreMember]
         private string? _T_NullableStringMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -444,6 +457,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private string _T_RequiredStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -462,6 +476,7 @@ namespace T_ImplNameSpace_
 
         //##}
 
+        /// <inheritdoc/>
         public bool Equals(T_AbstractEntity_? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -514,8 +529,11 @@ namespace T_ImplNameSpace_
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);
+        /// <inheritdoc/>
         public static bool operator ==(T_AbstractEntity_? left, T_AbstractEntity_? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(T_AbstractEntity_? left, T_AbstractEntity_? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
@@ -599,6 +617,7 @@ namespace T_ImplNameSpace_
 
         [IgnoreMember]
         private int? _hashCode;
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             if (!IsFrozen) return CalcHashCode();
@@ -658,6 +677,9 @@ namespace T_ImplNameSpace_
         private const int T_MemberDefaultValue_ = 0;
         //##}
 
+        /// <summary>
+        /// Represents the unique identifier for the entity type associated with this class.
+        /// </summary>
         public new const int EntityId = T_EntityId_;
 
         private static T_ConcreteEntity_ CreateEmpty()
@@ -667,8 +689,15 @@ namespace T_ImplNameSpace_
             return empty;
         }
         private static readonly T_ConcreteEntity_ _empty = CreateEmpty();
+        /// <summary>
+        /// Gets an instance of the entity that represents an empty or default value.
+        /// </summary>
         public static new T_ConcreteEntity_ Empty => _empty;
 
+        /// <summary>
+        /// Creates a new instance of the entity from the specified source, or returns the source if it is already
+        /// frozen.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)
         {
             if (source.IsFrozen)
@@ -677,6 +706,10 @@ namespace T_ImplNameSpace_
                 return new T_ConcreteEntity_(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
+        /// is already a frozen concrete entity.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
             if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen)
@@ -685,6 +718,10 @@ namespace T_ImplNameSpace_
                 return new T_ConcreteEntity_(source);
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
+        /// identifier matches the expected value.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             if (entityId == T_ImplNameSpace_.T_ConcreteEntity_.EntityId)
@@ -693,8 +730,10 @@ namespace T_ImplNameSpace_
                 throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => T_EntityId_;
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -723,9 +762,15 @@ namespace T_ImplNameSpace_
 
         protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);
 
+        /// <summary>
+        /// Initializes a new instance of the T_ConcreteEntity_ class for deserialization purposes.
+        /// </summary>
         [SerializationConstructor]
         public T_ConcreteEntity_() { }
 
+        /// <summary>
+        /// Initializes a new instance of the T_ConcreteEntity_ class by copying the values from the specified source.
+        /// </summary>
         public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -775,6 +820,10 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <summary>
+        /// Initializes a new instance of the T_ConcreteEntity_ class by copying values from the specified source entity
+        /// interface.
+        /// </summary>
         public T_ConcreteEntity_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -832,6 +881,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [IgnoreMember]
         private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -841,6 +891,7 @@ namespace T_ImplNameSpace_
             get => _T_NullableCustomStructMemberName_;
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
         }
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -853,6 +904,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_NativeMemberType_? _T_NullableNativeStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -867,6 +919,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [IgnoreMember]
         private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -876,6 +929,7 @@ namespace T_ImplNameSpace_
             get => _T_RequiredCustomStructMemberName_;
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
         }
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -888,6 +942,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -904,6 +959,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [IgnoreMember]
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -921,6 +977,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_ _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -941,6 +998,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [IgnoreMember]
         private Octets? _T_NullableBinaryMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -953,6 +1011,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -968,6 +1027,7 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         [IgnoreMember]
         private string? _T_NullableStringMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -980,6 +1040,7 @@ namespace T_ImplNameSpace_
         //##} else {
         [IgnoreMember]
         private string _T_RequiredStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -998,6 +1059,7 @@ namespace T_ImplNameSpace_
 
         //##}
 
+        /// <inheritdoc/>
         public bool Equals(T_ConcreteEntity_? other)
         {
             if (other is null) return false;
@@ -1050,8 +1112,11 @@ namespace T_ImplNameSpace_
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is T_ConcreteEntity_ other && Equals(other);
+        /// <inheritdoc/>
         public static bool operator ==(T_ConcreteEntity_? left, T_ConcreteEntity_? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(T_ConcreteEntity_? left, T_ConcreteEntity_? right) => left is not null ? !left.Equals(right) : (right is not null);
 
         private int CalcHashCode()
@@ -1141,6 +1206,7 @@ namespace T_ImplNameSpace_
 
         [IgnoreMember]
         private int? _hashCode;
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             if (!IsFrozen) return CalcHashCode();
