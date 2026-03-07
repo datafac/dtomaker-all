@@ -2,8 +2,6 @@
 # Builds, tests and publishes package(s)
 #
 
-# todo ubuntu-latest
-
 name: Build-Deploy
 
 on:
@@ -15,7 +13,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04 # todo latest
 
     steps:
     - name: Checkout

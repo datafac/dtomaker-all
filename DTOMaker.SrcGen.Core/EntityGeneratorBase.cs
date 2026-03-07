@@ -121,6 +121,10 @@ namespace DTOMaker.SrcGen.Core
         }
         private string BuildTokenName(OutputMember member, string name) => OnBuildTokenName(member, name);
 
+        protected IDisposable NewScope(IReadOnlyDictionary<string, object?> tokens)
+        {
+            return _tokenStack.NewScope(tokens);
+        }
         protected IDisposable NewScope(OutputEntity entity, OutputMember member)
         {
             string memberJsonName = member.FieldJsonName ?? $"_f{entity.ClassHeight:D2}_{member.Sequence:D3}";
@@ -237,7 +241,13 @@ namespace DTOMaker.SrcGen.Core
         protected abstract void OnGenerate(OutputEntity entity);
         public string GenerateSourceText(OutputEntity entity)
         {
-            using var _ = NewScope(entity);
+            var globalTokens = new Dictionary<string, object?>()
+            {
+                ["CopyrightYear"] = $"{DateTime.Now.Year:D4}",
+                ["CopyrightOwner"] = "ACME Software Ltd"
+            };
+            using var globalScope = NewScope(globalTokens);
+            using var entityScope = NewScope(entity);
             _builder.Clear();
             OnGenerate(entity);
             return _builder.ToString();
