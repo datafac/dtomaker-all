@@ -98,7 +98,7 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     4     4  LE    Int32   Field1
+        //     1     4     1  LE    Byte    Field1
         //           0     0                Field1 (isNull bit)
         // ------------------------------------------------------------
 
@@ -147,14 +147,14 @@ namespace MyOrg.Models.MemBlocks
         {
             get
             {
-                Int32 nativeValue = Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
+                Byte nativeValue = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 1).Span);
                 return DTOMaker.Models.DayOfWeekConverter.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
-                Int32 nativeValue = DTOMaker.Models.DayOfWeekConverter.ToNative(value);
-                Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, nativeValue);
+                Byte nativeValue = DTOMaker.Models.DayOfWeekConverter.ToNative(value);
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(4, 1).Span, nativeValue);
             }
         }
 

@@ -11,8 +11,8 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests;
 [Entity(41)]
 public interface ISimpleDTO_DayOfWeek : IEntityBase
 {
-    [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; }
-    [Member(2, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek? Field2 { get; }
+    [Member(1, NativeType.Byte, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; }
+    [Member(2, NativeType.Byte, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek? Field2 { get; }
 }
 
 public class RoundtripBasicTypeTests_Custom_DayOfWeek

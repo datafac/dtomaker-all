@@ -136,7 +136,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                     [Entity(1)]
                     public interface IMyDTO : IEntityBase
                     {
-                        [Member(1, NativeType.Int32, typeof(DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                        [Member(1, NativeType.Byte, typeof(DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
                     }
                 }
                 """;

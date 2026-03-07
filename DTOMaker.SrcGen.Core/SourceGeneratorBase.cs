@@ -166,7 +166,7 @@ namespace DTOMaker.SrcGen.Core
                         {
                             1 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; }),
                             3 => TryGetAttributeRequiredArgumentValue<int>(attributeData, location, 0, (value) => { sequence = value; })
-                                 ?? TryGetAttributeOptionalArgumentValue<int>(attributeData, location, 1, (value) => { nativeType = (NativeType)value; })
+                                 ?? TryGetAttributeOptionalArgumentValue<short>(attributeData, location, 1, (value) => { nativeType = (NativeType)value; })
                                  ?? TryGetAttributeOptionalArgumentValue<INamedTypeSymbol>(attributeData, location, 2, (value) => { converterFullName = value.ToDisplayString(); }),
                             _ => Diagnostic.Create(DiagnosticsEN.DME01, location),
                         };

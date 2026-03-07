@@ -81,9 +81,9 @@ namespace MyOrg.Models.MsgPack2
         }
 
         [IgnoreMember]
-        private Int32 _Field1;
+        private Byte _Field1;
         [Key(1)]
-        public Int32 Native_Field1
+        public Byte Native_Field1
         {
             get => _Field1;
             set => _Field1 = IfNotFrozen(value);
@@ -96,9 +96,9 @@ namespace MyOrg.Models.MsgPack2
         }
 
         [IgnoreMember]
-        private Int32? _Field2;
+        private Byte? _Field2;
         [Key(2)]
-        public Int32? Native_Field2
+        public Byte? Native_Field2
         {
             get => _Field2;
             set => _Field2 = IfNotFrozen(value);

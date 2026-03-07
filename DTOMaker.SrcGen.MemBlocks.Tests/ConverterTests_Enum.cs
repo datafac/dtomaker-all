@@ -16,7 +16,7 @@ public class ConverterTests_Enum
                 [Entity(1)]
                 public interface IMyDTO : IEntityBase
                 {
-                    [Member(1, NativeType.Int32, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
+                    [Member(1, NativeType.Byte, typeof(DTOMaker.Models.DayOfWeekConverter))] DayOfWeek Field1 { get; set; }
                 }
             }
             """;

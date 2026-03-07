@@ -79,7 +79,7 @@ namespace MyOrg.Models.JsonSystemText
 
         [JsonPropertyName("_f01_001")]
         [JsonInclude]
-        private Int32 _Field1 = default;
+        private Byte _Field1 = default;
         [JsonIgnore]
         public System.DayOfWeek Field1
         {
@@ -89,7 +89,7 @@ namespace MyOrg.Models.JsonSystemText
 
         [JsonPropertyName("_f01_002")]
         [JsonInclude]
-        private Int32? _Field2;
+        private Byte? _Field2;
         [JsonIgnore]
         public System.DayOfWeek? Field2
         {
