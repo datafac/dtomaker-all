@@ -88,6 +88,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("{");
         if (entity.DerivedEntities.Count > 0)
         {
+            Emit("    /// <summary>");
+            Emit("    /// Abstract class T_AbstractEntity_");
+            Emit("    /// </summary>");
             Emit("    [MessagePackObject]");
             Emit("    [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]");
             foreach (var derived in entity.DerivedEntities)
@@ -119,8 +122,18 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 Emit("        private const int T_MemberDefaultValue_ = 0;");
             }
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Represents the unique identifier for the entity type associated with this class.");
+            Emit("        /// </summary>");
             Emit("        public new const int EntityId = T_EntityId_;");
+            Emit("        /// <summary>");
+            Emit("        /// Gets a default empty concrete entity derived from this abstract entity.");
+            Emit("        /// </summary>");
             Emit("        public static new T_AbstractEntity_ Empty => T_AbstractEntity__Default.Empty;");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the entity from the specified source, or returns the source if it is already");
+            Emit("        /// frozen.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)");
             Emit("        {");
             Emit("            if (source.IsFrozen) return source;");
@@ -138,6 +151,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            };");
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it");
+            Emit("        /// is already a frozen concrete entity.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)");
             Emit("        {");
             Emit("            if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen) return concrete;");
@@ -155,6 +172,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("            };");
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity");
+            Emit("        /// identifier matches the expected value.");
+            Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)");
             Emit("        {");
             Emit("            return entityId switch");
@@ -206,8 +227,14 @@ public sealed class EntityGenerator : EntityGeneratorBase
             }
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_AbstractEntity_ class.");
+            Emit("        /// </summary>");
             Emit("        protected T_AbstractEntity_() { }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_AbstractEntity_ class by copying the values from the specified source.");
+            Emit("        /// </summary>");
             Emit("        protected T_AbstractEntity_(T_AbstractEntity_ source) : base(source)");
             Emit("        {");
             Emit("            if (source is null) throw new ArgumentNullException(nameof(source));");
@@ -277,6 +304,10 @@ public sealed class EntityGenerator : EntityGeneratorBase
             }
             Emit("        }");
             Emit("");
+            Emit("        /// <summary>");
+            Emit("        /// Initializes a new instance of the T_AbstractEntity_ class by copying values from the specified source entity");
+            Emit("        /// interface.");
+            Emit("        /// </summary>");
             Emit("        public T_AbstractEntity_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)");
             Emit("        {");
             Emit("            if (source is null) throw new ArgumentNullException(nameof(source));");
@@ -786,6 +817,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
         }
         else
         {
+            Emit("    /// <summary>");
+            Emit("    /// Concrete class T_ConcreteEntity_");
+            Emit("    /// </summary>");
             Emit("    [MessagePackObject]");
             Emit("    public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>");
             Emit("    {");
@@ -896,6 +930,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             }
             Emit("        }");
             Emit("");
+            Emit("        /// <inheritdoc/>");
             Emit("        protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);");
             Emit("");
             Emit("        /// <summary>");

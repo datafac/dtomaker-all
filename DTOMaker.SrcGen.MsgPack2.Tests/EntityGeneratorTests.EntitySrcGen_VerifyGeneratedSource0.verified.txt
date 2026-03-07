@@ -15,14 +15,27 @@ using System;
 
 namespace MyOrg.Models.MsgPack2
 {
+    /// <summary>
+    /// Abstract class MyDTO
+    /// </summary>
     [MessagePackObject]
     [Union(MyDTO.EntityId, typeof(MyDTO_Default))]
     [Union(Derived.EntityId, typeof(Derived))]
     public abstract partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
+        /// <summary>
+        /// Represents the unique identifier for the entity type associated with this class.
+        /// </summary>
         public new const int EntityId = 1;
+        /// <summary>
+        /// Gets a default empty concrete entity derived from this abstract entity.
+        /// </summary>
         public static new MyDTO Empty => MyDTO_Default.Empty;
+        /// <summary>
+        /// Creates a new instance of the entity from the specified source, or returns the source if it is already
+        /// frozen.
+        /// </summary>
         public new static MyDTO CreateFrom(MyDTO source)
         {
             if (source.IsFrozen) return source;
@@ -33,6 +46,10 @@ namespace MyOrg.Models.MsgPack2
             };
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
+        /// is already a frozen concrete entity.
+        /// </summary>
         public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
@@ -43,6 +60,10 @@ namespace MyOrg.Models.MsgPack2
             };
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
+        /// identifier matches the expected value.
+        /// </summary>
         public new static MyDTO CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             return entityId switch
@@ -61,8 +82,14 @@ namespace MyOrg.Models.MsgPack2
             base.OnFreeze();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class.
+        /// </summary>
         protected MyDTO() { }
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class by copying the values from the specified source.
+        /// </summary>
         protected MyDTO(MyDTO source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -70,6 +97,10 @@ namespace MyOrg.Models.MsgPack2
             _Field2 = source._Field2;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the MyDTO class by copying values from the specified source entity
+        /// interface.
+        /// </summary>
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));

@@ -86,6 +86,9 @@ namespace T_BaseImplNameSpace_
 namespace T_ImplNameSpace_
 {
     //##if (entity.DerivedEntities.Count > 0) {
+    /// <summary>
+    /// Abstract class T_AbstractEntity_
+    /// </summary>
     [MessagePackObject]
     [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]
     //##foreach (var derived in entity.DerivedEntities) {
@@ -114,8 +117,18 @@ namespace T_ImplNameSpace_
         private const int T_MemberDefaultValue_ = 0;
         //##}
 
+        /// <summary>
+        /// Represents the unique identifier for the entity type associated with this class.
+        /// </summary>
         public new const int EntityId = T_EntityId_;
+        /// <summary>
+        /// Gets a default empty concrete entity derived from this abstract entity.
+        /// </summary>
         public static new T_AbstractEntity_ Empty => T_AbstractEntity__Default.Empty;
+        /// <summary>
+        /// Creates a new instance of the entity from the specified source, or returns the source if it is already
+        /// frozen.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)
         {
             if (source.IsFrozen) return source;
@@ -131,6 +144,10 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
+        /// is already a frozen concrete entity.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
             if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen) return concrete;
@@ -146,6 +163,10 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <summary>
+        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
+        /// identifier matches the expected value.
+        /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             return entityId switch
@@ -190,8 +211,14 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <summary>
+        /// Initializes a new instance of the T_AbstractEntity_ class.
+        /// </summary>
         protected T_AbstractEntity_() { }
 
+        /// <summary>
+        /// Initializes a new instance of the T_AbstractEntity_ class by copying the values from the specified source.
+        /// </summary>
         protected T_AbstractEntity_(T_AbstractEntity_ source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -241,6 +268,10 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <summary>
+        /// Initializes a new instance of the T_AbstractEntity_ class by copying values from the specified source entity
+        /// interface.
+        /// </summary>
         public T_AbstractEntity_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)
         {
             if (source is null) throw new ArgumentNullException(nameof(source));
@@ -503,7 +534,7 @@ namespace T_ImplNameSpace_
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
             if (_T_NullableEntityMemberName_ != other.T_NullableEntityMemberName_) return false;
-            //##} else {
+                              //##} else {
             if (_T_RequiredEntityMemberName_ != other.T_RequiredEntityMemberName_) return false;
             //##}
             //##break;
@@ -656,6 +687,9 @@ namespace T_ImplNameSpace_
         public override int GetHashCode() => base.GetHashCode();
     }
     //##} else {
+    /// <summary>
+    /// Concrete class T_ConcreteEntity_
+    /// </summary>
     [MessagePackObject]
     public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>
     {
@@ -760,6 +794,7 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);
 
         /// <summary>

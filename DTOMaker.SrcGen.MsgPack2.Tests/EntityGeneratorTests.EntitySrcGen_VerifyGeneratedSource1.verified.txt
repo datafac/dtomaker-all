@@ -15,6 +15,9 @@ using System;
 
 namespace MyOrg.Models.MsgPack2
 {
+    /// <summary>
+    /// Concrete class Derived
+    /// </summary>
     [MessagePackObject]
     public sealed partial class Derived : MyOrg.Models.MsgPack2.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
@@ -81,6 +84,7 @@ namespace MyOrg.Models.MsgPack2
             base.OnFreeze();
         }
 
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new Derived(this);
 
         /// <summary>

@@ -15,6 +15,9 @@ using System;
 
 namespace MyOrg.Models.MsgPack2
 {
+    /// <summary>
+    /// Concrete class MyDTO
+    /// </summary>
     [MessagePackObject]
     public sealed partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
@@ -82,6 +85,7 @@ namespace MyOrg.Models.MsgPack2
             _Field1?.Freeze();
         }
 
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
         /// <summary>
