@@ -20,6 +20,9 @@ using System.Threading.Tasks;
 using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
+    /// <summary>
+    /// The MyDTO entity - the MemBlocks implementation of the MyOrg.Models.IMyDTO interface.
+    /// </summary>
     public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>, IMemBlocksEntity<MyDTO>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
@@ -27,7 +30,13 @@ namespace MyOrg.Models.MemBlocks
             public MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
+        /// <summary>
+        /// Gets the factory for the MyDTO entity.
+        /// </summary>
         public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
+        /// <summary>
+        /// Creates an instance if the MyDTO entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public static MyDTO CreateInstance(ReadOnlySequence<byte> buffers) => MyDTO.DeserializeFrom(buffers);
 
         private const long BlockStructureCode = 0x00000041;
@@ -38,6 +47,9 @@ namespace MyOrg.Models.MemBlocks
 
         private static readonly BlockHeader _header = BlockHeader.CreateNew(1, BlockStructureCode);
 
+        /// <summary>
+        /// Creates a required instance of the MyDTO entity (or derived entity) from the source.
+        /// </summary>
         public new static MyDTO CreateRequired(MyDTO source)
         {
             if (source.IsFrozen) return source;
@@ -47,11 +59,17 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the MyDTO entity (or derived entity) from the source.
+        /// </summary>
         public new static MyDTO? CreateNullable(MyDTO? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates a required instance of the MyDTO entity (or derived entity) from the source.
+        /// </summary>
         public new static MyDTO CreateRequired(MyOrg.Models.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
@@ -61,11 +79,17 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the MyDTO entity (or derived entity) from the source.
+        /// </summary>
         public new static MyDTO? CreateNullable(MyOrg.Models.IMyDTO? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates an instance if the MyDTO entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public new static MyDTO DeserializeFrom(ReadOnlySequence<byte> buffers)
         {
             SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
@@ -75,21 +99,28 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => 1;
+        /// <inheritdoc/>
         protected override int OnGetClassHeight() => ClassHeight;
+        /// <inheritdoc/>
         protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnPack(IDataStore dataStore)
         {
             await base.OnPack(dataStore);
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
         {
             await base.OnUnpack(dataStore, depth);
@@ -102,29 +133,53 @@ namespace MyOrg.Models.MemBlocks
         //           0     0                Field1 (isNull bit)
         // ------------------------------------------------------------
 
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity.
+        /// </summary>
         protected MyDTO(BlockHeader header) : base(header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
+
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity.
+        /// </summary>
         public MyDTO() : base(_header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
 
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source instance.
+        /// </summary>
         protected MyDTO(BlockHeader header, MyDTO source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
         }
+
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source instance.
+        /// </summary>
         public MyDTO(MyDTO source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source interface.
+        /// </summary>
         protected MyDTO(BlockHeader header, MyOrg.Models.IMyDTO source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             this.Field1 = source.Field1;
         }
+
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source interface.
+        /// </summary>
         public MyDTO(MyOrg.Models.IMyDTO source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source.
+        /// </summary>
         protected MyDTO(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
         {
             var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
@@ -140,9 +195,18 @@ namespace MyOrg.Models.MemBlocks
                 _writableLocalBlock = Memory<byte>.Empty;
             }
         }
+
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by copying from the source.
+        /// </summary>
         internal MyDTO(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+
+        /// <summary>
+        /// Creates a new instance of the MyDTO entity by deserializing the buffers.
+        /// </summary>
         public MyDTO(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
+        /// <inheritdoc/>
         public System.DayOfWeek Field1
         {
             get
@@ -159,6 +223,7 @@ namespace MyOrg.Models.MemBlocks
         }
 
 
+        /// <inheritdoc/>
         public bool Equals(MyDTO? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -167,9 +232,13 @@ namespace MyOrg.Models.MemBlocks
             if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
+        /// <inheritdoc/>
         public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
 
     }

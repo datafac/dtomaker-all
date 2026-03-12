@@ -29,6 +29,8 @@ using System.Text;
 using System.Threading.Tasks;
 using T_ImplNameSpace_;
 //##if(false) {
+#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace DataFac.Memory
@@ -217,9 +219,13 @@ namespace T_BaseImplNameSpace_
         public override int GetHashCode() => base.GetHashCode();
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 //##}
 namespace T_ImplNameSpace_
 {
+    /// <summary>
+    /// The T_EntityImplName_ entity - the MemBlocks implementation of the T_IntfNameSpace_.T_EntityIntfName_ interface.
+    /// </summary>
     public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>, IMemBlocksEntity<T_EntityImplName_>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>
@@ -227,7 +233,13 @@ namespace T_ImplNameSpace_
             public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
+        /// <summary>
+        /// Gets the factory for the T_EntityImplName_ entity.
+        /// </summary>
         public IMemBlocksEntityFactory<T_EntityImplName_> GetFactory() => _factory;
+        /// <summary>
+        /// Creates an instance if the T_EntityImplName_ entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);
 
         //##if(false) {
@@ -245,6 +257,9 @@ namespace T_ImplNameSpace_
 
         private static readonly BlockHeader _header = BlockHeader.CreateNew(T_EntityId_, BlockStructureCode);
 
+        /// <summary>
+        /// Creates a required instance of the T_EntityImplName_ entity (or derived entity) from the source.
+        /// </summary>
         public new static T_EntityImplName_ CreateRequired(T_EntityImplName_ source)
         {
             if (source.IsFrozen) return source;
@@ -258,11 +273,17 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the T_EntityImplName_ entity (or derived entity) from the source.
+        /// </summary>
         public new static T_EntityImplName_? CreateNullable(T_EntityImplName_? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates a required instance of the T_EntityImplName_ entity (or derived entity) from the source.
+        /// </summary>
         public new static T_EntityImplName_ CreateRequired(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
             if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;
@@ -276,11 +297,17 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the T_EntityImplName_ entity (or derived entity) from the source.
+        /// </summary>
         public new static T_EntityImplName_? CreateNullable(T_IntfNameSpace_.T_EntityIntfName_? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates an instance if the T_EntityImplName_ entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public new static T_EntityImplName_ DeserializeFrom(ReadOnlySequence<byte> buffers)
         {
             SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
@@ -294,11 +321,16 @@ namespace T_ImplNameSpace_
             };
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => T_EntityId_;
+        /// <inheritdoc/>
         protected override int OnGetClassHeight() => ClassHeight;
+        /// <inheritdoc/>
         protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
@@ -325,6 +357,7 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnPack(IDataStore dataStore)
         {
             await base.OnPack(dataStore);
@@ -361,6 +394,7 @@ namespace T_ImplNameSpace_
             //##}
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
         {
             await base.OnUnpack(dataStore, depth);
@@ -409,15 +443,25 @@ namespace T_ImplNameSpace_
         //##}
         // ------------------------------------------------------------
 
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity.
+        /// </summary>
         protected T_EntityImplName_(BlockHeader header) : base(header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
+
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity.
+        /// </summary>
         public T_EntityImplName_() : base(_header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
 
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source instance.
+        /// </summary>
         protected T_EntityImplName_(BlockHeader header, T_EntityImplName_ source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
@@ -466,8 +510,15 @@ namespace T_ImplNameSpace_
             //##} // switch
             //##}
         }
+
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source instance.
+        /// </summary>
         public T_EntityImplName_(T_EntityImplName_ source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source interface.
+        /// </summary>
         protected T_EntityImplName_(BlockHeader header, T_IntfNameSpace_.T_EntityIntfName_ source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
@@ -516,8 +567,15 @@ namespace T_ImplNameSpace_
             //##} // switch
             //##}
         }
+
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source interface.
+        /// </summary>
         public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source.
+        /// </summary>
         protected T_EntityImplName_(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
         {
             var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
@@ -533,7 +591,15 @@ namespace T_ImplNameSpace_
                 _writableLocalBlock = Memory<byte>.Empty;
             }
         }
+
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source.
+        /// </summary>
         internal T_EntityImplName_(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+
+        /// <summary>
+        /// Creates a new instance of the T_EntityImplName_ entity by deserializing the buffers.
+        /// </summary>
         public T_EntityImplName_(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
         //##if(false) {
@@ -563,6 +629,7 @@ namespace T_ImplNameSpace_
         //##case MemberKind.Struct:
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -596,6 +663,7 @@ namespace T_ImplNameSpace_
             }
         }
         //##} else {
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -629,6 +697,7 @@ namespace T_ImplNameSpace_
         //##}
         //##} else {
         //##if (member.IsCustom) {
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -647,6 +716,7 @@ namespace T_ImplNameSpace_
             }
         }
         //##} else {
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -690,6 +760,7 @@ namespace T_ImplNameSpace_
             }
         }
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -730,6 +801,7 @@ namespace T_ImplNameSpace_
             }
         }
         private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_RequiredEntityMemberName_ = null;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -761,6 +833,7 @@ namespace T_ImplNameSpace_
             _T_NullableBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);
         }
         private Octets? _T_NullableBinaryMemberName_;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -784,6 +857,7 @@ namespace T_ImplNameSpace_
 
         }
         private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -814,6 +888,7 @@ namespace T_ImplNameSpace_
 #endif
         }
         private string? _T_NullableStringMemberName_;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -841,6 +916,7 @@ namespace T_ImplNameSpace_
 #endif
         }
         private string _T_RequiredStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
@@ -858,6 +934,7 @@ namespace T_ImplNameSpace_
 
         //##}
 
+        /// <inheritdoc/>
         public bool Equals(T_EntityImplName_? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -866,9 +943,13 @@ namespace T_ImplNameSpace_
             if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is T_EntityImplName_ other && Equals(other);
+        /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
+        /// <inheritdoc/>
         public static bool operator ==(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? !left.Equals(right) : (right is not null);
 
     }

@@ -26,6 +26,8 @@ public sealed class EntityGenerator : EntityGeneratorBase
         Emit("");
         if (false)
         {
+            Emit("#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
+            Emit("#pragma warning disable CS0618 // Type or member is obsolete");
             Emit("using T_CustomMemberType_ = System.DayOfWeek;");
             Emit("using T_NativeMemberType_ = System.Int32;");
             Emit("namespace T_MemberTypeImplSpace_");
@@ -83,6 +85,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
             Emit("}");
+            Emit("#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
         }
         Emit("namespace T_ImplNameSpace_");
         Emit("{");

@@ -30,6 +30,8 @@ public partial class EntityGenerator
         Emit("using T_ImplNameSpace_;");
         if (false)
         {
+            Emit("#pragma warning disable CS0618 // Type or member is obsolete");
+            Emit("#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
             Emit("using T_CustomMemberType_ = System.DayOfWeek;");
             Emit("using T_NativeMemberType_ = System.Int32;");
             Emit("namespace DataFac.Memory");
@@ -219,9 +221,13 @@ public partial class EntityGenerator
             Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
             Emit("}");
+            Emit("#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
         }
         Emit("namespace T_ImplNameSpace_");
         Emit("{");
+        Emit("    /// <summary>");
+        Emit("    /// The T_EntityImplName_ entity - the MemBlocks implementation of the T_IntfNameSpace_.T_EntityIntfName_ interface.");
+        Emit("    /// </summary>");
         Emit("    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>, IMemBlocksEntity<T_EntityImplName_>");
         Emit("    {");
         Emit("        private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>");
@@ -229,7 +235,13 @@ public partial class EntityGenerator
         Emit("            public T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);");
         Emit("        }");
         Emit("        private static readonly _EntityFactory _factory = new _EntityFactory();");
+        Emit("        /// <summary>");
+        Emit("        /// Gets the factory for the T_EntityImplName_ entity.");
+        Emit("        /// </summary>");
         Emit("        public IMemBlocksEntityFactory<T_EntityImplName_> GetFactory() => _factory;");
+        Emit("        /// <summary>");
+        Emit("        /// Creates an instance if the T_EntityImplName_ entity (or derived entity) by deserializing the buffers.");
+        Emit("        /// </summary>");
         Emit("        public static T_EntityImplName_ CreateInstance(ReadOnlySequence<byte> buffers) => T_EntityImplName_.DeserializeFrom(buffers);");
         Emit("");
         if (false)
@@ -248,6 +260,9 @@ public partial class EntityGenerator
         Emit("");
         Emit("        private static readonly BlockHeader _header = BlockHeader.CreateNew(T_EntityId_, BlockStructureCode);");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a required instance of the T_EntityImplName_ entity (or derived entity) from the source.");
+        Emit("        /// </summary>");
         Emit("        public new static T_EntityImplName_ CreateRequired(T_EntityImplName_ source)");
         Emit("        {");
         Emit("            if (source.IsFrozen) return source;");
@@ -262,11 +277,17 @@ public partial class EntityGenerator
         Emit("            };");
         Emit("        }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates an optional instance of the T_EntityImplName_ entity (or derived entity) from the source.");
+        Emit("        /// </summary>");
         Emit("        public new static T_EntityImplName_? CreateNullable(T_EntityImplName_? source)");
         Emit("        {");
         Emit("            return (source is null) ? null : CreateRequired(source);");
         Emit("        }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a required instance of the T_EntityImplName_ entity (or derived entity) from the source.");
+        Emit("        /// </summary>");
         Emit("        public new static T_EntityImplName_ CreateRequired(T_IntfNameSpace_.T_EntityIntfName_ source)");
         Emit("        {");
         Emit("            if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;");
@@ -281,11 +302,17 @@ public partial class EntityGenerator
         Emit("            };");
         Emit("        }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates an optional instance of the T_EntityImplName_ entity (or derived entity) from the source.");
+        Emit("        /// </summary>");
         Emit("        public new static T_EntityImplName_? CreateNullable(T_IntfNameSpace_.T_EntityIntfName_? source)");
         Emit("        {");
         Emit("            return (source is null) ? null : CreateRequired(source);");
         Emit("        }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates an instance if the T_EntityImplName_ entity (or derived entity) by deserializing the buffers.");
+        Emit("        /// </summary>");
         Emit("        public new static T_EntityImplName_ DeserializeFrom(ReadOnlySequence<byte> buffers)");
         Emit("        {");
         Emit("            SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);");
@@ -300,11 +327,16 @@ public partial class EntityGenerator
         Emit("            };");
         Emit("        }");
         Emit("");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override int OnGetEntityId() => T_EntityId_;");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override int OnGetClassHeight() => ClassHeight;");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);");
         Emit("");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override void OnFreeze()");
         Emit("        {");
         Emit("            base.OnFreeze();");
@@ -336,6 +368,7 @@ public partial class EntityGenerator
         }
         Emit("        }");
         Emit("");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override async ValueTask OnPack(IDataStore dataStore)");
         Emit("        {");
         Emit("            await base.OnPack(dataStore);");
@@ -383,6 +416,7 @@ public partial class EntityGenerator
         }
         Emit("        }");
         Emit("");
+        Emit("        /// <inheritdoc/>");
         Emit("        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)");
         Emit("        {");
         Emit("            await base.OnUnpack(dataStore, depth);");
@@ -444,15 +478,25 @@ public partial class EntityGenerator
         }
         Emit("        // ------------------------------------------------------------");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity.");
+        Emit("        /// </summary>");
         Emit("        protected T_EntityImplName_(BlockHeader header) : base(header)");
         Emit("        {");
         Emit("            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];");
         Emit("        }");
+        Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity.");
+        Emit("        /// </summary>");
         Emit("        public T_EntityImplName_() : base(_header)");
         Emit("        {");
         Emit("            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];");
         Emit("        }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source instance.");
+        Emit("        /// </summary>");
         Emit("        protected T_EntityImplName_(BlockHeader header, T_EntityImplName_ source) : base(header, source)");
         Emit("        {");
         Emit("            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];");
@@ -521,8 +565,15 @@ public partial class EntityGenerator
             } // switch
         }
         Emit("        }");
+        Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source instance.");
+        Emit("        /// </summary>");
         Emit("        public T_EntityImplName_(T_EntityImplName_ source) : this(_header, source) { }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source interface.");
+        Emit("        /// </summary>");
         Emit("        protected T_EntityImplName_(BlockHeader header, T_IntfNameSpace_.T_EntityIntfName_ source) : base(header, source)");
         Emit("        {");
         Emit("            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];");
@@ -591,8 +642,15 @@ public partial class EntityGenerator
             } // switch
         }
         Emit("        }");
+        Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source interface.");
+        Emit("        /// </summary>");
         Emit("        public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : this(_header, source) { }");
         Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source.");
+        Emit("        /// </summary>");
         Emit("        protected T_EntityImplName_(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)");
         Emit("        {");
         Emit("            var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];");
@@ -608,7 +666,15 @@ public partial class EntityGenerator
         Emit("                _writableLocalBlock = Memory<byte>.Empty;");
         Emit("            }");
         Emit("        }");
+        Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source.");
+        Emit("        /// </summary>");
         Emit("        internal T_EntityImplName_(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }");
+        Emit("");
+        Emit("        /// <summary>");
+        Emit("        /// Creates a new instance of the T_EntityImplName_ entity by deserializing the buffers.");
+        Emit("        /// </summary>");
         Emit("        public T_EntityImplName_(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }");
         Emit("");
         if (false)
@@ -643,6 +709,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -679,6 +746,7 @@ public partial class EntityGenerator
                         }
                         else
                         {
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -716,6 +784,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -737,6 +806,7 @@ public partial class EntityGenerator
                         }
                         else
                         {
+                            Emit("        /// <inheritdoc/>");
                             if (member.IsObsolete)
                             {
                                 Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -782,6 +852,7 @@ public partial class EntityGenerator
                         Emit("            }");
                         Emit("        }");
                         Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -825,6 +896,7 @@ public partial class EntityGenerator
                         Emit("            }");
                         Emit("        }");
                         Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_RequiredEntityMemberName_ = null;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -858,6 +930,7 @@ public partial class EntityGenerator
                         Emit("            _T_NullableBinaryMemberName_ = blob is null ? null : Octets.UnsafeWrap(blob.Value);");
                         Emit("        }");
                         Emit("        private Octets? _T_NullableBinaryMemberName_;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -884,6 +957,7 @@ public partial class EntityGenerator
                         Emit("");
                         Emit("        }");
                         Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -916,6 +990,7 @@ public partial class EntityGenerator
                         Emit("#endif");
                         Emit("        }");
                         Emit("        private string? _T_NullableStringMemberName_;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -946,6 +1021,7 @@ public partial class EntityGenerator
                         Emit("#endif");
                         Emit("        }");
                         Emit("        private string _T_RequiredStringMemberName_ = string.Empty;");
+                        Emit("        /// <inheritdoc/>");
                         if (member.IsObsolete)
                         {
                             Emit("        [Obsolete(\"T_MemberObsoleteMessage_\", T_MemberObsoleteIsError_)]");
@@ -964,6 +1040,7 @@ public partial class EntityGenerator
             Emit("");
         }
         Emit("");
+        Emit("        /// <inheritdoc/>");
         Emit("        public bool Equals(T_EntityImplName_? other)");
         Emit("        {");
         Emit("            if (ReferenceEquals(this, other)) return true;");
@@ -972,9 +1049,13 @@ public partial class EntityGenerator
         Emit("            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;");
         Emit("            return true;");
         Emit("        }");
+        Emit("        /// <inheritdoc/>");
         Emit("        public override bool Equals(object? obj) => obj is T_EntityImplName_ other && Equals(other);");
+        Emit("        /// <inheritdoc/>");
         Emit("        public override int GetHashCode() => base.GetHashCode();");
+        Emit("        /// <inheritdoc/>");
         Emit("        public static bool operator ==(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? left.Equals(right) : (right is null);");
+        Emit("        /// <inheritdoc/>");
         Emit("        public static bool operator !=(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? !left.Equals(right) : (right is not null);");
         Emit("");
         Emit("    }");

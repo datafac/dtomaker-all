@@ -20,6 +20,9 @@ using System.Threading.Tasks;
 using MyOrg.Models.MemBlocks;
 namespace MyOrg.Models.MemBlocks
 {
+    /// <summary>
+    /// The Derived entity - the MemBlocks implementation of the MyOrg.Models.IDerived interface.
+    /// </summary>
     public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>, IMemBlocksEntity<Derived>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<Derived>
@@ -27,7 +30,13 @@ namespace MyOrg.Models.MemBlocks
             public Derived CreateInstance(ReadOnlySequence<byte> buffers) => Derived.DeserializeFrom(buffers);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
+        /// <summary>
+        /// Gets the factory for the Derived entity.
+        /// </summary>
         public IMemBlocksEntityFactory<Derived> GetFactory() => _factory;
+        /// <summary>
+        /// Creates an instance if the Derived entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public static Derived CreateInstance(ReadOnlySequence<byte> buffers) => Derived.DeserializeFrom(buffers);
 
         private const long BlockStructureCode = 0x00000852;
@@ -38,6 +47,9 @@ namespace MyOrg.Models.MemBlocks
 
         private static readonly BlockHeader _header = BlockHeader.CreateNew(2, BlockStructureCode);
 
+        /// <summary>
+        /// Creates a required instance of the Derived entity (or derived entity) from the source.
+        /// </summary>
         public new static Derived CreateRequired(Derived source)
         {
             if (source.IsFrozen) return source;
@@ -47,11 +59,17 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the Derived entity (or derived entity) from the source.
+        /// </summary>
         public new static Derived? CreateNullable(Derived? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates a required instance of the Derived entity (or derived entity) from the source.
+        /// </summary>
         public new static Derived CreateRequired(MyOrg.Models.IDerived source)
         {
             if (source is Derived concrete && concrete.IsFrozen) return concrete;
@@ -61,11 +79,17 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <summary>
+        /// Creates an optional instance of the Derived entity (or derived entity) from the source.
+        /// </summary>
         public new static Derived? CreateNullable(MyOrg.Models.IDerived? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
+        /// <summary>
+        /// Creates an instance if the Derived entity (or derived entity) by deserializing the buffers.
+        /// </summary>
         public new static Derived DeserializeFrom(ReadOnlySequence<byte> buffers)
         {
             SourceBlocks blocks = SourceBlocks.ParseFrom(buffers);
@@ -75,16 +99,22 @@ namespace MyOrg.Models.MemBlocks
             };
         }
 
+        /// <inheritdoc/>
         protected override int OnGetEntityId() => 2;
+        /// <inheritdoc/>
         protected override int OnGetClassHeight() => ClassHeight;
+        /// <inheritdoc/>
         protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new Derived(this);
 
+        /// <inheritdoc/>
         protected override void OnFreeze()
         {
             base.OnFreeze();
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnPack(IDataStore dataStore)
         {
             await base.OnPack(dataStore);
@@ -92,6 +122,7 @@ namespace MyOrg.Models.MemBlocks
             await Field12_Pack(dataStore);
         }
 
+        /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IDataStore dataStore, int depth)
         {
             await base.OnUnpack(dataStore, depth);
@@ -106,31 +137,55 @@ namespace MyOrg.Models.MemBlocks
         //     2    64    64  LE    String  Field12
         // ------------------------------------------------------------
 
+        /// <summary>
+        /// Creates a new instance of the Derived entity.
+        /// </summary>
         protected Derived(BlockHeader header) : base(header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
+
+        /// <summary>
+        /// Creates a new instance of the Derived entity.
+        /// </summary>
         public Derived() : base(_header)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
 
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source instance.
+        /// </summary>
         protected Derived(BlockHeader header, Derived source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             _Field11 = source._Field11;
             _Field12 = source._Field12;
         }
+
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source instance.
+        /// </summary>
         public Derived(Derived source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source interface.
+        /// </summary>
         protected Derived(BlockHeader header, MyOrg.Models.IDerived source) : base(header, source)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
             _Field11 = source.Field11;
             _Field12 = source.Field12;
         }
+
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source interface.
+        /// </summary>
         public Derived(MyOrg.Models.IDerived source) : this(_header, source) { }
 
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source.
+        /// </summary>
         protected Derived(BlockHeader header, SourceBlocks sourceBlocks) : base(header, sourceBlocks)
         {
             var sourceBlock = sourceBlocks.Blocks.Span[ClassHeight];
@@ -146,7 +201,15 @@ namespace MyOrg.Models.MemBlocks
                 _writableLocalBlock = Memory<byte>.Empty;
             }
         }
+
+        /// <summary>
+        /// Creates a new instance of the Derived entity by copying from the source.
+        /// </summary>
         internal Derived(SourceBlocks sourceBlocks) : this(_header, sourceBlocks) { }
+
+        /// <summary>
+        /// Creates a new instance of the Derived entity by deserializing the buffers.
+        /// </summary>
         public Derived(ReadOnlySequence<byte> buffers) : this(_header, SourceBlocks.ParseFrom(buffers)) { }
 
         private async ValueTask Field11_Pack(IDataStore dataStore)
@@ -167,6 +230,7 @@ namespace MyOrg.Models.MemBlocks
 #endif
         }
         private string _Field11 = string.Empty;
+        /// <inheritdoc/>
         public string Field11
         {
             get => IfUnpacked(_Field11);
@@ -191,6 +255,7 @@ namespace MyOrg.Models.MemBlocks
 #endif
         }
         private string? _Field12;
+        /// <inheritdoc/>
         public string? Field12
         {
             get => IfUnpacked(_Field12);
@@ -198,6 +263,7 @@ namespace MyOrg.Models.MemBlocks
         }
 
 
+        /// <inheritdoc/>
         public bool Equals(Derived? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -206,9 +272,13 @@ namespace MyOrg.Models.MemBlocks
             if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
             return true;
         }
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is Derived other && Equals(other);
+        /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
+        /// <inheritdoc/>
         public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
+        /// <inheritdoc/>
         public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
 
     }
