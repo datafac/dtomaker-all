@@ -874,7 +874,7 @@ namespace T_ImplNameSpace_
         {
             BlobIdV1 blobId = _T_NullableStringMemberName_ is null
                 ? default
-                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));
+                : await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));
             blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);
         }
         private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore)

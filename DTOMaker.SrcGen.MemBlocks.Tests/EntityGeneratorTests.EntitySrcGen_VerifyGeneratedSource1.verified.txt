@@ -241,7 +241,7 @@ namespace MyOrg.Models.MemBlocks
         {
             BlobIdV1 blobId = _Field12 is null
                 ? default
-                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_Field12)));
+                : await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_Field12)));
             blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
         private async ValueTask Field12_Unpack(IDataStore dataStore)

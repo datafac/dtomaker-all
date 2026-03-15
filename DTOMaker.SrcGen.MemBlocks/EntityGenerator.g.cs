@@ -976,7 +976,7 @@ public partial class EntityGenerator
                         Emit("        {");
                         Emit("            BlobIdV1 blobId = _T_NullableStringMemberName_ is null");
                         Emit("                ? default");
-                        Emit("                : blobId = await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));");
+                        Emit("                : await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));");
                         Emit("            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);");
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore)");
