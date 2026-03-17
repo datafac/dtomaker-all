@@ -30,13 +30,13 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
 
     protected EntityBase(BlockHeader blockHeader)
     {
-        _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-        blockHeader.Memory.CopyTo(_writableLocalBlock);
+        _readonlyLocalBlock = blockHeader.Memory;
+        _writableLocalBlock = Memory<byte>.Empty;
     }
     protected EntityBase(BlockHeader blockHeader, object source)
     {
-        _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-        blockHeader.Memory.CopyTo(_writableLocalBlock);
+        _readonlyLocalBlock = blockHeader.Memory;
+        _writableLocalBlock = Memory<byte>.Empty;
     }
     protected EntityBase(BlockHeader blockHeader, SourceBlocks sourceBlocks)
     {
@@ -61,7 +61,8 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
     public ReadOnlySequence<byte> GetBuffers()
     {
         ThrowIfNotFrozen();
-        return OnSequenceBuilder(new ReadOnlySequenceBuilder<byte>()).Build();
+        var builder = OnSequenceBuilder(new ReadOnlySequenceBuilder<byte>());
+        return builder.Build();
     }
 
     //public void LoadBuffer(ReadOnlyMemory<byte> buffer)

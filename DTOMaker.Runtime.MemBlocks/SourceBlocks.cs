@@ -21,10 +21,36 @@ public readonly struct SourceBlocks
         = new ReadOnlyMemory<int>([0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 * 1, 1024 * 2, 1024 * 4, 1024 * 8, 1024 * 16]);
     private static int GetBlockSize(int blockSizeCode) => _blockSizes.Span[blockSizeCode];
 
+    private static ReadOnlyMemory<T> SliceAndCompact<T>(ReadOnlySequence<T> sequence, int start, int length)
+    {
+        // special cases
+        // - empty
+        if (sequence.IsEmpty) return ReadOnlyMemory<T>.Empty;
+
+        // - single segment
+        if (sequence.IsSingleSegment) return sequence.First.Slice(start, length);
+
+        // - direct match
+        int position = 0;
+        ReadOnlySequence<T>.Enumerator enumerator = sequence.GetEnumerator();
+        while (enumerator.MoveNext())
+        {
+            ReadOnlyMemory<T> current = enumerator.Current;
+            if (position == start && current.Length == length)
+            {
+                return current;
+            }
+            position += current.Length;
+        }
+
+        // no segment was a direct match
+        return sequence.Slice(start, length).Compact();
+
+    }
     public static SourceBlocks ParseFrom(ReadOnlySequence<byte> buffers)
     {
         int startPosition = 0;
-        ReadOnlyMemory<byte> headerMemory = buffers.Slice(startPosition, BlockHeader.HeaderSize).Compact();
+        ReadOnlyMemory<byte> headerMemory = SliceAndCompact(buffers, startPosition, BlockHeader.HeaderSize);
         startPosition += BlockHeader.HeaderSize;
 
         // parse header
@@ -44,7 +70,7 @@ public readonly struct SourceBlocks
             bits = bits >> 4;
             int blockSizeCode = (int)(bits & 0x0F);
             int blockLength = GetBlockSize(blockSizeCode);
-            ReadOnlyMemory<byte> block = buffers.Slice(startPosition, blockLength).Compact();
+            ReadOnlyMemory<byte> block = SliceAndCompact(buffers, startPosition, blockLength);
             startPosition += blockLength;
             blockSpan[h + 1] = block;
         }

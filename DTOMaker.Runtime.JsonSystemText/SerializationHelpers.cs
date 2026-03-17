@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using DTOMaker.Models;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace DTOMaker.Runtime.JsonSystemText
@@ -20,6 +21,12 @@ namespace DTOMaker.Runtime.JsonSystemText
         };
 
         public static string SerializeToJson<T>(this T value) => JsonSerializer.Serialize<T>(value, _options);
-        public static T? DeserializeFromJson<T>(this string input) => JsonSerializer.Deserialize<T>(input, _options);
+        public static T? DeserializeFromJson<T>(this string input)
+            where T: IEntityBase
+        {
+            T? result = JsonSerializer.Deserialize<T>(input, _options);
+            result?.Freeze();
+            return result;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using DTOMaker.Models;
+using MessagePack;
 using MessagePack.Resolvers;
 using System;
 
@@ -30,8 +31,11 @@ namespace DTOMaker.Runtime.MsgPack2
         /// Deerializes an entity from a buffer using the MessagePack serializer.
         /// </summary>
         public static T DeserializeFromMessagePack<T>(this ReadOnlyMemory<byte> buffer)
+            where T : IEntityBase
         {
-            return MessagePackSerializer.Deserialize<T>(buffer, _options);
+            T result = MessagePackSerializer.Deserialize<T>(buffer, _options);
+            result.Freeze();
+            return result;
         }
     }
 }
