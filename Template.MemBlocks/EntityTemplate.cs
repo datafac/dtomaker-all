@@ -739,14 +739,17 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         private async ValueTask T_NullableEntityMemberName__Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = default;
-            if (_T_NullableEntityMemberName_ is not null)
+            if (_T_NullableEntityMemberName_ is null)
+            {
+                _writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span.Clear();
+            }
+            else
             {
                 await _T_NullableEntityMemberName_.Pack(dataStore);
                 var buffers = _T_NullableEntityMemberName_.GetBuffers();
-                blobId = await dataStore.PutBlob(buffers);
+                BlobIdV1 blobId = await dataStore.PutBlob(buffers);
+                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);
             }
-            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);
         }
         private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)
         {
@@ -821,10 +824,15 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         private async ValueTask T_NullableBinaryMemberName__Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = _T_NullableBinaryMemberName_ is null
-                ? default
-                : await dataStore.PutBlob(_T_NullableBinaryMemberName_.Sequence);
-            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);
+            if (_T_NullableBinaryMemberName_ is null)
+            {
+                _writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span.Clear();
+            }
+            else
+            {
+                BlobIdV1 blobId = await dataStore.PutBlob(_T_NullableBinaryMemberName_.Sequence);
+                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);
+            }
         }
         private async ValueTask T_NullableBinaryMemberName__Unpack(IDataStore dataStore)
         {
@@ -872,10 +880,15 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         private async ValueTask T_NullableStringMemberName__Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = _T_NullableStringMemberName_ is null
-                ? default
-                : await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));
-            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);
+            if (_T_NullableStringMemberName_ is null)
+            {
+                _writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span.Clear();
+            }
+            else
+            {
+                BlobIdV1 blobId = await dataStore.PutBlob(_T_NullableStringMemberName_);
+                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);
+            }
         }
         private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore)
         {
@@ -900,9 +913,7 @@ namespace T_ImplNameSpace_
         //##} else {
         private async ValueTask T_RequiredStringMemberName__Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = default;
-            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_RequiredStringMemberName_));
-            blobId = await dataStore.PutBlob(buffers);
+            BlobIdV1 blobId = await dataStore.PutBlob(_T_RequiredStringMemberName_);
             blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64).Span);
         }
         private async ValueTask T_RequiredStringMemberName__Unpack(IDataStore dataStore)

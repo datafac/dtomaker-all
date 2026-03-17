@@ -831,14 +831,17 @@ public partial class EntityGenerator
                     {
                         Emit("        private async ValueTask T_NullableEntityMemberName__Pack(IDataStore dataStore)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = default;");
-                        Emit("            if (_T_NullableEntityMemberName_ is not null)");
+                        Emit("            if (_T_NullableEntityMemberName_ is null)");
+                        Emit("            {");
+                        Emit("                _writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span.Clear();");
+                        Emit("            }");
+                        Emit("            else");
                         Emit("            {");
                         Emit("                await _T_NullableEntityMemberName_.Pack(dataStore);");
                         Emit("                var buffers = _T_NullableEntityMemberName_.GetBuffers();");
-                        Emit("                blobId = await dataStore.PutBlob(buffers);");
+                        Emit("                BlobIdV1 blobId = await dataStore.PutBlob(buffers);");
+                        Emit("                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);");
                         Emit("            }");
-                        Emit("            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);");
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)");
                         Emit("        {");
@@ -918,10 +921,15 @@ public partial class EntityGenerator
                     {
                         Emit("        private async ValueTask T_NullableBinaryMemberName__Pack(IDataStore dataStore)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = _T_NullableBinaryMemberName_ is null");
-                        Emit("                ? default");
-                        Emit("                : await dataStore.PutBlob(_T_NullableBinaryMemberName_.Sequence);");
-                        Emit("            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);");
+                        Emit("            if (_T_NullableBinaryMemberName_ is null)");
+                        Emit("            {");
+                        Emit("                _writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span.Clear();");
+                        Emit("            }");
+                        Emit("            else");
+                        Emit("            {");
+                        Emit("                BlobIdV1 blobId = await dataStore.PutBlob(_T_NullableBinaryMemberName_.Sequence);");
+                        Emit("                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64).Span);");
+                        Emit("            }");
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableBinaryMemberName__Unpack(IDataStore dataStore)");
                         Emit("        {");
@@ -974,10 +982,15 @@ public partial class EntityGenerator
                     {
                         Emit("        private async ValueTask T_NullableStringMemberName__Pack(IDataStore dataStore)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = _T_NullableStringMemberName_ is null");
-                        Emit("                ? default");
-                        Emit("                : await dataStore.PutBlob(new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_NullableStringMemberName_)));");
-                        Emit("            blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);");
+                        Emit("            if (_T_NullableStringMemberName_ is null)");
+                        Emit("            {");
+                        Emit("                _writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span.Clear();");
+                        Emit("            }");
+                        Emit("            else");
+                        Emit("            {");
+                        Emit("                BlobIdV1 blobId = await dataStore.PutBlob(_T_NullableStringMemberName_);");
+                        Emit("                blobId.WriteTo(_writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64).Span);");
+                        Emit("            }");
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore)");
                         Emit("        {");
@@ -1005,9 +1018,7 @@ public partial class EntityGenerator
                     {
                         Emit("        private async ValueTask T_RequiredStringMemberName__Pack(IDataStore dataStore)");
                         Emit("        {");
-                        Emit("            BlobIdV1 blobId = default;");
-                        Emit("            var buffers = new ReadOnlySequence<byte>(System.Text.Encoding.UTF8.GetBytes(_T_RequiredStringMemberName_));");
-                        Emit("            blobId = await dataStore.PutBlob(buffers);");
+                        Emit("            BlobIdV1 blobId = await dataStore.PutBlob(_T_RequiredStringMemberName_);");
                         Emit("            blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64).Span);");
                         Emit("        }");
                         Emit("        private async ValueTask T_RequiredStringMemberName__Unpack(IDataStore dataStore)");

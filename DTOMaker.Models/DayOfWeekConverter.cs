@@ -5,7 +5,7 @@ namespace DTOMaker.Models;
 /// <summary>
 /// When used in a <see cref="DTOMaker.Models.MemberAttribute"/>, this 
 /// converter allows <see cref="System.DayOfWeek"/> properties to be internally 
-/// stored and serialized as <see cref="System.Int32"/> values.
+/// stored and serialized as <see cref="System.Byte"/> values.
 /// </summary>
 public sealed class DayOfWeekConverter : IStructConverter<DayOfWeek, byte>
 {

@@ -210,14 +210,17 @@ namespace MyOrg.Models.MemBlocks
 
         private async ValueTask Field1_Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = default;
-            if (_Field1 is not null)
+            if (_Field1 is null)
+            {
+                _writableLocalBlock.Slice(0, 64).Span.Clear();
+            }
+            else
             {
                 await _Field1.Pack(dataStore);
                 var buffers = _Field1.GetBuffers();
-                blobId = await dataStore.PutBlob(buffers);
+                BlobIdV1 blobId = await dataStore.PutBlob(buffers);
+                blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
             }
-            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
         private async ValueTask Field1_Unpack(IDataStore dataStore, int depth)
         {

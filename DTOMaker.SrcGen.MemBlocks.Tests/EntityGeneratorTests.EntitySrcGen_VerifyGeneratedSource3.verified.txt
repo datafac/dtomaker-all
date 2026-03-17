@@ -235,10 +235,15 @@ namespace MyOrg.Model3.MemBlocks
 
         private async ValueTask Field42_Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = _Field42 is null
-                ? default
-                : await dataStore.PutBlob(_Field42.Sequence);
-            blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
+            if (_Field42 is null)
+            {
+                _writableLocalBlock.Slice(64, 64).Span.Clear();
+            }
+            else
+            {
+                BlobIdV1 blobId = await dataStore.PutBlob(_Field42.Sequence);
+                blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
+            }
         }
         private async ValueTask Field42_Unpack(IDataStore dataStore)
         {

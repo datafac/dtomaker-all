@@ -254,14 +254,17 @@ namespace MyOrg.Model2.MemBlocks
 
         private async ValueTask Field32_Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = default;
-            if (_Field32 is not null)
+            if (_Field32 is null)
+            {
+                _writableLocalBlock.Slice(64, 64).Span.Clear();
+            }
+            else
             {
                 await _Field32.Pack(dataStore);
                 var buffers = _Field32.GetBuffers();
-                blobId = await dataStore.PutBlob(buffers);
+                BlobIdV1 blobId = await dataStore.PutBlob(buffers);
+                blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
             }
-            blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
         }
         private async ValueTask Field32_Unpack(IDataStore dataStore, int depth)
         {
