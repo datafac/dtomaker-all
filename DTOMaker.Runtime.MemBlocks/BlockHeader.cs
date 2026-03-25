@@ -10,20 +10,21 @@ public readonly struct BlockHeader
 
     public static BlockHeader CreateNew(int entityId, long structureBits)
     {
-        Memory<byte> memory = new byte[HeaderSize];
-        Span<byte> headerSpan = memory.Span;
+        Memory<byte> header = new byte[HeaderSize];
+        Span<byte> headerSpan = header.Span;
         Codec_Int32_LE.WriteToSpan(headerSpan.Slice(0, 4), SignatureV21);
         Codec_Int32_LE.WriteToSpan(headerSpan.Slice(4, 4), entityId);
         Codec_Int64_LE.WriteToSpan(headerSpan.Slice(8, 8), structureBits);
-        return new BlockHeader(SignatureV21, entityId, structureBits, memory);
+        return new BlockHeader(SignatureV21, entityId, structureBits, header);
     }
 
     public static BlockHeader ParseFrom(ReadOnlyMemory<byte> buffer)
     {
         var header = buffer.Slice(0, HeaderSize);
-        int signature = Codec_Int32_LE.ReadFromSpan(header.Span.Slice(0, 4));
-        int entityId = Codec_Int32_LE.ReadFromSpan(header.Span.Slice(4, 4));
-        long structureBits = Codec_Int64_LE.ReadFromSpan(header.Span.Slice(8, 8));
+        var headerSpan = header.Span;
+        int signature = Codec_Int32_LE.ReadFromSpan(headerSpan.Slice(0, 4));
+        int entityId = Codec_Int32_LE.ReadFromSpan(headerSpan.Slice(4, 4));
+        long structureBits = Codec_Int64_LE.ReadFromSpan(headerSpan.Slice(8, 8));
         return new BlockHeader(signature, entityId, structureBits, header);
     }
 
@@ -42,14 +43,14 @@ public readonly struct BlockHeader
     /// </summary>
     public readonly long StructureBits;
 
-    public readonly ReadOnlyMemory<byte> Memory;
+    public readonly ReadOnlyMemory<byte> Header;
 
-    private BlockHeader(int signatureBits, int entityId, long structureBits, ReadOnlyMemory<byte> memory)
+    private BlockHeader(int signatureBits, int entityId, long structureBits, ReadOnlyMemory<byte> header)
     {
         SignatureBits = signatureBits;
         EntityId = entityId;
         StructureBits = structureBits;
-        Memory = memory;
+        Header = header;
     }
 
     public bool Equals(BlockHeader other)

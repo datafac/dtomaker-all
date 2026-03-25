@@ -30,18 +30,18 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
 
     protected EntityBase(BlockHeader blockHeader)
     {
-        _readonlyLocalBlock = blockHeader.Memory;
+        _readonlyLocalBlock = blockHeader.Header;
         _writableLocalBlock = Memory<byte>.Empty;
     }
     protected EntityBase(BlockHeader blockHeader, object source)
     {
-        _readonlyLocalBlock = blockHeader.Memory;
+        _readonlyLocalBlock = blockHeader.Header;
         _writableLocalBlock = Memory<byte>.Empty;
     }
     protected EntityBase(BlockHeader blockHeader, SourceBlocks sourceBlocks)
     {
         if (sourceBlocks.Header != blockHeader) throw new NotSupportedException("Entity evolution not supported yet!");
-        _readonlyLocalBlock = blockHeader.Memory;
+        _readonlyLocalBlock = blockHeader.Header;
         _writableLocalBlock = Memory<byte>.Empty;
         _frozen = true;
     }

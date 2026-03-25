@@ -4,7 +4,7 @@ using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace T_MemberTypeIntfSpace_
 {
-    public interface T_MemberTypeIntfName_
+    public interface T_MemberTypeIntfName_ : IEntityBase
     {
         long Field1 { get; set; }
     }
