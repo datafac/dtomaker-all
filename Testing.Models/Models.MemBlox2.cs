@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Testing.Models.MemBlox2;
 
-public sealed partial class Required_String : DTOMaker.Runtime.MemBlox2.EntityBase, Testing.Models.IRequired_String, IEquatable<Required_String>, IMemBlox2Entity<Required_String>
+public sealed partial class Required_String : DTOMaker.Runtime.MemBlox2.EntityBase, Testing.Models.IRequired_String, IEquatable<Required_String>
 {
     protected override IEntityBase OnPartCopy() => new Required_String(this);
 
@@ -20,18 +20,18 @@ public sealed partial class Required_String : DTOMaker.Runtime.MemBlox2.EntityBa
     private const int ClassHeight = 1;
     private const int BlockLength = 64;
 
-    private static readonly EntityInfo _entityInfo = new EntityInfo(EntityId, StructureCode);
+    private static readonly EntityMetadata _metadata = new EntityMetadata(EntityId, StructureCode);
 
-    public Required_String() : base(_entityInfo, new byte[BlockLength])
+    public Required_String() : base(_metadata, new byte[BlockLength])
     {
         _Field = string.Empty;
     }
-    public Required_String(Required_String source) : base(source, _entityInfo, new byte[BlockLength])
+    public Required_String(Required_String source) : base(source, _metadata, new byte[BlockLength])
     {
         _Field = source._Field;
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Required_String(ImmutableArray<ReadOnlyMemory<byte>> buffers) : base(_entityInfo, buffers)
+    public Required_String(EntityContent buffers) : base(_metadata, buffers)
     {
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.

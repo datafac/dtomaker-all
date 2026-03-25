@@ -1,12 +1,15 @@
 ﻿using DataFac.Memory;
+using DataFac.Storage;
 using System;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime;
 
 /// <summary>
 /// Information about block-based entities.
 /// </summary>
-public readonly struct EntityInfo : IEquatable<EntityInfo>
+public readonly struct EntityMetadata : IEquatable<EntityMetadata>
 {
     private const int HeaderSize = 16;
     private const int SignatureV21 = 0x01025f7c; // 1,2,_,|
@@ -36,7 +39,7 @@ public readonly struct EntityInfo : IEquatable<EntityInfo>
     /// </summary>
     public readonly ReadOnlyMemory<byte> Memory;
 
-    public EntityInfo(int entityId, long structureBits) : this()
+    public EntityMetadata(int entityId, long structureBits) : this()
     {
         SignatureBits = SignatureV21;
         EntityId = entityId;
@@ -57,15 +60,15 @@ public readonly struct EntityInfo : IEquatable<EntityInfo>
 
     public override string ToString() => $"0x{SignatureBits:X8},{EntityId},0x{StructureBits:X8}";
 
-    public bool Equals(EntityInfo other)
+    public bool Equals(EntityMetadata other)
         => other.SignatureBits == SignatureV21
         && other.EntityId == EntityId
         && other.StructureBits == StructureBits;
 
-    public override bool Equals(object? obj) => obj is EntityInfo other && Equals(other);
+    public override bool Equals(object? obj) => obj is EntityMetadata other && Equals(other);
     public override int GetHashCode() => HashCode.Combine(SignatureBits, EntityId, StructureBits);
-    public static bool operator ==(EntityInfo left, EntityInfo right) => left.Equals(right);
-    public static bool operator !=(EntityInfo left, EntityInfo right) => !left.Equals(right);
+    public static bool operator ==(EntityMetadata left, EntityMetadata right) => left.Equals(right);
+    public static bool operator !=(EntityMetadata left, EntityMetadata right) => !left.Equals(right);
 }
 
 

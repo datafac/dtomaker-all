@@ -9,21 +9,21 @@ using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.NetStrux;
 
-public abstract class EntityBase : INetStruxEntityBase, IEquatable<EntityBase>
+public abstract class EntityBase : IMemoryBlockEntity, IEquatable<EntityBase>
 {
-    private readonly EntityInfo _entityInfo;
+    private readonly EntityMetadata _metadata;
 
     protected virtual void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
     {
-        buffers[0] = _entityInfo.Memory;
+        buffers[0] = _metadata.Memory;
     }
 
-    public ImmutableArray<ReadOnlyMemory<byte>> GetBuffers()
+    public EntityContent GetBuffers()
     {
         ThrowIfNotFrozen();
-        var buffers = new ReadOnlyMemory<byte>[_entityInfo.ClassHeight + 1];
+        var buffers = new ReadOnlyMemory<byte>[_metadata.ClassHeight + 1];
         OnGetBuffers(buffers);
-        return ImmutableArray<ReadOnlyMemory<byte>>.Empty.AddRange(buffers);
+        return new EntityContent(_metadata, ImmutableArray<ReadOnlyMemory<byte>>.Empty.AddRange(buffers));
     }
 
     protected abstract IEntityBase OnPartCopy();
@@ -32,18 +32,18 @@ public abstract class EntityBase : INetStruxEntityBase, IEquatable<EntityBase>
     /// <summary>
     /// Constructor for entity of height 1.
     /// </summary>
-    protected EntityBase(EntityInfo entityInfo)
+    protected EntityBase(EntityMetadata metadata)
     {
-        _entityInfo = entityInfo;
+        _metadata = metadata;
     }
 
-    protected EntityBase(EntityBase source, EntityInfo entityInfo) : this(entityInfo) { }
+    protected EntityBase(EntityBase source, EntityMetadata metadata) : this(metadata) { }
 
-    protected EntityBase(EntityInfo entityInfo, ImmutableArray<ReadOnlyMemory<byte>> buffers)
+    protected EntityBase(EntityMetadata metadata, EntityContent content)
     {
         // todo structure checks
-        if (buffers.Length != (entityInfo.ClassHeight + 1)) throw new InvalidDataException($"Expected {entityInfo.ClassHeight + 1} buffers but received {buffers.Length}");
-        _entityInfo = entityInfo;
+        if (content.Buffers.Length != (metadata.ClassHeight + 1)) throw new InvalidDataException($"Expected {metadata.ClassHeight + 1} buffers but received {content.Buffers.Length}");
+        _metadata = metadata;
         _frozen = true;
     }
 
@@ -132,13 +132,13 @@ public abstract class EntityBase : INetStruxEntityBase, IEquatable<EntityBase>
     {
         if (ReferenceEquals(this, that)) return true;
         if (that is null) return false;
-        if (that._entityInfo != _entityInfo) return false;
+        if (that._metadata != _metadata) return false;
         return true;
     }
 
     public override bool Equals(object? obj) => obj is EntityBase;
 
-    private int CalcHashCode() => _entityInfo.GetHashCode();
+    private int CalcHashCode() => _metadata.GetHashCode();
 
     private int? _hashCode;
     public override int GetHashCode()

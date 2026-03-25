@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlox2;
 
-public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
+public abstract class EntityBase : IMemoryBlockEntity, IEquatable<EntityBase>
 {
-    private readonly EntityInfo _entityInfo;
+    private readonly EntityMetadata _metadata;
     protected readonly ImmutableArray<ReadOnlyMemory<byte>> _readonlyBuffers;
     protected readonly ImmutableArray<Memory<byte>> _writableBuffers;
 
-    public ImmutableArray<ReadOnlyMemory<byte>> GetBuffers()
+    public EntityContent GetBuffers()
     {
         ThrowIfNotFrozen();
-        return _readonlyBuffers;
+        return new EntityContent(_metadata, _readonlyBuffers);
     }
 
     protected abstract IEntityBase OnPartCopy();
@@ -27,21 +27,21 @@ public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
     /// <summary>
     /// Constructor for entity of height 1.
     /// </summary>
-    protected EntityBase(EntityInfo entityInfo, Memory<byte> block1)
+    protected EntityBase(EntityMetadata metadata, Memory<byte> block1)
     {
-        _entityInfo = entityInfo;
+        _metadata = metadata;
         _writableBuffers = [Memory<byte>.Empty, block1];
-        _readonlyBuffers = [entityInfo.Memory, block1];
+        _readonlyBuffers = [metadata.Memory, block1];
     }
 
-    protected EntityBase(EntityBase source, EntityInfo entityInfo, Memory<byte> block1) : this(entityInfo, block1) { }
+    protected EntityBase(EntityBase source, EntityMetadata metadata, Memory<byte> block1) : this(metadata, block1) { }
 
-    protected EntityBase(EntityInfo entityInfo, ImmutableArray<ReadOnlyMemory<byte>> buffers)
+    protected EntityBase(EntityMetadata metadata, EntityContent buffers)
     {
         // todo structure checks
-        if (buffers.Length != (entityInfo.ClassHeight + 1)) throw new InvalidDataException($"Expected {entityInfo.ClassHeight + 1} buffers but received {buffers.Length}");
-        _entityInfo = entityInfo;
-        _readonlyBuffers = buffers;
+        if (buffers.Buffers.Length != (metadata.ClassHeight + 1)) throw new InvalidDataException($"Expected {metadata.ClassHeight + 1} buffers but received {buffers.Buffers.Length}");
+        _metadata = metadata;
+        _readonlyBuffers = buffers.Buffers;
         _writableBuffers = ImmutableArray<Memory<byte>>.Empty;
         _frozen = true;
     }

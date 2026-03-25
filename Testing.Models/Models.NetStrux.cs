@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Testing.Models.NetStrux;
 
-public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBase, Testing.Models.IRequired_String, IEquatable<Required_String>, INetStruxEntityBase
+public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBase, Testing.Models.IRequired_String, IEquatable<Required_String>
 {
     protected override IEntityBase OnPartCopy() => new Required_String(this);
 
@@ -22,7 +22,7 @@ public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBa
     private const int ClassHeight = 1;
     private const int BlockLength = 64;
 
-    private static readonly EntityInfo _entityInfo = new EntityInfo(EntityId, StructureCode);
+    private static readonly EntityMetadata _metadata = new EntityMetadata(EntityId, StructureCode);
 
     private BlockB064 _block;
 
@@ -34,18 +34,18 @@ public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBa
         buffers[ClassHeight] = buffer;
     }
 
-    public Required_String() : base(_entityInfo)
+    public Required_String() : base(_metadata)
     {
         _Field = string.Empty;
     }
-    public Required_String(Required_String source) : base(source, _entityInfo)
+    public Required_String(Required_String source) : base(source, _metadata)
     {
         _Field = source._Field;
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Required_String(ImmutableArray<ReadOnlyMemory<byte>> buffers) : base(_entityInfo, buffers)
+    public Required_String(EntityContent content) : base(_metadata, content)
     {
-        if (!_block.TryRead(buffers[ClassHeight].Span)) throw new InvalidDataException($"buffers[{ClassHeight}].Length must be at least {_block.BlockSize} bytes");
+        if (!_block.TryRead(content.Buffers[ClassHeight].Span)) throw new InvalidDataException($"buffers[{ClassHeight}].Length must be at least {_block.BlockSize} bytes");
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 

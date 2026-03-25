@@ -4,12 +4,12 @@ namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
 public abstract record FieldDef
 {
-    public string Nameqqq { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
     public int Offset { get; init; }
     public int Length { get; init; }
     public FieldDef(string name, int offset, int length)
     {
-        Nameqqq = name;
+        Name = name;
         Offset = offset;
         Length = length;
     }

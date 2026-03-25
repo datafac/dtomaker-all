@@ -1,21 +1,18 @@
 ﻿using DataFac.Storage;
-using DTOMaker.Models;
-using System;
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 
-namespace DTOMaker.Runtime.MemBlox2;
+namespace DTOMaker.Runtime;
 
 /// <summary>
 /// Defines the contract for an entity that manages memory blocks and supports packing and unpacking operations to and
 /// from a data store.
 /// </summary>
-public interface IMemBlox2EntityBase : IEntityBase
+public interface IMemoryBlockEntity
 {
     /// <summary>
-    /// Gets a sequence of readonly buffers containing the immutable state of the entity.
+    /// Gets the metadata and readonly buffers of the entity.
     /// </summary>
-    ImmutableArray<ReadOnlyMemory<byte>> GetBuffers();
+    EntityContent GetBuffers();
 
     /// <summary>
     /// Asynchronously prepares the entity's data for emission, which includes emitting any referenced entities to the data store.
@@ -32,3 +29,5 @@ public interface IMemBlox2EntityBase : IEntityBase
     /// </summary>
     ValueTask UnpackAll(IDataStore dataStore);
 }
+
+
