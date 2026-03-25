@@ -7,18 +7,23 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace DTOMaker.Runtime.MemBlox2;
+namespace DTOMaker.Runtime.NetStrux;
 
-public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
+public abstract class EntityBase : INetStruxEntityBase, IEquatable<EntityBase>
 {
-    private readonly BlockHeader _header;
-    protected readonly ImmutableArray<ReadOnlyMemory<byte>> _readonlyBuffers;
-    protected readonly ImmutableArray<Memory<byte>> _writableBuffers;
+    private readonly EntityInfo _entityInfo;
 
-    public ReadOnlyBuffers GetBuffers()
+    protected virtual void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
+    {
+        buffers[0] = _entityInfo.Memory;
+    }
+
+    public ImmutableArray<ReadOnlyMemory<byte>> GetBuffers()
     {
         ThrowIfNotFrozen();
-        return new ReadOnlyBuffers(_header, _readonlyBuffers);
+        var buffers = new ReadOnlyMemory<byte>[_entityInfo.ClassHeight + 1];
+        OnGetBuffers(buffers);
+        return ImmutableArray<ReadOnlyMemory<byte>>.Empty.AddRange(buffers);
     }
 
     protected abstract IEntityBase OnPartCopy();
@@ -27,21 +32,19 @@ public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
     /// <summary>
     /// Constructor for entity of height 1.
     /// </summary>
-    protected EntityBase(BlockHeader header, Memory<byte> block1)
+    protected EntityBase(EntityInfo entityInfo)
     {
-        _header = header;
-        _writableBuffers = [Memory<byte>.Empty, block1];
-        _readonlyBuffers = [header.Memory, block1];
+        _entityInfo = entityInfo;
     }
 
-    protected EntityBase(EntityBase source, BlockHeader header, Memory<byte> block1) : this(header, block1) { }
+    protected EntityBase(EntityBase source, EntityInfo entityInfo) : this(entityInfo) { }
 
-    protected EntityBase(BlockHeader header, ReadOnlyBuffers received)
+    protected EntityBase(EntityInfo entityInfo, ImmutableArray<ReadOnlyMemory<byte>> buffers)
     {
-        if (received.Header != header) throw new InvalidDataException($"Header invalid: Expected {header} but received {received.Header}");
-        _header = header;
-        _readonlyBuffers = received.Buffersqqq;
-        _writableBuffers = ImmutableArray<Memory<byte>>.Empty;
+        //var receivedInfo = new EntityInfo(buffers[0]);
+        //if (receivedInfo != entityInfo) throw new InvalidDataException($"Header invalid: expected {entityInfo} but received {receivedInfo}");
+        if (buffers.Length != (entityInfo.ClassHeight + 1)) throw new InvalidDataException($"Expected {entityInfo.ClassHeight + 1} buffers but received {buffers.Length}");
+        _entityInfo = entityInfo;
         _frozen = true;
     }
 
@@ -130,36 +133,13 @@ public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
     {
         if (ReferenceEquals(this, that)) return true;
         if (that is null) return false;
-        if (that._readonlyBuffers.Length != _readonlyBuffers.Length) return false;
-        for (int b = 0; b < _readonlyBuffers.Length; b++)
-        {
-            var thatSpan = that._readonlyBuffers[b].Span;
-            var thisSpan = this._readonlyBuffers[b].Span;
-            if (!thatSpan.SequenceEqual(thisSpan)) return false;
-        }
+        if (that._entityInfo != _entityInfo) return false;
         return true;
     }
 
     public override bool Equals(object? obj) => obj is EntityBase;
 
-    private int CalcHashCode()
-    {
-        HashCode result = new HashCode();
-        result.Add(_readonlyBuffers.Length);
-        for (int b = 0; b < _readonlyBuffers.Length; b++)
-        {
-            var thisSpan = this._readonlyBuffers[b].Span;
-#if NET8_0_OR_GREATER
-            result.AddBytes(thisSpan);
-#else
-            for (int i = 0; i < thisSpan.Length; i++)
-            {
-                result.Add(thisSpan[i]);
-            }
-#endif
-        }
-        return result.ToHashCode();
-    }
+    private int CalcHashCode() => _entityInfo.GetHashCode();
 
     private int? _hashCode;
     public override int GetHashCode()

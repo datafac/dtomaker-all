@@ -32,12 +32,19 @@ namespace Testing.PerfBench.UnitTests
         [InlineData(ValueKind.StrZero)]
         [InlineData(ValueKind.StrB064)]
         [InlineData(ValueKind.StrK002)]
+        public async ValueTask Roundtrip_String_JsonSystemText(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).JsonSystemText();
+
+        [Theory]
+        [InlineData(ValueKind.StrZero)]
+        [InlineData(ValueKind.StrB064)]
+        [InlineData(ValueKind.StrK002)]
         public async ValueTask Roundtrip_String_MemBlox2(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).MemBlox2();
 
         [Theory]
         [InlineData(ValueKind.StrZero)]
         [InlineData(ValueKind.StrB064)]
         [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_JsonSystemText(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).JsonSystemText();
+        public async ValueTask Roundtrip_String_NetStrux(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NetStrux();
+
     }
 }

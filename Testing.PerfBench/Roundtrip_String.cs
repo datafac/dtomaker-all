@@ -134,6 +134,23 @@ public class Roundtrip_String
     }
 
     [Benchmark]
+    public async ValueTask<long> NetStrux()
+    {
+        var orig = new Testing.Models.NetStrux.Required_String();
+        orig.Field = GetTestValue(Kind);
+        await orig.Pack(_dataStore);
+        var buffers = orig.GetBuffers();
+        var copy = new Testing.Models.NetStrux.Required_String(buffers);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            await copy.UnpackAll(_dataStore);
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffers.Length;
+    }
+
+    [Benchmark]
     public async ValueTask<long> MemBlox2()
     {
         var orig = new Testing.Models.MemBlox2.Required_String();
