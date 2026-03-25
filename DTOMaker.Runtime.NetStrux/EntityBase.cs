@@ -41,8 +41,7 @@ public abstract class EntityBase : INetStruxEntityBase, IEquatable<EntityBase>
 
     protected EntityBase(EntityInfo entityInfo, ImmutableArray<ReadOnlyMemory<byte>> buffers)
     {
-        //var receivedInfo = new EntityInfo(buffers[0]);
-        //if (receivedInfo != entityInfo) throw new InvalidDataException($"Header invalid: expected {entityInfo} but received {receivedInfo}");
+        // todo structure checks
         if (buffers.Length != (entityInfo.ClassHeight + 1)) throw new InvalidDataException($"Expected {entityInfo.ClassHeight + 1} buffers but received {buffers.Length}");
         _entityInfo = entityInfo;
         _frozen = true;

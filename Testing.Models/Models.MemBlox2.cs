@@ -1,7 +1,9 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
+using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlox2;
 using System;
+using System.Collections.Immutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,18 +20,18 @@ public sealed partial class Required_String : DTOMaker.Runtime.MemBlox2.EntityBa
     private const int ClassHeight = 1;
     private const int BlockLength = 64;
 
-    private static readonly BlockHeader _header = new BlockHeader(EntityId, StructureCode);
+    private static readonly EntityInfo _entityInfo = new EntityInfo(EntityId, StructureCode);
 
-    public Required_String() : base(_header, new byte[BlockLength])
+    public Required_String() : base(_entityInfo, new byte[BlockLength])
     {
         _Field = string.Empty;
     }
-    public Required_String(Required_String source) : base(source, _header, new byte[BlockLength])
+    public Required_String(Required_String source) : base(source, _entityInfo, new byte[BlockLength])
     {
         _Field = source._Field;
     }
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-    public Required_String(ReadOnlyBuffers buffers) : base(_header, buffers)
+    public Required_String(ImmutableArray<ReadOnlyMemory<byte>> buffers) : base(_entityInfo, buffers)
     {
     }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.

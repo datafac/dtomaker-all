@@ -164,7 +164,7 @@ public class Roundtrip_String
             await copy.UnpackAll(_dataStore);
             if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
         }
-        return buffers.Buffersqqq.Length;
+        return buffers.Length;
     }
 
     [Benchmark]

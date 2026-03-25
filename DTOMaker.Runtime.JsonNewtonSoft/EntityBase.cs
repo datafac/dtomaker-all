@@ -40,13 +40,13 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         public EntityBase(EntityBase _) { }
 
         [JsonIgnore]
-        private volatile bool _frozenqqq;
+        private volatile bool _frozen;
 
         /// <summary>
         /// Gets a value indicating whether the object is in a frozen (read-only) state.
         /// </summary>
         [JsonIgnore]
-        public bool IsFrozen => _frozenqqq;
+        public bool IsFrozen => _frozen;
 
         /// <summary>
         /// Performs actions when the object is being frozen.
@@ -60,9 +60,9 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         /// exceptions. Calling this method multiple times has no additional effect.</remarks>
         public void Freeze()
         {
-            if (_frozenqqq) return;
+            if (_frozen) return;
             OnFreeze();
-            _frozenqqq = true;
+            _frozen = true;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected T IfNotFrozen<T>(T value, [CallerMemberName] string? methodName = null)
         {
-            if (_frozenqqq) ThrowIsFrozenException(methodName);
+            if (_frozen) ThrowIsFrozenException(methodName);
             return value;
         }
 

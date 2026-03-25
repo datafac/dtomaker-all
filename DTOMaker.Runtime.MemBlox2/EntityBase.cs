@@ -11,14 +11,14 @@ namespace DTOMaker.Runtime.MemBlox2;
 
 public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
 {
-    private readonly BlockHeader _header;
+    private readonly EntityInfo _entityInfo;
     protected readonly ImmutableArray<ReadOnlyMemory<byte>> _readonlyBuffers;
     protected readonly ImmutableArray<Memory<byte>> _writableBuffers;
 
-    public ReadOnlyBuffers GetBuffers()
+    public ImmutableArray<ReadOnlyMemory<byte>> GetBuffers()
     {
         ThrowIfNotFrozen();
-        return new ReadOnlyBuffers(_header, _readonlyBuffers);
+        return _readonlyBuffers;
     }
 
     protected abstract IEntityBase OnPartCopy();
@@ -27,20 +27,21 @@ public abstract class EntityBase : IMemBlox2EntityBase, IEquatable<EntityBase>
     /// <summary>
     /// Constructor for entity of height 1.
     /// </summary>
-    protected EntityBase(BlockHeader header, Memory<byte> block1)
+    protected EntityBase(EntityInfo entityInfo, Memory<byte> block1)
     {
-        _header = header;
+        _entityInfo = entityInfo;
         _writableBuffers = [Memory<byte>.Empty, block1];
-        _readonlyBuffers = [header.Memory, block1];
+        _readonlyBuffers = [entityInfo.Memory, block1];
     }
 
-    protected EntityBase(EntityBase source, BlockHeader header, Memory<byte> block1) : this(header, block1) { }
+    protected EntityBase(EntityBase source, EntityInfo entityInfo, Memory<byte> block1) : this(entityInfo, block1) { }
 
-    protected EntityBase(BlockHeader header, ReadOnlyBuffers received)
+    protected EntityBase(EntityInfo entityInfo, ImmutableArray<ReadOnlyMemory<byte>> buffers)
     {
-        if (received.Header != header) throw new InvalidDataException($"Header invalid: Expected {header} but received {received.Header}");
-        _header = header;
-        _readonlyBuffers = received.Buffersqqq;
+        // todo structure checks
+        if (buffers.Length != (entityInfo.ClassHeight + 1)) throw new InvalidDataException($"Expected {entityInfo.ClassHeight + 1} buffers but received {buffers.Length}");
+        _entityInfo = entityInfo;
+        _readonlyBuffers = buffers;
         _writableBuffers = ImmutableArray<Memory<byte>>.Empty;
         _frozen = true;
     }

@@ -1,5 +1,7 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
+using System;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlox2;
@@ -13,7 +15,7 @@ public interface IMemBlox2EntityBase : IEntityBase
     /// <summary>
     /// Gets a sequence of readonly buffers containing the immutable state of the entity.
     /// </summary>
-    ReadOnlyBuffers GetBuffers();
+    ImmutableArray<ReadOnlyMemory<byte>> GetBuffers();
 
     /// <summary>
     /// Asynchronously prepares the entity's data for emission, which includes emitting any referenced entities to the data store.
