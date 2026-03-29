@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+﻿using System;
 
 namespace DTOMaker.Runtime.MemBlocks;
 
@@ -12,7 +12,7 @@ public interface IMemBlocksEntity<T> : IMemBlocksEntityBase
     /// <summary>
     /// Creates a new instance of type T from the specified sequence of bytes.
     /// </summary>
-    static abstract T CreateInstance(ReadOnlySequence<byte> buffers);
+    static abstract T CreateInstance(ReadOnlyMemory<byte> buffer);
 #endif
 
     /// <summary>

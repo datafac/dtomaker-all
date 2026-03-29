@@ -1,4 +1,5 @@
 using DTOMaker.Models;
+using DTOMaker.Runtime;
 using DTOMaker.SrcGen.MemBlocks.IntTests.MemBlocks;
 using Shouldly;
 using System;
@@ -49,11 +50,12 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
                 }
             }
         }
-        public static string ToDisplay(this ReadOnlySequence<byte> sequence)
+
+        public static string ToDisplay(this EntityContent content)
         {
             var result = new StringBuilder();
             int i = 0;
-            foreach (byte b in sequence.ToBytes())
+            foreach (byte b in content.ToSingleBuffer().Span)
             {
                 if (i % 32 == 0)
                 {
@@ -77,7 +79,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             await orig.Pack(dataStore);
-            var buffers = orig.GetBuffers();
+            var buffers = orig.GetContent();
             var copy = new Tree(buffers);
             copy.ShouldNotBeNull();
             copy.Freeze();

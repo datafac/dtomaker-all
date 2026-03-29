@@ -29,7 +29,7 @@ namespace Template_MessagePack.Tests
         [IgnoreMember]
         public Octets Data1
         {
-            get { return Octets.UnsafeWrap( _data1); }
+            get { return Octets.Wrap( _data1); }
             set { _data1 = value.AsMemory(); }
         }
 
@@ -37,7 +37,7 @@ namespace Template_MessagePack.Tests
         [IgnoreMember]
         public Octets? Data2
         {
-            get { return _data2.HasValue ? Octets.UnsafeWrap(_data2.Value) : null; }
+            get { return _data2.HasValue ? Octets.Wrap(_data2.Value) : null; }
             set { _data2 = value is not null ? value.AsMemory() : null; }
         }
 

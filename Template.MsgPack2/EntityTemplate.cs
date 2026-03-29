@@ -602,36 +602,9 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            if (_T_NullableBinaryMemberName_ is not null)
-            {
-                result.Add(_T_NullableBinaryMemberName_.Length);
-                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)
-                {
-#if NET8_0_OR_GREATER
-                    result.AddBytes(segment.Span);
-#else
-                    var segmentSpan = segment.Span;
-                    for (int i = 0; i < segmentSpan.Length; i++)
-                    {
-                        result.Add(segmentSpan[i]);
-                    }
-#endif
-                }
-            }
+            result.Add(_T_NullableBinaryMemberName_);
             //##} else {
-            result.Add(_T_RequiredBinaryMemberName_.Length);
-            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)
-            {
-#if NET8_0_OR_GREATER
-                result.AddBytes(segment.Span);
-#else
-                var segmentSpan = segment.Span;
-                for (int i = 0; i < segmentSpan.Length; i++)
-                {
-                    result.Add(segmentSpan[i]);
-                }
-#endif
-            }
+            result.Add(_T_RequiredBinaryMemberName_);
             //##}
             //##break;
             //##case MemberKind.String:
@@ -687,7 +660,6 @@ namespace T_ImplNameSpace_
         public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);
         public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);
-        public override int GetHashCode() => base.GetHashCode();
     }
     //##} else {
     /// <summary>
@@ -1189,42 +1161,9 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.Binary:
             //##if (member.IsNullable) {
-            if (_T_NullableBinaryMemberName_ is not null)
-            {
-                result.Add(_T_NullableBinaryMemberName_.Length);
-#if NET8_0_OR_GREATER
-                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)
-                {
-                    result.AddBytes(segment.Span);
-                }
-#else
-                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)
-                {
-                    var segmentSpan = segment.Span;
-                    for (int i = 0; i < segmentSpan.Length; i++)
-                    {
-                        result.Add(segmentSpan[i]);
-                    }
-                }
-#endif
-            }
+            result.Add(_T_NullableBinaryMemberName_);
             //##} else {
-            result.Add(_T_RequiredBinaryMemberName_.Length);
-#if NET8_0_OR_GREATER
-                foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)
-                {
-                    result.AddBytes(segment.Span);
-                }
-#else
-            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)
-            {
-                var segmentSpan = segment.Span;
-                for (int i = 0; i < segmentSpan.Length; i++)
-                {
-                    result.Add(segmentSpan[i]);
-                }
-            }
-#endif
+            result.Add(_T_RequiredBinaryMemberName_);
             //##}
             //##break;
             //##case MemberKind.String:

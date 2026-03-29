@@ -3,6 +3,8 @@ using DataFac.Storage;
 using DTOMaker.Models;
 using System;
 using System.Buffers;
+using System.Collections.Immutable;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
@@ -22,29 +24,39 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
 
     private const int ClassHeight = 0;
     private const int BlockLength = BlockHeader.HeaderSize; // V1.0
-    private readonly Memory<byte> _writableLocalBlock;
-    private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
     protected abstract int OnGetEntityId();
     public int GetEntityId() => OnGetEntityId();
 
-    protected EntityBase(BlockHeader blockHeader)
+    /// <summary>
+    /// Constructor for an empty, unfrozen entity.
+    /// </summary>
+    protected EntityBase(EntityMetadata metadata)
     {
-        _readonlyLocalBlock = blockHeader.Header;
-        _writableLocalBlock = Memory<byte>.Empty;
+        _metadata = metadata;
     }
-    protected EntityBase(BlockHeader blockHeader, object source)
+
+    /// <summary>
+    /// Constructor for an unfrozen entity with content copied from source.
+    /// </summary>
+    protected EntityBase(EntityMetadata metadata, EntityBase source) : this(metadata) { }
+
+    /// <summary>
+    /// Constructor for an unfrozen entity with content copied from source.
+    /// </summary>
+    protected EntityBase(EntityMetadata metadata, IEntityBase source) : this(metadata) { }
+
+    /// <summary>
+    /// Constructor for a frozen entity with content copied from source.
+    /// </summary>
+    protected EntityBase(EntityMetadata metadata, EntityContent content)
     {
-        _readonlyLocalBlock = blockHeader.Header;
-        _writableLocalBlock = Memory<byte>.Empty;
-    }
-    protected EntityBase(BlockHeader blockHeader, SourceBlocks sourceBlocks)
-    {
-        if (sourceBlocks.Header != blockHeader) throw new NotSupportedException("Entity evolution not supported yet!");
-        _readonlyLocalBlock = blockHeader.Header;
-        _writableLocalBlock = Memory<byte>.Empty;
+        // todo structure checks
+        if (content.Buffers.Length != (metadata.ClassHeight + 1)) throw new InvalidDataException($"Expected {metadata.ClassHeight + 1} buffers but received {content.Buffers.Length}");
+        _metadata = metadata;
         _frozen = true;
     }
+
     private volatile bool _frozen;
     public bool IsFrozen => _frozen;
     protected virtual void OnFreeze() { }
@@ -56,21 +68,20 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
         _frozen = true;
     }
 
-    protected abstract int OnGetClassHeight();
-    protected virtual ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => builder.Append(_readonlyLocalBlock);
-    public ReadOnlySequence<byte> GetBuffers()
+    private readonly EntityMetadata _metadata;
+
+    protected virtual void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
     {
-        ThrowIfNotFrozen();
-        var builder = OnSequenceBuilder(new ReadOnlySequenceBuilder<byte>());
-        return builder.Build();
+        buffers[0] = _metadata.Memory;
     }
 
-    //public void LoadBuffer(ReadOnlyMemory<byte> buffer)
-    //{
-    //    ThrowIfFrozen();
-    //    var buffers = DataFac.MemBlocks.Protocol.SplitBuffers(buffer);
-    //    OnLoadBuffers(buffers);
-    //}
+    public EntityContent GetContent()
+    {
+        ThrowIfNotFrozen();
+        var buffers = new ReadOnlyMemory<byte>[_metadata.ClassHeight + 1];
+        OnGetBuffers(buffers);
+        return new EntityContent(_metadata, ImmutableArray<ReadOnlyMemory<byte>>.Empty.AddRange(buffers));
+    }
 
     protected virtual IEntityBase OnPartCopy() => throw new NotImplementedException();
     public IEntityBase PartCopy() => OnPartCopy();
@@ -123,32 +134,17 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
         throw new InvalidOperationException($"Cannot call {methodName} when not set.");
     }
 
-    public bool Equals(EntityBase? other)
+    public bool Equals(EntityBase? that)
     {
-        if (ReferenceEquals(this, other)) return true;
-        if (other is null) return false;
-        if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
+        if (ReferenceEquals(this, that)) return true;
+        if (that is null) return false;
+        if (that._metadata != _metadata) return false;
         return true;
     }
 
     public override bool Equals(object? obj) => obj is EntityBase;
 
-    private int CalcHashCode()
-    {
-        HashCode result = new HashCode();
-        result.Add(GetType());
-        result.Add(_readonlyLocalBlock.Length);
-#if NET8_0_OR_GREATER
-            result.AddBytes(_readonlyLocalBlock.Span);
-#else
-        var byteSpan = _readonlyLocalBlock.Span;
-        for (int i = 0; i < byteSpan.Length; i++)
-        {
-            result.Add(byteSpan[i]);
-        }
-#endif
-        return result.ToHashCode();
-    }
+    private int CalcHashCode() => _metadata.GetHashCode();
 
     private int? _hashCode;
     public override int GetHashCode()

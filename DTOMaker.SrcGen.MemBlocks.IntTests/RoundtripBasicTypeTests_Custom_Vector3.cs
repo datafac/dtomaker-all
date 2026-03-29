@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_Custom_Vector3
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetBuffers();
+        var buffers = orig.GetContent();
         var copy = new SimpleDTO_Vector3(buffers);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

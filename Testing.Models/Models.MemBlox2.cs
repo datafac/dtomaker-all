@@ -57,11 +57,7 @@ public sealed partial class Required_String : DTOMaker.Runtime.MemBlox2.EntityBa
     {
         BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyBuffers[ClassHeight].Slice(0, 64).Span);
         var blob = await dataStore.GetBlob(blobId);
-#if NET8_0_OR_GREATER
-        _Field = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
-#else
-        _Field = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
-#endif
+        _Field = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.Span) : string.Empty;
     }
     private string _Field;
     /// <inheritdoc/>

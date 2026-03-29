@@ -725,38 +725,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (_T_NullableBinaryMemberName_ is not null)");
-                            Emit("            {");
-                            Emit("                result.Add(_T_NullableBinaryMemberName_.Length);");
-                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
-                            Emit("                {");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("                    result.AddBytes(segment.Span);");
-                            Emit("#else");
-                            Emit("                    var segmentSpan = segment.Span;");
-                            Emit("                    for (int i = 0; i < segmentSpan.Length; i++)");
-                            Emit("                    {");
-                            Emit("                        result.Add(segmentSpan[i]);");
-                            Emit("                    }");
-                            Emit("#endif");
-                            Emit("                }");
-                            Emit("            }");
+                            Emit("            result.Add(_T_NullableBinaryMemberName_);");
                         }
                         else
                         {
-                            Emit("            result.Add(_T_RequiredBinaryMemberName_.Length);");
-                            Emit("            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
-                            Emit("            {");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("                result.AddBytes(segment.Span);");
-                            Emit("#else");
-                            Emit("                var segmentSpan = segment.Span;");
-                            Emit("                for (int i = 0; i < segmentSpan.Length; i++)");
-                            Emit("                {");
-                            Emit("                    result.Add(segmentSpan[i]);");
-                            Emit("                }");
-                            Emit("#endif");
-                            Emit("            }");
+                            Emit("            result.Add(_T_RequiredBinaryMemberName_);");
                         }
                         break;
                     case MemberKind.String:
@@ -815,7 +788,6 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        public override bool Equals(object? obj) => obj is T_AbstractEntity_ other && Equals(other);");
             Emit("        public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);");
             Emit("        public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);");
-            Emit("        public override int GetHashCode() => base.GetHashCode();");
             Emit("    }");
         }
         else
@@ -1432,44 +1404,11 @@ public sealed class EntityGenerator : EntityGeneratorBase
                     case MemberKind.Binary:
                         if (member.IsNullable)
                         {
-                            Emit("            if (_T_NullableBinaryMemberName_ is not null)");
-                            Emit("            {");
-                            Emit("                result.Add(_T_NullableBinaryMemberName_.Length);");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
-                            Emit("                {");
-                            Emit("                    result.AddBytes(segment.Span);");
-                            Emit("                }");
-                            Emit("#else");
-                            Emit("                foreach (var segment in _T_NullableBinaryMemberName_.Sequence)");
-                            Emit("                {");
-                            Emit("                    var segmentSpan = segment.Span;");
-                            Emit("                    for (int i = 0; i < segmentSpan.Length; i++)");
-                            Emit("                    {");
-                            Emit("                        result.Add(segmentSpan[i]);");
-                            Emit("                    }");
-                            Emit("                }");
-                            Emit("#endif");
-                            Emit("            }");
+                            Emit("            result.Add(_T_NullableBinaryMemberName_);");
                         }
                         else
                         {
-                            Emit("            result.Add(_T_RequiredBinaryMemberName_.Length);");
-                            Emit("#if NET8_0_OR_GREATER");
-                            Emit("                foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
-                            Emit("                {");
-                            Emit("                    result.AddBytes(segment.Span);");
-                            Emit("                }");
-                            Emit("#else");
-                            Emit("            foreach (var segment in _T_RequiredBinaryMemberName_.Sequence)");
-                            Emit("            {");
-                            Emit("                var segmentSpan = segment.Span;");
-                            Emit("                for (int i = 0; i < segmentSpan.Length; i++)");
-                            Emit("                {");
-                            Emit("                    result.Add(segmentSpan[i]);");
-                            Emit("                }");
-                            Emit("            }");
-                            Emit("#endif");
+                            Emit("            result.Add(_T_RequiredBinaryMemberName_);");
                         }
                         break;
                     case MemberKind.String:

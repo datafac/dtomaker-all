@@ -14,7 +14,7 @@ public interface IMemBlocksEntityBase : IEntityBase
     /// <summary>
     /// Gets a sequence of readonly buffers containing the immutable state of the entity.
     /// </summary>
-    ReadOnlySequence<byte> GetBuffers();
+    EntityContent GetContent();
 
     /// <summary>
     /// Asynchronously prepares the entity's data for emission, which includes emitting any referenced entities to the data store.

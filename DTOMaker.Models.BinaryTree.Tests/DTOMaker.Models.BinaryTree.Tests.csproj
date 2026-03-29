@@ -15,8 +15,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="DataFac.Memory" Version="0.20.5" />
-		<PackageReference Include="DataFac.Storage.Testing" Version="2.2.6-dev" />
+		<PackageReference Include="DataFac.Memory" Version="1.0.2-dev" />
+		<PackageReference Include="DataFac.Storage.Testing" Version="3.0.4-dev" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
 		<PackageReference Include="Shouldly" Version="4.3.0" />
 		<PackageReference Include="Verify.XunitV3" Version="31.13.5" />
@@ -34,6 +34,7 @@
 		<ProjectReference Include="..\DTOMaker.Runtime.JsonSystemText\DTOMaker.Runtime.JsonSystemText.csproj" />
 		<ProjectReference Include="..\DTOMaker.Runtime.MemBlocks\DTOMaker.Runtime.MemBlocks.csproj" />
 		<ProjectReference Include="..\DTOMaker.Runtime.MsgPack2\DTOMaker.Runtime.MsgPack2.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.JsonNewtonSoft\DTOMaker.SrcGen.JsonNewtonSoft.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.JsonSystemText\DTOMaker.SrcGen.JsonSystemText.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.MsgPack2\DTOMaker.SrcGen.MsgPack2.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

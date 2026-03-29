@@ -15,7 +15,7 @@ public abstract class EntityBase : IMemoryBlockEntity, IEquatable<EntityBase>
     protected readonly ImmutableArray<ReadOnlyMemory<byte>> _readonlyBuffers;
     protected readonly ImmutableArray<Memory<byte>> _writableBuffers;
 
-    public EntityContent GetBuffers()
+    public EntityContent GetContent()
     {
         ThrowIfNotFrozen();
         return new EntityContent(_metadata, _readonlyBuffers);

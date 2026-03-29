@@ -38,7 +38,7 @@ public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBa
     {
         _Field = string.Empty;
     }
-    public Required_String(Required_String source) : base(source, _metadata)
+    public Required_String(Required_String source) : base(_metadata, source)
     {
         _Field = source._Field;
     }
@@ -70,11 +70,7 @@ public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBa
     {
         BlobIdV1 blobId = BlobIdV1.FromBlock(_block);
         var blob = await dataStore.GetBlob(blobId);
-#if NET8_0_OR_GREATER
-        _Field = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value);
-#else
-        _Field = blob is null ? string.Empty : System.Text.Encoding.UTF8.GetString(blob.Value.ToArray());
-#endif
+        _Field = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.Span) : string.Empty;
     }
     private string _Field;
     /// <inheritdoc/>

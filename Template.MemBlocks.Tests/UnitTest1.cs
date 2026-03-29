@@ -1,19 +1,33 @@
 using DataFac.Memory;
 using DataFac.Storage;
+using DTOMaker.Models;
+using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlocks;
 using Shouldly;
 using System;
 using System.Buffers;
 using System.Linq;
 using System.Threading.Tasks;
+using T_BaseImplNameSpace_;
 using T_ImplNameSpace_;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
 namespace Template.MemBlocks.Tests
 {
-    internal sealed class TestEntity : EntityBase
+    internal interface ITestEntity
     {
+
+    }
+    internal sealed class TestEntity : EntityBase, ITestEntity, IEquatable<TestEntity>, IMemBlocksEntity<TestEntity>
+    {
+        private sealed class _EntityFactory : IMemBlocksEntityFactory<TestEntity>
+        {
+            public TestEntity CreateInstance(ReadOnlyMemory<byte> buffer) => TestEntity.DeserializeFrom(buffer);
+        }
+        private static readonly _EntityFactory _factory = new _EntityFactory();
+        public IMemBlocksEntityFactory<TestEntity> GetFactory() => _factory;
+
         //##if(false) {
         //private const int T_ClassHeight_ = 2;
         //private const int T_BlockLength_ = 1024;
@@ -27,15 +41,65 @@ namespace Template.MemBlocks.Tests
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
-        private static readonly BlockHeader _header = BlockHeader.CreateNew(EntityId, _structureBits);
+        private static readonly EntityMetadata _metadata = new EntityMetadata(EntityId, _structureBits);
 
-        protected override int OnGetClassHeight() => ClassHeight;
-        protected override ReadOnlySequenceBuilder<byte> OnSequenceBuilder(ReadOnlySequenceBuilder<byte> builder) => base.OnSequenceBuilder(builder).Append(_readonlyLocalBlock);
+        private static TestEntity DeserializeFrom(ReadOnlyMemory<byte> buffer)
+        {
+            EntityContent content = EntityContent.FromSingleBuffer(_metadata, buffer);
+            return new TestEntity(content);
+        }
+        public static TestEntity CreateInstance(ReadOnlyMemory<byte> buffer) => TestEntity.DeserializeFrom(buffer);
+
         protected override int OnGetEntityId() => EntityId;
-        public TestEntity() : base(_header)
+        protected override void OnFreeze() => base.OnFreeze();
+        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
+        {
+            base.OnGetBuffers(buffers);
+            buffers[ClassHeight] = _readonlyLocalBlock;
+        }
+        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
+        protected override IEntityBase OnPartCopy() => new TestEntity(this);
+
+        public TestEntity() : base(_metadata)
         {
             _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
         }
+        public TestEntity(TestEntity source) : base(_metadata)
+        {
+            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            //this.Field1 = source.Field1;
+        }
+
+        protected TestEntity(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        {
+            var sourceBlock = content.Buffers[ClassHeight];
+            if (sourceBlock.Length < BlockLength)
+            {
+                // source too small - allocate new
+                Memory<byte> memory = new byte[BlockLength];
+                sourceBlock.CopyTo(memory);
+                _readonlyLocalBlock = memory;
+            }
+            else
+            {
+                _readonlyLocalBlock = sourceBlock;
+            }
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
+
+        internal TestEntity(EntityContent content) : this(_metadata, content) { }
+
+        public bool Equals(TestEntity? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
+            return true;
+        }
+        public override bool Equals(object? obj) => obj is TestEntity other && Equals(other);
+        public override int GetHashCode() => base.GetHashCode();
     }
     public class EntityBaseTests
     {
@@ -70,7 +134,7 @@ namespace Template.MemBlocks.Tests
             var orig = new TestEntity();
             await orig.Pack(dataStore);
             orig.Freeze();
-            var buffer = orig.GetBuffers().Compact();
+            var buffer = orig.GetContent().ToSingleBuffer();
             buffer.Length.ShouldBe(48);
 
             buffer.Span[0].ShouldBe((byte)'|');  // marker byte 0
@@ -138,8 +202,8 @@ namespace Template.MemBlocks.Tests
             await orig.Pack(dataStore);
             orig.Freeze();
 
-            var buffers = orig.GetBuffers();
-            var copy = T_ImplNameSpace_.T_EntityImplName_.DeserializeFrom(buffers);
+            var buffer = orig.GetContent().ToSingleBuffer();
+            var copy = T_ImplNameSpace_.T_EntityImplName_.CreateInstance(buffer);
             await copy.UnpackAll(dataStore);
 
             copy.IsFrozen.ShouldBeTrue();
@@ -168,8 +232,8 @@ namespace Template.MemBlocks.Tests
             await orig.Pack(dataStore);
             orig.Freeze();
 
-            var buffers = orig.GetBuffers();
-            var recd = T_BaseImplNameSpace_.T_BaseImplName_.DeserializeFrom(buffers);
+            var buffer = orig.GetContent().ToSingleBuffer();
+            var recd = T_BaseImplNameSpace_.T_BaseImplName_.CreateInstance(buffer);
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();

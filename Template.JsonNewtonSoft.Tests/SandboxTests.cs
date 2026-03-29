@@ -22,7 +22,7 @@ namespace Template.JsonNewtonSoft.Tests
         [JsonProperty("fieldTwo")]
         public byte[] Field2 { get; set; } = Array.Empty<byte>();
 
-        Octets ISimple.Field2 => Octets.UnsafeWrap(Field2);
+        Octets ISimple.Field2 => Octets.Wrap(Field2);
     }
 
     internal interface IParent

@@ -1,5 +1,4 @@
-﻿using DataFac.Memory;
-using DataFac.Storage;
+﻿using DataFac.Storage;
 using DTOMaker.Models;
 using System;
 using System.Collections.Immutable;
@@ -18,7 +17,7 @@ public abstract class EntityBase : IMemoryBlockEntity, IEquatable<EntityBase>
         buffers[0] = _metadata.Memory;
     }
 
-    public EntityContent GetBuffers()
+    public EntityContent GetContent()
     {
         ThrowIfNotFrozen();
         var buffers = new ReadOnlyMemory<byte>[_metadata.ClassHeight + 1];
@@ -30,15 +29,21 @@ public abstract class EntityBase : IMemoryBlockEntity, IEquatable<EntityBase>
     public IEntityBase PartCopy() => OnPartCopy();
 
     /// <summary>
-    /// Constructor for entity of height 1.
+    /// Constructor for an empty, unfrozen entity.
     /// </summary>
     protected EntityBase(EntityMetadata metadata)
     {
         _metadata = metadata;
     }
 
-    protected EntityBase(EntityBase source, EntityMetadata metadata) : this(metadata) { }
+    /// <summary>
+    /// Constructor for an unfrozen entity with content copied from source.
+    /// </summary>
+    protected EntityBase(EntityMetadata metadata, EntityBase source) : this(metadata) { }
 
+    /// <summary>
+    /// Constructor for a frozen entity with content copied from source.
+    /// </summary>
     protected EntityBase(EntityMetadata metadata, EntityContent content)
     {
         // todo structure checks

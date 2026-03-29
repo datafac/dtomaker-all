@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_PairOfInt32
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetBuffers();
+        var buffers = orig.GetContent();
         var copy = new SimpleDTO_PairOfInt32(buffers);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

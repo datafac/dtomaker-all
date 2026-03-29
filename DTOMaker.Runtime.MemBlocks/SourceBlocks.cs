@@ -57,7 +57,6 @@ public readonly struct SourceBlocks
         BlockHeader header = BlockHeader.ParseFrom(headerMemory);
 
         // get remaining blocks
-        //ReadOnlySpan<int> blockSizes = _blockSizes.AsSpan();
         // if the source is a single element or the source elements match the target
         // structure, then the slice compactions will not allocate new memory.
         long bits = header.StructureBits;

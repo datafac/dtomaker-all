@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 
 namespace DTOMaker.Runtime.MemBlocks;
 
@@ -10,5 +11,5 @@ public interface IMemBlocksEntityFactory<T>
     /// <summary>
     /// Creates an instance of type T by deserializing the provided sequence of bytes.
     /// </summary>
-    T CreateInstance(ReadOnlySequence<byte> buffers);
+    T CreateInstance(ReadOnlyMemory<byte> buffer);
 }

@@ -12,7 +12,7 @@ public interface IMemoryBlockEntity
     /// <summary>
     /// Gets the metadata and readonly buffers of the entity.
     /// </summary>
-    EntityContent GetBuffers();
+    EntityContent GetContent();
 
     /// <summary>
     /// Asynchronously prepares the entity's data for emission, which includes emitting any referenced entities to the data store.

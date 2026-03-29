@@ -158,41 +158,8 @@ namespace MyOrg.Model3.MsgPack2
             HashCode result = new HashCode();
             result.Add(typeof(MyDTO));
             result.Add(base.GetHashCode());
-            result.Add(_Field41.Length);
-#if NET8_0_OR_GREATER
-                foreach (var segment in _Field41.Sequence)
-                {
-                    result.AddBytes(segment.Span);
-                }
-#else
-            foreach (var segment in _Field41.Sequence)
-            {
-                var segmentSpan = segment.Span;
-                for (int i = 0; i < segmentSpan.Length; i++)
-                {
-                    result.Add(segmentSpan[i]);
-                }
-            }
-#endif
-            if (_Field42 is not null)
-            {
-                result.Add(_Field42.Length);
-#if NET8_0_OR_GREATER
-                foreach (var segment in _Field42.Sequence)
-                {
-                    result.AddBytes(segment.Span);
-                }
-#else
-                foreach (var segment in _Field42.Sequence)
-                {
-                    var segmentSpan = segment.Span;
-                    for (int i = 0; i < segmentSpan.Length; i++)
-                    {
-                        result.Add(segmentSpan[i]);
-                    }
-                }
-#endif
-            }
+            result.Add(_Field41);
+            result.Add(_Field42);
             return result.ToHashCode();
         }
 

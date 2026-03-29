@@ -11,8 +11,8 @@ namespace DTOMaker.Runtime;
 /// </summary>
 public readonly struct EntityMetadata : IEquatable<EntityMetadata>
 {
-    private const int HeaderSize = 16;
-    private const int SignatureV21 = 0x01025f7c; // 1,2,_,|
+    public const int HeaderSize = 16;
+    public const int SignatureV21 = 0x01025f7c; // 1,2,_,|
 
     /// <summary>
     /// Marker and version bytes
@@ -39,6 +39,14 @@ public readonly struct EntityMetadata : IEquatable<EntityMetadata>
     /// </summary>
     public readonly ReadOnlyMemory<byte> Memory;
 
+    private EntityMetadata(int signature, int entityId, long structureBits, ReadOnlyMemory<byte> memory) : this()
+    {
+        SignatureBits = signature;
+        EntityId = entityId;
+        StructureBits = structureBits;
+        Memory = memory;
+    }
+
     public EntityMetadata(int entityId, long structureBits) : this()
     {
         SignatureBits = SignatureV21;
@@ -56,6 +64,17 @@ public readonly struct EntityMetadata : IEquatable<EntityMetadata>
         Memory<byte> memory = new byte[HeaderSize];
         block.WriteTo(memory.Span);
         return memory;
+    }
+
+    public static EntityMetadata Decode(ReadOnlyMemory<byte> buffer)
+    {
+        ReadOnlyMemory<byte> header = buffer.Slice(0, HeaderSize);
+        BlockB016 block = default;
+        block.TryRead(header.Span);
+        int signature = block.A.A.Int32ValueLE;
+        int entityId = block.A.B.Int32ValueLE;
+        long structureBits = block.B.Int64ValueLE;
+        return new EntityMetadata(signature, entityId, structureBits, header);
     }
 
     public override string ToString() => $"0x{SignatureBits:X8},{EntityId},0x{StructureBits:X8}";

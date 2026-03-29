@@ -139,7 +139,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.NetStrux.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore);
-        var buffers = orig.GetBuffers();
+        var buffers = orig.GetContent();
         var copy = new Testing.Models.NetStrux.Required_String(buffers);
         if (_checkValues)
         {
@@ -156,7 +156,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.MemBlox2.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore);
-        var buffers = orig.GetBuffers();
+        var buffers = orig.GetContent();
         var copy = new Testing.Models.MemBlox2.Required_String(buffers);
         if (_checkValues)
         {
@@ -173,7 +173,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.MemBlocks.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore);
-        var buffers = orig.GetBuffers();
+        var buffers = orig.GetContent();
         var copy = new Testing.Models.MemBlocks.Required_String(buffers);
         if (_checkValues)
         {
