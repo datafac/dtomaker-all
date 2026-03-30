@@ -13,6 +13,7 @@ public record class Phase2Entity
     public EquatableArray<Phase1Entity> DerivedEntities { get; init; } = EquatableArray<Phase1Entity>.Empty;
     public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
     public int KeyOffset { get; init; }
+    public int BlockOffset { get; init; }
     public int BlockLength { get; init; }
 
     public override string ToString() => $"{TFN} [{EntityId}] ({Members.Count} members)";
@@ -34,6 +35,11 @@ public record class OutputEntity
     /// member's sequence number, replacing the default calculation of (ClassHeight - 1) * 100.
     /// </summary>
     public int KeyOffset { get; init; }
+
+    /// <summary>
+    /// The MemBlocks entity block offset in bytes.
+    /// </summary>
+    public int BlockOffset { get; init; }
 
     /// <summary>
     /// The MemBlocks entity block length in bytes.

@@ -25,10 +25,7 @@ namespace DTOMaker.SrcGen.MemBlocks
             "Invalid member offset", "The member offset must be zero or greater", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly DiagnosticDescriptor DME13 = new DiagnosticDescriptor(nameof(DME13),
-            "Member layout issue", "Member (value) overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
-
-        private static readonly DiagnosticDescriptor DME14 = new DiagnosticDescriptor(nameof(DME14),
-            "Member layout issue", "Member (flags) overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
+            "Member layout issue", "Member overlaps another, is misaligned, or extends beyond the end of the block", DiagnosticCategory.Design, DiagnosticSeverity.Error, true);
 
         private static readonly SourceGeneratorParameters _parameters = new SourceGeneratorParameters()
         {
@@ -50,18 +47,24 @@ namespace DTOMaker.SrcGen.MemBlocks
 
         protected override OutputEntity OnCustomizeOutputEntity(OutputEntity outputEntity, Phase2Entity inputEntity, ImmutableArray<Phase2Entity> allEntities)
         {
-            // calculate structure code
+            // calculate structure code and block offset
+            int blockOffset = 0;
             var structureCode = new StructureCode(inputEntity.ClassHeight, inputEntity.BlockLength);
             Phase2Entity? parent = allEntities.FirstOrDefault(e => e.TFN == inputEntity.BaseEntity?.TFN);
             while (parent is not null)
             {
+                blockOffset += parent.BlockLength;
                 structureCode = structureCode.AddInnerBlock(parent.ClassHeight, parent.BlockLength);
                 parent = parent.BaseEntity is not null
                     ? allEntities.FirstOrDefault(e => e.TFN == parent.BaseEntity.TFN)
                     : null;
             }
 
-            return outputEntity with { BlockStructureCode = structureCode.Bits };
+            return outputEntity with
+            {
+                BlockStructureCode = structureCode.Bits,
+                BlockOffset = blockOffset
+            };
         }
 
         private static bool IsValidBlockLength(int blockLength)

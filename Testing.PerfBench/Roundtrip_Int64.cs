@@ -65,14 +65,14 @@ public class Roundtrip_Int64
         var orig = new Testing.Models.MemBlocks.Required_Int64();
         orig.Field = 123456L;
         await orig.Pack(_dataStore);
-        var content = orig.GetContent();
-        var copy = new Testing.Models.MemBlocks.Required_Int64(content);
+        var buffer = orig.GetBuffer();
+        var copy = new Testing.Models.MemBlocks.Required_Int64(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
             if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
         }
-        return content.Length;
+        return buffer.Length;
     }
 
     [Benchmark]

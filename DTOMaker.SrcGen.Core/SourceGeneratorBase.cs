@@ -287,6 +287,7 @@ namespace DTOMaker.SrcGen.Core
             //string generatedNamespace = GetNamespace(intfDeclarationSyntax);
             int entityId = 0;
             int keyOffset = 0;
+            int blockOffset = 0;
             int blockLength = 0;
 
             // Loop through all of the attributes on the interface
@@ -329,6 +330,7 @@ namespace DTOMaker.SrcGen.Core
             var result = new ParsedEntity(location, new TypeFullName(intfSymbol, srcGenParams.ImplSpaceSuffix), entityId, baseTFN, diagnostics)
             {
                 KeyOffset = keyOffset,
+                BlockOffset = blockOffset,
                 BlockLength = blockLength,
             };
 
@@ -459,6 +461,7 @@ namespace DTOMaker.SrcGen.Core
                     ? new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics))
                     : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
+                BlockOffset = entity.BlockOffset,
                 BlockLength = entity.BlockLength,
             };
 
@@ -494,6 +497,7 @@ namespace DTOMaker.SrcGen.Core
                     ? new EquatableArray<Diagnostic>(entity.Diagnostics.Concat(newDiagnostics))
                     : entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
+                BlockOffset = entity.BlockOffset,
                 BlockLength = entity.BlockLength,
             };
         }
@@ -514,6 +518,7 @@ namespace DTOMaker.SrcGen.Core
                 DerivedEntities = new EquatableArray<Phase2Entity>(derivedEntities.OrderBy(e => e.TFN.Intf.FullName)),
                 Diagnostics = entity.Diagnostics,
                 KeyOffset = entity.KeyOffset,
+                BlockOffset = entity.BlockOffset,
                 BlockLength = entity.BlockLength,
             };
 

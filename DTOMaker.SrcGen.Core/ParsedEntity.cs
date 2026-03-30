@@ -13,6 +13,7 @@ namespace DTOMaker.SrcGen.Core
         public TypeFullName? BaseTFN { get; init; } = null;
         public EquatableArray<Diagnostic> Diagnostics { get; init; } = EquatableArray<Diagnostic>.Empty;
         public int KeyOffset { get; init; }
+        public int BlockOffset { get; init; }
         public int BlockLength { get; init; }
 
         public ParsedEntity(Location location, TypeFullName tfn, int entityId, TypeFullName? baseTFN, IEnumerable<Diagnostic> diagnostics)

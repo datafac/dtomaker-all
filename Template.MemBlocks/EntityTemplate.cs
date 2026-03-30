@@ -45,9 +45,10 @@ namespace DataFac.Memory
 }
 namespace T_MemberTypeImplSpace_
 {
-    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_
+    public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
     {
         private const int ClassHeight = 1;
+        private const int BlockOffset = 16;
         private const int BlockLength = 8;
         private const long StructureCode = 0x00_41L;
 
@@ -73,51 +74,39 @@ namespace T_MemberTypeImplSpace_
         }
         public static T_MemberTypeImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
-            EntityContent content = EntityContent.FromSingleBuffer(_metadata, buffer);
-            return new T_MemberTypeImplName_(content);
+            return new T_MemberTypeImplName_(buffer);
         }
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
         public T_MemberTypeImplName_() : base(_metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
         public T_MemberTypeImplName_(T_MemberTypeImplName_ source) : base(_metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) : base(_metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.Field1 = source.Field1;
         }
-        protected T_MemberTypeImplName_(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        protected T_MemberTypeImplName_(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
-            var sourceBlock = content.Buffers[ClassHeight];
-            if (sourceBlock.Length < BlockLength)
-            {
-                // source too small - allocate new
-                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-                sourceBlock.CopyTo(_writableLocalBlock);
-            }
-            else
-            {
-                _readonlyLocalBlock = sourceBlock;
-                _writableLocalBlock = Memory<byte>.Empty;
-            }
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
         }
-        public T_MemberTypeImplName_(EntityContent content) : this(_metadata, content) { }
-        public T_MemberTypeImplName_(ReadOnlyMemory<byte> buffer) : this(EntityContent.FromSingleBuffer(_metadata, buffer)) { }
+        public T_MemberTypeImplName_(ReadOnlyMemory<byte> buffer) : this(_metadata, buffer) { }
 
         protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
         protected override int OnGetEntityId() => 3;
         protected override ValueTask OnPack(IDataStore dataStore) => default;
         protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
-        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-        {
-            base.OnGetBuffers(buffers);
-            buffers[ClassHeight] = _readonlyLocalBlock;
-        }
+
+        public bool Equals(T_MemberTypeImplName_? other) => base.Equals(other);
 
         public Int64 Field1
         {
@@ -128,7 +117,7 @@ namespace T_MemberTypeImplSpace_
 }
 namespace T_BaseImplNameSpace_
 {
-    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>, IMemBlocksEntity<T_BaseImplName_>
+    public class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<T_BaseImplName_>
         {
@@ -145,6 +134,7 @@ namespace T_BaseImplNameSpace_
         private static readonly EntityMetadata _metadata = new EntityMetadata(T_EntityId_, BlockStructureCode);
 
         private const int ClassHeight = 1;
+        private const int BlockOffset = 16;
         private const int BlockLength = 4; // structure code = 0x0031L;
 
         private readonly Memory<byte> _writableLocalBlock;
@@ -152,7 +142,7 @@ namespace T_BaseImplNameSpace_
 
         public new static T_BaseImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
-            var metadata = EntityMetadata.Decode(buffer);
+            var metadata = new EntityMetadata(buffer);
             return metadata.EntityId switch
             {
                 //##foreach(var derived in entity.DerivedEntities) {
@@ -170,12 +160,6 @@ namespace T_BaseImplNameSpace_
             base.OnFreeze();
         }
 
-        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-        {
-            base.OnGetBuffers(buffers);
-            buffers[ClassHeight] = _readonlyLocalBlock;
-        }
-
         protected override ValueTask OnPack(IDataStore dataStore)
         {
             return base.OnPack(dataStore);
@@ -188,40 +172,31 @@ namespace T_BaseImplNameSpace_
 
         protected T_BaseImplName_(EntityMetadata metadata) : base(metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
 
         protected T_BaseImplName_(EntityMetadata metadata, T_BaseImplName_ source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.BaseField1 = source.BaseField1;
         }
 
         protected T_BaseImplName_(EntityMetadata metadata, T_BaseIntfNameSpace_.T_BaseIntfName_ source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.BaseField1 = source.BaseField1;
         }
 
-        protected T_BaseImplName_(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        protected T_BaseImplName_(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
-            var sourceBlock = content.Buffers[ClassHeight];
-            if (sourceBlock.Length < BlockLength)
-            {
-                // source too small - allocate new
-                Memory<byte> memory = new byte[BlockLength];
-                sourceBlock.CopyTo(memory);
-                _readonlyLocalBlock = memory;
-            }
-            else
-            {
-                _readonlyLocalBlock = sourceBlock;
-            }
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        public T_BaseImplName_(EntityContent content) : this(_metadata, content) { }
-        public T_BaseImplName_(ReadOnlyMemory<byte> buffer) : this(EntityContent.FromSingleBuffer(_metadata, buffer)) { }
+        public T_BaseImplName_(ReadOnlyMemory<byte> buffer) : this(_metadata, buffer) { }
 
         private const int T_FieldOffset_ = 0;
         private const int T_FieldLength_ = 4;
@@ -232,16 +207,7 @@ namespace T_BaseImplNameSpace_
             set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
         }
 
-        public bool Equals(T_BaseImplName_? other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            if (other is null) return false;
-            if (!base.Equals(other)) return false;
-            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
-            return true;
-        }
-        public override bool Equals(object? obj) => obj is T_BaseImplName_ other && Equals(other);
-        public override int GetHashCode() => base.GetHashCode();
+        public bool Equals(T_BaseImplName_? other) => base.Equals(other);
     }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -251,7 +217,7 @@ namespace T_ImplNameSpace_
     /// <summary>
     /// The T_EntityImplName_ entity - the MemBlocks implementation of the T_IntfNameSpace_.T_EntityIntfName_ interface.
     /// </summary>
-    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>, IMemBlocksEntity<T_EntityImplName_>
+    public partial class T_EntityImplName_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_EntityImplName_>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<T_EntityImplName_>
         {
@@ -270,17 +236,22 @@ namespace T_ImplNameSpace_
         //##if(false) {
         private const int T_ClassHeight_ = 2;
         private const int T_EntityId_ = 2;
-        private const int T_BlockLength_ = 1024;
+        //private const int T_BlockOffset_ = 20;
+        //private const int T_BlockLength_ = 1024;
         private const bool T_MemberObsoleteIsError_ = false;
         private const long T_BlockStructureCode_ = 0x0B00 + 0x0030 + 0x0002;
         //##}
         private const long BlockStructureCode = T_BlockStructureCode_;
         private const int ClassHeight = T_ClassHeight_;
-        private const int BlockLength = T_BlockLength_;
+        //private const int BlockOffset = T_BlockOffset_;
+        //private const int BlockLength = T_BlockLength_;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
         private static readonly EntityMetadata _metadata = new EntityMetadata(T_EntityId_, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
 
         /// <summary>
         /// Creates a required instance of the T_EntityImplName_ entity (or derived entity) from the source.
@@ -335,7 +306,7 @@ namespace T_ImplNameSpace_
         /// </summary>
         public new static T_EntityImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
-            var metadata = EntityMetadata.Decode(buffer);
+            var metadata = new EntityMetadata(buffer);
             return metadata.EntityId switch
             {
                 //##foreach(var derived in entity.DerivedEntities) {
@@ -350,12 +321,6 @@ namespace T_ImplNameSpace_
         protected override int OnGetEntityId() => T_EntityId_;
         /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);
-        /// <inheritdoc/>
-        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-        {
-            base.OnGetBuffers(buffers);
-            buffers[ClassHeight] = _readonlyLocalBlock;
-        }
 
         /// <inheritdoc/>
         protected override void OnFreeze()
@@ -475,7 +440,8 @@ namespace T_ImplNameSpace_
         /// </summary>
         protected T_EntityImplName_(EntityMetadata metadata) : base(metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
 
         /// <summary>
@@ -483,7 +449,9 @@ namespace T_ImplNameSpace_
         /// </summary>
         public T_EntityImplName_() : base(_metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+
         }
 
         /// <summary>
@@ -491,7 +459,8 @@ namespace T_ImplNameSpace_
         /// </summary>
         protected T_EntityImplName_(EntityMetadata metadata, T_EntityImplName_ source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
@@ -548,7 +517,8 @@ namespace T_ImplNameSpace_
         /// </summary>
         protected T_EntityImplName_(EntityMetadata metadata, T_IntfNameSpace_.T_EntityIntfName_ source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             //##foreach (var member in entity.Members) {
             //##using var _ = NewScope(entity, member);
             //##switch(member.Kind) {
@@ -601,33 +571,22 @@ namespace T_ImplNameSpace_
         public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : this(_metadata, source) { }
 
         /// <summary>
-        /// Creates a new instance of the T_EntityImplName_ entity by copying from the source.
+        /// Creates a new frozen instance of the T_EntityImplName_ entity by copying from the source.
         /// </summary>
-        protected T_EntityImplName_(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        protected T_EntityImplName_(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
-            var sourceBlock = content.Buffers[ClassHeight];
-            if (sourceBlock.Length < BlockLength)
-            {
-                // source too small - allocate new
-                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-                sourceBlock.CopyTo(_writableLocalBlock);
-            }
-            else
-            {
-                _readonlyLocalBlock = sourceBlock;
-                _writableLocalBlock = Memory<byte>.Empty;
-            }
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
         }
 
         /// <summary>
-        /// Creates a new instance of the T_EntityImplName_ entity by deserializing the content buffers.
+        /// Creates a new frozen instance of the T_EntityImplName_ entity by deserializing the received buffer.
         /// </summary>
-        public T_EntityImplName_(EntityContent content) : this(_metadata, content) { }
-
-        /// <summary>
-        /// Creates a new instance of the T_EntityImplName_ entity by deserializing the received buffer.
-        /// </summary>
-        public T_EntityImplName_(ReadOnlyMemory<byte> buffer) : this(_metadata, EntityContent.FromSingleBuffer(_metadata, buffer)) { }
+        public T_EntityImplName_(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
 
         //##if(false) {
         private const int T_RequiredNativeStructFieldOffset_ = 0;
@@ -773,8 +732,8 @@ namespace T_ImplNameSpace_
             else
             {
                 await _T_NullableEntityMemberName_.Pack(dataStore);
-                var buffers = _T_NullableEntityMemberName_.GetContent();
-                BlobIdV1 blobId = await dataStore.PutBlob(buffers.ToSingleBuffer());
+                var buffer = _T_NullableEntityMemberName_.GetBuffer();
+                BlobIdV1 blobId = await dataStore.PutBlob(buffer);
                 blobId.WriteTo(_writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64).Span);
             }
         }
@@ -812,8 +771,8 @@ namespace T_ImplNameSpace_
                 _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);
             }
             await _T_RequiredEntityMemberName_.Pack(dataStore);
-            var content = _T_RequiredEntityMemberName_.GetContent();
-            BlobIdV1 blobId = await dataStore.PutBlob(content.ToSingleBuffer());
+            var buffer = _T_RequiredEntityMemberName_.GetBuffer();
+            BlobIdV1 blobId = await dataStore.PutBlob(buffer);
             blobId.WriteTo(_writableLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64).Span);
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)
@@ -973,41 +932,7 @@ namespace T_ImplNameSpace_
         //##}
 
         /// <inheritdoc/>
-        public bool Equals(T_EntityImplName_? other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            if (other is null) return false;
-            if (!base.Equals(other)) return false;
-            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
-            return true;
-        }
-        /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is T_EntityImplName_ other && Equals(other);
-        private int CalcHashCode()
-        {
-            HashCode result = new HashCode();
-            result.Add(base.GetHashCode());
-            var span = _readonlyLocalBlock.Span;
-            result.Add(span.Length);
-#if NET8_0_OR_GREATER
-            result.AddBytes(span);
-#else
-            for (int i = 0; i < span.Length; i++)
-            {
-                result.Add(span[i]);
-            }
-#endif
-            return result.ToHashCode();
-        }
-        private int? _hashCode;
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            if (!IsFrozen) return CalcHashCode();
-            if (_hashCode.HasValue) return _hashCode.Value;
-            _hashCode = CalcHashCode();
-            return _hashCode.Value;
-        }
+        public bool Equals(T_EntityImplName_? other) => base.Equals(other);
         /// <inheritdoc/>
         public static bool operator ==(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>

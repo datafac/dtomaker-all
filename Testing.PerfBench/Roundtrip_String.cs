@@ -47,7 +47,7 @@ public class Roundtrip_String
         return kind switch
         {
             ValueKind.StrZero => string.Empty,
-            ValueKind.StrB064 => "abcdefghijklmnopqrstuvwxyz",
+            ValueKind.StrB064 => "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
             ValueKind.StrK002 =>
                 """
                 You came like a motherless child
@@ -134,53 +134,19 @@ public class Roundtrip_String
     }
 
     [Benchmark]
-    public async ValueTask<long> NetStrux()
-    {
-        var orig = new Testing.Models.NetStrux.Required_String();
-        orig.Field = GetTestValue(Kind);
-        await orig.Pack(_dataStore);
-        var buffers = orig.GetContent();
-        var copy = new Testing.Models.NetStrux.Required_String(buffers);
-        if (_checkValues)
-        {
-            if (copy is null) throw new Exception("Roundtrip entity is null!");
-            await copy.UnpackAll(_dataStore);
-            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-        }
-        return buffers.Buffers.Length;
-    }
-
-    [Benchmark]
-    public async ValueTask<long> MemBlox2()
-    {
-        var orig = new Testing.Models.MemBlox2.Required_String();
-        orig.Field = GetTestValue(Kind);
-        await orig.Pack(_dataStore);
-        var buffers = orig.GetContent();
-        var copy = new Testing.Models.MemBlox2.Required_String(buffers);
-        if (_checkValues)
-        {
-            if (copy is null) throw new Exception("Roundtrip entity is null!");
-            await copy.UnpackAll(_dataStore);
-            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-        }
-        return buffers.Buffers.Length;
-    }
-
-    [Benchmark]
     public async ValueTask<long> MemBlocks()
     {
         var orig = new Testing.Models.MemBlocks.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore);
-        var buffers = orig.GetContent();
-        var copy = new Testing.Models.MemBlocks.Required_String(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new Testing.Models.MemBlocks.Required_String(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
             if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
         }
-        return buffers.Length;
+        return buffer.Length;
     }
 
     [Benchmark]

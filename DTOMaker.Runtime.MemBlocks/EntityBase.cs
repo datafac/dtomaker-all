@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlocks;
 
-public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
+public abstract class EntityBase : IEntityBase, IMemoryBlockEntity, IEquatable<EntityBase>
 {
     #region Static Helpers
-    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore) where T : class, IMemBlocksEntityBase, IEntityBase, new()
+    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore) where T : class, IMemoryBlockEntity, IEntityBase, new()
     {
         var empty = new T();
         await empty.Pack(dataStore);
@@ -23,7 +23,10 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
     #endregion
 
     private const int ClassHeight = 0;
-    private const int BlockLength = BlockHeader.HeaderSize; // V1.0
+    private const int BlockLength = EntityMetadata.HeaderSize; // V1.0
+
+    protected readonly ReadOnlyMemory<byte> _readonlyGlobalBlock;
+    protected readonly Memory<byte> _writableGlobalBlock;
 
     protected abstract int OnGetEntityId();
     public int GetEntityId() => OnGetEntityId();
@@ -33,7 +36,8 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
     /// </summary>
     protected EntityBase(EntityMetadata metadata)
     {
-        _metadata = metadata;
+        _readonlyGlobalBlock = _writableGlobalBlock = new byte[metadata.TotalLength];
+        metadata.WriteTo(_writableGlobalBlock.Span);
     }
 
     /// <summary>
@@ -44,16 +48,24 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
     /// <summary>
     /// Constructor for an unfrozen entity with content copied from source.
     /// </summary>
-    protected EntityBase(EntityMetadata metadata, IEntityBase source) : this(metadata) { }
+    protected EntityBase(EntityMetadata metadata, IEntityBase source) : this(metadata)
+    {
+    }
 
     /// <summary>
     /// Constructor for a frozen entity with content copied from source.
     /// </summary>
-    protected EntityBase(EntityMetadata metadata, EntityContent content)
+    protected EntityBase(EntityMetadata metadata, ReadOnlyMemory<byte> buffer)
     {
-        // todo structure checks
-        if (content.Buffers.Length != (metadata.ClassHeight + 1)) throw new InvalidDataException($"Expected {metadata.ClassHeight + 1} buffers but received {content.Buffers.Length}");
-        _metadata = metadata;
+        // get incoming header and compare
+        EntityMetadata receivedMetadata = new EntityMetadata(buffer);
+        var receivedLength = receivedMetadata.TotalLength;
+        if (receivedLength != buffer.Length) throw new InvalidDataException($"Received header length ({receivedLength}) does not match actual buffer length ({buffer.Length})");
+        if (receivedMetadata != metadata) throw new InvalidDataException($"Received [{receivedMetadata}] does not match current metadata [{metadata}]");
+        var currentLength = metadata.TotalLength;
+        if (receivedLength != currentLength) throw new InvalidDataException($"Received length ({receivedLength}) does not match current length ({currentLength})");
+        _readonlyGlobalBlock = buffer;
+        _writableGlobalBlock = Memory<byte>.Empty;
         _frozen = true;
     }
 
@@ -68,19 +80,10 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
         _frozen = true;
     }
 
-    private readonly EntityMetadata _metadata;
-
-    protected virtual void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-    {
-        buffers[0] = _metadata.Memory;
-    }
-
-    public EntityContent GetContent()
+    public ReadOnlyMemory<byte> GetBuffer()
     {
         ThrowIfNotFrozen();
-        var buffers = new ReadOnlyMemory<byte>[_metadata.ClassHeight + 1];
-        OnGetBuffers(buffers);
-        return new EntityContent(_metadata, ImmutableArray<ReadOnlyMemory<byte>>.Empty.AddRange(buffers));
+        return _readonlyGlobalBlock;
     }
 
     protected virtual IEntityBase OnPartCopy() => throw new NotImplementedException();
@@ -138,13 +141,27 @@ public abstract class EntityBase : IMemBlocksEntityBase, IEquatable<EntityBase>
     {
         if (ReferenceEquals(this, that)) return true;
         if (that is null) return false;
-        if (that._metadata != _metadata) return false;
+        if (!_readonlyGlobalBlock.Span.SequenceEqual(that._readonlyGlobalBlock.Span)) return false;
         return true;
     }
 
-    public override bool Equals(object? obj) => obj is EntityBase;
+    public override bool Equals(object? obj) => obj is EntityBase other && Equals(other);
 
-    private int CalcHashCode() => _metadata.GetHashCode();
+    private int CalcHashCode()
+    {
+        HashCode result = new HashCode();
+        var span = _readonlyGlobalBlock.Span;
+        result.Add(span.Length);
+#if NET8_0_OR_GREATER
+            result.AddBytes(span);
+#else
+        for (int i = 0; i < span.Length; i++)
+        {
+            result.Add(span[i]);
+        }
+#endif
+        return result.ToHashCode();
+    }
 
     private int? _hashCode;
     public override int GetHashCode()

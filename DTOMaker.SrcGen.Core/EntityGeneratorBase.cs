@@ -210,6 +210,7 @@ namespace DTOMaker.SrcGen.Core
                 ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
                 ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}",
                 ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
+                ["BlockOffset"] = entity.BlockOffset,
                 ["BlockLength"] = entity.BlockLength,
             };
             return _tokenStack.NewScope(tokens);
@@ -232,6 +233,7 @@ namespace DTOMaker.SrcGen.Core
                 ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
                 ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}",
                 ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
+                ["BlockOffset"] = entity.BlockOffset,
                 ["BlockLength"] = entity.BlockLength,
                 ["BlockStructureCode"] = $"0x{entity.BlockStructureCode:X8}",
             };

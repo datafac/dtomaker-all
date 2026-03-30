@@ -1,4 +1,5 @@
 ﻿using DataFac.Storage;
+using System;
 using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime;
@@ -12,7 +13,7 @@ public interface IMemoryBlockEntity
     /// <summary>
     /// Gets the metadata and readonly buffers of the entity.
     /// </summary>
-    EntityContent GetContent();
+    ReadOnlyMemory<byte> GetBuffer();
 
     /// <summary>
     /// Asynchronously prepares the entity's data for emission, which includes emitting any referenced entities to the data store.
