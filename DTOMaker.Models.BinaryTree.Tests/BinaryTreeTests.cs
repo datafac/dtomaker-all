@@ -1,3 +1,4 @@
+using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlocks;
 using Shouldly;
 using System;
@@ -38,7 +39,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IMemBlocksEntityBase packable) packable.Pack(dataStore);
+                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
                 tree.Freeze();
             }
 
@@ -97,7 +98,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IMemBlocksEntityBase packable) packable.Pack(dataStore);
+                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
                 tree.Freeze();
             }
 
@@ -109,7 +110,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count--;
 
                 // pack and freeze the tree after each addition
-                if (tree is IMemBlocksEntityBase packable) packable.Pack(dataStore);
+                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
                 tree?.Freeze();
             }
 

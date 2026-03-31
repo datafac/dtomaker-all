@@ -51,11 +51,11 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
             }
         }
 
-        public static string ToDisplay(this EntityContent content)
+        public static string ToDisplay(this ReadOnlyMemory<byte> buffer)
         {
             var result = new StringBuilder();
             int i = 0;
-            foreach (byte b in content.ToSingleBuffer().Span)
+            foreach (byte b in buffer.Span)
             {
                 if (i % 32 == 0)
                 {
@@ -79,12 +79,12 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             await orig.Pack(dataStore);
-            var buffers = orig.GetContent();
-            var copy = new Tree(buffers);
+            var buffer = orig.GetBuffer();
+            var copy = new Tree(buffer);
             copy.ShouldNotBeNull();
             copy.Freeze();
             copy.ShouldBe(orig);
-            return buffers.ToDisplay();
+            return buffer.ToDisplay();
         }
 
         [Fact]

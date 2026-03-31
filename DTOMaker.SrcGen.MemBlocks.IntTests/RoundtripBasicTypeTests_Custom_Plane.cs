@@ -26,14 +26,14 @@ public class RoundtripBasicTypeTests_Custom_Plane
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_Plane(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_Plane(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Equals(orig).ShouldBeTrue();
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_Plane_Defaults() => await Verifier.Verify(Roundtrip_PlaneAsync(default, null));

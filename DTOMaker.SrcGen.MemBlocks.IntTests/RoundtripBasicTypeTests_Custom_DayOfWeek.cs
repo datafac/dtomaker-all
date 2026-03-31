@@ -24,14 +24,14 @@ public class RoundtripBasicTypeTests_Custom_DayOfWeek
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_DayOfWeek(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_DayOfWeek(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Equals(orig).ShouldBeTrue();
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_DayOfWeek_Defaults() => await Verifier.Verify(await Roundtrip_DayOfWeekAsync(default, null));

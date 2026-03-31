@@ -25,7 +25,7 @@ namespace MyOrg.Models.MemBlocks
     /// <summary>
     /// The Derived entity - the MemBlocks implementation of the MyOrg.Models.IDerived interface.
     /// </summary>
-    public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>, IMemBlocksEntity<Derived>
+    public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<Derived>
         {
@@ -43,11 +43,13 @@ namespace MyOrg.Models.MemBlocks
 
         private const long BlockStructureCode = 0x00000852;
         private const int ClassHeight = 2;
-        private const int BlockLength = 128;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
         private static readonly EntityMetadata _metadata = new EntityMetadata(2, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
 
         /// <summary>
         /// Creates a required instance of the Derived entity (or derived entity) from the source.
@@ -94,7 +96,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public new static Derived DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
-            var metadata = EntityMetadata.Decode(buffer);
+            var metadata = new EntityMetadata(buffer);
             return metadata.EntityId switch
             {
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
@@ -105,12 +107,6 @@ namespace MyOrg.Models.MemBlocks
         protected override int OnGetEntityId() => 2;
         /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new Derived(this);
-        /// <inheritdoc/>
-        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-        {
-            base.OnGetBuffers(buffers);
-            buffers[ClassHeight] = _readonlyLocalBlock;
-        }
 
         /// <inheritdoc/>
         protected override void OnFreeze()
@@ -146,7 +142,8 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         protected Derived(EntityMetadata metadata) : base(metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
 
         /// <summary>
@@ -154,7 +151,9 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public Derived() : base(_metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+
         }
 
         /// <summary>
@@ -162,7 +161,8 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         protected Derived(EntityMetadata metadata, Derived source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             _Field11 = source._Field11;
             _Field12 = source._Field12;
         }
@@ -177,7 +177,8 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         protected Derived(EntityMetadata metadata, MyOrg.Models.IDerived source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             _Field11 = source.Field11;
             _Field12 = source.Field12;
         }
@@ -188,33 +189,22 @@ namespace MyOrg.Models.MemBlocks
         public Derived(MyOrg.Models.IDerived source) : this(_metadata, source) { }
 
         /// <summary>
-        /// Creates a new instance of the Derived entity by copying from the source.
+        /// Creates a new frozen instance of the Derived entity by copying from the source.
         /// </summary>
-        protected Derived(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        protected Derived(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
-            var sourceBlock = content.Buffers[ClassHeight];
-            if (sourceBlock.Length < BlockLength)
-            {
-                // source too small - allocate new
-                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-                sourceBlock.CopyTo(_writableLocalBlock);
-            }
-            else
-            {
-                _readonlyLocalBlock = sourceBlock;
-                _writableLocalBlock = Memory<byte>.Empty;
-            }
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
         }
 
         /// <summary>
-        /// Creates a new instance of the Derived entity by deserializing the content buffers.
+        /// Creates a new frozen instance of the Derived entity by deserializing the received buffer.
         /// </summary>
-        public Derived(EntityContent content) : this(_metadata, content) { }
-
-        /// <summary>
-        /// Creates a new instance of the Derived entity by deserializing the received buffer.
-        /// </summary>
-        public Derived(ReadOnlyMemory<byte> buffer) : this(_metadata, EntityContent.FromSingleBuffer(_metadata, buffer)) { }
+        public Derived(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
 
         private async ValueTask Field11_Pack(IDataStore dataStore)
         {
@@ -271,41 +261,7 @@ namespace MyOrg.Models.MemBlocks
 
 
         /// <inheritdoc/>
-        public bool Equals(Derived? other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            if (other is null) return false;
-            if (!base.Equals(other)) return false;
-            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
-            return true;
-        }
-        /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is Derived other && Equals(other);
-        private int CalcHashCode()
-        {
-            HashCode result = new HashCode();
-            result.Add(base.GetHashCode());
-            var span = _readonlyLocalBlock.Span;
-            result.Add(span.Length);
-#if NET8_0_OR_GREATER
-            result.AddBytes(span);
-#else
-            for (int i = 0; i < span.Length; i++)
-            {
-                result.Add(span[i]);
-            }
-#endif
-            return result.ToHashCode();
-        }
-        private int? _hashCode;
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            if (!IsFrozen) return CalcHashCode();
-            if (_hashCode.HasValue) return _hashCode.Value;
-            _hashCode = CalcHashCode();
-            return _hashCode.Value;
-        }
+        public bool Equals(Derived? other) => base.Equals(other);
         /// <inheritdoc/>
         public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>

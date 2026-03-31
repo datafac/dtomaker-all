@@ -236,15 +236,11 @@ namespace T_ImplNameSpace_
         //##if(false) {
         private const int T_ClassHeight_ = 2;
         private const int T_EntityId_ = 2;
-        //private const int T_BlockOffset_ = 20;
-        //private const int T_BlockLength_ = 1024;
         private const bool T_MemberObsoleteIsError_ = false;
         private const long T_BlockStructureCode_ = 0x0B00 + 0x0030 + 0x0002;
         //##}
         private const long BlockStructureCode = T_BlockStructureCode_;
         private const int ClassHeight = T_ClassHeight_;
-        //private const int BlockOffset = T_BlockOffset_;
-        //private const int BlockLength = T_BlockLength_;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 

@@ -25,7 +25,7 @@ namespace MyOrg.Model2.MemBlocks
     /// <summary>
     /// The MyDTO entity - the MemBlocks implementation of the MyOrg.Model2.IMyDTO interface.
     /// </summary>
-    public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Model2.IMyDTO, IEquatable<MyDTO>, IMemBlocksEntity<MyDTO>
+    public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Model2.IMyDTO, IEquatable<MyDTO>
     {
         private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
         {
@@ -43,11 +43,13 @@ namespace MyOrg.Model2.MemBlocks
 
         private const long BlockStructureCode = 0x00000081;
         private const int ClassHeight = 1;
-        private const int BlockLength = 128;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
         private static readonly EntityMetadata _metadata = new EntityMetadata(3, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
 
         /// <summary>
         /// Creates a required instance of the MyDTO entity (or derived entity) from the source.
@@ -94,7 +96,7 @@ namespace MyOrg.Model2.MemBlocks
         /// </summary>
         public new static MyDTO DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
-            var metadata = EntityMetadata.Decode(buffer);
+            var metadata = new EntityMetadata(buffer);
             return metadata.EntityId switch
             {
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
@@ -105,12 +107,6 @@ namespace MyOrg.Model2.MemBlocks
         protected override int OnGetEntityId() => 3;
         /// <inheritdoc/>
         protected override IEntityBase OnPartCopy() => new MyDTO(this);
-        /// <inheritdoc/>
-        protected override void OnGetBuffers(Span<ReadOnlyMemory<byte>> buffers)
-        {
-            base.OnGetBuffers(buffers);
-            buffers[ClassHeight] = _readonlyLocalBlock;
-        }
 
         /// <inheritdoc/>
         protected override void OnFreeze()
@@ -148,7 +144,8 @@ namespace MyOrg.Model2.MemBlocks
         /// </summary>
         protected MyDTO(EntityMetadata metadata) : base(metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
 
         /// <summary>
@@ -156,7 +153,9 @@ namespace MyOrg.Model2.MemBlocks
         /// </summary>
         public MyDTO() : base(_metadata)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+
         }
 
         /// <summary>
@@ -164,7 +163,8 @@ namespace MyOrg.Model2.MemBlocks
         /// </summary>
         protected MyDTO(EntityMetadata metadata, MyDTO source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             _Field31 = source._Field31;
             _Field32 = source._Field32;
         }
@@ -179,7 +179,8 @@ namespace MyOrg.Model2.MemBlocks
         /// </summary>
         protected MyDTO(EntityMetadata metadata, MyOrg.Model2.IMyDTO source) : base(metadata, source)
         {
-            _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             _Field31 = MyOrg.Model2.MemBlocks.MyDTO.CreateRequired(source.Field31);
             _Field32 = source.Field32 is null ? null : MyOrg.Model2.MemBlocks.MyDTO.CreateNullable(source.Field32);
         }
@@ -190,33 +191,22 @@ namespace MyOrg.Model2.MemBlocks
         public MyDTO(MyOrg.Model2.IMyDTO source) : this(_metadata, source) { }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by copying from the source.
+        /// Creates a new frozen instance of the MyDTO entity by copying from the source.
         /// </summary>
-        protected MyDTO(EntityMetadata metadata, EntityContent content) : base(metadata, content)
+        protected MyDTO(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
-            var sourceBlock = content.Buffers[ClassHeight];
-            if (sourceBlock.Length < BlockLength)
-            {
-                // source too small - allocate new
-                _readonlyLocalBlock = _writableLocalBlock = new byte[BlockLength];
-                sourceBlock.CopyTo(_writableLocalBlock);
-            }
-            else
-            {
-                _readonlyLocalBlock = sourceBlock;
-                _writableLocalBlock = Memory<byte>.Empty;
-            }
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
         }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by deserializing the content buffers.
+        /// Creates a new frozen instance of the MyDTO entity by deserializing the received buffer.
         /// </summary>
-        public MyDTO(EntityContent content) : this(_metadata, content) { }
-
-        /// <summary>
-        /// Creates a new instance of the MyDTO entity by deserializing the received buffer.
-        /// </summary>
-        public MyDTO(ReadOnlyMemory<byte> buffer) : this(_metadata, EntityContent.FromSingleBuffer(_metadata, buffer)) { }
+        public MyDTO(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
 
         private async ValueTask Field31_Pack(IDataStore dataStore)
         {
@@ -225,8 +215,8 @@ namespace MyOrg.Model2.MemBlocks
                 _Field31 = await CreateEmpty<MyOrg.Model2.MemBlocks.MyDTO>(dataStore);
             }
             await _Field31.Pack(dataStore);
-            var content = _Field31.GetContent();
-            BlobIdV1 blobId = await dataStore.PutBlob(content.ToSingleBuffer());
+            var buffer = _Field31.GetBuffer();
+            BlobIdV1 blobId = await dataStore.PutBlob(buffer);
             blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
         }
         private async ValueTask Field31_Unpack(IDataStore dataStore, int depth)
@@ -265,8 +255,8 @@ namespace MyOrg.Model2.MemBlocks
             else
             {
                 await _Field32.Pack(dataStore);
-                var buffers = _Field32.GetContent();
-                BlobIdV1 blobId = await dataStore.PutBlob(buffers.ToSingleBuffer());
+                var buffer = _Field32.GetBuffer();
+                BlobIdV1 blobId = await dataStore.PutBlob(buffer);
                 blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
             }
         }
@@ -296,41 +286,7 @@ namespace MyOrg.Model2.MemBlocks
 
 
         /// <inheritdoc/>
-        public bool Equals(MyDTO? other)
-        {
-            if (ReferenceEquals(this, other)) return true;
-            if (other is null) return false;
-            if (!base.Equals(other)) return false;
-            if (!_readonlyLocalBlock.Span.SequenceEqual(other._readonlyLocalBlock.Span)) return false;
-            return true;
-        }
-        /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
-        private int CalcHashCode()
-        {
-            HashCode result = new HashCode();
-            result.Add(base.GetHashCode());
-            var span = _readonlyLocalBlock.Span;
-            result.Add(span.Length);
-#if NET8_0_OR_GREATER
-            result.AddBytes(span);
-#else
-            for (int i = 0; i < span.Length; i++)
-            {
-                result.Add(span[i]);
-            }
-#endif
-            return result.ToHashCode();
-        }
-        private int? _hashCode;
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            if (!IsFrozen) return CalcHashCode();
-            if (_hashCode.HasValue) return _hashCode.Value;
-            _hashCode = CalcHashCode();
-            return _hashCode.Value;
-        }
+        public bool Equals(MyDTO? other) => base.Equals(other);
         /// <inheritdoc/>
         public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>

@@ -24,13 +24,13 @@ public class RoundtripBasicTypeTests_Guid
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_Guid(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_Guid(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     private static readonly Guid guidValue = Guid.Parse("12345678-1234-1234-1234-1234567890ab");

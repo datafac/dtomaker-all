@@ -26,14 +26,14 @@ public class RoundtripBasicTypeTests_Octets
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_Octets(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_Octets(buffer);
         copy.ShouldNotBeNull();
         await copy.UnpackAll(dataStore);
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_Octets_Defaults() => await Verifier.Verify(await Roundtrip_OctetsAsync(Octets.Empty, null));

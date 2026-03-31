@@ -24,8 +24,8 @@ public class RoundtripBasicTypeTests_Double
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_Double(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_Double(buffer);
         copy.ShouldNotBeNull();
         if (Double.IsNaN(reqValue))
         {
@@ -37,7 +37,7 @@ public class RoundtripBasicTypeTests_Double
             copy.Field1.ShouldBe(reqValue);
         }
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_Double_Defaults() => await Verifier.Verify(await Roundtrip_DoubleAsync(default, null));

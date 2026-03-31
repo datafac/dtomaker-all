@@ -24,13 +24,13 @@ public class RoundtripBasicTypeTests_Int08
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffers = orig.GetContent();
-        var copy = new SimpleDTO_Int08(buffers);
+        var buffer = orig.GetBuffer();
+        var copy = new SimpleDTO_Int08(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);
-        return buffers.ToDisplay();
+        return buffer.ToDisplay();
     }
 
     [Fact] public async Task Roundtrip_Int08_Defaults() => await Verifier.Verify(await Roundtrip_Int08Async(default, null));
