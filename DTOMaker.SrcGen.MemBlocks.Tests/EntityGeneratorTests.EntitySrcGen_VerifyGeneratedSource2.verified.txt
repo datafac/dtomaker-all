@@ -97,6 +97,7 @@ namespace MyOrg.Model2.MemBlocks
         public new static MyDTO DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
             var metadata = new EntityMetadata(buffer);
+            if (metadata.EntityId == 3) return new MyOrg.Model2.MemBlocks.MyDTO(buffer);
             return metadata.EntityId switch
             {
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")

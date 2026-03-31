@@ -97,6 +97,7 @@ namespace MyOrg.Models.MemBlocks
         public new static Derived DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
             var metadata = new EntityMetadata(buffer);
+            if (metadata.EntityId == 2) return new MyOrg.Models.MemBlocks.Derived(buffer);
             return metadata.EntityId switch
             {
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")

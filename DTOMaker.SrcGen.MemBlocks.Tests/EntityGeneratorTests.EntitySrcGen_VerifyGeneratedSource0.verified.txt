@@ -99,6 +99,7 @@ namespace MyOrg.Models.MemBlocks
         public new static MyDTO DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
             var metadata = new EntityMetadata(buffer);
+            if (metadata.EntityId == 1) return new MyOrg.Models.MemBlocks.MyDTO(buffer);
             return metadata.EntityId switch
             {
                 2 => new MyOrg.Models.MemBlocks.Derived(buffer),

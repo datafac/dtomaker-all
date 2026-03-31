@@ -308,6 +308,7 @@ public partial class EntityGenerator
         Emit("        public new static T_EntityImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)");
         Emit("        {");
         Emit("            var metadata = new EntityMetadata(buffer);");
+        Emit("            if (metadata.EntityId == T_EntityId_) return new T_ImplNameSpace_.T_EntityImplName_(buffer);");
         Emit("            return metadata.EntityId switch");
         Emit("            {");
         foreach (var derived in entity.DerivedEntities)

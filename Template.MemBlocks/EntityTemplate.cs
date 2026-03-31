@@ -303,6 +303,7 @@ namespace T_ImplNameSpace_
         public new static T_EntityImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
             var metadata = new EntityMetadata(buffer);
+            if (metadata.EntityId == T_EntityId_) return new T_ImplNameSpace_.T_EntityImplName_(buffer);
             return metadata.EntityId switch
             {
                 //##foreach(var derived in entity.DerivedEntities) {
