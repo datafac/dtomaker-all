@@ -164,4 +164,20 @@ public class Roundtrip_String
         }
         return buffer.Length;
     }
+
+    [Benchmark]
+    public async ValueTask<long> JsonNewtonSoft()
+    {
+        var orig = new Testing.Models.JsonNewtonSoft.Required_String();
+        orig.Field = GetTestValue(Kind);
+        orig.Freeze();
+        string buffer = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.SerializeToJson(orig);
+        var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonNewtonSoft.Required_String>(buffer);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffer.Length;
+    }
 }
