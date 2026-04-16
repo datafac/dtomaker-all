@@ -209,16 +209,14 @@ namespace MyOrg.Model3.MemBlocks
 
         private async ValueTask Field41_Pack(IDataStore dataStore)
         {
-            var buffers = _Field41.AsMemory();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffers);
-            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+            var writableField = _writableLocalBlock.Slice(0, 64);
+            await PackData(_Field41.AsMemory(), writableField, dataStore);
         }
         private async ValueTask Field41_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
-            _Field41 = blob.HasData ? Octets.Wrap(blob.Data) : Octets.Empty;
-
+            var readonlyField = _readonlyLocalBlock.Slice(0, 64);
+            var data = await UnpackData(readonlyField, dataStore);
+            _Field41 = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;
         }
         private Octets _Field41 = Octets.Empty;
         /// <inheritdoc/>
@@ -230,21 +228,14 @@ namespace MyOrg.Model3.MemBlocks
 
         private async ValueTask Field42_Pack(IDataStore dataStore)
         {
-            if (_Field42 is null)
-            {
-                _writableLocalBlock.Slice(64, 64).Span.Clear();
-            }
-            else
-            {
-                BlobIdV1 blobId = await dataStore.PutBlob(_Field42.AsMemory());
-                blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
-            }
+            var writableField = _writableLocalBlock.Slice(64, 64);
+            await PackData(_Field42?.AsMemory(), writableField, dataStore);
         }
         private async ValueTask Field42_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
-            _Field42 = blob.HasData ? Octets.Wrap(blob.Data) : null;
+            var readonlyField = _readonlyLocalBlock.Slice(64, 64);
+            var data = await UnpackData(readonlyField, dataStore);
+            _Field42 = data.HasValue ? Octets.Wrap(data.Value) : null;
         }
         private Octets? _Field42;
         /// <inheritdoc/>

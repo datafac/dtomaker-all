@@ -205,26 +205,18 @@ namespace MyOrg.Models.MemBlocks
 
         private async ValueTask Field1_Pack(IDataStore dataStore)
         {
-            if (_Field1 is null)
-            {
-                _writableLocalBlock.Slice(0, 64).Span.Clear();
-            }
-            else
-            {
-                await _Field1.Pack(dataStore);
-                var buffer = _Field1.GetBuffer();
-                BlobIdV1 blobId = await dataStore.PutBlob(buffer);
-                blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
-            }
+            var writableField = _writableLocalBlock.Slice(0, 64);
+            if (_Field1 is not null) await _Field1.Pack(dataStore);
+            await PackData(_Field1?.GetBuffer(), writableField, dataStore);
         }
         private async ValueTask Field1_Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
+            var readonlyField = _readonlyLocalBlock.Slice(0, 64);
+            var data = await UnpackData(readonlyField, dataStore);
             _Field1 = null;
-            if (blob.HasData)
+            if (data.HasValue)
             {
-                _Field1 = MyOrg.Models.MemBlocks.MyDTO.DeserializeFrom(blob.Data);
+                _Field1 = MyOrg.Models.MemBlocks.MyDTO.DeserializeFrom(data.Value);
                 await _Field1.Unpack(dataStore, depth - 1);
             }
         }

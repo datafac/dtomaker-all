@@ -211,22 +211,21 @@ namespace MyOrg.Model2.MemBlocks
 
         private async ValueTask Field31_Pack(IDataStore dataStore)
         {
+            var writableField = _writableLocalBlock.Slice(0, 64);
             if (_Field31 is null)
             {
                 _Field31 = await CreateEmpty<MyOrg.Model2.MemBlocks.MyDTO>(dataStore);
             }
             await _Field31.Pack(dataStore);
-            var buffer = _Field31.GetBuffer();
-            BlobIdV1 blobId = await dataStore.PutBlob(buffer);
-            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+            await PackData(_Field31.GetBuffer(), writableField, dataStore);
         }
         private async ValueTask Field31_Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
-            if (blob.HasData)
+            var readonlyField = _readonlyLocalBlock.Slice(0, 64);
+            var data = await UnpackData(readonlyField, dataStore);
+            if (data.HasValue)
             {
-                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(blob.Data);
+                _Field31 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(data.Value);
                 await _Field31.Unpack(dataStore, depth - 1);
             }
             else
@@ -249,26 +248,18 @@ namespace MyOrg.Model2.MemBlocks
 
         private async ValueTask Field32_Pack(IDataStore dataStore)
         {
-            if (_Field32 is null)
-            {
-                _writableLocalBlock.Slice(64, 64).Span.Clear();
-            }
-            else
-            {
-                await _Field32.Pack(dataStore);
-                var buffer = _Field32.GetBuffer();
-                BlobIdV1 blobId = await dataStore.PutBlob(buffer);
-                blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
-            }
+            var writableField = _writableLocalBlock.Slice(64, 64);
+            if (_Field32 is not null) await _Field32.Pack(dataStore);
+            await PackData(_Field32?.GetBuffer(), writableField, dataStore);
         }
         private async ValueTask Field32_Unpack(IDataStore dataStore, int depth)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
+            var readonlyField = _readonlyLocalBlock.Slice(64, 64);
+            var data = await UnpackData(readonlyField, dataStore);
             _Field32 = null;
-            if (blob.HasData)
+            if (data.HasValue)
             {
-                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(blob.Data);
+                _Field32 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(data.Value);
                 await _Field32.Unpack(dataStore, depth - 1);
             }
         }

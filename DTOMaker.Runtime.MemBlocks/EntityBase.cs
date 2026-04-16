@@ -1,4 +1,5 @@
-﻿using DataFac.Memory;
+﻿using DataFac.MemBlox2;
+using DataFac.Memory;
 using DataFac.Storage;
 using DTOMaker.Models;
 using System;
@@ -170,6 +171,46 @@ public abstract class EntityBase : IEntityBase, IMemoryBlockEntity, IEquatable<E
         if (_hashCode.HasValue) return _hashCode.Value;
         _hashCode = CalcHashCode();
         return _hashCode.Value;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected static async ValueTask PackData(ReadOnlyMemory<byte>? buffer, Memory<byte> fieldMemory, IDataStore dataStore)
+    {
+        if (!buffer.HasValue)
+        {
+            fieldMemory.Span.Clear();
+        }
+        else
+        {
+            (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressData(buffer.Value, fieldMemory.Span);
+            if (embedded) return;
+            await dataStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IDataStore dataStore)
+    {
+        (bool embedded, ReadOnlyMemory<byte>? embeddedData) = BlobHelpers.TryGetEmbedded(fieldMemory.Span);
+        if (embedded) return embeddedData;
+
+        BlobData data = await dataStore.GetBlob(BlobKey.From(fieldMemory));
+        return data.HasValue ? data.Bytes : null;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected static async ValueTask PackText(string? text, Memory<byte> fieldMemory, IDataStore dataStore)
+    {
+        if (text is null)
+        {
+            fieldMemory.Span.Clear();
+        }
+        else
+        {
+            (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressText(text, fieldMemory.Span);
+            if (embedded) return;
+            await dataStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+        }
     }
 
     private volatile bool _packed;

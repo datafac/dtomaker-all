@@ -209,17 +209,17 @@ namespace MyOrg.Models.MemBlocks
 
         private async ValueTask Field11_Pack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = await dataStore.PutBlob(_Field11);
-            blobId.WriteTo(_writableLocalBlock.Slice(0, 64).Span);
+            var writableField = _writableLocalBlock.Slice(0, 64);
+            await PackText(_Field11, writableField, dataStore);
         }
         private async ValueTask Field11_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(0, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
+            var readonlyField = _readonlyLocalBlock.Slice(0, 64);
+            var data = await UnpackData(readonlyField, dataStore);
 #if NET8_0_OR_GREATER
-            _Field11 = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.Span) : string.Empty;
+            _Field11 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
 #else
-            _Field11 = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.ToArray()) : string.Empty;
+            _Field11 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
 #endif
         }
         private string _Field11 = string.Empty;
@@ -232,24 +232,17 @@ namespace MyOrg.Models.MemBlocks
 
         private async ValueTask Field12_Pack(IDataStore dataStore)
         {
-            if (_Field12 is null)
-            {
-                _writableLocalBlock.Slice(64, 64).Span.Clear();
-            }
-            else
-            {
-                BlobIdV1 blobId = await dataStore.PutBlob(_Field12);
-                blobId.WriteTo(_writableLocalBlock.Slice(64, 64).Span);
-            }
+            var writableField = _writableLocalBlock.Slice(64, 64);
+            await PackText(_Field12, writableField, dataStore);
         }
         private async ValueTask Field12_Unpack(IDataStore dataStore)
         {
-            BlobIdV1 blobId = BlobIdV1.FromSpan(_readonlyLocalBlock.Slice(64, 64).Span);
-            var blob = await dataStore.GetBlob(blobId);
+            var readonlyField = _readonlyLocalBlock.Slice(64, 64);
+            var data = await UnpackData(readonlyField, dataStore);
 #if NET8_0_OR_GREATER
-            _Field12 = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.Span) : null;
+            _Field12 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
 #else
-            _Field12 = blob.HasData ? System.Text.Encoding.UTF8.GetString(blob.Data.ToArray()) : null;
+            _Field12 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : null;
 #endif
         }
         private string? _Field12;

@@ -36,8 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Memory" Version="1.0.4" />
-		<PackageReference Include="DataFac.Storage" Version="3.0.10-dev" />
+		<PackageReference Include="DataFac.MemBlox2" Version="1.0.7-dev" />
+		<PackageReference Include="DataFac.Memory" Version="1.0.5" />
+		<PackageReference Include="DataFac.Storage" Version="3.0.22-dev" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
 			<PrivateAssets>all</PrivateAssets>
