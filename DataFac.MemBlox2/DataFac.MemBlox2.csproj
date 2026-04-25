@@ -7,8 +7,8 @@
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageProjectUrl>https://github.com/datafac/io</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/datafac/io</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/datafac/dtomaker-all</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/datafac/dtomaker-all</RepositoryUrl>
 		<Company>DataFac</Company>
 		<Product>DTOMaker</Product>
 		<Authors>DataFac Contributors</Authors>
@@ -31,8 +31,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Compression" Version="1.0.10-dev" />
-		<PackageReference Include="DataFac.Hashing" Version="1.0.10-dev" />
+		<PackageReference Include="DataFac.Compression" Version="1.0.11" />
+		<PackageReference Include="DataFac.Hashing" Version="1.0.11" />
 		<PackageReference Include="DataFac.Memory" Version="1.0.6" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
