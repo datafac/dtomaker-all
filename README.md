@@ -9,9 +9,7 @@
 ![GitHub Sponsors](https://img.shields.io/github/sponsors/psiman62)
 ![GitHub Repo stars](https://img.shields.io/github/stars/datafac/dtomaker-all)
 
-*Warning: This is pre-release software under active development. Breaking changes may occur.*
-
-This project contains model-driven compile-time source generators for quickly creating 
+This repo contains model-driven compile-time source generators for quickly creating 
 and maintaining polymorphic, immutable DTOs (Data Transport Objects) supporting various
 serialization protocols.
 
@@ -19,38 +17,42 @@ The objective of these generators is to improve developer productivity, saving t
 reducing errors incurred maintaining boilerplate DTO code, by allowing developers to focus
 on the more interesting data model design, rather than on coding the implementations.
 
-## Open Source Declaration
-
-This is an open source project. This means that you are free to use the source code
-and released binaries within the terms of the license. Use of such constitutes agreement
-to the license terms.
-
-This project is maintained by unpaid developers who enjoy doing this. Please remember that 
-developers are ordinary people, probably much like you, that have families, homes, vehicles 
-and other everyday expenses.
-
-If you find this project useful in any way, including generating revenue for your
-organisation, we ask that you consider sponsoring this project financially. We leave
-it up to you to decide how much. Any amount is appreciated.
-
-You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
-
 ## Features
-- Models defined via C# interfaces with attributes.
-  - Source generators create implementations at compile time.
-- Properties can be basic .NET types such as integers, floats, strings, Guid, etc.
-  - Raw byte arrays are supported using the built-in Octets type.
-  - Other common types such as DateTime, DateTimeOffset, TimeSpan are supported by built-in converters.
-  - User-defined value types can be supported via user-defined converters to built-in types.
-- Nullable value types.
-- Polymorphic types.
-- Freezable types: Instances are mutable until frozen.
-- Serialization protocols:
+
+All DTOs created by these generators support the following features:
+- Common interfaces: Models are defined as C# interfaces. As each implementation has constructors
+  that accept these interfaces, different implementations can be used interchangeably, allowing 
+  simple conversion between different serialization formats.
+- Immutability/Freezability: Newly created instances are mutable until frozen. Once frozen, 
+  instances become immutable and can be safely shared across threads without locking. 
+- Backward compatibility: New properties can be added to models without breaking backward 
+  compatibility. Older versions of the DTOs will simply ignore new properties.
+- Polymorphism: Model types are defined as interfaces that can inherit from other interfaces. This 
+  allows for polymorphic types, where a property of a base type can hold instances of derived 
+  types.
+- Incremental serialization: When serializing an object graph, only the parts of the graph 
+  that have changed since the last serialization need to be re-serialized. This can significantly 
+  improve performance when working with large object graphs where only a small portion of 
+  the data changes between serializations. [Note: Currently, this feature is only supported by
+  the MemBlox2 generator.]
+- Built-in type support: Most .NET primitive types are supported out of the box, including 
+  integers, floats, strings, Guid, etc. Raw byte arrays are supported using the built-in 
+  Octets type. Other common types such as DateTime, DateTimeOffset, TimeSpan are supported 
+  by built-in converters. All types can be nullable.
+- Custom type support: User-defined value types can be supported via user-defined converters 
+  to built-in types. For example, a custom type representing a 3D point could be converted 
+  to and from a built-in type such as a tuple of three floats.
+- Collections: Currently, only collections based on balanced binary trees are supported. 
+  [Development is ongoing.]
+
+## Serialization Protocols
+The following serialization protocols are supported via separate source generators and runtime 
+libraries. You can choose which ones to use by referencing the appropriate source generator 
+and runtime library in your project.
   - JSON (System.Text.Json)
   - JSON (Newtonsoft.Json)
   - MessagePack 2.x
-  - MemBlocks
-- Collections. Collections based on balanced binary trees are supported.
+  - MemBlox2 (a custom binary format optimised for incremental serialization)
 
 ## Example
 
@@ -91,26 +93,38 @@ flowchart TB
     ref3-->bld
 ```
 
-# Ongoing Development
-## Coming next in V2.0
-- common interface support across all serializers
+## Open Source Declaration
+
+This is an open source project. This means that you are free to use the source code
+and released binaries within the terms of the license. Use of such constitutes agreement
+to the license terms.
+
+This project is maintained by unpaid developers who enjoy doing this. Please remember that 
+developers are ordinary people, probably much like you, that have families, homes, vehicles 
+and other everyday expenses.
+
+If you find this project useful in any way, including generating revenue for your
+organisation, we ask that you consider sponsoring this project financially. We leave
+it up to you to decide how much. Any amount is appreciated.
+
+You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
+
+## Coming next in V2.1
 - BitSet type
 
-## Coming later in V2.1+
+## Coming later
 - ref type converters
-- incremental serialization
+- incremental serialization for all
+- more collection types
 - MessagePack 3.x serialization
 - Orleans serialization
 - Protobuf.Net serialization
 - model.json generation
 - command-line alternative
-- variant native type support
-- variable length arrays
 - logical value equality
-- common pattern extensions
 
 # License
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 16th Apr 2026.
+- This readme was last updated 15th May 2026.
