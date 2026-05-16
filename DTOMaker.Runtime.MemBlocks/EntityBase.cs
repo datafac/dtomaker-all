@@ -191,11 +191,13 @@ public abstract class EntityBase : IEntityBase, IMemoryBlockEntity, IEquatable<E
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IDataStore dataStore)
     {
-        (bool embedded, ReadOnlyMemory<byte>? embeddedData) = BlobHelpers.TryGetEmbedded(fieldMemory.Span);
+        (bool embedded, ReadOnlyMemory<byte>? embeddedData) = BlobHelpers.TryGetEmbedded(fieldMemory);
         if (embedded) return embeddedData;
 
         BlobData data = await dataStore.GetBlob(BlobKey.From(fieldMemory));
-        return data.HasValue ? data.Bytes : null;
+        return data.HasValue 
+            ? BlobHelpers.DecompressData(fieldMemory.Span, data.Bytes) 
+            : (ReadOnlyMemory<byte>?)null;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

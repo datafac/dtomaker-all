@@ -42,7 +42,7 @@ public static class BlobHelpers
         }
     }
 
-    public static (bool embedded, ReadOnlyMemory<byte>? decompressed) TryGetEmbedded(ReadOnlySpan<byte> blobId)
+    public static (bool embedded, ReadOnlyMemory<byte>? decompressed) TryGetEmbedded(ReadOnlyMemory<byte> blobId)
     {
         return BlobIdV1.TryReadEmbedded(blobId);
     }

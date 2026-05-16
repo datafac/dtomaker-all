@@ -102,18 +102,19 @@ public static class BlobIdV1
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static (bool embedded, ReadOnlyMemory<byte>? data) TryReadEmbedded(ReadOnlySpan<byte> source)
+    public static (bool embedded, ReadOnlyMemory<byte>? data) TryReadEmbedded(ReadOnlyMemory<byte> source)
     {
         if (source.Length != Size) ThrowBufferWrongSize(nameof(source), Size);
-        if (IsDefaultSpan(source)) return (true, null);
-        if ((source[0] == (byte)'|') && source[1] == (byte)'_') return (false, null); // non-embedded format
+        var sourceSpan = source.Span;
+        if (IsDefaultSpan(sourceSpan)) return (true, null);
+        if ((sourceSpan[0] == (byte)'|') && sourceSpan[1] == (byte)'_') return (false, null); // non-embedded format
 
-        var compAlgo = source[0].ToCompAlgo();
-        int embeddedSize = source[1] - (byte)'A';
+        var compAlgo = sourceSpan[0].ToCompAlgo();
+        int embeddedSize = sourceSpan[1] - (byte)'A';
         return compAlgo switch
         {
-            BlobCompAlgo.UnComp => (true, source.Slice(2, embeddedSize).ToArray()),
-            BlobCompAlgo.Snappy => (true, SnappyCompressor.Decompress(source.Slice(2, embeddedSize))),
+            BlobCompAlgo.UnComp => (true, source.Slice(2, embeddedSize)),
+            BlobCompAlgo.Snappy => (true, SnappyCompressor.Decompress(source.Slice(2, embeddedSize).Span)),
             _ => (false, null),
         };
     }

@@ -44,7 +44,7 @@ public class BlobIdRegressionTests
         (bool embedded1, var compressed) = BlobHelpers.CompressData(data, idMemory.Span);
         embedded1.ShouldBeTrue();
 
-        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idMemory.Span);
+        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idMemory);
         embedded2.ShouldBeTrue();
 
         BlobIdV1.ToDisplayString(idMemory.Span).ShouldBe("U:62:AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0=");
@@ -60,7 +60,7 @@ public class BlobIdRegressionTests
         embedded1.ShouldBeTrue();
         ReadOnlySpan<byte> idSpan = idMemory.Span;
 
-        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idMemory.Span);
+        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idMemory);
         embedded2.ShouldBeTrue();
 
         BlobIdV1.ToDisplayString(idSpan).ShouldBe("S:9:ZAB6/gEAigEA");
@@ -87,18 +87,18 @@ public class BlobIdRegressionTests
         Memory<byte> idMemory = new byte[BlobIdV1.Size];
         (bool embedded1, var compressed) = BlobHelpers.CompressData(data, idMemory.Span);
         embedded1.ShouldBeFalse();
-        ReadOnlySpan<byte> idSpan = idMemory.Span;
+        //ReadOnlySpan<byte> idSpan = idMemory.Span;
 
-        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idSpan);
+        (bool embedded2, _) = BlobHelpers.TryGetEmbedded(idMemory);
         embedded2.ShouldBeFalse();
 
-        (int majorVer, int minorVer, var compAlgo, var hashAlgo, int blobSize) = BlobIdV1.ReadNonEmbedded(idSpan);
+        (int majorVer, int minorVer, var compAlgo, var hashAlgo, int blobSize) = BlobIdV1.ReadNonEmbedded(idMemory.Span);
         majorVer.ShouldBe(1);
         minorVer.ShouldBe(0);
         hashAlgo.ShouldBe(BlobHashAlgo.Sha256);
         compAlgo.ShouldBe(BlobCompAlgo.UnComp);
         blobSize.ShouldBe(256);
-        BlobIdV1.ToDisplayString(idSpan).ShouldBe("V1.0:256:U:S:QK/y6dLYki5Hr9RkjmlnSXFYeF+9Hahw5xECZr+USIA=");
+        BlobIdV1.ToDisplayString(idMemory.Span).ShouldBe("V1.0:256:U:S:QK/y6dLYki5Hr9RkjmlnSXFYeF+9Hahw5xECZr+USIA=");
     }
 
     [Fact]
@@ -110,19 +110,19 @@ public class BlobIdRegressionTests
             "40-AF-F2-E9-D2-D8-92-2E-47-AF-D4-64-8E-69-67-49-" +
             "71-58-78-5F-BD-1D-A8-70-E7-11-02-66-BF-94-48-80";
 
-        ReadOnlySpan<byte> input = inputStr.Split('-').Select(s => (byte)int.Parse(s, System.Globalization.NumberStyles.HexNumber)).ToArray();
+        ReadOnlyMemory<byte> input = inputStr.Split('-').Select(s => (byte)int.Parse(s, System.Globalization.NumberStyles.HexNumber)).ToArray();
 
         (bool embedded, _) = BlobHelpers.TryGetEmbedded(input);
         embedded.ShouldBeFalse();
 
-        (int majorVer, int minorVer, var compAlgo, var hashAlgo, int blobSize) = BlobIdV1.ReadNonEmbedded(input);
+        (int majorVer, int minorVer, var compAlgo, var hashAlgo, int blobSize) = BlobIdV1.ReadNonEmbedded(input.Span);
         majorVer.ShouldBe(1);
         minorVer.ShouldBe(0);
         hashAlgo.ShouldBe(BlobHashAlgo.Sha256);
         compAlgo.ShouldBe(BlobCompAlgo.UnComp);
         blobSize.ShouldBe(256);
 
-        BlobIdV1.ToDisplayString(input).ShouldBe("V1.0:256:U:S:QK/y6dLYki5Hr9RkjmlnSXFYeF+9Hahw5xECZr+USIA=");
+        BlobIdV1.ToDisplayString(input.Span).ShouldBe("V1.0:256:U:S:QK/y6dLYki5Hr9RkjmlnSXFYeF+9Hahw5xECZr+USIA=");
     }
 
 }
