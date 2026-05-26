@@ -38,10 +38,10 @@ public partial class EntityGenerator
             Emit("using T_NativeMemberType_ = System.Int32;");
             Emit("namespace DataFac.Memory");
             Emit("{");
-            Emit("    public static class Codec_T_NativeMemberType__T_MemberBELE_");
+            Emit("    public sealed class Codec_T_NativeMemberType__T_MemberBELE_ : ISpanCodec<T_NativeMemberType_>");
             Emit("    {");
             Emit("        public static T_NativeMemberType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);");
-            Emit("        public static void WriteToSpan(Span<byte> source, T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);");
+            Emit("        public static void WriteToSpan(Span<byte> source, in T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);");
             Emit("    }");
             Emit("}");
             Emit("namespace T_MemberTypeImplSpace_");
@@ -1011,6 +1011,10 @@ public partial class EntityGenerator
         Emit("");
         Emit("        /// <inheritdoc/>");
         Emit("        public bool Equals(T_EntityImplName_? other) => base.Equals(other);");
+        Emit("        /// <inheritdoc/>");
+        Emit("        public override bool Equals(object? obj) => obj is T_EntityImplName_ other && Equals(other);");
+        Emit("        /// <inheritdoc/>");
+        Emit("        public override int GetHashCode() => base.GetHashCode();");
         Emit("        /// <inheritdoc/>");
         Emit("        public static bool operator ==(T_EntityImplName_? left, T_EntityImplName_? right) => left is not null ? left.Equals(right) : (right is null);");
         Emit("        /// <inheritdoc/>");

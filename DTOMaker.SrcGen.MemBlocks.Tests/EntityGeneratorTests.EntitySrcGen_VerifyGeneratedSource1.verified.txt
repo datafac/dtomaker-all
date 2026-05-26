@@ -257,6 +257,10 @@ namespace MyOrg.Models.MemBlocks
         /// <inheritdoc/>
         public bool Equals(Derived? other) => base.Equals(other);
         /// <inheritdoc/>
+        public override bool Equals(object? obj) => obj is Derived other && Equals(other);
+        /// <inheritdoc/>
+        public override int GetHashCode() => base.GetHashCode();
+        /// <inheritdoc/>
         public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>
         public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
