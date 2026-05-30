@@ -21,9 +21,9 @@ namespace DTOMaker.SrcGen.MsgPack2.Tests
         {
             Version version = typeof(Microsoft.CodeAnalysis.CSharp.LanguageVersion).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
-            version.Major.ShouldBe(4);
-            version.Minor.ShouldBe(14);
-            version.ToString().ShouldBe("4.14.0.0");
+            version.Major.ShouldBe(5);
+            version.Minor.ShouldBe(3);
+            version.ToString().ShouldBe("5.3.0.0");
         }
 
     }
