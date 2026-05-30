@@ -1,6 +1,5 @@
 using DataFac.Compression;
 using DataFac.Hashing;
-using Microsoft.Testing.Platform.Extensions.Messages;
 using Shouldly;
 using System;
 using System.Linq;

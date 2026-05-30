@@ -1,5 +1,3 @@
-using DataFac.Compression;
-using DataFac.Hashing;
 using Shouldly;
 using System;
 using System.Linq;
