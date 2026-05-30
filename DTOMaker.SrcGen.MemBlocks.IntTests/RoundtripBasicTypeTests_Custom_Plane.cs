@@ -26,7 +26,7 @@ public class RoundtripBasicTypeTests_Custom_Plane
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
         var copy = new SimpleDTO_Plane(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

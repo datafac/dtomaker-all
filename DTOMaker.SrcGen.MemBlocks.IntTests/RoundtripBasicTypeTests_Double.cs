@@ -24,7 +24,7 @@ public class RoundtripBasicTypeTests_Double
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
         var copy = new SimpleDTO_Double(buffer);
         copy.ShouldNotBeNull();
         if (Double.IsNaN(reqValue))

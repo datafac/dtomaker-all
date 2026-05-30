@@ -39,7 +39,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
+                if (tree is IPackable packable) packable.Pack(dataStore);
                 tree.Freeze();
             }
 
@@ -98,7 +98,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
+                if (tree is IPackable packable) packable.Pack(dataStore);
                 tree.Freeze();
             }
 
@@ -109,8 +109,8 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 tree = tree.Remove<string, long , MyBinaryTree>(new string(ch, 1));
                 count--;
 
-                // pack and freeze the tree after each addition
-                if (tree is IMemoryBlockEntity packable) packable.Pack(dataStore);
+                // pack and freeze the tree after each removal
+                if (tree is IPackable packable) packable.Pack(dataStore);
                 tree?.Freeze();
             }
 

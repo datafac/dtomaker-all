@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace DTOMaker.Runtime.MemBlocks;
 
-public abstract class EntityBase : IEntityBase, IMemoryBlockEntity, IEquatable<EntityBase>
+public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase>
 {
     #region Static Helpers
-    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore) where T : class, IMemoryBlockEntity, IEntityBase, new()
+    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore) where T : class, IPackable, IEntityBase, new()
     {
         var empty = new T();
         await empty.Pack(dataStore);
@@ -81,7 +81,7 @@ public abstract class EntityBase : IEntityBase, IMemoryBlockEntity, IEquatable<E
         _frozen = true;
     }
 
-    public ReadOnlyMemory<byte> GetBuffer()
+    public ReadOnlyMemory<byte> GetPacked()
     {
         ThrowIfNotFrozen();
         return _readonlyGlobalBlock;

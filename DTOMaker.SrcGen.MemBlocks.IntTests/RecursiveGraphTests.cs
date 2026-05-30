@@ -79,7 +79,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
         {
             using var dataStore = new DataFac.Storage.Testing.TestDataStore();
             await orig.Pack(dataStore);
-            var buffer = orig.GetBuffer();
+            var buffer = orig.GetPacked();
             var copy = new Tree(buffer);
             copy.ShouldNotBeNull();
             copy.Freeze();

@@ -34,7 +34,7 @@ public class PolymorphicVarSetTests_MemBlocks
         VarBase orig = new VarString() { Value = value };
         await orig.Pack(dataStore);
 
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
 
         var metadata = new EntityMetadata(buffer);
         metadata.SignatureBits.ShouldBe(0x01025f7c);
@@ -78,7 +78,7 @@ public class PolymorphicVarSetTests_MemBlocks
         VarSetNode orig = new VarSetNode() { Count = 1, Depth = 0, Key = "abc", Value = node };
         await orig.Pack(dataStore);
 
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
 
         var metadata = new EntityMetadata(buffer);
         metadata.SignatureBits.ShouldBe(0x01025f7c);
@@ -112,7 +112,7 @@ public class PolymorphicVarSetTests_MemBlocks
             Root = tree
         };
         await orig.Pack(dataStore);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);
@@ -144,7 +144,7 @@ public class PolymorphicVarSetTests_MemBlocks
             Root = tree
         };
         await orig.Pack(dataStore);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);
@@ -176,7 +176,7 @@ public class PolymorphicVarSetTests_MemBlocks
             Root = tree
         };
         await orig.Pack(dataStore);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
 
         string json = buffer.ToDisplay();
         await Verifier.Verify(json);

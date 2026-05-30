@@ -1,11 +1,10 @@
-namespace DTOMaker.Models.BinaryTree.Tests
+namespace DTOMaker.Models.BinaryTree.Tests;
+
+public enum ImplKind
 {
-    public enum ImplKind
-    {
-        Reference,
-        JsonSystemText,
-        JsonNewtonSoft,
-        MsgPack2,
-        MemBlox2,
-    }
+    Reference,
+    JsonSystemText,
+    JsonNewtonSoft,
+    MsgPack2,
+    MemBlox2,
 }

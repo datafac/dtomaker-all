@@ -24,7 +24,7 @@ public class RoundtripBasicTypeTests_UInt64
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetBuffer();
+        var buffer = orig.GetPacked();
         var copy = new SimpleDTO_UInt64(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

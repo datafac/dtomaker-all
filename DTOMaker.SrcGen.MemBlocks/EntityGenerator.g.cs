@@ -816,7 +816,7 @@ public partial class EntityGenerator
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64);");
                         Emit("            if (_T_NullableEntityMemberName_ is not null) await _T_NullableEntityMemberName_.Pack(dataStore);");
-                        Emit("            await PackData(_T_NullableEntityMemberName_?.GetBuffer(), writableField, dataStore);");
+                        Emit("            await PackData(_T_NullableEntityMemberName_?.GetPacked(), writableField, dataStore);");
                         Emit("        }");
                         Emit("        private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)");
                         Emit("        {");
@@ -856,7 +856,7 @@ public partial class EntityGenerator
                         Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);");
                         Emit("            }");
                         Emit("            await _T_RequiredEntityMemberName_.Pack(dataStore);");
-                        Emit("            await PackData(_T_RequiredEntityMemberName_.GetBuffer(), writableField, dataStore);");
+                        Emit("            await PackData(_T_RequiredEntityMemberName_.GetPacked(), writableField, dataStore);");
                         Emit("        }");
                         Emit("        private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)");
                         Emit("        {");
