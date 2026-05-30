@@ -95,6 +95,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFac.MemBlox2", "DataFac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFac.MemBlox2.Tests", "DataFac.MemBlox2.Tests\DataFac.MemBlox2.Tests.csproj", "{D1C2CAD9-5B34-6F90-90D4-B283DE47B809}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewModels", "NewModels\NewModels.csproj", "{DAEB7C31-48E0-4C92-8353-A362F7EEBF00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewModels.Tests", "NewModels.Tests\NewModels.Tests.csproj", "{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -245,6 +249,14 @@ Global
 		{D1C2CAD9-5B34-6F90-90D4-B283DE47B809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1C2CAD9-5B34-6F90-90D4-B283DE47B809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1C2CAD9-5B34-6F90-90D4-B283DE47B809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAEB7C31-48E0-4C92-8353-A362F7EEBF00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAEB7C31-48E0-4C92-8353-A362F7EEBF00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAEB7C31-48E0-4C92-8353-A362F7EEBF00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAEB7C31-48E0-4C92-8353-A362F7EEBF00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

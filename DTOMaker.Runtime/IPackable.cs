@@ -11,7 +11,7 @@ namespace DTOMaker.Runtime;
 public interface IPackable
 {
     /// <summary>
-    /// Returns the readonly (packed) state of the entity. This will usually fail if the 
+    /// Returns the serialized state of the entity. This will usually fail if the 
     /// entity has not been packed yet.
     /// </summary>
     ReadOnlyMemory<byte> GetPacked();
@@ -35,4 +35,20 @@ public interface IPackable
     /// Performs a full restore of the entity's state from the data store.
     /// </summary>
     ValueTask UnpackAll(IDataStore dataStore);
+}
+
+/// <summary>
+/// Defines the contract for a strongly-typed entity that supports packing and unpacking 
+/// operations to and from a data store.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public interface IPackable<T> : IPackable where T : class, IPackable<T>
+{
+    /// <summary>
+    /// Deserializes an instance of the entity from the provided packed buffer.
+    /// </summary>
+    /// <param name="buffer"></param>
+#if NET6_0_OR_GREATER
+    static abstract T Deserialize(ReadOnlyMemory<byte> buffer);
+#endif
 }
