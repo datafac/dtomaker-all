@@ -24,8 +24,16 @@ public readonly struct DictionaryFacade<TKey, TValue, TNode> : IDictionary<TKey,
     public IEnumerable<TKey> Keys => _getter().GetKeyValuePairs<TKey, TValue, TNode>().Select(kv => kv.Key);
     public IEnumerable<TValue> Values => _getter().GetKeyValuePairs<TKey, TValue, TNode>().Select(kv => kv.Value);
     public int Count => _getter()?.Count ?? 0;
-    ICollection<TKey> IDictionary<TKey, TValue>.Keys => throw new NotSupportedException();
-    ICollection<TValue> IDictionary<TKey, TValue>.Values => throw new NotSupportedException();
+
+    /// <summary>
+    /// Returns all keys as a new list. Avoid using this as it will allocate a new list every time.
+    /// </summary>
+    ICollection<TKey> IDictionary<TKey, TValue>.Keys => _getter().GetKeyValuePairs<TKey, TValue, TNode>().Select(kv => kv.Key).ToList();
+
+    /// <summary>
+    /// Returns all values as a new list. Avoid using this as it will allocate a new list every time.
+    /// </summary>
+    ICollection<TValue> IDictionary<TKey, TValue>.Values => _getter().GetKeyValuePairs<TKey, TValue, TNode>().Select(kv => kv.Value).ToList();
     public bool ContainsKey(TKey key) => _getter().Get<TKey, TValue, TNode>(key) is not null;
     public bool Contains(KeyValuePair<TKey, TValue> item) => TryGetValue(item.Key, out var value) && Equals(value, item.Value);
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _getter().GetKeyValuePairs<TKey, TValue, TNode>().GetEnumerator();
@@ -78,6 +86,7 @@ public readonly struct DictionaryFacade<TKey, TValue, TNode> : IDictionary<TKey,
     public bool Remove(TKey key)
     {
         var root = _getter();
+        if (root.Get<TKey, TValue, TNode>(key) is null) return false;
         _setter(root.Remove<TKey, TValue, TNode>(key));
         return true;
     }

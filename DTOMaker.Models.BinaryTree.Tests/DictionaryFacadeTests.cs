@@ -123,10 +123,112 @@ public class DictionaryFacadeTests
 
         // assert
         impl.Count.ShouldBe(1);
+        impl.ToArray().ShouldHaveSingleItem();
         impl.ContainsKey("a").ShouldBeTrue();
         impl.TryGetValue("a", out var value2).ShouldBeTrue();
         value2.ShouldNotBeNull();
         value2.Equals(value).ShouldBeTrue();
-        impl.ToArray().ShouldHaveSingleItem();
     }
+
+    [Theory]
+    [InlineData(ImplKind.Reference)]
+    [InlineData(ImplKind.JsonSystemText)]
+    [InlineData(ImplKind.JsonNewtonSoft)]
+    [InlineData(ImplKind.MsgPack2)]
+    [InlineData(ImplKind.MemBlox2)]
+    public void Writable03_Remove(ImplKind kind)
+    {
+        // arrange
+        IDictionary<string, IVarBase> impl = CreateDictionary(kind);
+        IVarBase value = CreateString(kind);
+        impl.Add("a", value);
+
+        // act
+        bool removed = impl.Remove("a");
+
+        // assert
+        removed.ShouldBeTrue();
+        impl.ToArray().ShouldBeEmpty();
+        impl.Count.ShouldBe(0);
+        impl.ContainsKey("a").ShouldBeFalse();
+        impl.TryGetValue("a", out var value2).ShouldBeFalse();
+        value2.ShouldBeNull();
+    }
+
+    [Theory]
+    [InlineData(ImplKind.Reference)]
+    [InlineData(ImplKind.JsonSystemText)]
+    [InlineData(ImplKind.JsonNewtonSoft)]
+    [InlineData(ImplKind.MsgPack2)]
+    [InlineData(ImplKind.MemBlox2)]
+    public void Writable04_RemoveAgain(ImplKind kind)
+    {
+        // arrange
+        IDictionary<string, IVarBase> impl = CreateDictionary(kind);
+        IVarBase value = CreateString(kind);
+        impl.Add("a", value);
+        impl.Remove("a");
+
+        // act
+        bool removed = impl.Remove("a");
+
+        // assert
+        removed.ShouldBeFalse();
+        impl.ToArray().ShouldBeEmpty();
+        impl.Count.ShouldBe(0);
+        impl.ContainsKey("a").ShouldBeFalse();
+        impl.TryGetValue("a", out var value2).ShouldBeFalse();
+        value2.ShouldBeNull();
+    }
+
+    [Theory]
+    [InlineData(ImplKind.Reference)]
+    [InlineData(ImplKind.JsonSystemText)]
+    [InlineData(ImplKind.JsonNewtonSoft)]
+    [InlineData(ImplKind.MsgPack2)]
+    [InlineData(ImplKind.MemBlox2)]
+    public void Writable05_AddMany(ImplKind kind)
+    {
+        // arrange
+        IDictionary<string, IVarBase> impl = CreateDictionary(kind);
+        IVarBase value = CreateString(kind);
+        impl.Add("a", value);
+        impl.Add("b", value);
+        impl.Add("c", value);
+
+        // act
+        // assert
+        impl.Count.ShouldBe(3);
+        impl.Count().ShouldBe(3);
+        impl.ToArray().Length.ShouldBe(3);
+
+        impl.Keys.Count().ShouldBe(3);
+        impl.Values.Count().ShouldBe(3);
+    }
+
+    [Theory]
+    [InlineData(ImplKind.Reference)]
+    [InlineData(ImplKind.JsonSystemText)]
+    [InlineData(ImplKind.JsonNewtonSoft)]
+    [InlineData(ImplKind.MsgPack2)]
+    [InlineData(ImplKind.MemBlox2)]
+    public void Writable06_Clear(ImplKind kind)
+    {
+        // arrange
+        IDictionary<string, IVarBase> impl = CreateDictionary(kind);
+        IVarBase value = CreateString(kind);
+        impl.Add("a", value);
+        impl.Add("b", value);
+        impl.Add("c", value);
+
+        // act
+        impl.Clear();
+
+        // assert
+        impl.Count.ShouldBe(0);
+        impl.ContainsKey("a").ShouldBeFalse();
+        impl.TryGetValue("a", out var _).ShouldBeFalse();
+        impl.ToArray().ShouldBeEmpty();
+    }
+
 }
