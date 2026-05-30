@@ -1,5 +1,5 @@
 using DataFac.Storage.Testing;
-using DTOMaker.Runtime;
+using DTOMaker.Runtime.MemBlocks;
 using Shouldly;
 using System;
 using System.Threading.Tasks;

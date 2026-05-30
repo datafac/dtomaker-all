@@ -1,11 +1,8 @@
 ﻿using DataFac.Memory;
-using DataFac.Storage;
 using System;
-using System.Collections.Immutable;
 using System.IO;
-using System.Threading.Tasks;
 
-namespace DTOMaker.Runtime;
+namespace DTOMaker.Runtime.MemBlocks;
 
 /// <summary>
 /// Information about block-based entities.
@@ -120,5 +117,3 @@ public readonly struct EntityMetadata : IEquatable<EntityMetadata>
     public static bool operator ==(EntityMetadata left, EntityMetadata right) => left.Equals(right);
     public static bool operator !=(EntityMetadata left, EntityMetadata right) => !left.Equals(right);
 }
-
-
