@@ -1,7 +1,6 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
 using DTOMaker.Runtime;
-using MessagePack;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -151,12 +150,107 @@ namespace NewModels.Records
 
 namespace NewModels.Classes
 {
+    public abstract class EntityBase : IEntityBase
+    {
+        public EntityBase() { }
+        public EntityBase(EntityBase source) { }
+        public EntityBase(IEntityBase source) { }
+
+        protected abstract EntityBase OnPartCopy();
+        public IEntityBase PartCopy() => OnPartCopy();
+
+        #region IFreezable implementation
+        private volatile bool _frozen = false;
+        public bool IsFrozen => _frozen;
+        protected virtual void OnFreeze() { }
+        public void Freeze()
+        {
+            if (_frozen) return;
+            _frozen = true;
+            OnFreeze();
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void ThrowIsFrozen(string? memberName)
+        {
+            throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void CheckNotFrozen([CallerMemberName] string? memberName = null)
+        {
+            if (_frozen) ThrowIsFrozen(memberName);
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
+        {
+            if (!_frozen) ThrowIsNotFrozenException(methodName);
+        }
+        #endregion
+    }
+
+    public abstract class DomainBase : EntityBase, IDomainBase_Writable
+    {
+        protected override void OnFreeze() { base.Freeze(); }
+        public DomainBase() { }
+        public DomainBase(DomainBase source) : base(source) { }
+        public DomainBase(IDomainBase source) : base(source) { }
+    }
+
+    public abstract class VarBase : DomainBase, IVarBase_Writable
+    {
+        protected override void OnFreeze() { base.Freeze(); }
+        public VarBase() { }
+        public VarBase(VarBase source) : base(source) { }
+        public VarBase(IVarBase source) : base(source) { }
+    }
+
+    public sealed class VarBoolean : VarBase, IVarBoolean_Writable
+    {
+        protected override EntityBase OnPartCopy() => new VarBoolean(this);
+        protected override void OnFreeze() { base.Freeze(); }
+        public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
+        public VarBoolean() { }
+        public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
+        public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
+    }
+
+    public sealed class VarString : VarBase, IVarString_Writable
+    {
+        protected override EntityBase OnPartCopy() => new VarString(this);
+        protected override void OnFreeze() { base.Freeze(); }
+        public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
+        public VarString() { }
+        public VarString(VarString source) : base(source) { Value = source.Value; }
+        public VarString(IVarString source) : base(source) { Value = source.Value; }
+    }
+
+    public sealed class VarInt64 : VarBase, IVarInt64_Writable
+    {
+        protected override EntityBase OnPartCopy() => new VarInt64(this);
+        protected override void OnFreeze() { base.Freeze(); }
+        public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
+        public VarInt64() { }
+        public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
+        public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
+    }
 }
 
 namespace NewModels.MsgPack3
 {
+    using MessagePack;
+
     public abstract class EntityBase : IEntityBase, IPackable
     {
+        public EntityBase() { }
+        public EntityBase(EntityBase source) { }
+        public EntityBase(IEntityBase source) { }
+
+        protected abstract EntityBase OnPartCopy();
+        public IEntityBase PartCopy() => OnPartCopy();
+
+        #region IFreezable implementation
         private volatile bool _frozen = false;
         [IgnoreMember]
         public bool IsFrozen => _frozen;
@@ -185,12 +279,7 @@ namespace NewModels.MsgPack3
         {
             if (!_frozen) ThrowIsNotFrozenException(methodName);
         }
-        protected abstract EntityBase OnPartCopy();
-        public IEntityBase PartCopy() => OnPartCopy();
-
-        public EntityBase() { }
-        public EntityBase(EntityBase source) { }
-        public EntityBase(IEntityBase source) { }
+        #endregion
 
         #region IPackable implementation
         protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
