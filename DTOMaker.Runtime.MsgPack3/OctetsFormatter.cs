@@ -1,16 +1,15 @@
 ﻿using DataFac.Memory;
 using MessagePack;
 using MessagePack.Formatters;
-using System.Buffers;
 
-namespace DTOMaker.Runtime.MsgPack2
+namespace DTOMaker.Runtime.MsgPack3
 {
     internal sealed class OctetsFormatter : IMessagePackFormatter<Octets?>
     {
         public Octets? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
         {
             var seq = reader.ReadBytes();
-            if (seq is null) return null!;
+            if (seq is null) return null;
             if (seq.Value.Length == 0) return Octets.Empty;
             return Octets.Wrap(seq.Value);
         }

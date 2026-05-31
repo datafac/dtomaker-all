@@ -1,10 +1,7 @@
 ﻿using DataFac.Compression;
 using DataFac.Hashing;
-using DataFac.Memory;
-using DataFac.UnsafeHelpers;
 using System;
 using System.Buffers.Binary;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -61,16 +58,6 @@ public static class BlobIdV1
         target[4] = (byte)compAlgo;
         target[5] = (byte)hashAlgo;
         BinaryPrimitives.WriteInt32LittleEndian(target.Slice(8, 4), blobSize);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Write(Span<byte> target, int blobSize, BlobCompAlgo compAlgo, BlobHashAlgo hashAlgo, ReadOnlySpan<byte> hashData)
-    {
-        if (target.Length != Size) ThrowBufferWrongSize(nameof(target), Size);
-        if (hashData.Length != 32) ThrowBufferWrongSize(nameof(hashData), 32); throw new ArgumentException("Length must be == 32", nameof(hashData));
-        target.Clear();
-        WriteHeadPart(target, blobSize, compAlgo, hashAlgo);
-        hashData.CopyTo(target.Slice(32, 32));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

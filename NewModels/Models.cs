@@ -240,82 +240,7 @@ namespace NewModels.Classes
 namespace NewModels.MsgPack3
 {
     using MessagePack;
-
-    public abstract class EntityBase : IEntityBase, IPackable
-    {
-        public EntityBase() { }
-        public EntityBase(EntityBase source) { }
-        public EntityBase(IEntityBase source) { }
-
-        protected abstract EntityBase OnPartCopy();
-        public IEntityBase PartCopy() => OnPartCopy();
-
-        #region IFreezable implementation
-        private volatile bool _frozen = false;
-        [IgnoreMember]
-        public bool IsFrozen => _frozen;
-        protected virtual void OnFreeze() { }
-        public void Freeze()
-        {
-            if (_frozen) return;
-            _frozen = true;
-            OnFreeze();
-        }
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void ThrowIsFrozen(string? memberName)
-        {
-            throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void CheckNotFrozen([CallerMemberName] string? memberName = null)
-        {
-            if (_frozen) ThrowIsFrozen(memberName);
-        }
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
-        {
-            if (!_frozen) ThrowIsNotFrozenException(methodName);
-        }
-        #endregion
-
-        #region IPackable implementation
-        protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
-        public ReadOnlyMemory<byte> GetPacked()
-        {
-            ThrowIfNotFrozen();
-            return OnSerialize();
-        }
-
-        private volatile bool _packed;
-        protected virtual ValueTask OnPack(IDataStore dataStore) => default;
-        public async ValueTask Pack(IDataStore dataStore)
-        {
-            if (_frozen) return;
-            if (_packed) return;
-            await OnPack(dataStore);
-            _packed = true;
-            OnFreeze();
-            _frozen = true;
-            _unpacked = true;
-        }
-
-        private volatile bool _unpacked;
-        protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
-        public async ValueTask Unpack(IDataStore dataStore, int depth = 0)
-        {
-            ThrowIfNotFrozen();
-            if (depth < 0) return;
-            if (_unpacked) return;
-            await OnUnpack(dataStore, depth);
-            _unpacked = true;
-        }
-        public ValueTask UnpackAll(IDataStore dataStore) => Unpack(dataStore, int.MaxValue);
-        #endregion
-
-    }
+    using DTOMaker.Runtime.MsgPack3;
 
     [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(5, typeof(VarBoolean))]
@@ -344,7 +269,8 @@ namespace NewModels.MsgPack3
     [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed class VarBoolean : VarBase, IVarBoolean_Writable, IPackable<VarBoolean>
     {
-        protected override EntityBase OnPartCopy() => new VarBoolean(this);
+        protected override int OnGetEntityId() => 5;
+        protected override IEntityBase OnPartCopy() => new VarBoolean(this);
         protected override void OnFreeze() { base.Freeze(); }
         [Key(1)]
         public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
@@ -352,6 +278,8 @@ namespace NewModels.MsgPack3
         public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
         public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
 
+        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
         protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarBoolean>(this);
         public static VarBoolean Deserialize(ReadOnlyMemory<byte> buffer)
         {
@@ -364,7 +292,8 @@ namespace NewModels.MsgPack3
     [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed class VarString : VarBase, IVarString_Writable, IPackable<VarString>
     {
-        protected override EntityBase OnPartCopy() => new VarString(this);
+        protected override int OnGetEntityId() => 6;
+        protected override IEntityBase OnPartCopy() => new VarString(this);
         protected override void OnFreeze() { base.Freeze(); }
         [Key(1)]
         public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
@@ -372,6 +301,8 @@ namespace NewModels.MsgPack3
         public VarString(VarString source) : base(source) { Value = source.Value; }
         public VarString(IVarString source) : base(source) { Value = source.Value; }
 
+        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
         protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarString>(this);
         public static VarString Deserialize(ReadOnlyMemory<byte> buffer)
         {
@@ -384,7 +315,8 @@ namespace NewModels.MsgPack3
     [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed class VarInt64 : VarBase, IVarInt64_Writable, IPackable<VarInt64>
     {
-        protected override EntityBase OnPartCopy() => new VarInt64(this);
+        protected override int OnGetEntityId() => 7;
+        protected override IEntityBase OnPartCopy() => new VarInt64(this);
         protected override void OnFreeze() { base.Freeze(); }
         [Key(1)]
         public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
@@ -392,6 +324,8 @@ namespace NewModels.MsgPack3
         public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
         public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
 
+        protected override ValueTask OnPack(IDataStore dataStore) => base.OnPack(dataStore);
+        protected override ValueTask OnUnpack(IDataStore dataStore, int depth) => base.OnUnpack(dataStore, depth);
         protected override ReadOnlyMemory<byte> OnSerialize() => MessagePackSerializer.Serialize<VarInt64>(this);
         public static VarInt64 Deserialize(ReadOnlyMemory<byte> buffer)
         {

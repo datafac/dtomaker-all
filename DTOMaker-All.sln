@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewModels", "NewModels\NewM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewModels.Tests", "NewModels.Tests\NewModels.Tests.csproj", "{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Runtime.MsgPack3", "DTOMaker.Runtime.MsgPack3\DTOMaker.Runtime.MsgPack3.csproj", "{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -257,6 +259,10 @@ Global
 		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
