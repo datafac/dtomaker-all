@@ -24,7 +24,7 @@ namespace DTOMaker.Runtime.JsonSystemText
             _frozen = true;
         }
         protected abstract IEntityBase OnPartCopy();
-        public IEntityBase PartCopy() => OnPartCopy();
+        public IEntityBase ShallowCopy() => OnPartCopy();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");

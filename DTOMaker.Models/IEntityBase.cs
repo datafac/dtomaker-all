@@ -18,5 +18,5 @@ public interface IEntityBase
     /// <summary>
     /// Returns an unfrozen, shallow copy of the entity.
     /// </summary>
-    IEntityBase PartCopy();
+    IEntityBase ShallowCopy();
 }

@@ -9,7 +9,7 @@ public partial class Required_Int64 : IRequired_Int64, IEquatable<Required_Int64
 {
     public bool IsFrozen => false;
     public void Freeze() { }
-    public IEntityBase PartCopy() => new Required_Int64() { Field = this.Field };
+    public IEntityBase ShallowCopy() => new Required_Int64() { Field = this.Field };
     [MemoryPackInclude] public Int64 Field { get; set; }
 
     public bool Equals(Required_Int64? other) => other is not null;
@@ -28,7 +28,7 @@ public partial class Required_String : IRequired_String, IEquatable<Required_Str
 {
     public bool IsFrozen => false;
     public void Freeze() { }
-    public IEntityBase PartCopy() => new Required_String() { Field = this.Field };
+    public IEntityBase ShallowCopy() => new Required_String() { Field = this.Field };
     [MemoryPackInclude] public String Field { get; set; } = string.Empty;
 
     public bool Equals(Required_String? other) => other is not null;

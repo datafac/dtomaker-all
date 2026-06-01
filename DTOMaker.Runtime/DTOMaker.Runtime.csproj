@@ -48,4 +48,8 @@
 		<PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
+	</ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
 using DTOMaker.Runtime;
+using MessagePack;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -20,6 +21,10 @@ namespace System.Runtime.CompilerServices
     internal static class IsExternalInit { }
 }
 #endif
+
+namespace DTOMaker.Runtime
+{
+}
 
 namespace NewModels
 {
@@ -78,15 +83,15 @@ namespace NewModels
     public interface IVarBase_Writable : IVarBase, IDomainBase_Writable { }
     public interface IVarBoolean_Writable : IVarBoolean, IVarBase_Writable
     {
-        Boolean Value { set; }
+        new Boolean Value { set; }
     }
     public interface IVarString_Writable : IVarString, IVarBase_Writable
     {
-        String Value { set; }
+        new String Value { set; }
     }
     public interface IVarInt64_Writable : IVarInt64, IVarBase_Writable
     {
-        Int64 Value { set; }
+        new Int64 Value { set; }
     }
 }
 // </generated>
@@ -97,8 +102,8 @@ namespace NewModels.Records
     {
         public bool IsFrozen => true;
         public void Freeze() { }
-        protected abstract EntityBase OnPartCopy();
-        public IEntityBase PartCopy() => OnPartCopy();
+        protected abstract EntityBase OnShallowCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
 
         public EntityBase() { }
         public EntityBase(EntityBase source) { }
@@ -125,7 +130,7 @@ namespace NewModels.Records
         public VarBoolean() { }
         public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
         public VarBoolean(IVarBoolean source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnPartCopy() => this;
+        protected override EntityBase OnShallowCopy() => this;
     }
 
     public sealed record VarString : VarBase, IVarString
@@ -134,7 +139,7 @@ namespace NewModels.Records
         public VarString() { }
         public VarString(VarString source) : base(source) { Value = source.Value; }
         public VarString(IVarString source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnPartCopy() => this;
+        protected override EntityBase OnShallowCopy() => this;
     }
 
     public sealed record VarInt64 : VarBase, IVarInt64
@@ -143,7 +148,7 @@ namespace NewModels.Records
         public VarInt64() { }
         public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
         public VarInt64(IVarInt64 source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnPartCopy() => this;
+        protected override EntityBase OnShallowCopy() => this;
     }
 
 }
@@ -156,8 +161,8 @@ namespace NewModels.Classes
         public EntityBase(EntityBase source) { }
         public EntityBase(IEntityBase source) { }
 
-        protected abstract EntityBase OnPartCopy();
-        public IEntityBase PartCopy() => OnPartCopy();
+        protected abstract EntityBase OnShallowCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
 
         #region IFreezable implementation
         private volatile bool _frozen = false;
@@ -192,7 +197,7 @@ namespace NewModels.Classes
 
     public abstract class DomainBase : EntityBase, IDomainBase_Writable
     {
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override void OnFreeze() { base.OnFreeze(); }
         public DomainBase() { }
         public DomainBase(DomainBase source) : base(source) { }
         public DomainBase(IDomainBase source) : base(source) { }
@@ -200,7 +205,7 @@ namespace NewModels.Classes
 
     public abstract class VarBase : DomainBase, IVarBase_Writable
     {
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override void OnFreeze() { base.OnFreeze(); }
         public VarBase() { }
         public VarBase(VarBase source) : base(source) { }
         public VarBase(IVarBase source) : base(source) { }
@@ -208,8 +213,8 @@ namespace NewModels.Classes
 
     public sealed class VarBoolean : VarBase, IVarBoolean_Writable
     {
-        protected override EntityBase OnPartCopy() => new VarBoolean(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override EntityBase OnShallowCopy() => new VarBoolean(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
         public VarBoolean() { }
         public VarBoolean(VarBoolean source) : base(source) { Value = source.Value; }
@@ -218,8 +223,8 @@ namespace NewModels.Classes
 
     public sealed class VarString : VarBase, IVarString_Writable
     {
-        protected override EntityBase OnPartCopy() => new VarString(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override EntityBase OnShallowCopy() => new VarString(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
         public VarString() { }
         public VarString(VarString source) : base(source) { Value = source.Value; }
@@ -228,8 +233,8 @@ namespace NewModels.Classes
 
     public sealed class VarInt64 : VarBase, IVarInt64_Writable
     {
-        protected override EntityBase OnPartCopy() => new VarInt64(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override EntityBase OnShallowCopy() => new VarInt64(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
         public VarInt64() { }
         public VarInt64(VarInt64 source) : base(source) { Value = source.Value; }
@@ -239,8 +244,8 @@ namespace NewModels.Classes
 
 namespace NewModels.MsgPack3
 {
-    using MessagePack;
     using DTOMaker.Runtime.MsgPack3;
+    using MessagePack;
 
     [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(5, typeof(VarBoolean))]
@@ -248,7 +253,7 @@ namespace NewModels.MsgPack3
     [Union(7, typeof(VarInt64))]
     public abstract class DomainBase : EntityBase, IDomainBase_Writable
     {
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override void OnFreeze() { base.OnFreeze(); }
         public DomainBase() { }
         public DomainBase(DomainBase source) : base(source) { }
         public DomainBase(IDomainBase source) : base(source) { }
@@ -260,7 +265,7 @@ namespace NewModels.MsgPack3
     [Union(7, typeof(VarInt64))]
     public abstract class VarBase : DomainBase, IVarBase_Writable
     {
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override void OnFreeze() { base.OnFreeze(); }
         public VarBase() { }
         public VarBase(VarBase source) : base(source) { }
         public VarBase(IVarBase source) : base(source) { }
@@ -270,8 +275,8 @@ namespace NewModels.MsgPack3
     public sealed class VarBoolean : VarBase, IVarBoolean_Writable, IPackable<VarBoolean>
     {
         protected override int OnGetEntityId() => 5;
-        protected override IEntityBase OnPartCopy() => new VarBoolean(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override IEntityBase OnShallowCopy() => new VarBoolean(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         [Key(1)]
         public Boolean Value { get; set { CheckNotFrozen(); field = value; } }
         public VarBoolean() { }
@@ -293,8 +298,8 @@ namespace NewModels.MsgPack3
     public sealed class VarString : VarBase, IVarString_Writable, IPackable<VarString>
     {
         protected override int OnGetEntityId() => 6;
-        protected override IEntityBase OnPartCopy() => new VarString(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override IEntityBase OnShallowCopy() => new VarString(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         [Key(1)]
         public String Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
         public VarString() { }
@@ -316,8 +321,8 @@ namespace NewModels.MsgPack3
     public sealed class VarInt64 : VarBase, IVarInt64_Writable, IPackable<VarInt64>
     {
         protected override int OnGetEntityId() => 7;
-        protected override IEntityBase OnPartCopy() => new VarInt64(this);
-        protected override void OnFreeze() { base.Freeze(); }
+        protected override IEntityBase OnShallowCopy() => new VarInt64(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
         [Key(1)]
         public Int64 Value { get; set { CheckNotFrozen(); field = value; } }
         public VarInt64() { }

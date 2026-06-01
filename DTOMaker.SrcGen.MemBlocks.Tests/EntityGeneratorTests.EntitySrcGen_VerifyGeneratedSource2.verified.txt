@@ -217,7 +217,7 @@ namespace MyOrg.Model2.MemBlocks
                 _Field31 = await CreateEmpty<MyOrg.Model2.MemBlocks.MyDTO>(dataStore);
             }
             await _Field31.Pack(dataStore);
-            await PackData(_Field31.GetPacked(), writableField, dataStore);
+            await PackData(_Field31.Serialize(), writableField, dataStore);
         }
         private async ValueTask Field31_Unpack(IDataStore dataStore, int depth)
         {
@@ -250,7 +250,7 @@ namespace MyOrg.Model2.MemBlocks
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
             if (_Field32 is not null) await _Field32.Pack(dataStore);
-            await PackData(_Field32?.GetPacked(), writableField, dataStore);
+            await PackData(_Field32?.Serialize(), writableField, dataStore);
         }
         private async ValueTask Field32_Unpack(IDataStore dataStore, int depth)
         {

@@ -207,7 +207,7 @@ namespace MyOrg.Models.MemBlocks
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
             if (_Field1 is not null) await _Field1.Pack(dataStore);
-            await PackData(_Field1?.GetPacked(), writableField, dataStore);
+            await PackData(_Field1?.Serialize(), writableField, dataStore);
         }
         private async ValueTask Field1_Unpack(IDataStore dataStore, int depth)
         {

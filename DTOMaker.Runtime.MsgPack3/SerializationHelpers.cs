@@ -2,6 +2,7 @@
 using MessagePack;
 using MessagePack.Resolvers;
 using System;
+using System.Threading;
 
 namespace DTOMaker.Runtime.MsgPack3
 {
@@ -22,20 +23,22 @@ namespace DTOMaker.Runtime.MsgPack3
         /// <summary>
         /// Serializes an entity to a buffer using the MessagePack serializer.
         /// </summary>
-        public static ReadOnlyMemory<byte> SerializeToMessagePack<T>(this T value)
+        public static ReadOnlyMemory<byte> SerializeToMessagePack<T>(this T entity, CancellationToken cancellationToken)
+            where T : IEntityBase
         {
-            return MessagePackSerializer.Serialize<T>(value, _options);
+            entity.Freeze();
+            return MessagePackSerializer.Serialize<T>(entity, _options, cancellationToken);
         }
 
         /// <summary>
         /// Deerializes an entity from a buffer using the MessagePack serializer.
         /// </summary>
-        public static T DeserializeFromMessagePack<T>(this ReadOnlyMemory<byte> buffer)
+        public static T DeserializeFromMessagePack<T>(this ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
             where T : IEntityBase
         {
-            T result = MessagePackSerializer.Deserialize<T>(buffer, _options);
-            result.Freeze();
-            return result;
+            T entity = MessagePackSerializer.Deserialize<T>(buffer, _options, cancellationToken);
+            entity.Freeze();
+            return entity;
         }
     }
 }

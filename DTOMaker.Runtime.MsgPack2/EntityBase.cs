@@ -66,7 +66,7 @@ namespace DTOMaker.Runtime.MsgPack2
         /// <summary>
         /// Creates a shallow copy of the entity.
         /// </summary>
-        public IEntityBase PartCopy() => OnPartCopy();
+        public IEntityBase ShallowCopy() => OnPartCopy();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");

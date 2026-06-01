@@ -724,7 +724,7 @@ namespace T_ImplNameSpace_
         {
             var writableField = _writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64);
             if (_T_NullableEntityMemberName_ is not null) await _T_NullableEntityMemberName_.Pack(dataStore);
-            await PackData(_T_NullableEntityMemberName_?.GetPacked(), writableField, dataStore);
+            await PackData(_T_NullableEntityMemberName_?.Serialize(), writableField, dataStore);
         }
         private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth)
         {
@@ -761,7 +761,7 @@ namespace T_ImplNameSpace_
                 _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore);
             }
             await _T_RequiredEntityMemberName_.Pack(dataStore);
-            await PackData(_T_RequiredEntityMemberName_.GetPacked(), writableField, dataStore);
+            await PackData(_T_RequiredEntityMemberName_.Serialize(), writableField, dataStore);
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth)
         {

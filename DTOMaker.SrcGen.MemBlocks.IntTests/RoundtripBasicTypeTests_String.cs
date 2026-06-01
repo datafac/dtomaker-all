@@ -24,7 +24,7 @@ public class RoundtripBasicTypeTests_String
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetPacked();
+        var buffer = orig.Serialize();
         var copy = new SimpleDTO_String(buffer);
         copy.ShouldNotBeNull();
         await copy.UnpackAll(dataStore);

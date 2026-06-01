@@ -79,7 +79,7 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
             _frozen = true;
         }
         protected virtual IEntityBase OnPartCopy() => new EntityBase(this);
-        public IEntityBase PartCopy() => OnPartCopy();
+        public IEntityBase ShallowCopy() => OnPartCopy();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");

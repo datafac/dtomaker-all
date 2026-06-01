@@ -11,7 +11,7 @@ public static class EntityExtensions
     public static TEntity Unfrozen<TEntity>(this TEntity entity) where TEntity : class, IEntityBase
     {
         return entity.IsFrozen
-            ? entity.PartCopy() as TEntity ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
+            ? entity.ShallowCopy() as TEntity ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
             : entity;
     }
 }

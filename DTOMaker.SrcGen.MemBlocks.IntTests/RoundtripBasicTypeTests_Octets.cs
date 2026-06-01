@@ -26,7 +26,7 @@ public class RoundtripBasicTypeTests_Octets
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetPacked();
+        var buffer = orig.Serialize();
         var copy = new SimpleDTO_Octets(buffer);
         copy.ShouldNotBeNull();
         await copy.UnpackAll(dataStore);

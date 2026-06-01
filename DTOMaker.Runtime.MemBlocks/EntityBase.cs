@@ -78,14 +78,14 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         _frozen = true;
     }
 
-    public ReadOnlyMemory<byte> GetPacked()
+    public ReadOnlyMemory<byte> Serialize()
     {
         ThrowIfNotFrozen();
         return _readonlyGlobalBlock;
     }
 
     protected virtual IEntityBase OnPartCopy() => throw new NotImplementedException();
-    public IEntityBase PartCopy() => OnPartCopy();
+    public IEntityBase ShallowCopy() => OnPartCopy();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");
@@ -213,7 +213,11 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     private volatile bool _packed;
+    /// <inheritdoc/>
+    public bool IsPacked => _packed;
+    /// <inheritdoc/>
     protected virtual ValueTask OnPack(IDataStore dataStore) => default;
+    /// <inheritdoc/>
     public async ValueTask Pack(IDataStore dataStore)
     {
         if (_frozen) return;
@@ -226,7 +230,11 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     private volatile bool _unpacked;
+    /// <inheritdoc/>
+    public bool IsUnpacked => _unpacked;
+    /// <inheritdoc/>
     protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth) => default;
+    /// <inheritdoc/>
     public async ValueTask Unpack(IDataStore dataStore, int depth = 0)
     {
         ThrowIfNotFrozen();
@@ -235,5 +243,6 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         await OnUnpack(dataStore, depth);
         _unpacked = true;
     }
+    /// <inheritdoc/>
     public ValueTask UnpackAll(IDataStore dataStore) => Unpack(dataStore, int.MaxValue);
 }

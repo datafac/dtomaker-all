@@ -1,3 +1,4 @@
+using DTOMaker.Runtime.MsgPack3;
 using MessagePack;
 using Shouldly;
 using System;
@@ -15,9 +16,12 @@ namespace NewModels.Tests
             var orig = new NewModels.Records.VarString() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new NewModels.MsgPack3.VarString(orig);
             await send.Pack(dataStore);
-            var buffer = send.GetPacked();
-            var recd = NewModels.MsgPack3.VarString.Deserialize(buffer);
-            recd.Freeze();
+            var buffer = send.SerializeToMessagePack<NewModels.MsgPack3.VarString>(TestContext.Current.CancellationToken);
+            var recd = buffer.DeserializeFromMessagePack<NewModels.MsgPack3.VarString>(TestContext.Current.CancellationToken);
+            recd.ShouldNotBeNull();
+            recd.IsFrozen.ShouldBeTrue();
+            //todo recd.IsPacked.ShouldbeTrue();
+            await recd.UnpackAll(dataStore);
             var copy = new NewModels.Records.VarString(recd);
             copy.ShouldBe(orig);
         }
@@ -29,10 +33,12 @@ namespace NewModels.Tests
             var orig = new NewModels.Records.VarString() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new NewModels.MsgPack3.VarString(orig);
             await send.Pack(dataStore);
-            ReadOnlyMemory<byte> buffer = MessagePackSerializer.Serialize<NewModels.MsgPack3.DomainBase>(send, null, TestContext.Current.CancellationToken);
-            var recd = MessagePackSerializer.Deserialize<NewModels.MsgPack3.DomainBase>(buffer, null, TestContext.Current.CancellationToken) as NewModels.MsgPack3.VarString;
+            var buffer = send.SerializeToMessagePack<NewModels.MsgPack3.DomainBase>(TestContext.Current.CancellationToken);
+            var recd = buffer.DeserializeFromMessagePack<NewModels.MsgPack3.DomainBase>(TestContext.Current.CancellationToken) as NewModels.MsgPack3.VarString;
             recd.ShouldNotBeNull();
-            recd.Freeze();
+            recd.IsFrozen.ShouldBeTrue();
+            //todo recd.IsPacked.ShouldbeTrue();
+            await recd.UnpackAll(dataStore);
             var copy = new NewModels.Records.VarString(recd);
             copy.ShouldBe(orig);
         }

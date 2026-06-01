@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_UInt128
         await orig.Pack(dataStore);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.GetPacked();
+        var buffer = orig.Serialize();
         var copy = new SimpleDTO_UInt128(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

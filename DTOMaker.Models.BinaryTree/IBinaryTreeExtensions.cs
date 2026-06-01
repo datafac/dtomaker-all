@@ -127,7 +127,7 @@ public static class BinaryTreeExtensions
 
         // shallow clone (unfreeze) if needed
         TNode result = tree.IsFrozen
-            ? tree.PartCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
+            ? tree.ShallowCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
             : tree;
 
         int comparison = result.Key.CompareTo(key);
@@ -229,7 +229,7 @@ public static class BinaryTreeExtensions
         if (tree is null) return new TNode().InitLeaf(key, value);
 
         TNode result = tree.IsFrozen
-            ? tree.PartCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
+            ? tree.ShallowCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
             : tree;
 
         if (tree.Count == 0) return tree.InitLeaf(key, value);
