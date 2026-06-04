@@ -65,7 +65,7 @@ namespace MyOrg.Model2.JsonSystemText
             _Field32?.Freeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         public MyDTO() { }
         public MyDTO(MyOrg.Model2.IMyDTO source) : base(source)

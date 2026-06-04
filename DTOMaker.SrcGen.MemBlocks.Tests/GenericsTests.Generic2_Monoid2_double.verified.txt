@@ -58,7 +58,7 @@ namespace MyOrg.Models.MemBlocks
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Monoid_1_Double(this);
+        protected override IEntityBase OnShallowCopy() => new Monoid_1_Double(this);
 
         public Monoid_1_Double() { }
         public Monoid_1_Double(IMonoid<Double> source) : base(source)

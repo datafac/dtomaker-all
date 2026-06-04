@@ -53,7 +53,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         public MyDTO() { }
         public MyDTO(IMyDTO source) : base(source)

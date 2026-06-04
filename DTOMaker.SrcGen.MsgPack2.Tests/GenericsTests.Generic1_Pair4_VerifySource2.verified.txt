@@ -58,7 +58,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Pair_2_Int64_String(this);
+        protected override IEntityBase OnShallowCopy() => new Pair_2_Int64_String(this);
 
         public Pair_2_Int64_String() { }
         public Pair_2_Int64_String(IPair<Int64, String> source) : base(source)

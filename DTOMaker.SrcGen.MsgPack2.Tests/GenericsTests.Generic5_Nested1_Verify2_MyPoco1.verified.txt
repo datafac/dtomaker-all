@@ -53,7 +53,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyPoco1(this);
+        protected override IEntityBase OnShallowCopy() => new MyPoco1(this);
 
         public MyPoco1() { }
         public MyPoco1(IMyPoco1 source) : base(source)

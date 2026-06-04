@@ -68,12 +68,12 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         /// <summary>
         /// Creates an unfrozen shallow copy of the current object.
         /// </summary>
-        protected abstract IEntityBase OnPartCopy();
+        protected abstract IEntityBase OnShallowCopy();
 
         /// <summary>
         /// Creates an unfrozen shallow copy of the current object.
         /// </summary>
-        public IEntityBase ShallowCopy() => OnPartCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");

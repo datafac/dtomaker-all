@@ -88,7 +88,7 @@ namespace MyOrg.Models.MsgPack2
         protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new Derived(this);
+        protected override IEntityBase OnShallowCopy() => new Derived(this);
 
         /// <summary>
         /// Initializes a new instance of the Derived class for deserialization purposes.

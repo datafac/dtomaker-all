@@ -61,7 +61,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO2(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO2(this);
 
         public MyDTO2() { }
         public MyDTO2(MyOrg.Models.IMyDTO2 source) : base(source)

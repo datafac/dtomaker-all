@@ -64,7 +64,7 @@ public partial class EntityGenerator
             Emit("        public T_MemberTypeImplName_() { }");
             Emit("        public T_MemberTypeImplName_(T_MemberTypeImplName_ source) { }");
             Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
-            Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
+            Emit("        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();");
             Emit("");
             Emit("        [JsonProperty(\"_f01_001\")]");
             Emit("        public long Field1 { get; set; }");
@@ -103,7 +103,7 @@ public partial class EntityGenerator
             Emit("        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }");
             Emit("");
             Emit("        protected override void OnFreeze() => base.OnFreeze();");
-            Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
+            Emit("        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();");
             Emit("");
             Emit("        public T_NativeMemberType_ BaseField1 { get; set; }");
             Emit("");
@@ -215,7 +215,7 @@ public partial class EntityGenerator
         }
         Emit("        }");
         Emit("");
-        Emit("        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);");
+        Emit("        protected override IEntityBase OnShallowCopy() => new T_EntityImplName_(this);");
         Emit("");
         Emit("        public T_EntityImplName_()");
         Emit("        {");

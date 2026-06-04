@@ -64,7 +64,7 @@ namespace T_MemberTypeImplSpace_
         public T_MemberTypeImplName_() { }
         public T_MemberTypeImplName_(T_MemberTypeImplName_ source) { }
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }
-        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
+        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();
 
         [JsonPropertyName("_f01_001")]
         public long Field1 { get; set; }
@@ -105,7 +105,7 @@ namespace T_BaseImplNameSpace_
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
 
         protected override void OnFreeze() => base.OnFreeze();
-        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
+        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();
 
         public T_NativeMemberType_ BaseField1 { get; set; }
 
@@ -215,7 +215,7 @@ namespace T_ImplNameSpace_
             //##}
         }
 
-        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);
+        protected override IEntityBase OnShallowCopy() => new T_EntityImplName_(this);
 
         public T_EntityImplName_() { }
         public T_EntityImplName_(T_IntfNameSpace_.T_EntityIntfName_ source) : base(source)

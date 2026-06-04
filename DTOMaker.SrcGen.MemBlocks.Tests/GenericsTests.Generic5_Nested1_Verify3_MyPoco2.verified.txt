@@ -54,7 +54,7 @@ namespace MyOrg.Models.MemBlocks
             _Field1?.Freeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyPoco2(this);
+        protected override IEntityBase OnShallowCopy() => new MyPoco2(this);
 
         public MyPoco2() { }
         public MyPoco2(IMyPoco2 source) : base(source)

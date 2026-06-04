@@ -58,7 +58,7 @@ namespace MyOrg.Models.MemBlocks
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Monoid_1_Boolean(this);
+        protected override IEntityBase OnShallowCopy() => new Monoid_1_Boolean(this);
 
         public Monoid_1_Boolean() { }
         public Monoid_1_Boolean(IMonoid<Boolean> source) : base(source)

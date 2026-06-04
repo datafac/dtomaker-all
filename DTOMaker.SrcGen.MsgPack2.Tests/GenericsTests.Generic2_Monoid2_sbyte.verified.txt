@@ -58,7 +58,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Monoid_1_SByte(this);
+        protected override IEntityBase OnShallowCopy() => new Monoid_1_SByte(this);
 
         public Monoid_1_SByte() { }
         public Monoid_1_SByte(IMonoid<SByte> source) : base(source)

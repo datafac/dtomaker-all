@@ -58,7 +58,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Poco_2_String_Octets(this);
+        protected override IEntityBase OnShallowCopy() => new Poco_2_String_Octets(this);
 
         public Poco_2_String_Octets() { }
         public Poco_2_String_Octets(IPoco<String, Octets> source) : base(source)

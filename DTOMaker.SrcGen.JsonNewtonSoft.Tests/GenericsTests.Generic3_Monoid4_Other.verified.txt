@@ -53,7 +53,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Other(this);
+        protected override IEntityBase OnShallowCopy() => new Other(this);
 
         public Other() { }
         public Other(IOther source) : base(source)

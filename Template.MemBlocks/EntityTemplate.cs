@@ -102,7 +102,7 @@ namespace T_MemberTypeImplSpace_
         }
         public T_MemberTypeImplName_(ReadOnlyMemory<byte> buffer) : this(_metadata, buffer) { }
 
-        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
+        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();
         protected override int OnGetEntityId() => 3;
         protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
         protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
@@ -318,7 +318,7 @@ namespace T_ImplNameSpace_
         /// <inheritdoc/>
         protected override int OnGetEntityId() => T_EntityId_;
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);
+        protected override IEntityBase OnShallowCopy() => new T_EntityImplName_(this);
 
         /// <inheritdoc/>
         protected override void OnFreeze()

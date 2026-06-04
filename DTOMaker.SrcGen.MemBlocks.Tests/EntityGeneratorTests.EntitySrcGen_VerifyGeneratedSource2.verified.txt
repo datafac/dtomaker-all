@@ -108,7 +108,7 @@ namespace MyOrg.Model2.MemBlocks
         /// <inheritdoc/>
         protected override int OnGetEntityId() => 3;
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         /// <inheritdoc/>
         protected override void OnFreeze()

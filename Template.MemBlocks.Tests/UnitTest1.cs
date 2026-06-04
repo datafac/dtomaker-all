@@ -49,7 +49,7 @@ namespace Template.MemBlocks.Tests
         protected override void OnFreeze() => base.OnFreeze();
         protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
         protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
-        protected override IEntityBase OnPartCopy() => new TestEntity(this);
+        protected override IEntityBase OnShallowCopy() => new TestEntity(this);
 
         public TestEntity() : base(_metadata)
         {

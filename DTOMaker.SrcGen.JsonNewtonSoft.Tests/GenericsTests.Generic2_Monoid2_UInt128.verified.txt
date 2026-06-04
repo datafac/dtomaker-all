@@ -58,7 +58,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Monoid_1_UInt128(this);
+        protected override IEntityBase OnShallowCopy() => new Monoid_1_UInt128(this);
 
         public Monoid_1_UInt128() { }
         public Monoid_1_UInt128(IMonoid<UInt128> source) : base(source)

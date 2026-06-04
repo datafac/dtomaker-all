@@ -64,6 +64,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         _readonlyGlobalBlock = buffer;
         _writableGlobalBlock = Memory<byte>.Empty;
         _frozen = true;
+        _packed = true;
     }
 
     private volatile bool _frozen;
@@ -83,8 +84,8 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         return _readonlyGlobalBlock;
     }
 
-    protected virtual IEntityBase OnPartCopy() => throw new NotImplementedException();
-    public IEntityBase ShallowCopy() => OnPartCopy();
+    protected virtual IEntityBase OnShallowCopy() => throw new NotImplementedException();
+    public IEntityBase ShallowCopy() => OnShallowCopy();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void ThrowIsFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot set {methodName} when frozen.");

@@ -41,7 +41,7 @@ namespace T_MemberTypeImplSpace_
         protected override int OnGetEntityId() => 3;
         public T_MemberTypeImplName_() { }
         public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }
-        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();
+        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();
         protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         [Key(1)]
@@ -649,7 +649,7 @@ namespace T_ImplNameSpace_
         public static new T_AbstractEntity__Default Empty => _empty;
         public T_AbstractEntity__Default() { }
         public T_AbstractEntity__Default(T_AbstractEntity_ source) : base(source) { }
-        protected override IEntityBase OnPartCopy() => new T_AbstractEntity__Default(this);
+        protected override IEntityBase OnShallowCopy() => new T_AbstractEntity__Default(this);
 
         public bool Equals(T_AbstractEntity__Default? other)
         {
@@ -775,7 +775,7 @@ namespace T_ImplNameSpace_
         protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);
+        protected override IEntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
 
         /// <summary>
         /// Initializes a new instance of the T_ConcreteEntity_ class for deserialization purposes.

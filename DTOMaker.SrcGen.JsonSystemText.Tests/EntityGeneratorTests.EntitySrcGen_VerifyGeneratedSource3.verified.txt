@@ -63,7 +63,7 @@ namespace MyOrg.Model3.JsonSystemText
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         public MyDTO() { }
         public MyDTO(MyOrg.Model3.IMyDTO source) : base(source)

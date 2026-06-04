@@ -58,7 +58,7 @@ namespace MyOrg.Models.JsonSystemText
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Base_1_Int64(this);
+        protected override IEntityBase OnShallowCopy() => new Base_1_Int64(this);
 
         public Base_1_Int64() { }
         public Base_1_Int64(IBase<Int64> source) : base(source)

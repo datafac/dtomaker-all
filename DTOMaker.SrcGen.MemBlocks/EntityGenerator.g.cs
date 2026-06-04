@@ -103,7 +103,7 @@ public partial class EntityGenerator
             Emit("        }");
             Emit("        public T_MemberTypeImplName_(ReadOnlyMemory<byte> buffer) : this(_metadata, buffer) { }");
             Emit("");
-            Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
+            Emit("        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();");
             Emit("        protected override int OnGetEntityId() => 3;");
             Emit("        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;");
             Emit("        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;");
@@ -324,7 +324,7 @@ public partial class EntityGenerator
         Emit("        /// <inheritdoc/>");
         Emit("        protected override int OnGetEntityId() => T_EntityId_;");
         Emit("        /// <inheritdoc/>");
-        Emit("        protected override IEntityBase OnPartCopy() => new T_EntityImplName_(this);");
+        Emit("        protected override IEntityBase OnShallowCopy() => new T_EntityImplName_(this);");
         Emit("");
         Emit("        /// <inheritdoc/>");
         Emit("        protected override void OnFreeze()");

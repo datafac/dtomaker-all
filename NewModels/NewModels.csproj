@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
+	  <ProjectReference Include="..\DTOMaker.Runtime.MemBlocks\DTOMaker.Runtime.MemBlocks.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime.MsgPack3\DTOMaker.Runtime.MsgPack3.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
 	</ItemGroup>

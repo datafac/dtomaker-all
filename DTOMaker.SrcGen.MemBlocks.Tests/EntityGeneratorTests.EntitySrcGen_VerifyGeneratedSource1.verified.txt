@@ -108,7 +108,7 @@ namespace MyOrg.Models.MemBlocks
         /// <inheritdoc/>
         protected override int OnGetEntityId() => 2;
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new Derived(this);
+        protected override IEntityBase OnShallowCopy() => new Derived(this);
 
         /// <inheritdoc/>
         protected override void OnFreeze()

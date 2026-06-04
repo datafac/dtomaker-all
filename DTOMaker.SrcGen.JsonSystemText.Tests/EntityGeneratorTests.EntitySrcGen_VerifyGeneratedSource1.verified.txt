@@ -63,7 +63,7 @@ namespace MyOrg.Models.JsonSystemText
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Derived(this);
+        protected override IEntityBase OnShallowCopy() => new Derived(this);
 
         public Derived() { }
         public Derived(MyOrg.Models.IDerived source) : base(source)

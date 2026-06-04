@@ -53,7 +53,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new MyTree(this);
+        protected override IEntityBase OnShallowCopy() => new MyTree(this);
 
         public MyTree() { }
         public MyTree(IMyTree source) : base(source)

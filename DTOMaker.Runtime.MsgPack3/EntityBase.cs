@@ -126,13 +126,6 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
         if (!_packed) EntityBase.ThrowIsNotPackedException(methodName);
     }
 
-    protected virtual ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => ReadOnlyMemory<byte>.Empty;
-    public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
-    {
-        ThrowIfNotPacked();
-        return OnSerializeqqq(cancellation);
-    }
-
     private volatile bool _packed;
     /// <inheritdoc/>
     [IgnoreMember]

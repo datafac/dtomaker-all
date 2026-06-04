@@ -42,7 +42,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        protected override int OnGetEntityId() => 3;");
             Emit("        public T_MemberTypeImplName_() { }");
             Emit("        public T_MemberTypeImplName_(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source) { }");
-            Emit("        protected override IEntityBase OnPartCopy() => throw new NotImplementedException();");
+            Emit("        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();");
             Emit("        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();");
             Emit("");
             Emit("        [Key(1)]");
@@ -777,7 +777,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        public static new T_AbstractEntity__Default Empty => _empty;");
             Emit("        public T_AbstractEntity__Default() { }");
             Emit("        public T_AbstractEntity__Default(T_AbstractEntity_ source) : base(source) { }");
-            Emit("        protected override IEntityBase OnPartCopy() => new T_AbstractEntity__Default(this);");
+            Emit("        protected override IEntityBase OnShallowCopy() => new T_AbstractEntity__Default(this);");
             Emit("");
             Emit("        public bool Equals(T_AbstractEntity__Default? other)");
             Emit("        {");
@@ -911,7 +911,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();");
             Emit("");
             Emit("        /// <inheritdoc/>");
-            Emit("        protected override IEntityBase OnPartCopy() => new T_ConcreteEntity_(this);");
+            Emit("        protected override IEntityBase OnShallowCopy() => new T_ConcreteEntity_(this);");
             Emit("");
             Emit("        /// <summary>");
             Emit("        /// Initializes a new instance of the T_ConcreteEntity_ class for deserialization purposes.");

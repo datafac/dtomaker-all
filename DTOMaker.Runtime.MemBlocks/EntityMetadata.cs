@@ -51,6 +51,14 @@ public readonly struct EntityMetadata : IEquatable<EntityMetadata>
         = new ReadOnlyMemory<int>([0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 * 1, 1024 * 2, 1024 * 4, 1024 * 8, 1024 * 16]);
     private static int GetBlockSize(int blockSizeCode) => _blockSizes.Span[blockSizeCode];
 
+    public static int GetEntityId(ReadOnlyMemory<byte> buffer)
+    {
+        ReadOnlyMemory<byte> header = buffer.Slice(0, HeaderSize);
+        BlockB016 block = default;
+        if (!block.TryRead(header.Span)) throw new InvalidDataException($"Source buffer too small, expected at least {HeaderSize} bytes but received {buffer.Length} bytes.");
+        return block.A.B.Int32ValueLE;
+    }
+
     public EntityMetadata(int entityId, long structureBits) : this()
     {
         SignatureBits = SignatureV21;

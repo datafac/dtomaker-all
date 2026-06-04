@@ -88,7 +88,7 @@ namespace MyOrg.Model3.MsgPack2
         protected override ReadOnlyMemory<byte> OnSerialize() => this.SerializeToMessagePack();
 
         /// <inheritdoc/>
-        protected override IEntityBase OnPartCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         /// <summary>
         /// Initializes a new instance of the MyDTO class for deserialization purposes.

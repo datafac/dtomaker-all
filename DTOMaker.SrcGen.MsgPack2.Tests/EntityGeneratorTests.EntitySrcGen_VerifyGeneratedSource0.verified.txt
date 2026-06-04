@@ -183,7 +183,7 @@ namespace MyOrg.Models.MsgPack2
         public static new MyDTO_Default Empty => _empty;
         public MyDTO_Default() { }
         public MyDTO_Default(MyDTO source) : base(source) { }
-        protected override IEntityBase OnPartCopy() => new MyDTO_Default(this);
+        protected override IEntityBase OnShallowCopy() => new MyDTO_Default(this);
 
         public bool Equals(MyDTO_Default? other)
         {

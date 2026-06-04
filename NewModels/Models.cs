@@ -1,7 +1,5 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
-using DTOMaker.Runtime;
-using MessagePack;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -29,12 +27,12 @@ namespace DTOMaker.Runtime
 namespace NewModels
 {
     [Entity(1)]
-    public interface IT_BaseImplName__ : IEntityBase
+    public interface IT_BaseImplName_ : IEntityBase
     {
     }
 
     [Entity(4)]
-    public interface IT_AbstractEntity_ : IT_BaseImplName__
+    public interface IT_AbstractEntity_ : IT_BaseImplName_
     {
     }
 
@@ -50,8 +48,8 @@ namespace NewModels
 namespace NewModels
 {
     public interface IEntityBase_Writable : IEntityBase { }
-    public interface IT_BaseImplName___Writable : IT_BaseImplName__, IEntityBase_Writable { }
-    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, IT_BaseImplName___Writable { }
+    public interface IT_BaseImplName__Writable : IT_BaseImplName_, IEntityBase_Writable { }
+    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, IT_BaseImplName__Writable { }
     public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, IT_AbstractEntity__Writable
     {
         new string Value { set; }
@@ -73,11 +71,11 @@ namespace NewModels.Records
         public EntityBase(IEntityBase source) { }
     }
 
-    public abstract record T_BaseImplName_ : EntityBase, IT_BaseImplName__
+    public abstract record T_BaseImplName_ : EntityBase, IT_BaseImplName_
     {
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
-        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
 
     public abstract record T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity_
@@ -139,12 +137,12 @@ namespace NewModels.Classes
         #endregion
     }
 
-    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName___Writable
+    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
-        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
 
     public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
@@ -174,12 +172,12 @@ namespace NewModels.MsgPack3
 
     [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(5, typeof(T_ConcreteEntity_))]
-    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName___Writable
+    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
-        public T_BaseImplName_(IT_BaseImplName__ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
 
     [MessagePackObject(SuppressSourceGeneration = true)]
@@ -206,6 +204,221 @@ namespace NewModels.MsgPack3
 
         protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
         protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
-        protected override ReadOnlyMemory<byte> OnSerializeqqq(CancellationToken cancellation) => MessagePackSerializer.Serialize<T_ConcreteEntity_>(this, _options, cancellation);
+    }
+}
+
+namespace NewModels.MemBlox2
+{
+    using DTOMaker.Runtime.MemBlocks;
+    using System.IO;
+    using System.Threading;
+
+    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
+    {
+        //##if(false) {
+        private const int T_ClassHeight_ = 1;
+        private const int T_EntityId_ = 4;
+        private const bool T_MemberObsoleteIsError_ = false;
+        private const long T_BlockStructureCode_ = 0x0000 + 0x0001;
+        //##}
+        private const long BlockStructureCode = T_BlockStructureCode_;
+        private const int ClassHeight = T_ClassHeight_;
+        private readonly Memory<byte> _writableLocalBlock;
+        private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
+
+        private static readonly EntityMetadata _metadata = new EntityMetadata(T_EntityId_, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
+
+        public static T_BaseImplName_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
+        {
+            int entityId = EntityMetadata.GetEntityId(buffer);
+            return entityId switch
+            {
+                //##foreach(var derived in entity.DerivedEntities) {
+                //##using var _ = NewScope(derived);
+                T_ConcreteEntity_.EntityId => new T_ConcreteEntity_(buffer),
+                //##}
+                _ => throw new InvalidDataException($"Header contains unexpected entity id: {entityId}")
+            };
+        }
+
+        protected override void OnFreeze() { base.OnFreeze(); }
+
+        protected T_BaseImplName_(EntityMetadata metadata) : base(metadata)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_BaseImplName_(EntityMetadata metadata, T_BaseImplName_ source) : base(metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_BaseImplName_(EntityMetadata metadata, IT_BaseImplName_ source) : base(metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_BaseImplName_(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
+    }
+
+    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
+    {
+        //##if(false) {
+        private const int T_ClassHeight_ = 2;
+        private const int T_EntityId_ = 4;
+        private const bool T_MemberObsoleteIsError_ = false;
+        private const long T_BlockStructureCode_ = 0x0000 + 0x0000 + 0x0002;
+        //##}
+        private const long BlockStructureCode = T_BlockStructureCode_;
+        private const int ClassHeight = T_ClassHeight_;
+        private readonly Memory<byte> _writableLocalBlock;
+        private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
+
+        private static readonly EntityMetadata _metadata = new EntityMetadata(T_EntityId_, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
+
+        public new static T_AbstractEntity_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
+        {
+            int entityId = EntityMetadata.GetEntityId(buffer);
+            return entityId switch
+            {
+                //##foreach(var derived in entity.DerivedEntities) {
+                //##using var _ = NewScope(derived);
+                T_ConcreteEntity_.EntityId => new T_ConcreteEntity_(buffer),
+                //##}
+                _ => throw new InvalidDataException($"Header contains unexpected entity id: {entityId}")
+            };
+        }
+
+        protected override void OnFreeze() { base.OnFreeze(); }
+
+        protected T_AbstractEntity_(EntityMetadata metadata) : base(metadata)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_AbstractEntity_(EntityMetadata metadata, T_AbstractEntity_ source) : base(metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_AbstractEntity_(EntityMetadata metadata, IT_AbstractEntity_ source) : base(metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        protected T_AbstractEntity_(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
+
+    }
+
+    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
+    {
+        //##if(false) {
+        private const int T_ClassHeight_ = 3;
+        private const int T_EntityId_ = 5;
+        private const bool T_MemberObsoleteIsError_ = false;
+        private const long T_BlockStructureCode_ = 0x7000 + 0x0000 + 0x0000 + 0x0003;
+        //##}
+        private const long BlockStructureCode = T_BlockStructureCode_;
+        private const int ClassHeight = T_ClassHeight_;
+        private readonly Memory<byte> _writableLocalBlock;
+        private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
+
+        private static readonly EntityMetadata _metadata = new EntityMetadata(T_EntityId_, BlockStructureCode);
+
+        private static readonly int BlockOffset = _metadata.LocalBlockOffset;
+        private static readonly int BlockLength = _metadata.LocalBlockLength;
+
+        public new static T_ConcreteEntity_ DeserializeFrom(ReadOnlyMemory<byte> buffer)
+        {
+            int entityId = EntityMetadata.GetEntityId(buffer);
+            return entityId switch
+            {
+                //##foreach(var derived in entity.DerivedEntities) {
+                //##using var _ = NewScope(derived);
+                T_ConcreteEntity_.EntityId => new T_ConcreteEntity_(buffer),
+                //##}
+                _ => throw new InvalidDataException($"Header contains unexpected entity id: {entityId}")
+            };
+        }
+
+        public const int EntityId = T_EntityId_;
+        protected override int OnGetEntityId() => T_EntityId_;
+        protected override IEntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
+        protected override void OnFreeze() { base.OnFreeze(); }
+
+        public T_ConcreteEntity_() : base(_metadata)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+        }
+        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(_metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+            this.Value = source.Value;
+        }
+        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(_metadata, source)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
+            this.Value = source.Value;
+        }
+        public T_ConcreteEntity_(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
+        {
+            _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
+            _writableLocalBlock = Memory<byte>.Empty;
+        }
+
+        private string _Value = string.Empty;
+        public string Value
+        {
+            get { return _Value; }
+            set { ThrowIfFrozen(); _Value = value; }
+        }
+        private const int Value_FieldOffset = 0;
+        private async ValueTask Value_Pack(IDataStore dataStore, CancellationToken cancellation)
+        {
+            var writableField = _writableLocalBlock.Slice(Value_FieldOffset, 64);
+            await PackText(_Value, writableField, dataStore);
+        }
+        private async ValueTask Value_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        {
+            var readonlyField = _readonlyLocalBlock.Slice(Value_FieldOffset, 64);
+            var data = await UnpackData(readonlyField, dataStore);
+#if NET8_0_OR_GREATER
+            _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
+#else
+            _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
+#endif
+        }
+
+        /// <inheritdoc/>
+        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
+        {
+            await base.OnPack(dataStore, cancellation);
+            await Value_Pack(dataStore, cancellation);
+        }
+
+        /// <inheritdoc/>
+        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        {
+            await base.OnUnpack(dataStore, depth, cancellation);
+            await Value_Unpack(dataStore, cancellation);
+        }
+
     }
 }

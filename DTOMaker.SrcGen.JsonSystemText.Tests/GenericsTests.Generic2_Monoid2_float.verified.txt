@@ -58,7 +58,7 @@ namespace MyOrg.Models.JsonSystemText
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Monoid_1_Single(this);
+        protected override IEntityBase OnShallowCopy() => new Monoid_1_Single(this);
 
         public Monoid_1_Single() { }
         public Monoid_1_Single(IMonoid<Single> source) : base(source)

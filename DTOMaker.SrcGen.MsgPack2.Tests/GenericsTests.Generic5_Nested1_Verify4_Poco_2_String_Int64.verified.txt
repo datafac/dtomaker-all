@@ -53,7 +53,7 @@ namespace MyOrg.Models.MessagePack
             base.OnFreeze();
         }
 
-        protected override IEntityBase OnPartCopy() => new Poco_2_String_Int64(this);
+        protected override IEntityBase OnShallowCopy() => new Poco_2_String_Int64(this);
 
         public Poco_2_String_Int64() { }
         public Poco_2_String_Int64(IPoco<String, Int64> source) : base(source)
