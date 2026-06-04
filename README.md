@@ -109,14 +109,15 @@ it up to you to decide how much. Any amount is appreciated.
 
 You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 
-## Coming next in V2.1
-- BitSet type
+## Coming next in V3.0
+- Breaking changes.
+- Incremental serialization (IPackable support) for all DTOs
+- Generators for records and plain classes
+- MessagePack 3.x generator
 
 ## Coming later
 - ref type converters
-- incremental serialization for all
 - more collection types
-- MessagePack 3.x serialization
 - Orleans serialization
 - Protobuf.Net serialization
 - model.json generation
@@ -127,4 +128,4 @@ You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 15th May 2026.
+- This readme was last updated 4th June 2026.
