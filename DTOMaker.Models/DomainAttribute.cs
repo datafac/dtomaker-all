@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTOMaker.Models;
+﻿namespace DTOMaker.Models;
 
 //[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
 //public class DomainAttribute : Attribute

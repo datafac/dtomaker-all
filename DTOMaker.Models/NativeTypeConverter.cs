@@ -5,7 +5,7 @@ namespace DTOMaker.Models;
 /// <summary>
 /// When used in a <see cref="DTOMaker.Models.MemberAttribute"/>, this 
 /// converter allows <see cref="DTOMaker.Models.NativeType"/> properties to be internally 
-/// stored and serialized as <see cref="System.Int32"/> values.
+/// stored and serialized as <see cref="System.Int16"/> values.
 /// </summary>
 public sealed class NativeTypeConverter : IStructConverter<NativeType, Int16>
 {

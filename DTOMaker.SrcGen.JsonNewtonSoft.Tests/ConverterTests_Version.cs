@@ -4,12 +4,11 @@ using Xunit;
 
 namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests;
 
-public class ConverterTests_Complex
+public class ConverterTests_Version
 {
     private static readonly string modelSource =
         """
         using System;
-        using System.Numerics;
         using DataFac.Memory;
         using DTOMaker.Models;
         namespace MyOrg.Models
@@ -17,7 +16,7 @@ public class ConverterTests_Complex
             [Entity(1)]
             public interface IMyDTO : IEntityBase
             {
-                [Member(1, NativeType.PairOfInt64, typeof(DTOMaker.Models.ComplexConverter))] Complex Field1 { get; set; }
+                [Member(1, NativeType.String, typeof(DTOMaker.Models.VersionConverter))] Version Field1 { get; set; }
             }
         }
         """;
@@ -25,3 +24,4 @@ public class ConverterTests_Complex
     [Fact] public void CustomSrcGen_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(1);
     [Fact] public async Task CustomSrcGen_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
 }
+

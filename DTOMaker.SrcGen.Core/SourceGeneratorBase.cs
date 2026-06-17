@@ -204,13 +204,23 @@ namespace DTOMaker.SrcGen.Core
                 }
             }
 
-            // adjust for custom structs
-            if (tfn.MemberKind == MemberKind.Undefined && nativeType != NativeType.Undefined && converterFullName is not null)
+            // adjust for custom string, binary and structs
+            if (tfn.MemberKind == MemberKind.Undefined && converterFullName is not null)
             {
-                tfn = new TypeFullName(tfn, MemberKind.Struct, true, nativeType);
                 var cpn = new ParsedName(converterFullName);
                 converterSpace = cpn.Space;
                 converterName = cpn.Name;
+                MemberKind newMemberKind = nativeType switch
+                {
+                    NativeType.Undefined => MemberKind.Undefined,
+                    NativeType.Binary => MemberKind.Binary,
+                    NativeType.String => MemberKind.String,
+                    _ => MemberKind.Struct,
+                };
+                if (newMemberKind != MemberKind.Undefined)
+                {
+                    tfn = new TypeFullName(tfn, newMemberKind, true, nativeType);
+                }
             }
 
             if (sequence <= 0)

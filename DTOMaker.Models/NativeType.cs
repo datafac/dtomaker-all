@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTOMaker.Models;
+﻿namespace DTOMaker.Models;
 
 public enum NativeType : short
 {
