@@ -13,13 +13,17 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-22.04 # todo latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
       with:  
         fetch-depth: 0
+
+    - name: Install Mono
+      run: |
+        sudo apt-get update && sudo apt-get install -y mono-complete
 
     - name: Setup .NET 10
       uses: actions/setup-dotnet@v4
