@@ -31,11 +31,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Compression" Version="1.1.6" />
-		<PackageReference Include="DataFac.Hashing" Version="1.1.6" />
-		<PackageReference Include="DataFac.Memory" Version="2.0.8" />
+		<PackageReference Include="DataFac.Compression" Version="1.1.7" />
+		<PackageReference Include="DataFac.Hashing" Version="1.1.7" />
+		<PackageReference Include="DataFac.Memory" Version="2.0.9" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.85">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

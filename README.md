@@ -1,5 +1,7 @@
 ![Icon](GreenPrinterIcon256.jpg)
 
+*This is the main development repo for V3+*
+
 # DTOMaker
 
 [![Build-Deploy](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml/badge.svg)](https://github.com/datafac/dtomaker-all/actions/workflows/dotnet.yml)
@@ -33,8 +35,9 @@ All DTOs created by these generators support the following features:
 - Incremental serialization: When serializing an object graph, only the parts of the graph 
   that have changed since the last serialization need to be re-serialized. This can significantly 
   improve performance when working with large object graphs where only a small portion of 
-  the data changes between serializations. [Note: Currently, this feature is only supported by
-  the MemBlox2 generator.]
+  the data changes between serializations. For some serialization protocols, this will be
+  optional on an opt-in basis, and for others it is mandatory e.g. MemBlox2. All DTOs implement 
+  incremental serialization via the IPackable interface.
 - Built-in type support: Most .NET primitive types are supported out of the box, including 
   integers, floats, strings, Guid, etc. Raw byte arrays are supported using the built-in 
   Octets type. Other common types such as DateTime, DateTimeOffset, TimeSpan are supported 
@@ -42,8 +45,8 @@ All DTOs created by these generators support the following features:
 - Custom type support: User-defined value types can be supported via user-defined converters 
   to built-in types. For example, a custom type representing a 3D point could be converted 
   to and from a built-in type such as a tuple of three floats.
-- Collections: Currently, only collections based on balanced binary trees are supported. 
-  [Development is ongoing.]
+- Collections types: Collection properties are natively supported. Initially only array-like
+  collections are supported, but support for other collection types is planned.
 
 ## Serialization Protocols
 The following serialization protocols are supported via separate source generators and runtime 
@@ -51,8 +54,8 @@ libraries. You can choose which ones to use by referencing the appropriate sourc
 and runtime library in your project.
   - JSON (System.Text.Json)
   - JSON (Newtonsoft.Json)
-  - MessagePack 2.x
-  - MemBlox2 (a custom binary format optimised for incremental serialization)
+  - MessagePack 3.x
+  - MemBlox2 (a performant binary format based on fixed memory blocks)
 
 ## Example
 
@@ -82,15 +85,18 @@ namespace MyModels;
 ## Workflow
 ```mermaid
 flowchart TB
-    def(Define models e.g. IMyDTO.cs)
-    ref1(Reference DTOMaker.Models)
-    ref2(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
-    ref3(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
+    defmodel(Define models e.g. IMyDTO.cs)
+    refmodel(Reference DTOMaker.Models)
+    choose(Choose serialization protocol e.g. JsonSystemText)
+    refruntime(Reference runtime e.g. DTOMaker.Runtime.JsonSystemText)
+    refsrcgen(Reference source generator e.g. DTOMaker.SrcGen.JsonSystemText)
     bld(Build/Run)
-    ref1-->def
-    def-->ref2
-    ref2-->ref3
-    ref3-->bld
+    refmodel-->defmodel
+    defmodel-->choose
+    choose-->refruntime
+    choose-->refsrcgen
+    refruntime-->bld
+    refsrcgen-->bld
 ```
 
 ## Open Source Declaration

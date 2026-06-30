@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DataFac.Memory" Version="2.0.8" />
+	  <PackageReference Include="DataFac.Memory" Version="2.0.9" />
 	</ItemGroup>
 
 	<ItemGroup>
