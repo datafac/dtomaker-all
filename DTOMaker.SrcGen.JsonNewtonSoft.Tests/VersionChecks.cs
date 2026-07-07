@@ -12,8 +12,8 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             Version version = typeof(Microsoft.CodeAnalysis.CSharp.LanguageVersion).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
             version.Major.ShouldBe(5);
-            version.Minor.ShouldBe(3);
-            version.ToString().ShouldBe("5.3.0.0");
+            version.Minor.ShouldBe(6);
+            version.ToString().ShouldBe("5.6.0.0");
         }
 
     }
