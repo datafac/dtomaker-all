@@ -1,6 +1,6 @@
 ![Icon](GreenPrinterIcon256.jpg)
 
-*This is the main development repo for V3+*
+*This is the main development repo.*
 
 # DTOMaker
 
