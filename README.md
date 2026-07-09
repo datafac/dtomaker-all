@@ -115,17 +115,17 @@ it up to you to decide how much. Any amount is appreciated.
 
 You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 
-## Coming next in V3.0
+## Coming in V3.0
 - Breaking changes.
 - Incremental serialization (IPackable support) for all DTOs
+- reference type converters
 - Generators for records and plain classes
 - MessagePack 3.x generator
 
 ## Coming later
-- ref type converters
 - more collection types
-- Orleans serialization
-- Protobuf.Net serialization
+- Orleans generators
+- Protobuf.Net generators
 - model.json generation
 - command-line alternative
 - logical value equality
@@ -134,4 +134,4 @@ You can [contribute via GitHub Sponsors](https://github.com/sponsors/Psiman62).
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Miscellaneous
-- This readme was last updated 4th June 2026.
+- This readme was last updated 9th June 2026.
