@@ -5,6 +5,7 @@ VisualStudioVersion = 18.0.11217.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F72D2FC-3AC9-451F-B6B9-907E32B23B5C}"
 	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		projscan.json = projscan.json
@@ -100,6 +101,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewModels.Tests", "NewModels.Tests\NewModels.Tests.csproj", "{A3AF05AD-D9CB-4826-B072-F206B6AFEC99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOMaker.Runtime.MsgPack3", "DTOMaker.Runtime.MsgPack3\DTOMaker.Runtime.MsgPack3.csproj", "{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XperPolyType.Models", "XperPolyType.Models\XperPolyType.Models.csproj", "{DFB32C6A-9328-4B76-83C7-F75202F2324E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XperPolyType.Models.Tests", "XperPolyType.Models.Tests\XperPolyType.Models.Tests.csproj", "{F717A975-6FD9-444C-80E9-DAF1A39718C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -263,6 +268,14 @@ Global
 		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F4C04ED-9581-29C3-DB0D-EDA06EEBCB85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFB32C6A-9328-4B76-83C7-F75202F2324E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFB32C6A-9328-4B76-83C7-F75202F2324E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFB32C6A-9328-4B76-83C7-F75202F2324E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFB32C6A-9328-4B76-83C7-F75202F2324E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F717A975-6FD9-444C-80E9-DAF1A39718C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F717A975-6FD9-444C-80E9-DAF1A39718C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F717A975-6FD9-444C-80E9-DAF1A39718C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F717A975-6FD9-444C-80E9-DAF1A39718C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
