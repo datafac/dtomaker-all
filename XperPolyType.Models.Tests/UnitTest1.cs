@@ -16,6 +16,11 @@ namespace XperPolyType.Models.Tests
 {
     public class UnitTest1
     {
+        private ITypeShape<T> TypeShapeOf<T>(T shape) where T : IShapeable<T>
+        {
+            return T.GetTypeShape();
+        }
+
         private string DumpShape<T>(T shape) where T : IShapeable<T>
         {
             // do something with shape
@@ -34,6 +39,12 @@ namespace XperPolyType.Models.Tests
                 result.AppendLineN($"       - {evt.Name}");
             }
             return result.ToString();
+        }
+
+        [Fact]
+        public async Task CheckVerifySetup()
+        {
+            await VerifyChecks.Run();
         }
 
         [Fact]
@@ -59,6 +70,19 @@ namespace XperPolyType.Models.Tests
             };
             string shape = DumpShape(student);
             await Verifier.Verify(shape);
+        }
+
+        [Fact]
+        public async Task Test2()
+        {
+            var student = new Student()
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                StudentId = "12345"
+            };
+            var typeShape = TypeShapeOf(student);
+            await Verifier.Verify(typeShape);
         }
     }
 }

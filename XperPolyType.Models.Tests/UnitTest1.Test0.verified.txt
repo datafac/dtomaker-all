@@ -1,4 +1,5 @@
-﻿Type   : XperPolyType.Models.Student
-Kind   : Object
-Methods: 0
-Events : 0
+﻿{
+  StudentId: 12345,
+  FirstName: John,
+  LastName: Doe
+}

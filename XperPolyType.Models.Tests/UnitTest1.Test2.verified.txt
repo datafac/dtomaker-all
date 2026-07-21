@@ -1,0 +1,32 @@
+﻿{
+  IsRecordType: true,
+  IsTupleType: false,
+  PropertiesFactory: {
+    Type: Func<IEnumerable<IPropertyShape>>,
+    Target: TypeShapeProvider_XperPolyType_Models,
+    Method: PolyType.Abstractions.IPropertyShape[] __CreateProperties_Student()
+  },
+  ConstructorFactory: {
+    Type: Func<IConstructorShape>,
+    Target: TypeShapeProvider_XperPolyType_Models,
+    Method: PolyType.Abstractions.IConstructorShape __CreateConstructor_Student()
+  },
+  Kind: Object,
+  Provider: {
+    Person: {
+      IsRecordType: true,
+      IsTupleType: false,
+      PropertiesFactory: {
+        Type: Func<IEnumerable<IPropertyShape>>,
+        Target: TypeShapeProvider_XperPolyType_Models,
+        Method: PolyType.Abstractions.IPropertyShape[] __CreateProperties_Person()
+      },
+      Kind: Object
+    },
+    String: {
+      IsRecordType: false,
+      IsTupleType: false,
+      Kind: Object
+    }
+  }
+}
