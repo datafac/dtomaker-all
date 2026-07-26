@@ -35,7 +35,6 @@ namespace MyOrg.Models.JsonNewtonSoft
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonNewtonSoft.Derived source2 => new MyOrg.Models.JsonNewtonSoft.Derived(source2),
                 _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
             };
         }
@@ -45,7 +44,6 @@ namespace MyOrg.Models.JsonNewtonSoft
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.JsonNewtonSoft.Derived(source2),
                 _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
             };
         }
@@ -55,7 +53,6 @@ namespace MyOrg.Models.JsonNewtonSoft
             if (entityId == 1) return new MyDTO();
             return entityId switch
             {
-                2 => new MyOrg.Models.JsonNewtonSoft.Derived(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
@@ -74,29 +71,43 @@ namespace MyOrg.Models.JsonNewtonSoft
         {
             _Field1 = source.Field1;
             _Field2 = source.Field2;
+            _Field3 = source.Field3;
         }
         public MyDTO(MyDTO source) : base(source)
         {
             _Field1 = source._Field1;
             _Field2 = source._Field2;
+            _Field3 = source._Field3;
         }
 
         [JsonIgnore]
-        private Int32 _Field1 = default;
+        private Double _Field1 = default;
+        [Obsolete("", false)]
         [JsonProperty("_f01_001")]
-        public Int32 Field1
+        public Double Field1
         {
             get => _Field1;
             set => _Field1 = IfNotFrozen(value);
         }
 
         [JsonIgnore]
-        private Int32? _Field2;
+        private Double _Field2 = default;
+        [Obsolete("Removed", false)]
         [JsonProperty("_f01_002")]
-        public Int32? Field2
+        public Double Field2
         {
             get => _Field2;
             set => _Field2 = IfNotFrozen(value);
+        }
+
+        [JsonIgnore]
+        private Double _Field3 = default;
+        [Obsolete("Removed", true)]
+        [JsonProperty("_f01_003")]
+        public Double Field3
+        {
+            get => _Field3;
+            set => _Field3 = IfNotFrozen(value);
         }
 
 
@@ -107,6 +118,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             if (!base.Equals(other)) return false;
             if (_Field1 != other._Field1) return false;
             if (_Field2 != other._Field2) return false;
+            if (_Field3 != other._Field3) return false;
             return true;
         }
 
@@ -120,6 +132,7 @@ namespace MyOrg.Models.JsonNewtonSoft
             result.Add(base.GetHashCode());
             result.Add(_Field1);
             result.Add(_Field2);
+            result.Add(_Field3);
             return result.ToHashCode();
         }
 

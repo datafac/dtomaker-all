@@ -87,7 +87,7 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             var generatorResult = GeneratorTestHelper.RunSourceGenerator(modelSource, LanguageVersion.LatestMajor);
             var generated = generatorResult.GeneratedSources[index];
             generated.HintName.ShouldBe(expectedHintName);
-            string outputCode = string.Join(Environment.NewLine, generated.SourceText.Lines.Select(tl => tl.ToString()));
+            string outputCode = string.Join("\n", generated.SourceText.Lines.Select(tl => tl.ToString()));
             return outputCode;
         }
 

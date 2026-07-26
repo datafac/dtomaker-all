@@ -81,7 +81,8 @@ namespace DTOMaker.SrcGen.Core
 
         protected void Emit(string line)
         {
-            _builder.AppendLine(ReplaceTokens(line));
+            _builder.Append(ReplaceTokens(line));
+            _builder.Append('\n');
         }
 
         private static string ToCamelCase_notUsed(string value)

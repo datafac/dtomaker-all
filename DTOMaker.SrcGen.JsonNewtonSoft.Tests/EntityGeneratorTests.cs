@@ -46,10 +46,12 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             }
             """;
 
-        [Fact] public void EntitySrcGen_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(4);
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource1() => await Verifier.Verify(modelSource.GenerateAndGetOutput(1, "MyOrg.Models.JsonNewtonSoft.Derived.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource2() => await Verifier.Verify(modelSource.GenerateAndGetOutput(2, "MyOrg.Model2.JsonNewtonSoft.MyDTO.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource3() => await Verifier.Verify(modelSource.GenerateAndGetOutput(3, "MyOrg.Model3.JsonNewtonSoft.MyDTO.g.cs"));
+        [Fact] public void EntitySrcGen_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(6);
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.Global.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource1() => await Verifier.Verify(modelSource.GenerateAndGetOutput(1, "MyOrg.Models.JsonNewtonSoft.Domain.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource2() => await Verifier.Verify(modelSource.GenerateAndGetOutput(2, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource3() => await Verifier.Verify(modelSource.GenerateAndGetOutput(3, "MyOrg.Models.JsonNewtonSoft.Derived.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource4() => await Verifier.Verify(modelSource.GenerateAndGetOutput(4, "MyOrg.Model2.JsonNewtonSoft.MyDTO.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource5() => await Verifier.Verify(modelSource.GenerateAndGetOutput(5, "MyOrg.Model3.JsonNewtonSoft.MyDTO.g.cs"));
     }
 }

@@ -25,8 +25,10 @@ namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
             }
             """;
 
-        [Fact] public void Obsolete_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(1);
-        [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
+        [Fact] public void Obsolete_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(3);
+        [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.Global.g.cs"));
+        [Fact] public async Task Obsolete_VerifyGeneratedSource1() => await Verifier.Verify(modelSource.GenerateAndGetOutput(1, "MyOrg.Models.JsonNewtonSoft.Domain.g.cs"));
+        [Fact] public async Task Obsolete_VerifyGeneratedSource2() => await Verifier.Verify(modelSource.GenerateAndGetOutput(2, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
 
     }
 }

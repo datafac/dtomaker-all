@@ -20,6 +20,11 @@ public record class Phase2Entity
 
 }
 
+public record class OutputDomain
+{
+    public EquatableArray<OutputEntity> Entities { get; init; } = EquatableArray<OutputEntity>.Empty;
+}
+
 public record class OutputEntity
 {
     public TypeFullName TFN { get; init; } = new();
