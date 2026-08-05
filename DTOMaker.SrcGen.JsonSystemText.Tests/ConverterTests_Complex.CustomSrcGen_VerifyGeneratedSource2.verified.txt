@@ -17,8 +17,6 @@ using System.Text.Json.Serialization;
 
 namespace MyOrg.Models.JsonSystemText
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonSystemText.Derived), 2)]
     public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
@@ -38,7 +36,6 @@ namespace MyOrg.Models.JsonSystemText
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonSystemText.Derived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
                 _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
             };
         }
@@ -48,7 +45,6 @@ namespace MyOrg.Models.JsonSystemText
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
                 _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
             };
         }
@@ -58,7 +54,6 @@ namespace MyOrg.Models.JsonSystemText
             if (entityId == 1) return new MyDTO();
             return entityId switch
             {
-                2 => new MyOrg.Models.JsonSystemText.Derived(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
@@ -73,31 +68,21 @@ namespace MyOrg.Models.JsonSystemText
         public MyDTO() { }
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
-            _Field1 = source.Field1;
-            _Field2 = source.Field2;
+            _Field1 = DTOMaker.Models.ComplexConverter.ToNative(source.Field1);
         }
         public MyDTO(MyDTO source) : base(source)
         {
             _Field1 = source._Field1;
-            _Field2 = source._Field2;
         }
 
-        [JsonIgnore]
-        private Int32 _Field1 = default;
         [JsonPropertyName("_f01_001")]
-        public Int32 Field1
-        {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
-        }
-
+        [JsonInclude]
+        private PairOfInt64 _Field1 = default;
         [JsonIgnore]
-        private Int32? _Field2;
-        [JsonPropertyName("_f01_002")]
-        public Int32? Field2
+        public System.Numerics.Complex Field1
         {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
+            get => DTOMaker.Models.ComplexConverter.ToCustom(_Field1);
+            set => _Field1 = IfNotFrozen(DTOMaker.Models.ComplexConverter.ToNative(value));
         }
 
 
@@ -107,7 +92,6 @@ namespace MyOrg.Models.JsonSystemText
             if (other is null) return false;
             if (!base.Equals(other)) return false;
             if (_Field1 != other._Field1) return false;
-            if (_Field2 != other._Field2) return false;
             return true;
         }
 
@@ -120,7 +104,6 @@ namespace MyOrg.Models.JsonSystemText
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
             result.Add(_Field1);
-            result.Add(_Field2);
             return result.ToHashCode();
         }
 

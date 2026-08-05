@@ -15,14 +15,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-namespace MyOrg.Models.JsonSystemText
+namespace MyOrg.Model2.JsonSystemText
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonSystemText.Derived), 2)]
-    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
+    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Model2.IMyDTO, IEquatable<MyDTO>
     {
 
-        protected override int OnGetEntityId() => 1;
+        protected override int OnGetEntityId() => 3;
 
         private static MyDTO CreateEmpty()
         {
@@ -38,27 +36,24 @@ namespace MyOrg.Models.JsonSystemText
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonSystemText.Derived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Model2.JsonSystemText.MyDTO(source)
             };
         }
 
-        public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
+        public new static MyDTO CreateFrom(MyOrg.Model2.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Model2.JsonSystemText.MyDTO(source)
             };
         }
 
         public new static MyDTO CreateNewFromId(int entityId)
         {
-            if (entityId == 1) return new MyDTO();
+            if (entityId == 3) return new MyDTO();
             return entityId switch
             {
-                2 => new MyOrg.Models.JsonSystemText.Derived(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
@@ -66,38 +61,52 @@ namespace MyOrg.Models.JsonSystemText
         protected override void OnFreeze()
         {
             base.OnFreeze();
+            _Field31.Freeze();
+            _Field32?.Freeze();
         }
 
         protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         public MyDTO() { }
-        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
+        public MyDTO(MyOrg.Model2.IMyDTO source) : base(source)
         {
-            _Field1 = source.Field1;
-            _Field2 = source.Field2;
+            _Field31 = MyOrg.Model2.JsonSystemText.MyDTO.CreateFrom(source.Field31);
+            _Field32 = source.Field32 is null ? null : MyOrg.Model2.JsonSystemText.MyDTO.CreateFrom(source.Field32);
         }
         public MyDTO(MyDTO source) : base(source)
         {
-            _Field1 = source._Field1;
-            _Field2 = source._Field2;
+            _Field31 = source._Field31;
+            _Field32 = source._Field32;
         }
 
         [JsonIgnore]
-        private Int32 _Field1 = default;
+        private MyOrg.Model2.JsonSystemText.MyDTO _Field31 = MyOrg.Model2.JsonSystemText.MyDTO.Empty;
         [JsonPropertyName("_f01_001")]
-        public Int32 Field1
+        public MyOrg.Model2.JsonSystemText.MyDTO Field31
         {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
+            get => _Field31;
+            set => _Field31 = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        MyOrg.Model2.IMyDTO MyOrg.Model2.IMyDTO.Field31
+        {
+            get => _Field31;
+            set => _Field31 = IfNotFrozen(MyOrg.Model2.JsonSystemText.MyDTO.CreateFrom(value));
         }
 
         [JsonIgnore]
-        private Int32? _Field2;
+        private MyOrg.Model2.JsonSystemText.MyDTO? _Field32;
         [JsonPropertyName("_f01_002")]
-        public Int32? Field2
+        public MyOrg.Model2.JsonSystemText.MyDTO? Field32
         {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
+            get => _Field32;
+            set => _Field32 = IfNotFrozen(value);
+        }
+        [JsonIgnore]
+        MyOrg.Model2.IMyDTO? MyOrg.Model2.IMyDTO.Field32
+        {
+            get => _Field32;
+            set => _Field32 = IfNotFrozen(value is null ? null : MyOrg.Model2.JsonSystemText.MyDTO.CreateFrom(value));
         }
 
 
@@ -106,8 +115,8 @@ namespace MyOrg.Models.JsonSystemText
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other._Field1) return false;
-            if (_Field2 != other._Field2) return false;
+            if (_Field31 != other._Field31) return false;
+            if (_Field32 != other._Field32) return false;
             return true;
         }
 
@@ -119,8 +128,8 @@ namespace MyOrg.Models.JsonSystemText
         {
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
-            result.Add(_Field1);
-            result.Add(_Field2);
+            result.Add(_Field31);
+            result.Add(_Field32);
             return result.ToHashCode();
         }
 

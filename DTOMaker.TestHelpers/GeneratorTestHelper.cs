@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Shouldly;
 using System;
@@ -6,9 +6,9 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 
-namespace DTOMaker.SrcGen.JsonSystemText.Tests
+namespace DTOMaker.TestHelpers
 {
-    internal static class GeneratorTestHelper
+    public static class GeneratorTestHelper
     {
         private static Compilation CreateCompilation(string source,
             LanguageVersion languageVersion,
@@ -46,7 +46,9 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             return compilation;
         }
 
-        public static GeneratorRunResult RunSourceGenerator(string source,
+        private static GeneratorRunResult RunSourceGenerator(
+            IIncrementalGenerator generator,
+            string source,
             LanguageVersion languageVersion,
             params PortableExecutableReference[] additionalReferences)
         {
@@ -55,7 +57,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
 
             // directly create an instance of the generator
             // (Note: in the compiler this is loaded from an assembly, and created via reflection at runtime)
-            var generator = new SourceGenerator();
+            //ISourceGenerator generator = new SourceGenerator();
 
             // Create the driver that will control the generation, passing in our generator
             GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
@@ -82,18 +84,20 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             return generatorResult;
         }
 
-        internal static string GenerateAndGetOutput(this string modelSource, int index, string expectedHintName)
+        public static string GenerateAndGetOutput(this IIncrementalGenerator generator, string modelSource, int index, string expectedHintName)
         {
-            var generatorResult = GeneratorTestHelper.RunSourceGenerator(modelSource, LanguageVersion.LatestMajor);
+            VerifyTestHelpers.EnsureInitialized();
+            var generatorResult = GeneratorTestHelper.RunSourceGenerator(generator, modelSource, LanguageVersion.LatestMajor);
             var generated = generatorResult.GeneratedSources[index];
             generated.HintName.ShouldBe(expectedHintName);
             string outputCode = string.Join(Environment.NewLine, generated.SourceText.Lines.Select(tl => tl.ToString()));
             return outputCode;
         }
 
-        internal static void GenerateAndCheckLength(this string modelSource, int expectedLength, string? expectedErrorCodes = null)
+        public static void GenerateAndCheckLength(this IIncrementalGenerator generator, string modelSource, int expectedLength, string? expectedErrorCodes = null)
         {
-            var generatorResult = GeneratorTestHelper.RunSourceGenerator(modelSource, LanguageVersion.LatestMajor);
+            VerifyTestHelpers.EnsureInitialized();
+            var generatorResult = GeneratorTestHelper.RunSourceGenerator(generator, modelSource, LanguageVersion.LatestMajor);
             generatorResult.Exception.ShouldBeNull();
             generatorResult.Diagnostics.Count(d => d.Id == "INF01").ShouldBe(1);
             generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Info).ShouldBe(1);

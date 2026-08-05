@@ -15,14 +15,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-namespace MyOrg.Models.JsonSystemText
+namespace MyOrg.Model3.JsonSystemText
 {
-    [JsonPolymorphic]
-    [JsonDerivedType(typeof(MyOrg.Models.JsonSystemText.Derived), 2)]
-    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
+    public partial class MyDTO : DTOMaker.Runtime.JsonSystemText.EntityBase, MyOrg.Model3.IMyDTO, IEquatable<MyDTO>
     {
 
-        protected override int OnGetEntityId() => 1;
+        protected override int OnGetEntityId() => 4;
 
         private static MyDTO CreateEmpty()
         {
@@ -38,27 +36,24 @@ namespace MyOrg.Models.JsonSystemText
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.JsonSystemText.Derived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Model3.JsonSystemText.MyDTO(source)
             };
         }
 
-        public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
+        public new static MyDTO CreateFrom(MyOrg.Model3.IMyDTO source)
         {
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.JsonSystemText.Derived(source2),
-                _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
+                _ => new MyOrg.Model3.JsonSystemText.MyDTO(source)
             };
         }
 
         public new static MyDTO CreateNewFromId(int entityId)
         {
-            if (entityId == 1) return new MyDTO();
+            if (entityId == 4) return new MyDTO();
             return entityId switch
             {
-                2 => new MyOrg.Models.JsonSystemText.Derived(),
                 _ => throw new InvalidOperationException($"EntityId '{entityId}' is not valid.")
             };
         }
@@ -71,33 +66,35 @@ namespace MyOrg.Models.JsonSystemText
         protected override IEntityBase OnShallowCopy() => new MyDTO(this);
 
         public MyDTO() { }
-        public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
+        public MyDTO(MyOrg.Model3.IMyDTO source) : base(source)
         {
-            _Field1 = source.Field1;
-            _Field2 = source.Field2;
+            _Field41 = source.Field41.ToByteArray();
+            _Field42 = source.Field42 is null ? null : source.Field42.ToByteArray();
         }
         public MyDTO(MyDTO source) : base(source)
         {
-            _Field1 = source._Field1;
-            _Field2 = source._Field2;
+            _Field41 = source._Field41;
+            _Field42 = source._Field42;
         }
 
-        [JsonIgnore]
-        private Int32 _Field1 = default;
         [JsonPropertyName("_f01_001")]
-        public Int32 Field1
+        [JsonInclude]
+        private byte[] _Field41 = Array.Empty<byte>();
+        [JsonIgnore]
+        public Octets Field41
         {
-            get => _Field1;
-            set => _Field1 = IfNotFrozen(value);
+            get => _Field41.Length == 0 ? Octets.Empty : new Octets(_Field41);
+            set => _Field41 = IfNotFrozen(value.ToByteArray());
         }
 
-        [JsonIgnore]
-        private Int32? _Field2;
         [JsonPropertyName("_f01_002")]
-        public Int32? Field2
+        [JsonInclude]
+        private byte[]? _Field42;
+        [JsonIgnore]
+        public Octets? Field42
         {
-            get => _Field2;
-            set => _Field2 = IfNotFrozen(value);
+            get => _Field42 is null ? null : _Field42.Length == 0 ? Octets.Empty : new Octets(_Field42);
+            set => _Field42 = IfNotFrozen(value is null ? null : value.ToByteArray());
         }
 
 
@@ -106,8 +103,8 @@ namespace MyOrg.Models.JsonSystemText
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (_Field1 != other._Field1) return false;
-            if (_Field2 != other._Field2) return false;
+            if (!BinaryValuesAreEqual(_Field41, other._Field41)) return false;
+            if (!BinaryValuesAreEqual(_Field42, other._Field42)) return false;
             return true;
         }
 
@@ -119,8 +116,29 @@ namespace MyOrg.Models.JsonSystemText
         {
             HashCode result = new HashCode();
             result.Add(base.GetHashCode());
-            result.Add(_Field1);
-            result.Add(_Field2);
+            ReadOnlySpan<byte> span_Field41 = _Field41;
+            result.Add(span_Field41.Length);
+#if NET8_0_OR_GREATER
+            result.AddBytes(span_Field41);
+#else
+            for (int i = 0; i < span_Field41.Length; i++)
+            {
+                result.Add(span_Field41[i]);
+            }
+#endif
+            if (_Field42 is not null)
+            {
+                ReadOnlySpan<byte> span_Field42 = _Field42;
+                result.Add(span_Field42.Length);
+#if NET8_0_OR_GREATER
+                result.AddBytes(span_Field42);
+#else
+                for (int i = 0; i < span_Field42.Length; i++)
+                {
+                    result.Add(span_Field42[i]);
+                }
+#endif
+            }
             return result.ToHashCode();
         }
 
