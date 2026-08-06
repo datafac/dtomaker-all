@@ -47,8 +47,8 @@ namespace Template.MemBlocks.Tests
 
         protected override int OnGetEntityId() => EntityId;
         protected override void OnFreeze() => base.OnFreeze();
-        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
+        protected override ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => base.OnPack(blobStore, cancellation);
+        protected override ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => base.OnUnpack(blobStore, depth, cancellation);
         protected override IEntityBase OnShallowCopy() => new TestEntity(this);
 
         public TestEntity() : base(_metadata)
@@ -103,9 +103,9 @@ namespace Template.MemBlocks.Tests
         public async Task BlockHeaderIsConstant()
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
             var orig = new TestEntity();
-            await orig.Pack(dataStore, cancellation);
+            await orig.Pack(blobStore, cancellation);
             orig.Freeze();
             var buffer = orig.Serialize(cancellation);
             buffer.Length.ShouldBe(32);
@@ -132,7 +132,7 @@ namespace Template.MemBlocks.Tests
         public async Task Roundtrip_Direct()
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
@@ -146,10 +146,10 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, cancellation);
+            await orig.Pack(blobStore, cancellation);
 
             var copy = new T_EntityImplName_(orig);
-            await copy.Pack(dataStore, cancellation);
+            await copy.Pack(blobStore, cancellation);
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
@@ -160,7 +160,7 @@ namespace Template.MemBlocks.Tests
         public async Task Roundtrip_AsEntity()
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
@@ -174,12 +174,12 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, cancellation);
+            await orig.Pack(blobStore, cancellation);
             orig.Freeze();
 
             var buffer = orig.Serialize(cancellation);
             var copy = T_ImplNameSpace_.T_EntityImplName_.CreateInstance(buffer);
-            await copy.UnpackAll(dataStore, cancellation);
+            await copy.UnpackAll(blobStore, cancellation);
 
             copy.BaseField1.ShouldBe(orig.BaseField1);
             copy.T_RequiredNativeStructMemberName_.ShouldBe(orig.T_RequiredNativeStructMemberName_);
@@ -194,7 +194,7 @@ namespace Template.MemBlocks.Tests
         public async Task Roundtrip_AsBase()
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
 
             var orig = new T_EntityImplName_();
             orig.BaseField1 = 321;
@@ -208,7 +208,7 @@ namespace Template.MemBlocks.Tests
             orig.T_NullableBinaryMemberName_ = largeBinary;
             orig.T_RequiredEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
-            await orig.Pack(dataStore, cancellation);
+            await orig.Pack(blobStore, cancellation);
             orig.Freeze();
 
             var buffer = orig.Serialize(cancellation);
@@ -216,7 +216,7 @@ namespace Template.MemBlocks.Tests
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();
-            await copy.UnpackAll(dataStore, cancellation);
+            await copy.UnpackAll(blobStore, cancellation);
 
             copy.IsFrozen.ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();

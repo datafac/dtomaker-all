@@ -31,9 +31,9 @@ public class PolymorphicVarSetTests_MemBlocks
             _ => throw new ArgumentOutOfRangeException(nameof(valueId), valueId, null)
         };
 
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         VarBase orig = new VarString() { Value = value };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
 
         var buffer = orig.Serialize(cancellation);
 
@@ -44,7 +44,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = VarBase.DeserializeFrom(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
 
         copy.ShouldBe(orig);
 
@@ -75,10 +75,10 @@ public class PolymorphicVarSetTests_MemBlocks
             _ => throw new ArgumentOutOfRangeException(nameof(valueId), valueId, null)
         };
 
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         VarBase node = new VarString() { Value = value };
         VarSetNode orig = new VarSetNode() { Count = 1, Depth = 0, Key = "abc", Value = node };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
 
         var buffer = orig.Serialize(cancellation);
 
@@ -89,7 +89,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = VarSetNode.DeserializeFrom(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
 
         copy.ShouldBe(orig);
 
@@ -101,7 +101,7 @@ public class PolymorphicVarSetTests_MemBlocks
     public async Task RoundtripVarSet01_Empty()
     {
         var cancellation = TestContext.Current.CancellationToken;
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         var tree = new VarSetNode();
         //tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
         //tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("b", new VarBoolean() { Value = true });
@@ -114,7 +114,7 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
         var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
@@ -122,7 +122,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
         copy.ShouldBe(orig);
     }
 
@@ -134,7 +134,7 @@ public class PolymorphicVarSetTests_MemBlocks
 #endif
     {
         var cancellation = TestContext.Current.CancellationToken;
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         var tree = new VarSetNode();
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
         //tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("b", new VarBoolean() { Value = true });
@@ -147,7 +147,7 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
         var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
@@ -155,7 +155,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
         copy.ShouldBe(orig);
     }
 
@@ -167,7 +167,7 @@ public class PolymorphicVarSetTests_MemBlocks
 #endif
     {
         var cancellation = TestContext.Current.CancellationToken;
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         var tree = new VarSetNode();
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("b", new VarBoolean() { Value = true });
@@ -180,7 +180,7 @@ public class PolymorphicVarSetTests_MemBlocks
         {
             Root = tree
         };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
         var buffer = orig.Serialize(cancellation);
 
         string json = buffer.ToDisplay();
@@ -188,7 +188,7 @@ public class PolymorphicVarSetTests_MemBlocks
 
         var copy = new VarSet(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
         copy.ShouldBe(orig);
     }
 }

@@ -14,7 +14,7 @@ public class PolymorphicVarSetTests_JsonNewtonSoft
     [Fact]
     public async Task RoundtripVarSet()
     {
-        using var dataStore = new TestDataStore();
+        using var blobStore = new TestBlobStore();
         var tree = new VarSetNode();
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("a", new VarString() { Value = "abcdef" });
         tree = tree.AddOrUpdate<string, IVarBase, VarSetNode>("b", new VarBoolean() { Value = true });

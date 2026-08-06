@@ -41,7 +41,7 @@ public class Roundtrip_String
     /// </summary>
     private readonly bool _checkValues;
 
-    private readonly TestDataStore _dataStore = new TestDataStore();
+    private readonly TestBlobStore _dataStore = new TestBlobStore();
 
     private static string GetTestValue(ValueKind kind)
     {

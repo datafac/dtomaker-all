@@ -118,17 +118,17 @@ namespace MyOrg.Models.MemBlocks
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
+        protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            await base.OnPack(dataStore, cancellation);
-            await Field1_Pack(dataStore, cancellation);
+            await base.OnPack(blobStore, cancellation);
+            await Field1_Pack(blobStore, cancellation);
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
-            await base.OnUnpack(dataStore, depth, cancellation);
-            await Field1_Unpack(dataStore, depth, cancellation);
+            await base.OnUnpack(blobStore, depth, cancellation);
+            await Field1_Unpack(blobStore, depth, cancellation);
         }
 
         // -------------------- field map -----------------------------
@@ -204,21 +204,21 @@ namespace MyOrg.Models.MemBlocks
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        private async ValueTask Field1_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field1_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            if (_Field1 is not null) await _Field1.Pack(dataStore, cancellation);
-            await PackData(_Field1?.Serialize(cancellation), writableField, dataStore);
+            if (_Field1 is not null) await _Field1.Pack(blobStore, cancellation);
+            await PackData(_Field1?.Serialize(cancellation), writableField, blobStore);
         }
-        private async ValueTask Field1_Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        private async ValueTask Field1_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, dataStore);
+            var data = await UnpackData(readonlyField, blobStore);
             _Field1 = null;
             if (data.HasValue)
             {
                 _Field1 = MyOrg.Models.MemBlocks.MyDTO.DeserializeFrom(data.Value);
-                await _Field1.Unpack(dataStore, depth - 1, cancellation);
+                await _Field1.Unpack(blobStore, depth - 1, cancellation);
             }
         }
         private MyOrg.Models.MemBlocks.MyDTO? _Field1;

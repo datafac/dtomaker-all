@@ -20,9 +20,9 @@ public class RoundtripBasicTypeTests_UInt64
 {
     public async Task<string> Roundtrip_UInt64Async(UInt64 reqValue, UInt64? optValue)
     {
-        using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+        using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
         var orig = new SimpleDTO_UInt64 { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore, CancellationToken.None);
+        await orig.Pack(blobStore, CancellationToken.None);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
         var buffer = orig.Serialize(CancellationToken.None);

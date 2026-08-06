@@ -23,7 +23,7 @@ public interface IPackable : IEntityBase
     /// Prepares the entity for serialization, which includes packing and emitting any large 
     /// strings, binary blobs (Octets) and any referenced entities to the data store.
     /// </summary>
-    ValueTask Pack(IDataStore dataStore, CancellationToken cancellation);
+    ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation);
 
     /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 
@@ -37,10 +37,10 @@ public interface IPackable : IEntityBase
     /// a greater depth, or call UnpackAll to restore the entire state, or make additional 
     /// calls to Unpack with increasing depth as needed.
     /// </summary>
-    ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation);
+    ValueTask Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation);
 
     /// <summary>
     /// Performs a full restore of the entity's state from the data store.
     /// </summary>
-    ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation);
+    ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation);
 }

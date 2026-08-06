@@ -202,8 +202,8 @@ namespace NewModels.MsgPack3
         public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
         public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
 
-        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => base.OnPack(dataStore, cancellation);
-        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => base.OnUnpack(dataStore, depth, cancellation);
+        protected override ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => base.OnPack(blobStore, cancellation);
+        protected override ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => base.OnUnpack(blobStore, depth, cancellation);
     }
 }
 
@@ -390,15 +390,15 @@ namespace NewModels.MemBlox2
             set { ThrowIfFrozen(); _Value = value; }
         }
         private const int Value_FieldOffset = 0;
-        private async ValueTask Value_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Value_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(Value_FieldOffset, 64);
-            await PackText(_Value, writableField, dataStore);
+            await PackText(_Value, writableField, blobStore);
         }
-        private async ValueTask Value_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Value_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(Value_FieldOffset, 64);
-            var data = await UnpackData(readonlyField, dataStore);
+            var data = await UnpackData(readonlyField, blobStore);
 #if NET8_0_OR_GREATER
             _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
 #else
@@ -407,17 +407,17 @@ namespace NewModels.MemBlox2
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
+        protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            await base.OnPack(dataStore, cancellation);
-            await Value_Pack(dataStore, cancellation);
+            await base.OnPack(blobStore, cancellation);
+            await Value_Pack(blobStore, cancellation);
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
-            await base.OnUnpack(dataStore, depth, cancellation);
-            await Value_Unpack(dataStore, cancellation);
+            await base.OnUnpack(blobStore, depth, cancellation);
+            await Value_Unpack(blobStore, cancellation);
         }
 
     }

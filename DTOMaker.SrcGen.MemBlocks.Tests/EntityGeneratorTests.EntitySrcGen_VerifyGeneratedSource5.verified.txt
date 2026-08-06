@@ -117,19 +117,19 @@ namespace MyOrg.Model3.MemBlocks
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
+        protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            await base.OnPack(dataStore, cancellation);
-            await Field41_Pack(dataStore, cancellation);
-            await Field42_Pack(dataStore, cancellation);
+            await base.OnPack(blobStore, cancellation);
+            await Field41_Pack(blobStore, cancellation);
+            await Field42_Pack(blobStore, cancellation);
         }
 
         /// <inheritdoc/>
-        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
-            await base.OnUnpack(dataStore, depth, cancellation);
-            await Field41_Unpack(dataStore, cancellation);
-            await Field42_Unpack(dataStore, cancellation);
+            await base.OnUnpack(blobStore, depth, cancellation);
+            await Field41_Unpack(blobStore, cancellation);
+            await Field42_Unpack(blobStore, cancellation);
         }
 
         // -------------------- field map -----------------------------
@@ -208,15 +208,15 @@ namespace MyOrg.Model3.MemBlocks
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        private async ValueTask Field41_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field41_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            await PackData(_Field41.AsMemory(), writableField, dataStore);
+            await PackData(_Field41.AsMemory(), writableField, blobStore);
         }
-        private async ValueTask Field41_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field41_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, dataStore);
+            var data = await UnpackData(readonlyField, blobStore);
             _Field41 = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;
         }
         private Octets _Field41 = Octets.Empty;
@@ -227,15 +227,15 @@ namespace MyOrg.Model3.MemBlocks
             set => _Field41 = IfNotFrozen(value);
         }
 
-        private async ValueTask Field42_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field42_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
-            await PackData(_Field42?.AsMemory(), writableField, dataStore);
+            await PackData(_Field42?.AsMemory(), writableField, blobStore);
         }
-        private async ValueTask Field42_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field42_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
-            var data = await UnpackData(readonlyField, dataStore);
+            var data = await UnpackData(readonlyField, blobStore);
             _Field42 = data.HasValue ? Octets.Wrap(data.Value) : null;
         }
         private Octets? _Field42;

@@ -11,10 +11,10 @@ namespace DTOMaker.Runtime.MemBlocks;
 
 public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase>
 {
-    public static async ValueTask<T> CreateEmpty<T>(IDataStore dataStore, CancellationToken cancellation) where T : class, IPackable, IEntityBase, new()
+    public static async ValueTask<T> CreateEmpty<T>(IBlobStore blobStore, CancellationToken cancellation) where T : class, IPackable, IEntityBase, new()
     {
         var empty = new T();
-        await empty.Pack(dataStore, cancellation);
+        await empty.Pack(blobStore, cancellation);
         empty.Freeze();
         return empty;
     }
@@ -171,7 +171,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask PackData(ReadOnlyMemory<byte>? buffer, Memory<byte> fieldMemory, IDataStore dataStore)
+    protected static async ValueTask PackData(ReadOnlyMemory<byte>? buffer, Memory<byte> fieldMemory, IBlobStore blobStore)
     {
         if (!buffer.HasValue)
         {
@@ -181,24 +181,24 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         {
             (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressData(buffer.Value, fieldMemory.Span);
             if (embedded) return;
-            await dataStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+            await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IDataStore dataStore)
+    protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IBlobStore blobStore)
     {
         (bool embedded, ReadOnlyMemory<byte>? embeddedData) = BlobHelpers.TryGetEmbedded(fieldMemory);
         if (embedded) return embeddedData;
 
-        BlobData data = await dataStore.GetBlob(BlobKey.From(fieldMemory));
+        BlobData data = await blobStore.GetBlob(BlobKey.From(fieldMemory));
         return data.HasValue 
             ? BlobHelpers.DecompressData(fieldMemory.Span, data.Bytes) 
             : (ReadOnlyMemory<byte>?)null;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask PackText(string? text, Memory<byte> fieldMemory, IDataStore dataStore)
+    protected static async ValueTask PackText(string? text, Memory<byte> fieldMemory, IBlobStore blobStore)
     {
         if (text is null)
         {
@@ -208,7 +208,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         {
             (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressText(text, fieldMemory.Span);
             if (embedded) return;
-            await dataStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+            await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
         }
     }
 
@@ -216,13 +216,13 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// <inheritdoc/>
     public bool IsPacked => _packed;
     /// <inheritdoc/>
-    protected virtual ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
+    protected virtual ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;
     /// <inheritdoc/>
-    public async ValueTask Pack(IDataStore dataStore, CancellationToken cancellation)
+    public async ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation)
     {
         if (_frozen) return;
         if (_packed) return;
-        await OnPack(dataStore, cancellation);
+        await OnPack(blobStore, cancellation);
         _packed = true;
         OnFreeze();
         _frozen = true;
@@ -233,16 +233,16 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// <inheritdoc/>
     public bool IsUnpacked => _unpacked;
     /// <inheritdoc/>
-    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
+    protected virtual ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;
     /// <inheritdoc/>
-    public async ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+    public async ValueTask Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
     {
         ThrowIfNotFrozen();
         if (depth < 0) return;
         if (_unpacked) return;
-        await OnUnpack(dataStore, depth, cancellation);
+        await OnUnpack(blobStore, depth, cancellation);
         _unpacked = true;
     }
     /// <inheritdoc/>
-    public ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation) => Unpack(dataStore, int.MaxValue, cancellation);
+    public ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation) => Unpack(blobStore, int.MaxValue, cancellation);
 }

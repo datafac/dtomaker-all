@@ -25,7 +25,7 @@ public class Roundtrip_Int64
     /// </summary>
     private readonly bool _checkValues;
 
-    private readonly TestDataStore _dataStore = new TestDataStore();
+    private readonly TestBlobStore _dataStore = new TestBlobStore();
 
     [Benchmark(Baseline = true)]
     public async ValueTask<long> MemoryPack()

@@ -22,15 +22,15 @@ public class RoundtripBasicTypeTests_Octets
     public async Task<string> Roundtrip_OctetsAsync(Octets reqValue, Octets? optValue)
     {
         var cancellation = TestContext.Current.CancellationToken;
-        using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+        using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
         var orig = new SimpleDTO_Octets { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
         var buffer = orig.Serialize(cancellation);
         var copy = new SimpleDTO_Octets(buffer);
         copy.ShouldNotBeNull();
-        await copy.UnpackAll(dataStore, cancellation);
+        await copy.UnpackAll(blobStore, cancellation);
         copy.ShouldBe(orig);
         copy.Field1.ShouldBe(reqValue);
         copy.Field2.ShouldBe(optValue);

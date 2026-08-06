@@ -105,8 +105,8 @@ public partial class EntityGenerator
             Emit("");
             Emit("        protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();");
             Emit("        protected override int OnGetEntityId() => 3;");
-            Emit("        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;");
-            Emit("        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;");
+            Emit("        protected override ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;");
+            Emit("        protected override ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;");
             Emit("");
             Emit("        public bool Equals(T_MemberTypeImplName_? other) => base.Equals(other);");
             Emit("");
@@ -163,14 +163,14 @@ public partial class EntityGenerator
             Emit("            base.OnFreeze();");
             Emit("        }");
             Emit("");
-            Emit("        protected override ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)");
+            Emit("        protected override ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)");
             Emit("        {");
-            Emit("            return base.OnPack(dataStore, cancellation);");
+            Emit("            return base.OnPack(blobStore, cancellation);");
             Emit("        }");
             Emit("");
-            Emit("        protected override ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)");
+            Emit("        protected override ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)");
             Emit("        {");
-            Emit("            return base.OnUnpack(dataStore, depth, cancellation);");
+            Emit("            return base.OnUnpack(blobStore, depth, cancellation);");
             Emit("        }");
             Emit("");
             Emit("        protected T_BaseImplName_(EntityMetadata metadata) : base(metadata)");
@@ -359,9 +359,9 @@ public partial class EntityGenerator
         Emit("        }");
         Emit("");
         Emit("        /// <inheritdoc/>");
-        Emit("        protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)");
+        Emit("        protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)");
         Emit("        {");
-        Emit("            await base.OnPack(dataStore, cancellation);");
+        Emit("            await base.OnPack(blobStore, cancellation);");
         foreach (var member in entity.Members)
         {
             using var _ = NewScope(entity, member);
@@ -372,31 +372,31 @@ public partial class EntityGenerator
                 case MemberKind.Entity:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableEntityMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_NullableEntityMemberName__Pack(blobStore, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredEntityMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_RequiredEntityMemberName__Pack(blobStore, cancellation);");
                     }
                     break;
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableBinaryMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_NullableBinaryMemberName__Pack(blobStore, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredBinaryMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_RequiredBinaryMemberName__Pack(blobStore, cancellation);");
                     }
                     break;
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableStringMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_NullableStringMemberName__Pack(blobStore, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredStringMemberName__Pack(dataStore, cancellation);");
+                        Emit("            await T_RequiredStringMemberName__Pack(blobStore, cancellation);");
                     }
                     break;
                 default:
@@ -407,9 +407,9 @@ public partial class EntityGenerator
         Emit("        }");
         Emit("");
         Emit("        /// <inheritdoc/>");
-        Emit("        protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)");
+        Emit("        protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)");
         Emit("        {");
-        Emit("            await base.OnUnpack(dataStore, depth, cancellation);");
+        Emit("            await base.OnUnpack(blobStore, depth, cancellation);");
         foreach (var member in entity.Members)
         {
             using var _ = NewScope(entity, member);
@@ -420,31 +420,31 @@ public partial class EntityGenerator
                 case MemberKind.Entity:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableEntityMemberName__Unpack(dataStore, depth, cancellation);");
+                        Emit("            await T_NullableEntityMemberName__Unpack(blobStore, depth, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredEntityMemberName__Unpack(dataStore, depth, cancellation);");
+                        Emit("            await T_RequiredEntityMemberName__Unpack(blobStore, depth, cancellation);");
                     }
                     break;
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableBinaryMemberName__Unpack(dataStore, cancellation);");
+                        Emit("            await T_NullableBinaryMemberName__Unpack(blobStore, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredBinaryMemberName__Unpack(dataStore, cancellation);");
+                        Emit("            await T_RequiredBinaryMemberName__Unpack(blobStore, cancellation);");
                     }
                     break;
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        Emit("            await T_NullableStringMemberName__Unpack(dataStore, cancellation);");
+                        Emit("            await T_NullableStringMemberName__Unpack(blobStore, cancellation);");
                     }
                     else
                     {
-                        Emit("            await T_RequiredStringMemberName__Unpack(dataStore, cancellation);");
+                        Emit("            await T_RequiredStringMemberName__Unpack(blobStore, cancellation);");
                     }
                     break;
                 default:
@@ -813,21 +813,21 @@ public partial class EntityGenerator
                 case MemberKind.Entity:
                     if (member.IsNullable)
                     {
-                        Emit("        private async ValueTask T_NullableEntityMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableEntityMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_NullableEntityFieldOffset_, 64);");
-                        Emit("            if (_T_NullableEntityMemberName_ is not null) await _T_NullableEntityMemberName_.Pack(dataStore, cancellation);");
-                        Emit("            await PackData(_T_NullableEntityMemberName_?.Serialize(cancellation), writableField, dataStore);");
+                        Emit("            if (_T_NullableEntityMemberName_ is not null) await _T_NullableEntityMemberName_.Pack(blobStore, cancellation);");
+                        Emit("            await PackData(_T_NullableEntityMemberName_?.Serialize(cancellation), writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_NullableEntityMemberName__Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("            _T_NullableEntityMemberName_ = null;");
                         Emit("            if (data.HasValue)");
                         Emit("            {");
                         Emit("                _T_NullableEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.DeserializeFrom(data.Value);");
-                        Emit("                await _T_NullableEntityMemberName_.Unpack(dataStore, depth - 1, cancellation);");
+                        Emit("                await _T_NullableEntityMemberName_.Unpack(blobStore, depth - 1, cancellation);");
                         Emit("            }");
                         Emit("        }");
                         Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_NullableEntityMemberName_;");
@@ -849,28 +849,28 @@ public partial class EntityGenerator
                     }
                     else
                     {
-                        Emit("        private async ValueTask T_RequiredEntityMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredEntityMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64);");
                         Emit("            if (_T_RequiredEntityMemberName_ is null)");
                         Emit("            {");
-                        Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore, cancellation);");
+                        Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(blobStore, cancellation);");
                         Emit("            }");
-                        Emit("            await _T_RequiredEntityMemberName_.Pack(dataStore, cancellation);");
-                        Emit("            await PackData(_T_RequiredEntityMemberName_.Serialize(cancellation), writableField, dataStore);");
+                        Emit("            await _T_RequiredEntityMemberName_.Pack(blobStore, cancellation);");
+                        Emit("            await PackData(_T_RequiredEntityMemberName_.Serialize(cancellation), writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_RequiredEntityMemberName__Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("            if (data.HasValue)");
                         Emit("            {");
                         Emit("                _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.DeserializeFrom(data.Value);");
-                        Emit("                await _T_RequiredEntityMemberName_.Unpack(dataStore, depth - 1, cancellation);");
+                        Emit("                await _T_RequiredEntityMemberName_.Unpack(blobStore, depth - 1, cancellation);");
                         Emit("            }");
                         Emit("            else");
                         Emit("            {");
-                        Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(dataStore, cancellation);");
+                        Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(blobStore, cancellation);");
                         Emit("            }");
                         Emit("        }");
                         Emit("        private T_MemberTypeImplSpace_.T_MemberTypeImplName_? _T_RequiredEntityMemberName_ = null;");
@@ -894,15 +894,15 @@ public partial class EntityGenerator
                 case MemberKind.Binary:
                     if (member.IsNullable)
                     {
-                        Emit("        private async ValueTask T_NullableBinaryMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableBinaryMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64);");
-                        Emit("            await PackData(_T_NullableBinaryMemberName_?.AsMemory(), writableField, dataStore);");
+                        Emit("            await PackData(_T_NullableBinaryMemberName_?.AsMemory(), writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_NullableBinaryMemberName__Unpack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableBinaryMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("            _T_NullableBinaryMemberName_ = data.HasValue ? Octets.Wrap(data.Value) : null;");
                         Emit("        }");
                         Emit("        private Octets? _T_NullableBinaryMemberName_;");
@@ -919,15 +919,15 @@ public partial class EntityGenerator
                     }
                     else
                     {
-                        Emit("        private async ValueTask T_RequiredBinaryMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredBinaryMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64);");
-                        Emit("            await PackData(_T_RequiredBinaryMemberName_.AsMemory(), writableField, dataStore);");
+                        Emit("            await PackData(_T_RequiredBinaryMemberName_.AsMemory(), writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_RequiredBinaryMemberName__Unpack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredBinaryMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("            _T_RequiredBinaryMemberName_ = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;");
                         Emit("        }");
                         Emit("        private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;");
@@ -946,15 +946,15 @@ public partial class EntityGenerator
                 case MemberKind.String:
                     if (member.IsNullable)
                     {
-                        Emit("        private async ValueTask T_NullableStringMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64);");
-                        Emit("            await PackText(_T_NullableStringMemberName_, writableField, dataStore);");
+                        Emit("            await PackText(_T_NullableStringMemberName_, writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_NullableStringMemberName__Unpack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_NullableStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_NullableStringFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("#if NET8_0_OR_GREATER");
                         Emit("            _T_NullableStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;");
                         Emit("#else");
@@ -975,15 +975,15 @@ public partial class EntityGenerator
                     }
                     else
                     {
-                        Emit("        private async ValueTask T_RequiredStringMemberName__Pack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var writableField = _writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);");
-                        Emit("            await PackText(_T_RequiredStringMemberName_, writableField, dataStore);");
+                        Emit("            await PackText(_T_RequiredStringMemberName_, writableField, blobStore);");
                         Emit("        }");
-                        Emit("        private async ValueTask T_RequiredStringMemberName__Unpack(IDataStore dataStore, CancellationToken cancellation)");
+                        Emit("        private async ValueTask T_RequiredStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)");
                         Emit("        {");
                         Emit("            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);");
-                        Emit("            var data = await UnpackData(readonlyField, dataStore);");
+                        Emit("            var data = await UnpackData(readonlyField, blobStore);");
                         Emit("#if NET8_0_OR_GREATER");
                         Emit("            _T_RequiredStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;");
                         Emit("#else");

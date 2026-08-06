@@ -28,7 +28,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         public void AddValues(string order, byte maxDepth)
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
             MyBinaryTree? tree = new MyBinaryTree();
 
             // add nodes in order
@@ -40,7 +40,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
+                if (tree is IPackable packable) packable.Pack(blobStore, cancellation);
                 tree.Freeze();
             }
 
@@ -88,7 +88,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         public void RemoveValues(string addOrder, string removeOrder, byte maxDepth)
         {
             var cancellation = TestContext.Current.CancellationToken;
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
             MyBinaryTree? tree = new MyBinaryTree();
 
             // add nodes in order
@@ -100,7 +100,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count++;
 
                 // pack and freeze the tree after each addition
-                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
+                if (tree is IPackable packable) packable.Pack(blobStore, cancellation);
                 tree.Freeze();
             }
 
@@ -112,7 +112,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
                 count--;
 
                 // pack and freeze the tree after each removal
-                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
+                if (tree is IPackable packable) packable.Pack(blobStore, cancellation);
                 tree?.Freeze();
             }
 
@@ -177,13 +177,13 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //    public void AllCombinations(string chars, short maxDepth)
         //    {
         //        var nodeFactory = GetNodeFactory(ImplKind.CSPoco);
-        //        using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+        //        using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
 
         //        foreach (string order in GetCharCombinations(chars))
         //        {
         //            var tree = CreateEmpty(impl);
         //            {
-        //                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
+        //                if (tree is IPackable packable) packable.Pack(blobStore, cancellation);
         //                tree.Freeze();
         //            }
         //            tree.Count.ShouldBe(0);
@@ -198,7 +198,7 @@ namespace DTOMaker.Models.BinaryTree.Tests
         //                count++;
 
         //                // pack and freeze the tree after each addition
-        //                if (tree is IPackable packable) packable.Pack(dataStore, cancellation);
+        //                if (tree is IPackable packable) packable.Pack(blobStore, cancellation);
         //                tree.Freeze();
         //            }
 

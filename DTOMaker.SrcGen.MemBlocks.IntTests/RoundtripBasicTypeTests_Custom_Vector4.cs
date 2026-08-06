@@ -21,9 +21,9 @@ public class RoundtripBasicTypeTests_Custom_Vector4
     public async Task<string> Roundtrip_Vector4Async(Vector4 reqValue, Vector4? optValue)
     {
         var cancellation = TestContext.Current.CancellationToken;
-        using var dataStore = new DataFac.Storage.Testing.TestDataStore();
+        using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
         var orig = new SimpleDTO_Vector4 { Field1 = reqValue, Field2 = optValue };
-        await orig.Pack(dataStore, cancellation);
+        await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
         var buffer = orig.Serialize(cancellation);

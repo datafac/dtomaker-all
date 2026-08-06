@@ -130,11 +130,11 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     /// <inheritdoc/>
     [IgnoreMember]
     public bool IsPacked => _packed;
-    protected virtual ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation) => default;
-    public async ValueTask Pack(IDataStore dataStore, CancellationToken cancellation)
+    protected virtual ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;
+    public async ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation)
     {
         if (_packed) return;
-        await OnPack(dataStore, cancellation);
+        await OnPack(blobStore, cancellation);
         _packed = true;
         OnFreeze();
         _frozen = true;
@@ -145,16 +145,16 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     /// <inheritdoc/>
     [IgnoreMember]
     public bool IsUnpacked => _unpacked;
-    protected virtual ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation) => default;
-    public async ValueTask Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+    protected virtual ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;
+    public async ValueTask Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
     {
         if (!_packed) ThrowIsNotPackedException(nameof(Unpack));
         if (depth < 0) return;
         if (_unpacked) return;
-        await OnUnpack(dataStore, depth, cancellation);
+        await OnUnpack(blobStore, depth, cancellation);
         _unpacked = true;
     }
-    public ValueTask UnpackAll(IDataStore dataStore, CancellationToken cancellation) => Unpack(dataStore, int.MaxValue, cancellation);
+    public ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation) => Unpack(blobStore, int.MaxValue, cancellation);
     #endregion
 
 }

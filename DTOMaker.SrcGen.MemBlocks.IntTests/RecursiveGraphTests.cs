@@ -78,8 +78,8 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
     {
         public async Task<string> Roundtrip_GraphAsync(Tree orig)
         {
-            using var dataStore = new DataFac.Storage.Testing.TestDataStore();
-            await orig.Pack(dataStore, CancellationToken.None);
+            using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
+            await orig.Pack(blobStore, CancellationToken.None);
             var buffer = orig.Serialize(CancellationToken.None);
             var copy = new Tree(buffer);
             copy.ShouldNotBeNull();
