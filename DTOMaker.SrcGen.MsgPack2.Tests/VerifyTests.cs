@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
-namespace DTOMaker.SrcGen.MsgPack2.Tests
+namespace DTOMaker.SrcGen.MsgPack2.Tests;
+
+public class VerifyTests
 {
-    public class VerifyTests
+    [Fact]
+    public async Task RunVerifyChecks()
     {
-        [Fact]
-        public async Task RunVerifyChecks()
-        {
-            await VerifyChecks.Run();
-        }
+        await VerifyChecks.Run();
     }
 }

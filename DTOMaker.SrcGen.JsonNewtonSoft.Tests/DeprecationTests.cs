@@ -6,29 +6,28 @@ using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
-namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests
-{
-    public class DeprecationTests
-    {
-        private static readonly string modelSource =
-            """
-            using System;
-            using DTOMaker.Models;
-            namespace MyOrg.Models
-            {
-                [Entity(1)]
-                public interface IMyDTO : IEntityBase
-                {
-                    [Obsolete]                  [Member(1)] double Field1 { get; set; }
-                    [Obsolete("Removed")]       [Member(2)] double Field2 { get; set; }
-                    [Obsolete("Removed", true)] [Member(3)] double Field3 { get; set; }
-                }
-            }
-            """;
+namespace DTOMaker.SrcGen.JsonNewtonSoft.Tests;
 
-        [Fact] public void Obsolete_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 3);
-        [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 0, "MyOrg.Models.Global.g.cs"));
-        [Fact] public async Task Obsolete_VerifyGeneratedSource1() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 1, "MyOrg.Models.JsonNewtonSoft.Domain.g.cs"));
-        [Fact] public async Task Obsolete_VerifyGeneratedSource2() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 2, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
-    }
+public class DeprecationTests
+{
+    private static readonly string modelSource =
+        """
+        using System;
+        using DTOMaker.Models;
+        namespace MyOrg.Models
+        {
+            [Entity(1)]
+            public interface IMyDTO : IEntityBase
+            {
+                [Obsolete]                  [Member(1)] double Field1 { get; set; }
+                [Obsolete("Removed")]       [Member(2)] double Field2 { get; set; }
+                [Obsolete("Removed", true)] [Member(3)] double Field3 { get; set; }
+            }
+        }
+        """;
+
+    [Fact] public void Obsolete_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 3);
+    [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 0, "MyOrg.Models.Global.g.cs"));
+    [Fact] public async Task Obsolete_VerifyGeneratedSource1() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 1, "MyOrg.Models.JsonNewtonSoft.Domain.g.cs"));
+    [Fact] public async Task Obsolete_VerifyGeneratedSource2() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 2, "MyOrg.Models.JsonNewtonSoft.MyDTO.g.cs"));
 }

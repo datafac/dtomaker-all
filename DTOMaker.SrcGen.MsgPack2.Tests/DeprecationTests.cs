@@ -1,4 +1,5 @@
 using DTOMaker.SrcGen.Core;
+using DTOMaker.TestHelpers;
 using Shouldly;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ public class DeprecationTests
         }
         """;
 
-    [Fact] public void Obsolete_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(1);
-    [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.MsgPack2.MyDTO.g.cs"));
+    [Fact] public void Obsolete_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 3);
+    [Fact] public async Task Obsolete_VerifyGeneratedSource0() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 0, "MyOrg.Models.Global.g.cs"));
+    [Fact] public async Task Obsolete_VerifyGeneratedSource1() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 1, "MyOrg.Models.MsgPack2.Domain.g.cs"));
+    [Fact] public async Task Obsolete_VerifyGeneratedSource2() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 2, "MyOrg.Models.MsgPack2.MyDTO.g.cs"));
 }
