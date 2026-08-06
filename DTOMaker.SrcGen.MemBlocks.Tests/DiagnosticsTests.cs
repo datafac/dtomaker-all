@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using DTOMaker.TestHelpers;
+using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME03");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME03");
         }
 
         [Fact]
@@ -41,7 +42,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(2, "DME12,DME12");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 4, "DME12,DME12");
         }
 
         [Fact]
@@ -58,7 +59,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME14");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME14");
         }
 
         [Fact]
@@ -78,7 +79,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME14");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME14");
         }
 
         [Fact]
@@ -99,7 +100,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME04,DME11");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME04,DME11");
         }
 
         [Fact]
@@ -120,7 +121,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME06,DME10");
+                new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME06,DME10");
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, null);
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, null);
         }
 
         [Fact]
@@ -163,7 +164,7 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
                 }
                 """;
 
-            modelSource.GenerateAndCheckLength(1, "DME11");
+            new SourceGenerator().GenerateAndCheckLength(modelSource, 3, "DME11");
         }
 
     }

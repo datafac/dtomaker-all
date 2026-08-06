@@ -116,7 +116,8 @@ namespace DTOMaker.TestHelpers
                 generatorResult.Diagnostics.Count(d => d.Severity == DiagnosticSeverity.Error).ShouldBe(expectedErrorCount);
                 foreach (var code in codes)
                 {
-                    generatorResult.Diagnostics.Count(d => d.Id == code).ShouldBe(1);
+                    int expectedCodeCount = codes.Count(c => c == code);
+                    generatorResult.Diagnostics.Count(d => d.Id == code).ShouldBe(expectedCodeCount);
                 }
             }
 

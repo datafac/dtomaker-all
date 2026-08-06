@@ -42,7 +42,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public static MyDTO CreateInstance(ReadOnlyMemory<byte> buffer) => MyDTO.DeserializeFrom(buffer);
 
-        private const long BlockStructureCode = 0x00000051;
+        private const long BlockStructureCode = 0x00000061;
         private const int ClassHeight = 1;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
@@ -60,7 +60,6 @@ namespace MyOrg.Models.MemBlocks
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.MemBlocks.Derived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -81,7 +80,6 @@ namespace MyOrg.Models.MemBlocks
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -103,7 +101,6 @@ namespace MyOrg.Models.MemBlocks
             if (metadata.EntityId == 1) return new MyOrg.Models.MemBlocks.MyDTO(buffer);
             return metadata.EntityId switch
             {
-                2 => new MyOrg.Models.MemBlocks.Derived(buffer),
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
             };
         }
@@ -134,10 +131,8 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     8     8  LE    Int64   Field1
+        //     1    16    16  LE    PairOfInt64 Field1
         //           0     0                Field1 (isNull bit)
-        //     2     4     4  LE    Int32   Field2
-        //           0     1                Field2 (isNull bit)
         // ------------------------------------------------------------
 
         /// <summary>
@@ -167,7 +162,6 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.Field1 = source.Field1;
-            this.Field2 = source.Field2;
         }
 
         /// <summary>
@@ -183,7 +177,6 @@ namespace MyOrg.Models.MemBlocks
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.Field1 = source.Field1;
-            this.Field2 = source.Field2;
         }
 
         /// <summary>
@@ -210,45 +203,18 @@ namespace MyOrg.Models.MemBlocks
         }
 
         /// <inheritdoc/>
-        public Int64 Field1
+        public System.Numerics.Complex Field1
         {
             get
             {
-                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
+                PairOfInt64 nativeValue = Codec_PairOfInt64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(16, 16).Span);
+                return DTOMaker.Models.ComplexConverter.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, value);
-            }
-        }
-
-        /// <inheritdoc/>
-        public Int32? Field2
-        {
-            get
-            {
-                var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                if (bits.GetBit(1)) return null;
-                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
-            }
-            set
-            {
-                ThrowIfFrozen();
-                Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                Bits32 newBits = oldBits.SetBit(1, !value.HasValue);
-                if (newBits != oldBits)
-                {
-                    Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, newBits.Data);
-                }
-                if (value.HasValue)
-                {
-                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, value.Value);
-                }
-                else
-                {
-                    _writableLocalBlock.Slice(4, 4).Span.Clear();
-                }
+                PairOfInt64 nativeValue = DTOMaker.Models.ComplexConverter.ToNative(value);
+                Codec_PairOfInt64_LE.WriteToSpan(_writableLocalBlock.Slice(16, 16).Span, nativeValue);
             }
         }
 

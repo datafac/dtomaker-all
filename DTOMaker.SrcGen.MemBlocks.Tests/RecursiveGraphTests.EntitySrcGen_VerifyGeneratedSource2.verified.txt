@@ -42,7 +42,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public static MyDTO CreateInstance(ReadOnlyMemory<byte> buffer) => MyDTO.DeserializeFrom(buffer);
 
-        private const long BlockStructureCode = 0x00000051;
+        private const long BlockStructureCode = 0x00000071;
         private const int ClassHeight = 1;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
@@ -60,7 +60,6 @@ namespace MyOrg.Models.MemBlocks
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.MemBlocks.Derived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -81,7 +80,6 @@ namespace MyOrg.Models.MemBlocks
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -103,7 +101,6 @@ namespace MyOrg.Models.MemBlocks
             if (metadata.EntityId == 1) return new MyOrg.Models.MemBlocks.MyDTO(buffer);
             return metadata.EntityId switch
             {
-                2 => new MyOrg.Models.MemBlocks.Derived(buffer),
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
             };
         }
@@ -117,27 +114,27 @@ namespace MyOrg.Models.MemBlocks
         protected override void OnFreeze()
         {
             base.OnFreeze();
+            _Field1?.Freeze();
         }
 
         /// <inheritdoc/>
         protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
         {
             await base.OnPack(dataStore, cancellation);
+            await Field1_Pack(dataStore, cancellation);
         }
 
         /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
         {
             await base.OnUnpack(dataStore, depth, cancellation);
+            await Field1_Unpack(dataStore, depth, cancellation);
         }
 
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     8     8  LE    Int64   Field1
-        //           0     0                Field1 (isNull bit)
-        //     2     4     4  LE    Int32   Field2
-        //           0     1                Field2 (isNull bit)
+        //     1     0    64  LE    MyDTO   Field1
         // ------------------------------------------------------------
 
         /// <summary>
@@ -166,8 +163,7 @@ namespace MyOrg.Models.MemBlocks
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            this.Field1 = source.Field1;
-            this.Field2 = source.Field2;
+            _Field1 = source._Field1;
         }
 
         /// <summary>
@@ -182,8 +178,7 @@ namespace MyOrg.Models.MemBlocks
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            this.Field1 = source.Field1;
-            this.Field2 = source.Field2;
+            _Field1 = source.Field1 is null ? null : MyOrg.Models.MemBlocks.MyDTO.CreateNullable(source.Field1);
         }
 
         /// <summary>
@@ -209,47 +204,34 @@ namespace MyOrg.Models.MemBlocks
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        /// <inheritdoc/>
-        public Int64 Field1
+        private async ValueTask Field1_Pack(IDataStore dataStore, CancellationToken cancellation)
         {
-            get
+            var writableField = _writableLocalBlock.Slice(0, 64);
+            if (_Field1 is not null) await _Field1.Pack(dataStore, cancellation);
+            await PackData(_Field1?.Serialize(cancellation), writableField, dataStore);
+        }
+        private async ValueTask Field1_Unpack(IDataStore dataStore, int depth, CancellationToken cancellation)
+        {
+            var readonlyField = _readonlyLocalBlock.Slice(0, 64);
+            var data = await UnpackData(readonlyField, dataStore);
+            _Field1 = null;
+            if (data.HasValue)
             {
-                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
-            }
-            set
-            {
-                ThrowIfFrozen();
-                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, value);
+                _Field1 = MyOrg.Models.MemBlocks.MyDTO.DeserializeFrom(data.Value);
+                await _Field1.Unpack(dataStore, depth - 1, cancellation);
             }
         }
-
+        private MyOrg.Models.MemBlocks.MyDTO? _Field1;
         /// <inheritdoc/>
-        public Int32? Field2
+        public MyOrg.Models.MemBlocks.MyDTO? Field1
         {
-            get
-            {
-                var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                if (bits.GetBit(1)) return null;
-                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
-            }
-            set
-            {
-                ThrowIfFrozen();
-                Bits32 oldBits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
-                Bits32 newBits = oldBits.SetBit(1, !value.HasValue);
-                if (newBits != oldBits)
-                {
-                    Codec_UInt32_LE.WriteToSpan(_writableLocalBlock.Slice(0, 4).Span, newBits.Data);
-                }
-                if (value.HasValue)
-                {
-                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, value.Value);
-                }
-                else
-                {
-                    _writableLocalBlock.Slice(4, 4).Span.Clear();
-                }
-            }
+            get => IfUnpacked(_Field1);
+            set => _Field1 = IfNotFrozen(value);
+        }
+        MyOrg.Models.IMyDTO? MyOrg.Models.IMyDTO.Field1
+        {
+            get => IfUnpacked(_Field1);
+            set => _Field1 = IfNotFrozen(MyOrg.Models.MemBlocks.MyDTO.CreateNullable(value));
         }
 
 

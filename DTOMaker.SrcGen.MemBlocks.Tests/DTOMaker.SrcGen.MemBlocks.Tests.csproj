@@ -33,6 +33,7 @@
 	  <ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime.MemBlocks\DTOMaker.Runtime.MemBlocks.csproj" />
 	  <ProjectReference Include="..\DTOMaker.SrcGen.MemBlocks\DTOMaker.SrcGen.MemBlocks.csproj" />
+	  <ProjectReference Include="..\DTOMaker.TestHelpers\DTOMaker.TestHelpers.csproj" />
 	</ItemGroup>
 
 </Project>

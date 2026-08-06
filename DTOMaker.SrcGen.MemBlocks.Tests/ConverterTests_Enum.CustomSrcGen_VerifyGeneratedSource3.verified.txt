@@ -42,7 +42,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public static MyDTO CreateInstance(ReadOnlyMemory<byte> buffer) => MyDTO.DeserializeFrom(buffer);
 
-        private const long BlockStructureCode = 0x00000051;
+        private const long BlockStructureCode = 0x00000041;
         private const int ClassHeight = 1;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
@@ -60,7 +60,6 @@ namespace MyOrg.Models.MemBlocks
             if (source.IsFrozen) return source;
             return source switch
             {
-                MyOrg.Models.MemBlocks.Derived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -81,7 +80,6 @@ namespace MyOrg.Models.MemBlocks
             if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                MyOrg.Models.IDerived source2 => new MyOrg.Models.MemBlocks.Derived(source2),
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
             };
         }
@@ -103,7 +101,6 @@ namespace MyOrg.Models.MemBlocks
             if (metadata.EntityId == 1) return new MyOrg.Models.MemBlocks.MyDTO(buffer);
             return metadata.EntityId switch
             {
-                2 => new MyOrg.Models.MemBlocks.Derived(buffer),
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
             };
         }
@@ -134,9 +131,9 @@ namespace MyOrg.Models.MemBlocks
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     8     8  LE    Int64   Field1
+        //     1     4     1  LE    Byte    Field1
         //           0     0                Field1 (isNull bit)
-        //     2     4     4  LE    Int32   Field2
+        //     2     5     1  LE    Byte    Field2
         //           0     1                Field2 (isNull bit)
         // ------------------------------------------------------------
 
@@ -210,27 +207,30 @@ namespace MyOrg.Models.MemBlocks
         }
 
         /// <inheritdoc/>
-        public Int64 Field1
+        public System.DayOfWeek Field1
         {
             get
             {
-                return Codec_Int64_LE.ReadFromSpan(_readonlyLocalBlock.Slice(8, 8).Span);
+                Byte nativeValue = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 1).Span);
+                return DTOMaker.Models.DayOfWeekConverter.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_Int64_LE.WriteToSpan(_writableLocalBlock.Slice(8, 8).Span, value);
+                Byte nativeValue = DTOMaker.Models.DayOfWeekConverter.ToNative(value);
+                Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(4, 1).Span, nativeValue);
             }
         }
 
         /// <inheritdoc/>
-        public Int32? Field2
+        public System.DayOfWeek? Field2
         {
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(0, 4).Span));
                 if (bits.GetBit(1)) return null;
-                return Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(4, 4).Span);
+                Byte nativeValue = Codec_Byte_LE.ReadFromSpan(_readonlyLocalBlock.Slice(5, 1).Span);
+                return DTOMaker.Models.DayOfWeekConverter.ToCustom(nativeValue);
             }
             set
             {
@@ -243,11 +243,12 @@ namespace MyOrg.Models.MemBlocks
                 }
                 if (value.HasValue)
                 {
-                    Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Slice(4, 4).Span, value.Value);
+                    Byte nativeValue = DTOMaker.Models.DayOfWeekConverter.ToNative(value.Value);
+                    Codec_Byte_LE.WriteToSpan(_writableLocalBlock.Slice(5, 1).Span, nativeValue);
                 }
                 else
                 {
-                    _writableLocalBlock.Slice(4, 4).Span.Clear();
+                    _writableLocalBlock.Slice(5, 1).Span.Clear();
                 }
             }
         }

@@ -20,85 +20,85 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MyOrg.Model3.MemBlocks;
-namespace MyOrg.Model3.MemBlocks
+using MyOrg.Models.MemBlocks;
+namespace MyOrg.Models.MemBlocks
 {
     /// <summary>
-    /// The MyDTO entity - the MemBlocks implementation of the MyOrg.Model3.IMyDTO interface.
+    /// The Derived entity - the MemBlocks implementation of the MyOrg.Models.IDerived interface.
     /// </summary>
-    public partial class MyDTO : DTOMaker.Runtime.MemBlocks.EntityBase, MyOrg.Model3.IMyDTO, IEquatable<MyDTO>
+    public partial class Derived : MyOrg.Models.MemBlocks.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
-        private sealed class _EntityFactory : IMemBlocksEntityFactory<MyDTO>
+        private sealed class _EntityFactory : IMemBlocksEntityFactory<Derived>
         {
-            public MyDTO CreateInstance(ReadOnlyMemory<byte> buffer) => MyDTO.DeserializeFrom(buffer);
+            public Derived CreateInstance(ReadOnlyMemory<byte> buffer) => Derived.DeserializeFrom(buffer);
         }
         private static readonly _EntityFactory _factory = new _EntityFactory();
         /// <summary>
-        /// Gets the factory for the MyDTO entity.
+        /// Gets the factory for the Derived entity.
         /// </summary>
-        public IMemBlocksEntityFactory<MyDTO> GetFactory() => _factory;
+        public IMemBlocksEntityFactory<Derived> GetFactory() => _factory;
         /// <summary>
-        /// Creates an instance if the MyDTO entity (or derived entity) by deserializing the buffers.
+        /// Creates an instance if the Derived entity (or derived entity) by deserializing the buffers.
         /// </summary>
-        public static MyDTO CreateInstance(ReadOnlyMemory<byte> buffer) => MyDTO.DeserializeFrom(buffer);
+        public static Derived CreateInstance(ReadOnlyMemory<byte> buffer) => Derived.DeserializeFrom(buffer);
 
-        private const long BlockStructureCode = 0x00000081;
-        private const int ClassHeight = 1;
+        private const long BlockStructureCode = 0x00000852;
+        private const int ClassHeight = 2;
         private readonly Memory<byte> _writableLocalBlock;
         private readonly ReadOnlyMemory<byte> _readonlyLocalBlock;
 
-        private static readonly EntityMetadata _metadata = new EntityMetadata(4, BlockStructureCode);
+        private static readonly EntityMetadata _metadata = new EntityMetadata(2, BlockStructureCode);
 
         private static readonly int BlockOffset = _metadata.LocalBlockOffset;
         private static readonly int BlockLength = _metadata.LocalBlockLength;
 
         /// <summary>
-        /// Creates a required instance of the MyDTO entity (or derived entity) from the source.
+        /// Creates a required instance of the Derived entity (or derived entity) from the source.
         /// </summary>
-        public new static MyDTO CreateRequired(MyDTO source)
+        public new static Derived CreateRequired(Derived source)
         {
             if (source.IsFrozen) return source;
             return source switch
             {
-                _ => new MyOrg.Model3.MemBlocks.MyDTO(source)
+                _ => new MyOrg.Models.MemBlocks.Derived(source)
             };
         }
 
         /// <summary>
-        /// Creates an optional instance of the MyDTO entity (or derived entity) from the source.
+        /// Creates an optional instance of the Derived entity (or derived entity) from the source.
         /// </summary>
-        public new static MyDTO? CreateNullable(MyDTO? source)
+        public new static Derived? CreateNullable(Derived? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
         /// <summary>
-        /// Creates a required instance of the MyDTO entity (or derived entity) from the source.
+        /// Creates a required instance of the Derived entity (or derived entity) from the source.
         /// </summary>
-        public new static MyDTO CreateRequired(MyOrg.Model3.IMyDTO source)
+        public new static Derived CreateRequired(MyOrg.Models.IDerived source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
+            if (source is Derived concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
-                _ => new MyOrg.Model3.MemBlocks.MyDTO(source)
+                _ => new MyOrg.Models.MemBlocks.Derived(source)
             };
         }
 
         /// <summary>
-        /// Creates an optional instance of the MyDTO entity (or derived entity) from the source.
+        /// Creates an optional instance of the Derived entity (or derived entity) from the source.
         /// </summary>
-        public new static MyDTO? CreateNullable(MyOrg.Model3.IMyDTO? source)
+        public new static Derived? CreateNullable(MyOrg.Models.IDerived? source)
         {
             return (source is null) ? null : CreateRequired(source);
         }
 
         /// <summary>
-        /// Creates an instance of MyDTO (or derived entity) by deserializing the buffer.
+        /// Creates an instance of Derived (or derived entity) by deserializing the buffer.
         /// </summary>
-        public new static MyDTO DeserializeFrom(ReadOnlyMemory<byte> buffer)
+        public new static Derived DeserializeFrom(ReadOnlyMemory<byte> buffer)
         {
             var metadata = new EntityMetadata(buffer);
-            if (metadata.EntityId == 4) return new MyOrg.Model3.MemBlocks.MyDTO(buffer);
+            if (metadata.EntityId == 2) return new MyOrg.Models.MemBlocks.Derived(buffer);
             return metadata.EntityId switch
             {
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {metadata.EntityId}")
@@ -106,9 +106,9 @@ namespace MyOrg.Model3.MemBlocks
         }
 
         /// <inheritdoc/>
-        protected override int OnGetEntityId() => 4;
+        protected override int OnGetEntityId() => 2;
         /// <inheritdoc/>
-        protected override IEntityBase OnShallowCopy() => new MyDTO(this);
+        protected override IEntityBase OnShallowCopy() => new Derived(this);
 
         /// <inheritdoc/>
         protected override void OnFreeze()
@@ -120,38 +120,38 @@ namespace MyOrg.Model3.MemBlocks
         protected override async ValueTask OnPack(IDataStore dataStore, CancellationToken cancellation)
         {
             await base.OnPack(dataStore, cancellation);
-            await Field41_Pack(dataStore, cancellation);
-            await Field42_Pack(dataStore, cancellation);
+            await Field11_Pack(dataStore, cancellation);
+            await Field12_Pack(dataStore, cancellation);
         }
 
         /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IDataStore dataStore, int depth, CancellationToken cancellation)
         {
             await base.OnUnpack(dataStore, depth, cancellation);
-            await Field41_Unpack(dataStore, cancellation);
-            await Field42_Unpack(dataStore, cancellation);
+            await Field11_Unpack(dataStore, cancellation);
+            await Field12_Unpack(dataStore, cancellation);
         }
 
         // -------------------- field map -----------------------------
         //  Seq.  Off.  Len.  End.  Type    Name
         //  ----  ----  ----  ----  ------- -------
-        //     1     0    64  LE    Octets  Field41
-        //     2    64    64  LE    Octets  Field42
+        //     1     0    64  LE    String  Field11
+        //     2    64    64  LE    String  Field12
         // ------------------------------------------------------------
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity.
+        /// Creates a new instance of the Derived entity.
         /// </summary>
-        protected MyDTO(EntityMetadata metadata) : base(metadata)
+        protected Derived(EntityMetadata metadata) : base(metadata)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity.
+        /// Creates a new instance of the Derived entity.
         /// </summary>
-        public MyDTO() : base(_metadata)
+        public Derived() : base(_metadata)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
@@ -159,104 +159,112 @@ namespace MyOrg.Model3.MemBlocks
         }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by copying from the source instance.
+        /// Creates a new instance of the Derived entity by copying from the source instance.
         /// </summary>
-        protected MyDTO(EntityMetadata metadata, MyDTO source) : base(metadata, source)
+        protected Derived(EntityMetadata metadata, Derived source) : base(metadata, source)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            _Field41 = source._Field41;
-            _Field42 = source._Field42;
+            _Field11 = source._Field11;
+            _Field12 = source._Field12;
         }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by copying from the source instance.
+        /// Creates a new instance of the Derived entity by copying from the source instance.
         /// </summary>
-        public MyDTO(MyDTO source) : this(_metadata, source) { }
+        public Derived(Derived source) : this(_metadata, source) { }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by copying from the source interface.
+        /// Creates a new instance of the Derived entity by copying from the source interface.
         /// </summary>
-        protected MyDTO(EntityMetadata metadata, MyOrg.Model3.IMyDTO source) : base(metadata, source)
+        protected Derived(EntityMetadata metadata, MyOrg.Models.IDerived source) : base(metadata, source)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            _Field41 = source.Field41;
-            _Field42 = source.Field42;
+            _Field11 = source.Field11;
+            _Field12 = source.Field12;
         }
 
         /// <summary>
-        /// Creates a new instance of the MyDTO entity by copying from the source interface.
+        /// Creates a new instance of the Derived entity by copying from the source interface.
         /// </summary>
-        public MyDTO(MyOrg.Model3.IMyDTO source) : this(_metadata, source) { }
+        public Derived(MyOrg.Models.IDerived source) : this(_metadata, source) { }
 
         /// <summary>
-        /// Creates a new frozen instance of the MyDTO entity by copying from the source.
+        /// Creates a new frozen instance of the Derived entity by copying from the source.
         /// </summary>
-        protected MyDTO(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
+        protected Derived(EntityMetadata metadata, ReadOnlyMemory<byte> buffer) : base(metadata, buffer)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
         /// <summary>
-        /// Creates a new frozen instance of the MyDTO entity by deserializing the received buffer.
+        /// Creates a new frozen instance of the Derived entity by deserializing the received buffer.
         /// </summary>
-        public MyDTO(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
+        public Derived(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        private async ValueTask Field41_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field11_Pack(IDataStore dataStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            await PackData(_Field41.AsMemory(), writableField, dataStore);
+            await PackText(_Field11, writableField, dataStore);
         }
-        private async ValueTask Field41_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field11_Unpack(IDataStore dataStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
             var data = await UnpackData(readonlyField, dataStore);
-            _Field41 = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;
+#if NET8_0_OR_GREATER
+            _Field11 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
+#else
+            _Field11 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
+#endif
         }
-        private Octets _Field41 = Octets.Empty;
+        private string _Field11 = string.Empty;
         /// <inheritdoc/>
-        public Octets Field41
+        public string Field11
         {
-            get => IfUnpacked(_Field41);
-            set => _Field41 = IfNotFrozen(value);
+            get => IfUnpacked(_Field11);
+            set => _Field11 = IfNotFrozen(value);
         }
 
-        private async ValueTask Field42_Pack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field12_Pack(IDataStore dataStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
-            await PackData(_Field42?.AsMemory(), writableField, dataStore);
+            await PackText(_Field12, writableField, dataStore);
         }
-        private async ValueTask Field42_Unpack(IDataStore dataStore, CancellationToken cancellation)
+        private async ValueTask Field12_Unpack(IDataStore dataStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
             var data = await UnpackData(readonlyField, dataStore);
-            _Field42 = data.HasValue ? Octets.Wrap(data.Value) : null;
+#if NET8_0_OR_GREATER
+            _Field12 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
+#else
+            _Field12 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : null;
+#endif
         }
-        private Octets? _Field42;
+        private string? _Field12;
         /// <inheritdoc/>
-        public Octets? Field42
+        public string? Field12
         {
-            get => IfUnpacked(_Field42);
-            set => _Field42 = IfNotFrozen(value);
+            get => IfUnpacked(_Field12);
+            set => _Field12 = IfNotFrozen(value);
         }
 
 
         /// <inheritdoc/>
-        public bool Equals(MyDTO? other) => base.Equals(other);
+        public bool Equals(Derived? other) => base.Equals(other);
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is MyDTO other && Equals(other);
+        public override bool Equals(object? obj) => obj is Derived other && Equals(other);
         /// <inheritdoc/>
         public override int GetHashCode() => base.GetHashCode();
         /// <inheritdoc/>
-        public static bool operator ==(MyDTO? left, MyDTO? right) => left is not null ? left.Equals(right) : (right is null);
+        public static bool operator ==(Derived? left, Derived? right) => left is not null ? left.Equals(right) : (right is null);
         /// <inheritdoc/>
-        public static bool operator !=(MyDTO? left, MyDTO? right) => left is not null ? !left.Equals(right) : (right is not null);
+        public static bool operator !=(Derived? left, Derived? right) => left is not null ? !left.Equals(right) : (right is not null);
 
     }
 }

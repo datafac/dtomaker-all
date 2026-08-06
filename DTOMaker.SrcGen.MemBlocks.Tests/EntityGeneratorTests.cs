@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using DTOMaker.TestHelpers;
+using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;
 
@@ -46,10 +47,12 @@ namespace DTOMaker.SrcGen.MemBlocks.Tests
             }
             """;
 
-        [Fact] public void EntitySrcGen_GeneratedSourcesLength() => modelSource.GenerateAndCheckLength(4);
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource0() => await Verifier.Verify(modelSource.GenerateAndGetOutput(0, "MyOrg.Models.MemBlocks.MyDTO.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource1() => await Verifier.Verify(modelSource.GenerateAndGetOutput(1, "MyOrg.Models.MemBlocks.Derived.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource2() => await Verifier.Verify(modelSource.GenerateAndGetOutput(2, "MyOrg.Model2.MemBlocks.MyDTO.g.cs"));
-        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource3() => await Verifier.Verify(modelSource.GenerateAndGetOutput(3, "MyOrg.Model3.MemBlocks.MyDTO.g.cs"));
+        [Fact] public void EntitySrcGen_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 6);
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource0() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 0, "MyOrg.Models.Global.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource1() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 1, "MyOrg.Models.MemBlocks.Domain.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource2() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 2, "MyOrg.Models.MemBlocks.MyDTO.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource3() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 3, "MyOrg.Models.MemBlocks.Derived.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource4() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 4, "MyOrg.Model2.MemBlocks.MyDTO.g.cs"));
+        [Fact] public async Task EntitySrcGen_VerifyGeneratedSource5() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 5, "MyOrg.Model3.MemBlocks.MyDTO.g.cs"));
     }
 }
