@@ -23,8 +23,7 @@ namespace DTOMaker.SrcGen.JsonSystemText.Tests
             }
             """;
 
-        [Fact]
-        public void CustomSrcGen_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 3);
+        [Fact] public void CustomSrcGen_GeneratedSourcesLength() => new SourceGenerator().GenerateAndCheckLength(modelSource, 3);
         [Fact] public async Task CustomSrcGen_VerifyGeneratedSource0() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 0, "MyOrg.Models.Global.g.cs"));
         [Fact] public async Task CustomSrcGen_VerifyGeneratedSource1() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 1, "MyOrg.Models.JsonSystemText.Domain.g.cs"));
         [Fact] public async Task CustomSrcGen_VerifyGeneratedSource2() => await Verifier.Verify(new SourceGenerator().GenerateAndGetOutput(modelSource, 2, "MyOrg.Models.JsonSystemText.MyDTO.g.cs"));

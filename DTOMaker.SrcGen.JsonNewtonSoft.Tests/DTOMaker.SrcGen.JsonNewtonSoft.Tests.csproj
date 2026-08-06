@@ -33,6 +33,7 @@
 	  <ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 	  <ProjectReference Include="..\DTOMaker.Runtime.JsonNewtonSoft\DTOMaker.Runtime.JsonNewtonSoft.csproj" />
 	  <ProjectReference Include="..\DTOMaker.SrcGen.JsonNewtonSoft\DTOMaker.SrcGen.JsonNewtonSoft.csproj" />
+	  <ProjectReference Include="..\DTOMaker.TestHelpers\DTOMaker.TestHelpers.csproj" />
 	</ItemGroup>
 
 </Project>
