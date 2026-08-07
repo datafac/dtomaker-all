@@ -20,3 +20,8 @@ public interface IEntityBase
     /// </summary>
     IEntityBase ShallowCopy();
 }
+
+/// <summary>
+/// Represents an entity which is writable, meaning it can be modified until frozen.
+/// </summary>
+public interface IEntityBase_Writable : IEntityBase { }

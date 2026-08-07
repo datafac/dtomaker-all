@@ -1,7 +1,12 @@
 ﻿using DataFac.Storage;
 using DTOMaker.Models;
+using DTOMaker.Runtime.MemBlocks;
+using MessagePack;
+using NewModels.Domain2;
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 // Todo:
@@ -20,22 +25,24 @@ namespace System.Runtime.CompilerServices
 }
 #endif
 
-namespace DTOMaker.Runtime
-{
-}
-
-namespace NewModels
+namespace NewModels.Domain1
 {
     [Entity(1)]
     public interface IT_BaseImplName_ : IEntityBase
     {
     }
+}
 
+namespace NewModels.Domain2
+{
     [Entity(4)]
-    public interface IT_AbstractEntity_ : IT_BaseImplName_
+    public interface IT_AbstractEntity_ : NewModels.Domain1.IT_BaseImplName_
     {
     }
+}
 
+namespace NewModels.Domain3
+{
     [Entity(5)]
     public interface IT_ConcreteEntity_ : IT_AbstractEntity_
     {
@@ -44,20 +51,25 @@ namespace NewModels
 }
 
 // <generated>
-// in Domain.g.cs
-namespace NewModels
+// todo in Domain.g.cs
+namespace NewModels.Domain1
 {
-    public interface IEntityBase_Writable : IEntityBase { }
     public interface IT_BaseImplName__Writable : IT_BaseImplName_, IEntityBase_Writable { }
-    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, IT_BaseImplName__Writable { }
-    public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, IT_AbstractEntity__Writable
+}
+namespace NewModels.Domain2
+{
+    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, NewModels.Domain1.IT_BaseImplName__Writable { }
+}
+namespace NewModels.Domain3
+{
+    public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, NewModels.Domain2.IT_AbstractEntity__Writable
     {
         new string Value { set; }
     }
 }
 // </generated>
 
-namespace NewModels.Records
+namespace DTOMaker.Runtime.Records
 {
     public abstract record EntityBase : IEntityBase
     {
@@ -70,32 +82,41 @@ namespace NewModels.Records
         public EntityBase(EntityBase source) { }
         public EntityBase(IEntityBase source) { }
     }
+}
 
-    public abstract record T_BaseImplName_ : EntityBase, IT_BaseImplName_
+namespace NewModels.Domain1.Records
+{
+    public abstract record T_BaseImplName_ : DTOMaker.Runtime.Records.EntityBase, IT_BaseImplName_
     {
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
         public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
+}
 
-    public abstract record T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity_
+namespace NewModels.Domain2.Records
+{
+    public abstract record T_AbstractEntity_ : NewModels.Domain1.Records.T_BaseImplName_, IT_AbstractEntity_
     {
         public T_AbstractEntity_() { }
-        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) {  }
+        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
         public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
+}
 
-    public sealed record T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity_
+namespace NewModels.Domain3.Records
+{
+    public sealed record T_ConcreteEntity_ : NewModels.Domain2.Records.T_AbstractEntity_, IT_ConcreteEntity_
     {
         public string Value { get; init; } = string.Empty;
         public T_ConcreteEntity_() { }
         public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
         public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
-        protected override EntityBase OnShallowCopy() => this;
+        protected override DTOMaker.Runtime.Records.EntityBase OnShallowCopy() => this;
     }
 }
 
-namespace NewModels.Classes
+namespace DTOMaker.Runtime.Classes
 {
     public abstract class EntityBase : IEntityBase
     {
@@ -136,26 +157,35 @@ namespace NewModels.Classes
         }
         #endregion
     }
+}
 
-    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
+namespace NewModels.Domain1.Classes
+{
+    public abstract class T_BaseImplName_ : DTOMaker.Runtime.Classes.EntityBase, IT_BaseImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
         public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
+}
 
-    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
+namespace NewModels.Domain2.Classes
+{
+    public abstract class T_AbstractEntity_ : NewModels.Domain1.Classes.T_BaseImplName_, IT_AbstractEntity__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_AbstractEntity_() { }
         public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
         public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
+}
 
-    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
+namespace NewModels.Domain3.Classes
+{
+    public sealed class T_ConcreteEntity_ : NewModels.Domain2.Classes.T_AbstractEntity_, IT_ConcreteEntity__Writable
     {
-        protected override EntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
+        protected override DTOMaker.Runtime.Classes.EntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
         protected override void OnFreeze() { base.OnFreeze(); }
         public string Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
         public T_ConcreteEntity_() { }
@@ -164,34 +194,36 @@ namespace NewModels.Classes
     }
 }
 
-namespace NewModels.MsgPack3
+namespace NewModels.Domain1.MsgPack3
 {
-    using DTOMaker.Runtime.MsgPack3;
-    using MessagePack;
-    using System.Threading;
-
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(T_ConcreteEntity_))]
-    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
+    [Union(5, typeof(NewModels.Domain3.MsgPack3.T_ConcreteEntity_))]
+    public abstract class T_BaseImplName_ : DTOMaker.Runtime.MsgPack3.EntityBase, IT_BaseImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_BaseImplName_() { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
         public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
     }
+}
 
+namespace NewModels.Domain2.MsgPack3
+{
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(T_ConcreteEntity_))]
-    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
+    [Union(5, typeof(NewModels.Domain3.MsgPack3.T_ConcreteEntity_))]
+    public abstract class T_AbstractEntity_ : NewModels.Domain1.MsgPack3.T_BaseImplName_, IT_AbstractEntity__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
         public T_AbstractEntity_() { }
         public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
         public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
     }
+}
 
+namespace NewModels.Domain3.MsgPack3
+{
     [MessagePackObject(SuppressSourceGeneration = true)]
-    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
+    public sealed class T_ConcreteEntity_ : NewModels.Domain2.MsgPack3.T_AbstractEntity_, IT_ConcreteEntity__Writable
     {
         protected override int OnGetEntityId() => 5;
         protected override IEntityBase OnShallowCopy() => new T_ConcreteEntity_(this);
@@ -207,13 +239,9 @@ namespace NewModels.MsgPack3
     }
 }
 
-namespace NewModels.MemBlox2
+namespace NewModels.Domain1.MemBlox2
 {
-    using DTOMaker.Runtime.MemBlocks;
-    using System.IO;
-    using System.Threading;
-
-    public abstract class T_BaseImplName_ : EntityBase, IT_BaseImplName__Writable
+    public abstract class T_BaseImplName_ : EntityBase, NewModels.Domain1.IT_BaseImplName__Writable
     {
         //##if(false) {
         private const int T_ClassHeight_ = 1;
@@ -238,7 +266,7 @@ namespace NewModels.MemBlox2
             {
                 //##foreach(var derived in entity.DerivedEntities) {
                 //##using var _ = NewScope(derived);
-                T_ConcreteEntity_.EntityId => new T_ConcreteEntity_(buffer),
+                NewModels.Domain3.MemBlox2.T_ConcreteEntity_.EntityId => new NewModels.Domain3.MemBlox2.T_ConcreteEntity_(buffer),
                 //##}
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {entityId}")
             };
@@ -256,7 +284,7 @@ namespace NewModels.MemBlox2
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
         }
-        protected T_BaseImplName_(EntityMetadata metadata, IT_BaseImplName_ source) : base(metadata, source)
+        protected T_BaseImplName_(EntityMetadata metadata, NewModels.Domain1.IT_BaseImplName_ source) : base(metadata, source)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
@@ -267,8 +295,11 @@ namespace NewModels.MemBlox2
             _writableLocalBlock = Memory<byte>.Empty;
         }
     }
+}
 
-    public abstract class T_AbstractEntity_ : T_BaseImplName_, IT_AbstractEntity__Writable
+namespace NewModels.Domain2.MemBlox2
+{
+    public abstract class T_AbstractEntity_ : NewModels.Domain1.MemBlox2.T_BaseImplName_, IT_AbstractEntity__Writable
     {
         //##if(false) {
         private const int T_ClassHeight_ = 2;
@@ -293,7 +324,7 @@ namespace NewModels.MemBlox2
             {
                 //##foreach(var derived in entity.DerivedEntities) {
                 //##using var _ = NewScope(derived);
-                T_ConcreteEntity_.EntityId => new T_ConcreteEntity_(buffer),
+                NewModels.Domain3.MemBlox2.T_ConcreteEntity_.EntityId => new NewModels.Domain3.MemBlox2.T_ConcreteEntity_(buffer),
                 //##}
                 _ => throw new InvalidDataException($"Header contains unexpected entity id: {entityId}")
             };
@@ -323,8 +354,11 @@ namespace NewModels.MemBlox2
         }
 
     }
+}
 
-    public sealed class T_ConcreteEntity_ : T_AbstractEntity_, IT_ConcreteEntity__Writable
+namespace NewModels.Domain3.MemBlox2
+{
+    public sealed class T_ConcreteEntity_ : NewModels.Domain2.MemBlox2.T_AbstractEntity_, NewModels.Domain3.IT_ConcreteEntity__Writable
     {
         //##if(false) {
         private const int T_ClassHeight_ = 3;
@@ -371,7 +405,7 @@ namespace NewModels.MemBlox2
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
             this.Value = source.Value;
         }
-        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(_metadata, source)
+        public T_ConcreteEntity_(NewModels.Domain3.IT_ConcreteEntity_ source) : base(_metadata, source)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
