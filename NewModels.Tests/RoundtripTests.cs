@@ -2,7 +2,7 @@ using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NewModels.Domain3.Tests.MsgPack3
+namespace T_ConcreteNameSpace_.Tests.MsgPack3
 {
     using DTOMaker.Runtime.MsgPack3;
 
@@ -13,16 +13,16 @@ namespace NewModels.Domain3.Tests.MsgPack3
         {
             var cancellation = TestContext.Current.CancellationToken;
             using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
-            var orig = new NewModels.Domain3.Records.T_ConcreteEntity_() { Value = "The quick brown fox jumps over the lazy dog." };
-            var send = new NewModels.Domain3.MsgPack3.T_ConcreteEntity_(orig);
+            var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
+            var send = new T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
-            var buffer = EntityBase.Serialize<NewModels.Domain3.MsgPack3.T_ConcreteEntity_>(send, cancellation);
-            var recd = EntityBase.Deserialize<NewModels.Domain3.MsgPack3.T_ConcreteEntity_>(buffer, cancellation);
+            var buffer = EntityBase.Serialize<T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_>(send, cancellation);
+            var recd = EntityBase.Deserialize<T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_>(buffer, cancellation);
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
-            var copy = new NewModels.Domain3.Records.T_ConcreteEntity_(recd);
+            var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
             copy.ShouldBe(orig);
         }
 
@@ -31,22 +31,22 @@ namespace NewModels.Domain3.Tests.MsgPack3
         {
             var cancellation = TestContext.Current.CancellationToken;
             using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
-            var orig = new NewModels.Domain3.Records.T_ConcreteEntity_() { Value = "The quick brown fox jumps over the lazy dog." };
-            var send = new NewModels.Domain3.MsgPack3.T_ConcreteEntity_(orig);
+            var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
+            var send = new T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
-            var buffer = EntityBase.Serialize<NewModels.Domain1.MsgPack3.T_BaseImplName_>(send, cancellation);
-            var recd = EntityBase.Deserialize<NewModels.Domain1.MsgPack3.T_BaseImplName_>(buffer, cancellation) as NewModels.Domain3.MsgPack3.T_ConcreteEntity_;
+            var buffer = EntityBase.Serialize<T_AncestorNameSpace_.MsgPack3.T_AncestorImplName_>(send, cancellation);
+            var recd = EntityBase.Deserialize<T_AncestorNameSpace_.MsgPack3.T_AncestorImplName_>(buffer, cancellation) as T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_;
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
-            var copy = new NewModels.Domain3.Records.T_ConcreteEntity_(recd);
+            var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
             copy.ShouldBe(orig);
         }
     }
 }
 
-namespace NewModels.Domain3.Tests.MemBlox2
+namespace T_ConcreteNameSpace_.Tests.MemBlox2
 {
     using DTOMaker.Runtime.MemBlocks;
 
@@ -57,16 +57,16 @@ namespace NewModels.Domain3.Tests.MemBlox2
         {
             var cancellation = TestContext.Current.CancellationToken;
             using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
-            var orig = new NewModels.Domain3.Records.T_ConcreteEntity_() { Value = "The quick brown fox jumps over the lazy dog." };
-            var send = new NewModels.Domain3.MemBlox2.T_ConcreteEntity_(orig);
+            var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
+            var send = new T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
             var buffer = send.Serialize(cancellation);
-            var recd = NewModels.Domain3.MemBlox2.T_ConcreteEntity_.DeserializeFrom(buffer);
+            var recd = T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_.DeserializeFrom(buffer);
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
-            var copy = new NewModels.Domain3.Records.T_ConcreteEntity_(recd);
+            var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
             copy.ShouldBe(orig);
         }
 
@@ -75,18 +75,18 @@ namespace NewModels.Domain3.Tests.MemBlox2
         {
             var cancellation = TestContext.Current.CancellationToken;
             using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
-            var orig = new NewModels.Domain3.Records.T_ConcreteEntity_() { Value = "The quick brown fox jumps over the lazy dog." };
-            var send = new NewModels.Domain3.MemBlox2.T_ConcreteEntity_(orig);
+            var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
+            var send = new T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
             var buffer = send.Serialize(cancellation);
-            var recdBase = NewModels.Domain1.MemBlox2.T_BaseImplName_.DeserializeFrom(buffer);
+            var recdBase = T_AncestorNameSpace_.MemBlox2.T_AncestorImplName_.DeserializeFrom(buffer);
             recdBase.ShouldNotBeNull();
             recdBase.IsFrozen.ShouldBeTrue();
             recdBase.IsPacked.ShouldBeTrue();
             await recdBase.UnpackAll(blobStore, cancellation);
-            recdBase.ShouldBeOfType<NewModels.Domain3.MemBlox2.T_ConcreteEntity_>();
-            NewModels.Domain3.MemBlox2.T_ConcreteEntity_ recd = (recdBase as NewModels.Domain3.MemBlox2.T_ConcreteEntity_)!;
-            var copy = new NewModels.Domain3.Records.T_ConcreteEntity_(recd);
+            recdBase.ShouldBeOfType<T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_>();
+            T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_ recd = (recdBase as T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_)!;
+            var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
             copy.ShouldBe(orig);
         }
     }
