@@ -33,8 +33,4 @@
 	  <ProjectReference Include="..\Template.MsgPack2\Template.MsgPack2.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Using Include="Xunit" />
-	</ItemGroup>
-
 </Project>

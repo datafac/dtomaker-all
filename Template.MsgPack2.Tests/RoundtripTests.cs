@@ -9,6 +9,7 @@ using System.Linq;
 using DTOMaker.Runtime.MsgPack2;
 using DataFac.Memory;
 using System.Security.Principal;
+using Xunit;
 
 namespace Template_MessagePack.Tests
 {

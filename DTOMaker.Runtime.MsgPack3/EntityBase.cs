@@ -94,7 +94,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     private static void ThrowIsFrozenException(string? memberName) => throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
 
     /// <summary>
-    /// Ensures that the entity is not frozen and throws an exception if it is, enforcing mutability for certain operations.
+    /// Ensures that the entity is not frozen and throws an exception if it is.
     /// </summary>
     /// <param name="memberName"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -126,6 +126,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
         if (!_packed) EntityBase.ThrowIsNotPackedException(methodName);
     }
 
+    [IgnoreMember]
     private volatile bool _packed;
     /// <inheritdoc/>
     [IgnoreMember]
@@ -141,6 +142,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
         _unpacked = true;
     }
 
+    [IgnoreMember]
     private volatile bool _unpacked;
     /// <inheritdoc/>
     [IgnoreMember]
