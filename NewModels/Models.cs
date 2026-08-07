@@ -25,100 +25,9 @@ namespace System.Runtime.CompilerServices
 }
 #endif
 
-namespace NewModels.Domain1
-{
-    [Entity(1)]
-    public interface IT_BaseImplName_ : IEntityBase
-    {
-    }
-}
-
-namespace NewModels.Domain2
-{
-    [Entity(4)]
-    public interface IT_AbstractEntity_ : NewModels.Domain1.IT_BaseImplName_
-    {
-    }
-}
-
-namespace NewModels.Domain3
-{
-    [Entity(5)]
-    public interface IT_ConcreteEntity_ : IT_AbstractEntity_
-    {
-        [Member(1)][Name("val")] string Value { get; }
-    }
-}
-
-// <generated>
-// todo in Domain.g.cs
-namespace NewModels.Domain1
-{
-    public interface IT_BaseImplName__Writable : IT_BaseImplName_, IEntityBase_Writable { }
-}
-namespace NewModels.Domain2
-{
-    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, NewModels.Domain1.IT_BaseImplName__Writable { }
-}
-namespace NewModels.Domain3
-{
-    public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, NewModels.Domain2.IT_AbstractEntity__Writable
-    {
-        new string Value { set; }
-    }
-}
-// </generated>
-
-namespace DTOMaker.Runtime.Records
-{
-    public abstract record EntityBase : IEntityBase
-    {
-        public bool IsFrozen => true;
-        public void Freeze() { }
-        protected abstract EntityBase OnShallowCopy();
-        public IEntityBase ShallowCopy() => OnShallowCopy();
-
-        public EntityBase() { }
-        public EntityBase(EntityBase source) { }
-        public EntityBase(IEntityBase source) { }
-    }
-}
-
-namespace NewModels.Domain1.Records
-{
-    public abstract record T_BaseImplName_ : DTOMaker.Runtime.Records.EntityBase, IT_BaseImplName_
-    {
-        public T_BaseImplName_() { }
-        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
-        public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
-    }
-}
-
-namespace NewModels.Domain2.Records
-{
-    public abstract record T_AbstractEntity_ : NewModels.Domain1.Records.T_BaseImplName_, IT_AbstractEntity_
-    {
-        public T_AbstractEntity_() { }
-        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
-        public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
-    }
-}
-
-namespace NewModels.Domain3.Records
-{
-    public sealed record T_ConcreteEntity_ : NewModels.Domain2.Records.T_AbstractEntity_, IT_ConcreteEntity_
-    {
-        public string Value { get; init; } = string.Empty;
-        public T_ConcreteEntity_() { }
-        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
-        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
-        protected override DTOMaker.Runtime.Records.EntityBase OnShallowCopy() => this;
-    }
-}
-
 namespace DTOMaker.Runtime.Classes
 {
-    public abstract class EntityBase : IEntityBase
+    public abstract class EntityBase : IEntityBase, IEquatable<EntityBase>
     {
         public EntityBase() { }
         public EntityBase(EntityBase source) { }
@@ -156,6 +65,107 @@ namespace DTOMaker.Runtime.Classes
             if (!_frozen) ThrowIsNotFrozenException(methodName);
         }
         #endregion
+
+        /// <inheritdoc/>
+        public bool Equals(EntityBase? other) => true;
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj) => obj is EntityBase;
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
+
+    }
+}
+
+namespace DTOMaker.Runtime.Records
+{
+    public abstract record EntityBase : IEntityBase
+    {
+        public bool IsFrozen => true;
+        public void Freeze() { }
+        protected abstract EntityBase OnShallowCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
+
+        public EntityBase() { }
+        public EntityBase(EntityBase source) { }
+        public EntityBase(IEntityBase source) { }
+    }
+}
+
+namespace NewModels.Domain1
+{
+    [Entity(1)]
+    public interface IT_BaseImplName_ : IEntityBase
+    {
+    }
+}
+
+namespace NewModels.Domain2
+{
+    [Entity(4)]
+    public interface IT_AbstractEntity_ : NewModels.Domain1.IT_BaseImplName_
+    {
+    }
+}
+
+namespace NewModels.Domain3
+{
+    [Entity(5)]
+    public interface IT_ConcreteEntity_ : NewModels.Domain2.IT_AbstractEntity_
+    {
+        [Member(1)][Name("val")] string Value { get; }
+    }
+}
+
+// <generated>
+// todo in Domain.g.cs
+namespace NewModels.Domain1
+{
+    public interface IT_BaseImplName__Writable : IT_BaseImplName_, IEntityBase_Writable { }
+}
+namespace NewModels.Domain2
+{
+    public interface IT_AbstractEntity__Writable : IT_AbstractEntity_, NewModels.Domain1.IT_BaseImplName__Writable { }
+}
+namespace NewModels.Domain3
+{
+    public interface IT_ConcreteEntity__Writable : IT_ConcreteEntity_, NewModels.Domain2.IT_AbstractEntity__Writable
+    {
+        new string Value { set; }
+    }
+}
+// </generated>
+
+namespace NewModels.Domain1.Records
+{
+    public abstract record T_BaseImplName_ : DTOMaker.Runtime.Records.EntityBase, IT_BaseImplName_
+    {
+        public T_BaseImplName_() { }
+        public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
+        public T_BaseImplName_(IT_BaseImplName_ source) : base(source) { }
+    }
+}
+
+namespace NewModels.Domain2.Records
+{
+    public abstract record T_AbstractEntity_ : NewModels.Domain1.Records.T_BaseImplName_, IT_AbstractEntity_
+    {
+        public T_AbstractEntity_() { }
+        public T_AbstractEntity_(T_AbstractEntity_ source) : base(source) { }
+        public T_AbstractEntity_(IT_AbstractEntity_ source) : base(source) { }
+    }
+}
+
+namespace NewModels.Domain3.Records
+{
+    public sealed record T_ConcreteEntity_ : NewModels.Domain2.Records.T_AbstractEntity_, IT_ConcreteEntity_
+    {
+        public string Value { get; init; } = string.Empty;
+        public T_ConcreteEntity_() { }
+        public T_ConcreteEntity_(T_ConcreteEntity_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteEntity_(IT_ConcreteEntity_ source) : base(source) { Value = source.Value; }
+        protected override DTOMaker.Runtime.Records.EntityBase OnShallowCopy() => this;
     }
 }
 
