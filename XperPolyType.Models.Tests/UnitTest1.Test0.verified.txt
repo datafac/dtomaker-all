@@ -1,5 +1,0 @@
-﻿{
-  StudentId: 12345,
-  FirstName: John,
-  LastName: Doe
-}
