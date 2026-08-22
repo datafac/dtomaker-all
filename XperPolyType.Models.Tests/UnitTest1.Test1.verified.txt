@@ -1,4 +1,0 @@
-﻿Type   : XperPolyType.Models.Student
-Kind   : Object
-Methods: 0
-Events : 0
