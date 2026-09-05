@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_UInt32
         await orig.Pack(blobStore, CancellationToken.None);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize(CancellationToken.None);
+        var buffer = await orig.Serialize(CancellationToken.None);
         var copy = new SimpleDTO_UInt32(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

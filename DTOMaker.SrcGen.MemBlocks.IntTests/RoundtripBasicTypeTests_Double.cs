@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_Double
         await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize(cancellation);
+        var buffer = await orig.Serialize(cancellation);
         var copy = new SimpleDTO_Double(buffer);
         copy.ShouldNotBeNull();
         if (Double.IsNaN(reqValue))

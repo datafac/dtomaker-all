@@ -211,7 +211,8 @@ namespace MyOrg.Model3.MemBlocks
         private async ValueTask Field41_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            await PackData(_Field41.AsMemory(), writableField, blobStore);
+            var buffer = _Field41.AsMemory();
+            await PackData(buffer, writableField, blobStore);
         }
         private async ValueTask Field41_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
@@ -230,7 +231,15 @@ namespace MyOrg.Model3.MemBlocks
         private async ValueTask Field42_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
-            await PackData(_Field42?.AsMemory(), writableField, blobStore);
+            if (_Field42 is null)
+            {
+                writableField.Span.Clear();
+            }
+            else
+            {
+                ReadOnlyMemory<byte> buffer = _Field42.AsMemory();
+                await PackData(buffer, writableField, blobStore);
+            }
         }
         private async ValueTask Field42_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {

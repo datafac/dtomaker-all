@@ -140,7 +140,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.MemBlocks.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = orig.Serialize(CancellationToken.None);
+        var buffer = await orig.Serialize(CancellationToken.None);
         var copy = new Testing.Models.MemBlocks.Required_String(buffer);
         if (_checkValues)
         {

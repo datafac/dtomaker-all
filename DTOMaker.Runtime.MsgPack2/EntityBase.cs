@@ -116,11 +116,12 @@ namespace DTOMaker.Runtime.MsgPack2
         /// </summary>
         /// <returns></returns>
         protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
+
         /// <inheritdoc/>
-        public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
+        public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
         {
             ThrowIfNotPacked();
-            return OnSerialize();
+            return new ValueTask<ReadOnlyMemory<byte>>(OnSerialize());
         }
 
         private volatile bool _packed;

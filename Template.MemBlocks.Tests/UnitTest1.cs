@@ -107,7 +107,7 @@ namespace Template.MemBlocks.Tests
             var orig = new TestEntity();
             await orig.Pack(blobStore, cancellation);
             orig.Freeze();
-            var buffer = orig.Serialize(cancellation);
+            var buffer = await orig.Serialize(cancellation);
             buffer.Length.ShouldBe(32);
 
             buffer.Span[0].ShouldBe((byte)'|');  // marker byte 0
@@ -177,7 +177,7 @@ namespace Template.MemBlocks.Tests
             await orig.Pack(blobStore, cancellation);
             orig.Freeze();
 
-            var buffer = orig.Serialize(cancellation);
+            var buffer = await orig.Serialize(cancellation);
             var copy = T_ImplNameSpace_.T_EntityImplName_.CreateInstance(buffer);
             await copy.UnpackAll(blobStore, cancellation);
 
@@ -211,7 +211,7 @@ namespace Template.MemBlocks.Tests
             await orig.Pack(blobStore, cancellation);
             orig.Freeze();
 
-            var buffer = orig.Serialize(cancellation);
+            var buffer = await orig.Serialize(cancellation);
             var recd = T_BaseImplNameSpace_.T_BaseImplName_.CreateInstance(buffer);
             recd.ShouldBeOfType<T_EntityImplName_>();
             var copy = recd as T_EntityImplName_;

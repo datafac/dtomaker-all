@@ -60,7 +60,7 @@ namespace T_ConcreteNameSpace_.Tests.MemBlox2
             var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
-            var buffer = send.Serialize(cancellation);
+            var buffer = await send.Serialize(cancellation);
             var recd = T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_.DeserializeFrom(buffer);
             recd.ShouldNotBeNull();
             recd.IsFrozen.ShouldBeTrue();
@@ -78,7 +78,7 @@ namespace T_ConcreteNameSpace_.Tests.MemBlox2
             var orig = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_() { Value = "The quick brown fox jumps over the lazy dog." };
             var send = new T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_(orig);
             await send.Pack(blobStore, cancellation);
-            var buffer = send.Serialize(cancellation);
+            var buffer = await send.Serialize(cancellation);
             var recdBase = T_AncestorNameSpace_.MemBlox2.T_AncestorImplName_.DeserializeFrom(buffer);
             recdBase.ShouldNotBeNull();
             recdBase.IsFrozen.ShouldBeTrue();

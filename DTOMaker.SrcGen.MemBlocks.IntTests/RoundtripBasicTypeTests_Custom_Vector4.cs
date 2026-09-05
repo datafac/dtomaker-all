@@ -26,7 +26,7 @@ public class RoundtripBasicTypeTests_Custom_Vector4
         await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize(cancellation);
+        var buffer = await orig.Serialize(cancellation);
         var copy = new SimpleDTO_Vector4(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

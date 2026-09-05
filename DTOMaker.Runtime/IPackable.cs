@@ -15,7 +15,7 @@ public interface IPackable : IEntityBase
 {
     /// <summary>
     /// Returns true if the entity is packed and ready for serialization, otherwise false. 
-    /// A packed entity is also frozen and immutable.
+    /// A packed entity is also frozen and immutable, and can be safely serialized.
     /// </summary>
     bool IsPacked { get; }
 
@@ -24,6 +24,14 @@ public interface IPackable : IEntityBase
     /// strings, binary blobs (Octets) and any referenced entities to the data store.
     /// </summary>
     ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation);
+
+    /// <summary>
+    /// Serializes the entity to a byte array, which can be stored or transmitted. The entity 
+    /// must be packed before serialization.
+    /// </summary>
+    /// <param name="cancellation"></param>
+    /// <returns></returns>
+    ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation);
 
     /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 

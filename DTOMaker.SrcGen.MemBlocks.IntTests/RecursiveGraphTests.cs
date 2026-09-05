@@ -80,7 +80,7 @@ namespace DTOMaker.SrcGen.MemBlocks.IntTests
         {
             using var blobStore = new DataFac.Storage.Testing.TestBlobStore();
             await orig.Pack(blobStore, CancellationToken.None);
-            var buffer = orig.Serialize(CancellationToken.None);
+            var buffer = await orig.Serialize(CancellationToken.None);
             var copy = new Tree(buffer);
             copy.ShouldNotBeNull();
             copy.Freeze();

@@ -44,6 +44,19 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     }
 
     /// <summary>
+    /// When implemented in a derived class, serializes the entity's data into a byte array.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
+
+    /// <inheritdoc/>
+    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
+    {
+        ThrowIfNotPacked();
+        return new ValueTask<ReadOnlyMemory<byte>>(OnSerialize());
+    }
+
+    /// <summary>
     /// Represents the default entity identifier value.
     /// </summary>
     public const int EntityId = 0;

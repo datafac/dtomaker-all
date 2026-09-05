@@ -25,7 +25,7 @@ public class RoundtripBasicTypeTests_Guid
         await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = orig.Serialize(cancellation);
+        var buffer = await orig.Serialize(cancellation);
         var copy = new SimpleDTO_Guid(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);

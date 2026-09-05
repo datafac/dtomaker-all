@@ -207,8 +207,16 @@ namespace MyOrg.Models.MemBlocks
         private async ValueTask Field1_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            if (_Field1 is not null) await _Field1.Pack(blobStore, cancellation);
-            await PackData(_Field1?.Serialize(cancellation), writableField, blobStore);
+            if (_Field1 is null)
+            {
+                writableField.Span.Clear();
+            }
+            else
+            {
+                await _Field1.Pack(blobStore, cancellation);
+                ReadOnlyMemory<byte> buffer = await _Field1.Serialize(cancellation);
+                await PackData(buffer, writableField, blobStore);
+            }
         }
         private async ValueTask Field1_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {

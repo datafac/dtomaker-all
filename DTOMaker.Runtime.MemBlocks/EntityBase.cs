@@ -78,10 +78,11 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         _frozen = true;
     }
 
-    public ReadOnlyMemory<byte> Serialize(CancellationToken cancellation)
+    /// <inheritdoc/>
+    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
     {
         if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Serialize));
-        return _readonlyGlobalBlock;
+        return new ValueTask<ReadOnlyMemory<byte>>(_readonlyGlobalBlock);
     }
 
     protected virtual IEntityBase OnShallowCopy() => throw new NotImplementedException();
@@ -171,18 +172,11 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask PackData(ReadOnlyMemory<byte>? buffer, Memory<byte> fieldMemory, IBlobStore blobStore)
+    protected static async ValueTask PackData(ReadOnlyMemory<byte> buffer, Memory<byte> fieldMemory, IBlobStore blobStore)
     {
-        if (!buffer.HasValue)
-        {
-            fieldMemory.Span.Clear();
-        }
-        else
-        {
-            (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressData(buffer.Value, fieldMemory.Span);
-            if (embedded) return;
-            await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
-        }
+        (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressData(buffer, fieldMemory.Span);
+        if (embedded) return;
+        await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

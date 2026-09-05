@@ -66,7 +66,7 @@ public class Roundtrip_Int64
         var orig = new Testing.Models.MemBlocks.Required_Int64();
         orig.Field = 123456L;
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = orig.Serialize(CancellationToken.None);
+        var buffer = await orig.Serialize(CancellationToken.None);
         var copy = new Testing.Models.MemBlocks.Required_Int64(buffer);
         if (_checkValues)
         {
