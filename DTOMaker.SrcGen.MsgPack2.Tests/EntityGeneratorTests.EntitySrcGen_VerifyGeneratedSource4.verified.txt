@@ -18,7 +18,7 @@ namespace MyOrg.Model2.MsgPack2
     /// <summary>
     /// Concrete class MyDTO
     /// </summary>
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Model2.IMyDTO, IEquatable<MyDTO>
     {
 

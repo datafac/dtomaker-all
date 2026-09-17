@@ -12,8 +12,8 @@ public class VersionChecks
     {
         Version version = typeof(MessagePack.MessagePackSerializer).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
-        version.Major.ShouldBe(2);
-        version.ToString().ShouldBe("2.5.0.0");
+        version.Major.ShouldBe(3);
+        version.ToString().ShouldBe("3.1.8.0");
     }
 
     [Fact]

@@ -32,7 +32,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("using T_NativeMemberType_ = System.Int32;");
             Emit("namespace T_MemberTypeImplSpace_");
             Emit("{");
-            Emit("    [MessagePackObject]");
+            Emit("    [MessagePackObject(SuppressSourceGeneration = true)]");
             Emit("    public sealed class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>");
             Emit("    {");
             Emit("        private static readonly T_MemberTypeImplName_ _empty = new T_MemberTypeImplName_();");
@@ -65,8 +65,8 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("}");
             Emit("namespace T_BaseImplNameSpace_");
             Emit("{");
-            Emit("    [MessagePackObject]");
-            Emit("    [Union(T_ImplNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ImplNameSpace_.T_ConcreteEntity_))]");
+            Emit("    [MessagePackObject(SuppressSourceGeneration = true)]");
+            Emit("    [Union(T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ConcreteNameSpace_.T_ConcreteEntity_))]");
             Emit("    public abstract class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>");
             Emit("    {");
             Emit("        public T_BaseImplName_() { }");
@@ -88,21 +88,21 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("}");
             Emit("#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
         }
-        Emit("namespace T_ImplNameSpace_");
-        Emit("{");
         if (entity.DerivedEntities.Count > 0)
         {
+            Emit("namespace T_AbstractNameSpace_");
+            Emit("{");
             Emit("    /// <summary>");
             Emit("    /// Abstract class T_AbstractEntity_");
             Emit("    /// </summary>");
-            Emit("    [MessagePackObject]");
+            Emit("    [MessagePackObject(SuppressSourceGeneration = true)]");
             Emit("    [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]");
             foreach (var derived in entity.DerivedEntities)
             {
                 using var _ = NewScope(derived);
                 if (derived.DerivedEntities.Count == 0)
                 {
-                    Emit("    [Union(T_ConcreteEntity_.EntityId, typeof(T_ConcreteEntity_))]");
+                    Emit("    [Union(T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ConcreteNameSpace_.T_ConcreteEntity_))]");
                 }
             }
             Emit("    public abstract partial class T_AbstractEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_AbstractEntity_>");
@@ -112,7 +112,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 Emit("        private const string T_MemberObsoleteMessage_ = null;");
                 Emit("        private const bool T_MemberObsoleteIsError_ = false;");
                 Emit("        private const int T_EntityId_ = 2;");
-                Emit("        private const int KeyOffset = 10;");
+                Emit("        private const int KeyOffset = 100;");
                 Emit("        private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;");
                 Emit("        private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;");
                 Emit("        private const int T_RequiredCustomStructMemberKey_ = KeyOffset + 3;");
@@ -138,7 +138,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        /// Creates a new instance of the entity from the specified source, or returns the source if it is already");
             Emit("        /// frozen.");
             Emit("        /// </summary>");
-            Emit("        public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)");
+            Emit("        public new static T_AbstractEntity_ CreateFrom(T_AbstractEntity_ source)");
             Emit("        {");
             Emit("            if (source.IsFrozen) return source;");
             Emit("            return source switch");
@@ -148,7 +148,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 using var _ = NewScope(derived);
                 if (derived.DerivedEntities.Count == 0)
                 {
-                    Emit("                T_ImplNameSpace_.T_ConcreteEntity_ source2 => new T_ImplNameSpace_.T_ConcreteEntity_(source2),");
+                    Emit("                T_ConcreteNameSpace_.T_ConcreteEntity_ source2 => new T_ConcreteNameSpace_.T_ConcreteEntity_(source2),");
                 }
             }
             Emit("                _ => throw new ArgumentException($\"Unexpected type: {source.GetType().Name}\", nameof(source))");
@@ -159,9 +159,9 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it");
             Emit("        /// is already a frozen concrete entity.");
             Emit("        /// </summary>");
-            Emit("        public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)");
+            Emit("        public new static T_AbstractEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)");
             Emit("        {");
-            Emit("            if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen) return concrete;");
+            Emit("            if (source is T_AbstractEntity_ concrete && concrete.IsFrozen) return concrete;");
             Emit("            return source switch");
             Emit("            {");
             foreach (var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight))
@@ -169,7 +169,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 using var _ = NewScope(derived);
                 if (derived.DerivedEntities.Count == 0)
                 {
-                    Emit("                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ImplNameSpace_.T_ConcreteEntity_(source2),");
+                    Emit("                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ConcreteNameSpace_.T_ConcreteEntity_(source2),");
                 }
             }
             Emit("                _ => throw new ArgumentException($\"Unexpected type: {source.GetType().Name}\", nameof(source))");
@@ -180,7 +180,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity");
             Emit("        /// identifier matches the expected value.");
             Emit("        /// </summary>");
-            Emit("        public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)");
+            Emit("        public new static T_AbstractEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)");
             Emit("        {");
             Emit("            return entityId switch");
             Emit("            {");
@@ -189,7 +189,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                 using var _ = NewScope(derived);
                 if (derived.DerivedEntities.Count == 0)
                 {
-                    Emit("                T_ImplNameSpace_.T_ConcreteEntity_.EntityId => buffer.DeserializeFromMessagePack<T_ImplNameSpace_.T_ConcreteEntity_>(),");
+                    Emit("                T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId => buffer.DeserializeFromMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>(),");
                 }
             }
             Emit("                _ => throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null)");
@@ -651,7 +651,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
                         }
                         else
                         {
-                            Emit("            if (_T_RequiredBinaryMemberName_ != other. _T_RequiredBinaryMemberName_) return false;");
+                            Emit("            if (_T_RequiredBinaryMemberName_ != other._T_RequiredBinaryMemberName_) return false;");
                         }
                         break;
                     case MemberKind.String:
@@ -764,7 +764,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("");
             Emit("    }");
             Emit("");
-            Emit("    [MessagePackObject]");
+            Emit("    [MessagePackObject(SuppressSourceGeneration = true)]");
             Emit("    internal sealed class T_AbstractEntity__Default : T_AbstractEntity_, IEquatable<T_AbstractEntity__Default>");
             Emit("    {");
             Emit("        private static T_AbstractEntity__Default CreateEmpty()");
@@ -791,21 +791,24 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);");
             Emit("        public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);");
             Emit("    }");
+            Emit("}");
         }
         else
         {
+            Emit("namespace T_ConcreteNameSpace_");
+            Emit("{");
             Emit("    /// <summary>");
             Emit("    /// Concrete class T_ConcreteEntity_");
             Emit("    /// </summary>");
-            Emit("    [MessagePackObject]");
-            Emit("    public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>");
+            Emit("    [MessagePackObject(SuppressSourceGeneration = true)]");
+            Emit("    public sealed partial class T_ConcreteEntity_ : T_AbstractNameSpace_.T_AbstractEntity_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>");
             Emit("    {");
             if (false)
             {
                 Emit("        private const string T_MemberObsoleteMessage_ = null;");
                 Emit("        private const bool T_MemberObsoleteIsError_ = false;");
                 Emit("        private const int T_EntityId_ = 3;");
-                Emit("        private const int KeyOffset = 10;");
+                Emit("        private const int KeyOffset = 200;");
                 Emit("        private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;");
                 Emit("        private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;");
                 Emit("        private const int T_RequiredCustomStructMemberKey_ = KeyOffset + 3;");
@@ -866,8 +869,8 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        /// </summary>");
             Emit("        public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)");
             Emit("        {");
-            Emit("            if (entityId == T_ImplNameSpace_.T_ConcreteEntity_.EntityId)");
-            Emit("                return buffer.DeserializeFromMessagePack<T_ImplNameSpace_.T_ConcreteEntity_>();");
+            Emit("            if (entityId == T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId)");
+            Emit("                return buffer.DeserializeFromMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>();");
             Emit("            else");
             Emit("                throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);");
             Emit("        }");
@@ -1446,7 +1449,7 @@ public sealed class EntityGenerator : EntityGeneratorBase
             Emit("        }");
             Emit("");
             Emit("    }");
+            Emit("}");
         }
-        Emit("}");
     }
 }

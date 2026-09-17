@@ -18,9 +18,9 @@ namespace MyOrg.Models.MsgPack2
     /// <summary>
     /// Abstract class MyDTO
     /// </summary>
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(MyDTO.EntityId, typeof(MyDTO_Default))]
-    [Union(Derived.EntityId, typeof(Derived))]
+    [Union(MyOrg.Models.MsgPack2.Derived.EntityId, typeof(MyOrg.Models.MsgPack2.Derived))]
     public abstract partial class MyDTO : DTOMaker.Runtime.MsgPack2.EntityBase, MyOrg.Models.IMyDTO, IEquatable<MyDTO>
     {
 
@@ -170,7 +170,7 @@ namespace MyOrg.Models.MsgPack2
 
     }
 
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     internal sealed class MyDTO_Default : MyDTO, IEquatable<MyDTO_Default>
     {
         private static MyDTO_Default CreateEmpty()

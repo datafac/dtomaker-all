@@ -31,7 +31,7 @@ using T_CustomMemberType_ = System.DayOfWeek;
 using T_NativeMemberType_ = System.Int32;
 namespace T_MemberTypeImplSpace_
 {
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
     {
         private static readonly T_MemberTypeImplName_ _empty = new T_MemberTypeImplName_();
@@ -64,8 +64,8 @@ namespace T_MemberTypeImplSpace_
 }
 namespace T_BaseImplNameSpace_
 {
-    [MessagePackObject]
-    [Union(T_ImplNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ImplNameSpace_.T_ConcreteEntity_))]
+    [MessagePackObject(SuppressSourceGeneration = true)]
+    [Union(T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ConcreteNameSpace_.T_ConcreteEntity_))]
     public abstract class T_BaseImplName_ : EntityBase, T_BaseIntfNameSpace_.T_BaseIntfName_, IEquatable<T_BaseImplName_>
     {
         public T_BaseImplName_() { }
@@ -87,18 +87,18 @@ namespace T_BaseImplNameSpace_
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 //##}
-namespace T_ImplNameSpace_
+//##if (entity.DerivedEntities.Count > 0) {
+namespace T_AbstractNameSpace_
 {
-    //##if (entity.DerivedEntities.Count > 0) {
     /// <summary>
     /// Abstract class T_AbstractEntity_
     /// </summary>
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     [Union(T_AbstractEntity_.EntityId, typeof(T_AbstractEntity__Default))]
     //##foreach (var derived in entity.DerivedEntities) {
     //##using var _ = NewScope(derived);
     //##if (derived.DerivedEntities.Count == 0) {
-    [Union(T_ConcreteEntity_.EntityId, typeof(T_ConcreteEntity_))]
+    [Union(T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId, typeof(T_ConcreteNameSpace_.T_ConcreteEntity_))]
     //##}
     //##}
     public abstract partial class T_AbstractEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_AbstractEntity_>
@@ -107,7 +107,7 @@ namespace T_ImplNameSpace_
         private const string T_MemberObsoleteMessage_ = null;
         private const bool T_MemberObsoleteIsError_ = false;
         private const int T_EntityId_ = 2;
-        private const int KeyOffset = 10;
+        private const int KeyOffset = 100;
         private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;
         private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;
         private const int T_RequiredCustomStructMemberKey_ = KeyOffset + 3;
@@ -133,7 +133,7 @@ namespace T_ImplNameSpace_
         /// Creates a new instance of the entity from the specified source, or returns the source if it is already
         /// frozen.
         /// </summary>
-        public new static T_ConcreteEntity_ CreateFrom(T_ConcreteEntity_ source)
+        public new static T_AbstractEntity_ CreateFrom(T_AbstractEntity_ source)
         {
             if (source.IsFrozen) return source;
             return source switch
@@ -141,7 +141,7 @@ namespace T_ImplNameSpace_
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
                 //##using var _ = NewScope(derived);
                 //##if (derived.DerivedEntities.Count == 0) {
-                T_ImplNameSpace_.T_ConcreteEntity_ source2 => new T_ImplNameSpace_.T_ConcreteEntity_(source2),
+                T_ConcreteNameSpace_.T_ConcreteEntity_ source2 => new T_ConcreteNameSpace_.T_ConcreteEntity_(source2),
                 //##}
                 //##}
                 _ => throw new ArgumentException($"Unexpected type: {source.GetType().Name}", nameof(source))
@@ -152,15 +152,15 @@ namespace T_ImplNameSpace_
         /// Creates a new instance of the concrete entity from the specified source entity, or returns the source if it
         /// is already a frozen concrete entity.
         /// </summary>
-        public new static T_ConcreteEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
+        public new static T_AbstractEntity_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
-            if (source is T_ConcreteEntity_ concrete && concrete.IsFrozen) return concrete;
+            if (source is T_AbstractEntity_ concrete && concrete.IsFrozen) return concrete;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
                 //##using var _ = NewScope(derived);
                 //##if (derived.DerivedEntities.Count == 0) {
-                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ImplNameSpace_.T_ConcreteEntity_(source2),
+                T_IntfNameSpace_.T_EntityIntfName_ source2 => new T_ConcreteNameSpace_.T_ConcreteEntity_(source2),
                 //##}
                 //##}
                 _ => throw new ArgumentException($"Unexpected type: {source.GetType().Name}", nameof(source))
@@ -171,14 +171,14 @@ namespace T_ImplNameSpace_
         /// Creates a new instance of the concrete entity by deserializing the specified buffer, if the provided entity
         /// identifier matches the expected value.
         /// </summary>
-        public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
+        public new static T_AbstractEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
             return entityId switch
             {
                 //##foreach (var derived in entity.DerivedEntities) {
                 //##using var _ = NewScope(derived);
                 //##if (derived.DerivedEntities.Count == 0) {
-                T_ImplNameSpace_.T_ConcreteEntity_.EntityId => buffer.DeserializeFromMessagePack<T_ImplNameSpace_.T_ConcreteEntity_>(),
+                T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId => buffer.DeserializeFromMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>(),
                 //##}
                 //##}
                 _ => throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null)
@@ -538,7 +538,7 @@ namespace T_ImplNameSpace_
             //##case MemberKind.Entity:
             //##if (member.IsNullable) {
             if (_T_NullableEntityMemberName_ != other.T_NullableEntityMemberName_) return false;
-                              //##} else {
+            //##} else {
             if (_T_RequiredEntityMemberName_ != other.T_RequiredEntityMemberName_) return false;
             //##}
             //##break;
@@ -546,7 +546,7 @@ namespace T_ImplNameSpace_
             //##if (member.IsNullable) {
             if (_T_NullableBinaryMemberName_ != other._T_NullableBinaryMemberName_) return false;
             //##} else {
-            if (_T_RequiredBinaryMemberName_ != other. _T_RequiredBinaryMemberName_) return false;
+            if (_T_RequiredBinaryMemberName_ != other._T_RequiredBinaryMemberName_) return false;
             //##}
             //##break;
             //##case MemberKind.String:
@@ -636,7 +636,7 @@ namespace T_ImplNameSpace_
 
     }
 
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     internal sealed class T_AbstractEntity__Default : T_AbstractEntity_, IEquatable<T_AbstractEntity__Default>
     {
         private static T_AbstractEntity__Default CreateEmpty()
@@ -663,18 +663,21 @@ namespace T_ImplNameSpace_
         public static bool operator ==(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? left.Equals(right) : (right is null);
         public static bool operator !=(T_AbstractEntity__Default? left, T_AbstractEntity__Default? right) => left is not null ? !left.Equals(right) : (right is not null);
     }
-    //##} else {
+}
+//##} else {
+namespace T_ConcreteNameSpace_
+{
     /// <summary>
     /// Concrete class T_ConcreteEntity_
     /// </summary>
-    [MessagePackObject]
-    public sealed partial class T_ConcreteEntity_ : T_BaseImplNameSpace_.T_BaseImplName_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>
+    [MessagePackObject(SuppressSourceGeneration = true)]
+    public sealed partial class T_ConcreteEntity_ : T_AbstractNameSpace_.T_AbstractEntity_, T_IntfNameSpace_.T_EntityIntfName_, IEquatable<T_ConcreteEntity_>
     {
         //##if (false) {
         private const string T_MemberObsoleteMessage_ = null;
         private const bool T_MemberObsoleteIsError_ = false;
         private const int T_EntityId_ = 3;
-        private const int KeyOffset = 10;
+        private const int KeyOffset = 200;
         private const int T_NullableCustomStructMemberKey_ = KeyOffset + 1;
         private const int T_NullableNativeStructMemberKey_ = KeyOffset + 2;
         private const int T_RequiredCustomStructMemberKey_ = KeyOffset + 3;
@@ -735,8 +738,8 @@ namespace T_ImplNameSpace_
         /// </summary>
         public new static T_ConcreteEntity_ CreateFrom(int entityId, ReadOnlyMemory<byte> buffer)
         {
-            if (entityId == T_ImplNameSpace_.T_ConcreteEntity_.EntityId)
-                return buffer.DeserializeFromMessagePack<T_ImplNameSpace_.T_ConcreteEntity_>();
+            if (entityId == T_ConcreteNameSpace_.T_ConcreteEntity_.EntityId)
+                return buffer.DeserializeFromMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>();
             else
                 throw new ArgumentOutOfRangeException(nameof(entityId), entityId, null);
         }
@@ -1198,7 +1201,7 @@ namespace T_ImplNameSpace_
         }
 
     }
-    //##}
 }
+//##}
 //##    }
 //##}

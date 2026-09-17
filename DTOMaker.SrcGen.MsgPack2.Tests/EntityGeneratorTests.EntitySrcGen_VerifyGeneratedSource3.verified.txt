@@ -18,7 +18,7 @@ namespace MyOrg.Models.MsgPack2
     /// <summary>
     /// Concrete class Derived
     /// </summary>
-    [MessagePackObject]
+    [MessagePackObject(SuppressSourceGeneration = true)]
     public sealed partial class Derived : MyOrg.Models.MsgPack2.MyDTO, MyOrg.Models.IDerived, IEquatable<Derived>
     {
 

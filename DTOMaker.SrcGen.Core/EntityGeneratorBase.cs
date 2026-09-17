@@ -81,8 +81,7 @@ namespace DTOMaker.SrcGen.Core
 
         protected void Emit(string line)
         {
-            _builder.Append(ReplaceTokens(line));
-            _builder.Append('\n');
+            _builder.AppendLine(ReplaceTokens(line));
         }
 
         private static string ToCamelCase_notUsed(string value)
@@ -197,47 +196,79 @@ namespace DTOMaker.SrcGen.Core
         protected IDisposable NewScope(Phase2Entity entity)
         {
             string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
+            string baseImplNameSpace = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}";
+            string baseImplName = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName;
             var tokens = new Dictionary<string, object?>()
             {
                 ["IntfNameSpace"] = entity.TFN.Intf.Space,
                 ["EntityIntfName"] = entity.TFN.Intf.Name,
                 ["ImplNameSpace"] = entity.TFN.Impl.Space,
                 ["EntityImplName"] = entity.TFN.Impl.Name,
-                ["AbstractEntity"] = entity.TFN.Impl.Name,
-                ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
                 ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? SpecialName.RuntimeBaseIntfSpace,
                 ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
-                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}",
-                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
+                ["BaseImplNameSpace"] = baseImplNameSpace,
+                ["BaseImplName"] = baseImplName,
                 ["BlockOffset"] = entity.BlockOffset,
                 ["BlockLength"] = entity.BlockLength,
             };
+            if (entity.DerivedEntities.Count == 0)
+            {
+                // concrete
+                tokens["AbstractNameSpace"] = baseImplNameSpace;
+                tokens["AbstractEntity"] = baseImplName;
+                tokens["ConcreteNameSpace"] = entity.TFN.Impl.Space;
+                tokens["ConcreteEntity"] = entity.TFN.Impl.Name;
+            }
+            else
+            {
+                // abstract
+                tokens["AbstractNameSpace"] = entity.TFN.Impl.Space;
+                tokens["AbstractEntity"] = entity.TFN.Impl.Name;
+                tokens["ConcreteNameSpace"] = null;
+                tokens["ConcreteEntity"] = null;
+            }
             return _tokenStack.NewScope(tokens);
         }
 
         protected IDisposable NewScope(OutputEntity entity)
         {
             string implSpaceSuffix = entity.TFN.Impl.Space.Split('.').LastOrDefault() ?? "Generated";
+            string baseImplNameSpace = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}";
+            string baseImplName = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName;
             var tokens = new Dictionary<string, object?>()
             {
                 ["IntfNameSpace"] = entity.TFN.Intf.Space,
                 ["EntityIntfName"] = entity.TFN.Intf.Name,
                 ["ImplNameSpace"] = entity.TFN.Impl.Space,
                 ["EntityImplName"] = entity.TFN.Impl.Name,
-                ["AbstractEntity"] = entity.TFN.Impl.Name,
-                ["ConcreteEntity"] = entity.TFN.Impl.Name,
                 ["EntityId"] = entity.EntityId,
                 ["ClassHeight"] = entity.ClassHeight,
                 ["BaseIntfNameSpace"] = entity.BaseEntity?.TFN.Intf.Space ?? SpecialName.RuntimeBaseIntfSpace,
                 ["BaseIntfName"] = entity.BaseEntity?.TFN.Intf.Name ?? SpecialName.RuntimeBaseIntfName,
-                ["BaseImplNameSpace"] = entity.BaseEntity?.TFN.Impl.Space ?? $"{SpecialName.RuntimeBaseImplSpace}.{implSpaceSuffix}",
-                ["BaseImplName"] = entity.BaseEntity?.TFN.Impl.Name ?? SpecialName.RuntimeBaseImplName,
+                ["BaseImplNameSpace"] = baseImplNameSpace,
+                ["BaseImplName"] = baseImplName,
                 ["BlockOffset"] = entity.BlockOffset,
                 ["BlockLength"] = entity.BlockLength,
                 ["BlockStructureCode"] = $"0x{entity.BlockStructureCode:X8}",
             };
+            if (entity.DerivedEntities.Count == 0)
+            {
+                // concrete
+                tokens["AbstractNameSpace"] = baseImplNameSpace;
+                tokens["AbstractEntity"] = baseImplName;
+                tokens["ConcreteNameSpace"] = entity.TFN.Impl.Space;
+                tokens["ConcreteEntity"] = entity.TFN.Impl.Name;
+            }
+            else
+            {
+                // abstract
+                tokens["AbstractNameSpace"] = entity.TFN.Impl.Space;
+                tokens["AbstractEntity"] = entity.TFN.Impl.Name;
+                tokens["ConcreteNameSpace"] = null;
+                tokens["ConcreteEntity"] = null;
+            }
             return _tokenStack.NewScope(tokens);
         }
 

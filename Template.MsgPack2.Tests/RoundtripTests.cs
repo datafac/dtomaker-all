@@ -4,7 +4,6 @@ using System;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 
-using T_ImplNameSpace_;
 using System.Linq;
 using DTOMaker.Runtime.MsgPack2;
 using DataFac.Memory;
@@ -122,7 +121,7 @@ namespace Template_MessagePack.Tests
         [Fact]
         public void Roundtrip01AsEntity()
         {
-            var orig = new T_ImplNameSpace_.T_ConcreteEntity_();
+            var orig = new T_ConcreteNameSpace_.T_ConcreteEntity_();
             orig.T_RequiredNativeStructMemberName_ = 123;
             orig.T_NullableNativeStructMemberName_ = 456;
             orig.T_RequiredCustomStructMemberName_ = DayOfWeek.Monday;
@@ -135,8 +134,8 @@ namespace Template_MessagePack.Tests
             orig.T_NullableEntityMemberName_ = new T_MemberTypeImplSpace_.T_MemberTypeImplName_();
             orig.Freeze();
 
-            ReadOnlyMemory<byte> buffer = orig.SerializeToMessagePack<T_ConcreteEntity_>();
-            var copy = buffer.DeserializeFromMessagePack<T_ConcreteEntity_>();
+            ReadOnlyMemory<byte> buffer = orig.SerializeToMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>();
+            var copy = buffer.DeserializeFromMessagePack<T_ConcreteNameSpace_.T_ConcreteEntity_>();
 
             copy.ShouldNotBeNull();
             copy.Freeze();
@@ -149,7 +148,7 @@ namespace Template_MessagePack.Tests
         [Fact]
         public void Roundtrip03AsBase()
         {
-            var orig = new T_ConcreteEntity_();
+            var orig = new T_ConcreteNameSpace_.T_ConcreteEntity_();
             orig.BaseField1 = 321;
             orig.T_RequiredNativeStructMemberName_ = 123;
             orig.T_NullableNativeStructMemberName_ = 456;
@@ -164,9 +163,9 @@ namespace Template_MessagePack.Tests
             var recd = buffer.DeserializeFromMessagePack<T_BaseImplNameSpace_.T_BaseImplName_>();
 
             recd.ShouldNotBeNull();
-            recd.ShouldBeOfType<T_ConcreteEntity_>();
+            recd.ShouldBeOfType<T_ConcreteNameSpace_.T_ConcreteEntity_>();
             recd.Freeze();
-            var copy = recd as T_ConcreteEntity_;
+            var copy = recd as T_ConcreteNameSpace_.T_ConcreteEntity_;
             copy.ShouldNotBeNull();
             copy.Freeze();
             copy.IsFrozen.ShouldBeTrue();
