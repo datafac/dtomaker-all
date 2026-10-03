@@ -732,13 +732,13 @@ namespace T_ImplNameSpace_
             {
                 await _T_NullableEntityMemberName_.Pack(blobStore, cancellation);
                 ReadOnlyMemory<byte> buffer = await _T_NullableEntityMemberName_.Serialize(cancellation);
-                await PackData(buffer, writableField, blobStore);
+                await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
         private async ValueTask T_NullableEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_NullableEntityFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _T_NullableEntityMemberName_ = null;
             if (data.HasValue)
             {
@@ -771,12 +771,12 @@ namespace T_ImplNameSpace_
             }
             await _T_RequiredEntityMemberName_.Pack(blobStore, cancellation);
             ReadOnlyMemory<byte> buffer = await _T_RequiredEntityMemberName_.Serialize(cancellation);
-            await PackData(buffer, writableField, blobStore);
+            await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_RequiredEntityFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             if (data.HasValue)
             {
                 _T_RequiredEntityMemberName_ = T_MemberTypeImplSpace_.T_MemberTypeImplName_.DeserializeFrom(data.Value);
@@ -816,13 +816,13 @@ namespace T_ImplNameSpace_
             else
             {
                 ReadOnlyMemory<byte> buffer = _T_NullableBinaryMemberName_.AsMemory();
-                await PackData(buffer, writableField, blobStore);
+                await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
         private async ValueTask T_NullableBinaryMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_NullableBinaryFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _T_NullableBinaryMemberName_ = data.HasValue ? Octets.Wrap(data.Value) : null;
         }
         private Octets? _T_NullableBinaryMemberName_;
@@ -840,12 +840,12 @@ namespace T_ImplNameSpace_
         {
             var writableField = _writableLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64);
             var buffer = _T_RequiredBinaryMemberName_.AsMemory();
-            await PackData(buffer, writableField, blobStore);
+            await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask T_RequiredBinaryMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_RequiredBinaryFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _T_RequiredBinaryMemberName_ = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;
         }
         private Octets _T_RequiredBinaryMemberName_ = Octets.Empty;
@@ -865,12 +865,12 @@ namespace T_ImplNameSpace_
         private async ValueTask T_NullableStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64);
-            await PackText(_T_NullableStringMemberName_, writableField, blobStore);
+            await PackText(_T_NullableStringMemberName_, writableField, blobStore, cancellation);
         }
         private async ValueTask T_NullableStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_NullableStringFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
             _T_NullableStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
 #else
@@ -891,12 +891,12 @@ namespace T_ImplNameSpace_
         private async ValueTask T_RequiredStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);
-            await PackText(_T_RequiredStringMemberName_, writableField, blobStore);
+            await PackText(_T_RequiredStringMemberName_, writableField, blobStore, cancellation);
         }
         private async ValueTask T_RequiredStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
             _T_RequiredStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
 #else

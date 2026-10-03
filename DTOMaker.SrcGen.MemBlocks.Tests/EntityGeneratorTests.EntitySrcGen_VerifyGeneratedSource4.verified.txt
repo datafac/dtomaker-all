@@ -219,12 +219,12 @@ namespace MyOrg.Model2.MemBlocks
             }
             await _Field31.Pack(blobStore, cancellation);
             ReadOnlyMemory<byte> buffer = await _Field31.Serialize(cancellation);
-            await PackData(buffer, writableField, blobStore);
+            await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask Field31_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             if (data.HasValue)
             {
                 _Field31 = MyOrg.Model2.MemBlocks.MyDTO.DeserializeFrom(data.Value);
@@ -259,13 +259,13 @@ namespace MyOrg.Model2.MemBlocks
             {
                 await _Field32.Pack(blobStore, cancellation);
                 ReadOnlyMemory<byte> buffer = await _Field32.Serialize(cancellation);
-                await PackData(buffer, writableField, blobStore);
+                await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
         private async ValueTask Field32_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _Field32 = null;
             if (data.HasValue)
             {

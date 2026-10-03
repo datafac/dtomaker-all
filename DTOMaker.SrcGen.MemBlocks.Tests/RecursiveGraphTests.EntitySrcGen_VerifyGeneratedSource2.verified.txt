@@ -215,13 +215,13 @@ namespace MyOrg.Models.MemBlocks
             {
                 await _Field1.Pack(blobStore, cancellation);
                 ReadOnlyMemory<byte> buffer = await _Field1.Serialize(cancellation);
-                await PackData(buffer, writableField, blobStore);
+                await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
         private async ValueTask Field1_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _Field1 = null;
             if (data.HasValue)
             {

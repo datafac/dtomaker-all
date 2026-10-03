@@ -438,12 +438,12 @@ namespace T_ConcreteNameSpace_.MemBlox2
         private async ValueTask Value_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(Value_FieldOffset, 64);
-            await PackText(_Value, writableField, blobStore);
+            await PackText(_Value, writableField, blobStore, cancellation);
         }
         private async ValueTask Value_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(Value_FieldOffset, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
             _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
 #else

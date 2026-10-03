@@ -211,12 +211,12 @@ namespace MyOrg.Models.MemBlocks
         private async ValueTask Field11_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
-            await PackText(_Field11, writableField, blobStore);
+            await PackText(_Field11, writableField, blobStore, cancellation);
         }
         private async ValueTask Field11_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
             _Field11 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
 #else
@@ -234,12 +234,12 @@ namespace MyOrg.Models.MemBlocks
         private async ValueTask Field12_Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var writableField = _writableLocalBlock.Slice(64, 64);
-            await PackText(_Field12, writableField, blobStore);
+            await PackText(_Field12, writableField, blobStore, cancellation);
         }
         private async ValueTask Field12_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
             _Field12 = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
 #else

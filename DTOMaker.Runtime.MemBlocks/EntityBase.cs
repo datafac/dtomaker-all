@@ -172,27 +172,27 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask PackData(ReadOnlyMemory<byte> buffer, Memory<byte> fieldMemory, IBlobStore blobStore)
+    protected static async ValueTask PackData(ReadOnlyMemory<byte> buffer, Memory<byte> fieldMemory, IBlobStore blobStore, CancellationToken cancellation)
     {
         (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressData(buffer, fieldMemory.Span);
         if (embedded) return;
-        await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+        await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed), cancellation);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IBlobStore blobStore)
+    protected static async ValueTask<ReadOnlyMemory<byte>?> UnpackData(ReadOnlyMemory<byte> fieldMemory, IBlobStore blobStore, CancellationToken cancellation)
     {
         (bool embedded, ReadOnlyMemory<byte>? embeddedData) = BlobHelpers.TryGetEmbedded(fieldMemory);
         if (embedded) return embeddedData;
 
-        BlobData data = await blobStore.GetBlob(BlobKey.From(fieldMemory));
+        BlobData data = await blobStore.GetBlob(BlobKey.From(fieldMemory), cancellation);
         return data.HasValue 
             ? BlobHelpers.DecompressData(fieldMemory.Span, data.Bytes) 
             : (ReadOnlyMemory<byte>?)null;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    protected static async ValueTask PackText(string? text, Memory<byte> fieldMemory, IBlobStore blobStore)
+    protected static async ValueTask PackText(string? text, Memory<byte> fieldMemory, IBlobStore blobStore, CancellationToken cancellation)
     {
         if (text is null)
         {
@@ -202,7 +202,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         {
             (bool embedded, ReadOnlyMemory<byte> compressed) = BlobHelpers.CompressText(text, fieldMemory.Span);
             if (embedded) return;
-            await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed));
+            await blobStore.PutBlob(BlobKey.From(fieldMemory), BlobData.From(compressed), cancellation);
         }
     }
 

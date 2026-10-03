@@ -212,12 +212,12 @@ namespace MyOrg.Model3.MemBlocks
         {
             var writableField = _writableLocalBlock.Slice(0, 64);
             var buffer = _Field41.AsMemory();
-            await PackData(buffer, writableField, blobStore);
+            await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask Field41_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(0, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _Field41 = data.HasValue ? Octets.Wrap(data.Value) : Octets.Empty;
         }
         private Octets _Field41 = Octets.Empty;
@@ -238,13 +238,13 @@ namespace MyOrg.Model3.MemBlocks
             else
             {
                 ReadOnlyMemory<byte> buffer = _Field42.AsMemory();
-                await PackData(buffer, writableField, blobStore);
+                await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
         private async ValueTask Field42_Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
             var readonlyField = _readonlyLocalBlock.Slice(64, 64);
-            var data = await UnpackData(readonlyField, blobStore);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
             _Field42 = data.HasValue ? Octets.Wrap(data.Value) : null;
         }
         private Octets? _Field42;

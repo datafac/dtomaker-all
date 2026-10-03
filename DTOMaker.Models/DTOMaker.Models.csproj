@@ -31,7 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Memory" Version="2.0.22" />
+		<PackageReference Include="DataFac.Memory" Version="2.0.23" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.94">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
