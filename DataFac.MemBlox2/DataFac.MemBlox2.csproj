@@ -31,9 +31,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DataFac.Compression" Version="1.1.21" />
-		<PackageReference Include="DataFac.Hashing" Version="1.1.21" />
-		<PackageReference Include="DataFac.Memory" Version="2.0.23" />
+		<PackageReference Include="DataFac.Compression" Version="1.1.22" />
+		<PackageReference Include="DataFac.Hashing" Version="1.1.22" />
+		<PackageReference Include="DataFac.Memory" Version="2.0.24" />
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.10.94">
 			<PrivateAssets>all</PrivateAssets>

@@ -9,8 +9,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MessagePack" Version="3.1.10" />
-		<PackageReference Include="MessagePackAnalyzer" Version="3.1.10">
+		<PackageReference Include="MessagePack" Version="3.1.11" />
+		<PackageReference Include="MessagePackAnalyzer" Version="3.1.11">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
