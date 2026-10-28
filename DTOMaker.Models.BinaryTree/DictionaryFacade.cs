@@ -62,7 +62,9 @@ public readonly struct DictionaryFacade<TKey, TValue, TNode> : IDictionary<TKey,
         get
         {
             TNode? node = _getter().Get<TKey, TValue, TNode>(key);
-            return (node is not null ? node.Value : default) ?? throw new KeyNotFoundException($"Key not found: {key}");
+            return node is not null
+                ? node.Value
+                : throw new KeyNotFoundException($"Key not found: {key}");
         }
 
         // ------------------------------ mutating methods --------------------------------------------------

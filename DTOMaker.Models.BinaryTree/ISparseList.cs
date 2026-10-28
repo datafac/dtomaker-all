@@ -7,6 +7,7 @@ namespace DTOMaker.Models.BinaryTree;
 public interface ISparseList<T> : IEntityBase
 {
     int Count { get; }
+    T GetItem(int index);
 }
 
 /// <summary>
@@ -15,7 +16,6 @@ public interface ISparseList<T> : IEntityBase
 /// <typeparam name="T"></typeparam>
 public interface ISparseListItems<T> : ISparseList<T>
 {
-    T GetItem(int index);
 }
 
 /// <summary>
@@ -26,6 +26,7 @@ public interface ISparseListNode<T> : ISparseList<T>
 {
     int Trees { get; set; }
     ISparseList<T> GetTree(int index);
+    IEnumerable<ISparseList<T>> GetTrees(bool reverse);
 }
 
 public static class SparseListExtensions
@@ -96,12 +97,6 @@ public readonly struct ListFacade<TValue, TNode> : IList<TValue>
     }
 
     // ------------------------------ readonly methods --------------------------------------------------
-    public TValue this[int index]
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-
     public int Count => _getter()?.Count ?? 0;
 
     public bool IsReadOnly => false;
@@ -166,6 +161,21 @@ public readonly struct ListFacade<TValue, TNode> : IList<TValue>
     }
 
     // ------------------------------ mutating methods --------------------------------------------------
+    public TValue this[int index]
+    {
+        get
+        {
+            TNode? tree = _getter();
+            if (tree is null) throw new IndexOutOfRangeException("Index out of range!");
+            return tree.GetItem(index);
+        }
+
+        set
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public void Add(TValue item)
     {
         throw new NotImplementedException();
