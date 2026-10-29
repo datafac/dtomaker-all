@@ -340,6 +340,15 @@ namespace T_AbstractNameSpace_.MemBlox2
             };
         }
 
+        protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)
+        {
+            await base.OnPack(blobStore, cancellation);
+        }
+        protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
+        {
+            await base.OnUnpack(blobStore, depth, cancellation);
+        }
+
         protected override void OnFreeze() { base.OnFreeze(); }
 
         protected T_AbstractImplName_(EntityMetadata metadata) : base(metadata)

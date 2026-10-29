@@ -78,13 +78,6 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         _frozen = true;
     }
 
-    /// <inheritdoc/>
-    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
-    {
-        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Serialize));
-        return new ValueTask<ReadOnlyMemory<byte>>(_readonlyGlobalBlock);
-    }
-
     protected virtual IEntityBase OnShallowCopy() => throw new NotImplementedException();
     public IEntityBase ShallowCopy() => OnShallowCopy();
 
@@ -206,6 +199,14 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
         }
     }
 
+    #region IPackable
+    /// <inheritdoc/>
+    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
+    {
+        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Serialize));
+        return new ValueTask<ReadOnlyMemory<byte>>(_readonlyGlobalBlock);
+    }
+
     private volatile bool _packed;
     /// <inheritdoc/>
     public bool IsPacked => _packed;
@@ -239,4 +240,5 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
     /// <inheritdoc/>
     public ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation) => Unpack(blobStore, int.MaxValue, cancellation);
+    #endregion
 }
