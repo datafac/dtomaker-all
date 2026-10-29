@@ -15,8 +15,8 @@ public interface IObjectConverter<TCustom, TNative>
 {
     NativeType NativeType { get; }
 #if NET8_0_OR_GREATER
-    static abstract TNative? ToNative(TCustom? custom);
-    static abstract TCustom? ToCustom(TNative? native);
+    static abstract TNative ToNative(TCustom custom);
+    static abstract TCustom ToCustom(TNative native);
 #endif
 }
 

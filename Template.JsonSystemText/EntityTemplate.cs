@@ -26,8 +26,10 @@ using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 //##if (false) {
-using T_CustomMemberType_ = System.DayOfWeek;
-using T_NativeMemberType_ = System.Int32;
+using T_CustomStructType_ = System.DayOfWeek;
+using T_NativeStructType_ = System.Int32;
+using T_CustomStringType_ = System.Version;
+using T_NativeStringType_ = System.String;
 namespace T_MemberTypeImplSpace_
 {
     public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
@@ -107,7 +109,7 @@ namespace T_BaseImplNameSpace_
         protected override void OnFreeze() => base.OnFreeze();
         protected override IEntityBase OnShallowCopy() => throw new NotImplementedException();
 
-        public T_NativeMemberType_ BaseField1 { get; set; }
+        public T_NativeStructType_ BaseField1 { get; set; }
 
         public bool Equals(T_BaseImplName_? other)
         {
@@ -226,13 +228,13 @@ namespace T_ImplNameSpace_
             //##case MemberKind.Struct:
             //##if (member.IsNullable) {
             //##if (member.IsCustom) {
-            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
+            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
             //##} else {
             _T_NullableNativeStructMemberName_ = source.T_NullableNativeStructMemberName_;
             //##}
             //##} else {
             //##if (member.IsCustom) {
-            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
+            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
             //##} else {
             _T_RequiredNativeStructMemberName_ = source.T_RequiredNativeStructMemberName_;
             //##}
@@ -254,9 +256,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source.T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source.T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_NullableCustomStringMemberName_);
             //##} else {
-            _T_RequiredStringMemberName_ = source.T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source.T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_RequiredCustomStringMemberName_);
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source.T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -301,9 +311,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source._T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source._T_NullableCustomStringMemberName_;
             //##} else {
-            _T_RequiredStringMemberName_ = source._T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source._T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = source._T_RequiredCustomStringMemberName_;
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source._T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -321,24 +339,24 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [JsonPropertyName("T_NullableCustomStructMemberJsonName_")]
         [JsonInclude]
-        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
+        private T_NativeStructType_? _T_NullableCustomStructMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonIgnore]
-        public T_CustomMemberType_? T_NullableCustomStructMemberName_
+        public T_CustomStructType_? T_NullableCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_NullableCustomStructMemberName_);
-            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(_T_NullableCustomStructMemberName_);
+            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StructConverterName_.ToNative(value));
         }
         //##} else {
         [JsonIgnore]
-        private T_NativeMemberType_? _T_NullableNativeStructMemberName_;
+        private T_NativeStructType_? _T_NullableNativeStructMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonPropertyName("T_NullableNativeStructMemberJsonName_")]
-        public T_NativeMemberType_? T_NullableNativeStructMemberName_
+        public T_NativeStructType_? T_NullableNativeStructMemberName_
         {
             get => _T_NullableNativeStructMemberName_;
             set => _T_NullableNativeStructMemberName_ = IfNotFrozen(value);
@@ -348,24 +366,24 @@ namespace T_ImplNameSpace_
         //##if (member.IsCustom) {
         [JsonPropertyName("T_RequiredCustomStructMemberJsonName_")]
         [JsonInclude]
-        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_ = T_MemberDefaultValue_;
+        private T_NativeStructType_ _T_RequiredCustomStructMemberName_ = T_MemberDefaultValue_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonIgnore]
-        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
+        public T_CustomStructType_ T_RequiredCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_RequiredCustomStructMemberName_);
-            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(_T_RequiredCustomStructMemberName_);
+            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StructConverterName_.ToNative(value));
         }
         //##} else {
         [JsonIgnore]
-        private T_NativeMemberType_ _T_RequiredNativeStructMemberName_ = T_MemberDefaultValue_;
+        private T_NativeStructType_ _T_RequiredNativeStructMemberName_ = T_MemberDefaultValue_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonPropertyName("T_RequiredNativeStructMemberJsonName_")]
-        public T_NativeMemberType_ T_RequiredNativeStructMemberName_
+        public T_NativeStructType_ T_RequiredNativeStructMemberName_
         {
             get => _T_RequiredNativeStructMemberName_;
             set => _T_RequiredNativeStructMemberName_ = IfNotFrozen(value);
@@ -443,29 +461,57 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
+        //##if (member.IsCustom) {
         [JsonIgnore]
-        private string? _T_NullableStringMemberName_;
+        private string? _T_NullableCustomStringMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_NullableStringMemberJsonName_")]
-        public string? T_NullableStringMemberName_
+        [JsonPropertyName("T_NullableCustomStringMemberJsonName_")]
+        public T_CustomStringType_? T_NullableCustomStringMemberName_
         {
-            get => _T_NullableStringMemberName_;
-            set => _T_NullableStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_NullableCustomStringMemberName_);
+            set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value));
         }
         //##} else {
         [JsonIgnore]
-        private string _T_RequiredStringMemberName_ = string.Empty;
+        private string? _T_NullableNativeStringMemberName_;
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [JsonPropertyName("T_RequiredStringMemberJsonName_")]
-        public string T_RequiredStringMemberName_
+        [JsonPropertyName("T_NullableNativeStringMemberJsonName_")]
+        public string? T_NullableNativeStringMemberName_
         {
-            get => _T_RequiredStringMemberName_;
-            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableNativeStringMemberName_;
+            set => _T_NullableNativeStringMemberName_ = IfNotFrozen(value);
         }
+        //##}
+        //##} else {
+        //##if (member.IsCustom) {
+        [JsonIgnore]
+        private string _T_RequiredCustomStringMemberName_ = string.Empty;
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [JsonPropertyName("T_RequiredCustomStringMemberJsonName_")]
+        public T_CustomStringType_ T_RequiredCustomStringMemberName_
+        {
+            get => T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_RequiredCustomStringMemberName_);
+            set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StringConverterName_.ToNative(value));
+        }
+        //##} else {
+        [JsonIgnore]
+        private string _T_RequiredNativeStringMemberName_ = string.Empty;
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [JsonPropertyName("T_RequiredNativeStringMemberJsonName_")]
+        public string T_RequiredNativeStringMemberName_
+        {
+            get => _T_RequiredNativeStringMemberName_;
+            set => _T_RequiredNativeStringMemberName_ = IfNotFrozen(value);
+        }
+        //##}
         //##}
         //##break;
         //##default:
@@ -514,9 +560,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            if (_T_NullableStringMemberName_ != other._T_NullableStringMemberName_) return false;
+            //##if (member.IsCustom) {
+            if (_T_NullableCustomStringMemberName_ != other._T_NullableCustomStringMemberName_) return false;
             //##} else {
-            if (_T_RequiredStringMemberName_ != other._T_RequiredStringMemberName_) return false;
+            if (_T_NullableNativeStringMemberName_ != other._T_NullableNativeStringMemberName_) return false;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            if (_T_RequiredCustomStringMemberName_ != other._T_RequiredCustomStringMemberName_) return false;
+            //##} else {
+            if (_T_RequiredNativeStringMemberName_ != other._T_RequiredNativeStringMemberName_) return false;
+            //##}
             //##}
             //##break;
             //##default:
@@ -590,9 +644,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            result.Add(_T_NullableStringMemberName_);
+            //##if (member.IsCustom) {
+            result.Add(_T_NullableCustomStringMemberName_);
             //##} else {
-            result.Add(_T_RequiredStringMemberName_);
+            result.Add(_T_NullableNativeStringMemberName_);
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            result.Add(_T_RequiredCustomStringMemberName_);
+            //##} else {
+            result.Add(_T_RequiredNativeStringMemberName_);
+            //##}
             //##}
             //##break;
             //##default:

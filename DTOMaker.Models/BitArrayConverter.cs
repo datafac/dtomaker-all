@@ -10,10 +10,9 @@ namespace DTOMaker.Models;
 public sealed class BitArrayConverter : IObjectConverter<BitArray, Octets>
 {
     public NativeType NativeType => NativeType.Binary;
-    public static BitArray? ToCustom(Octets? native) => native is null ? null : new BitArray(native.ToByteArray());
-    public static Octets? ToNative(BitArray? custom)
+    public static BitArray ToCustom(Octets native) => new BitArray(native.ToByteArray());
+    public static Octets ToNative(BitArray custom)
     {
-        if (custom is null) return null;
         var output = new byte[(custom.Length + 7) / 8];
         custom.CopyTo(output, 0);
         return Octets.Wrap(output);

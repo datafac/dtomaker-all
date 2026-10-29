@@ -497,13 +497,15 @@ namespace DTOMaker.SrcGen.Core
             List<Phase1Entity> derivedEntities = GetDerivedEntities1(entity.TFN, allEnts);
 
             // check entity id uniqueness
-            int duplicateCount = allEnts.Count(e => e.EntityId == entity.EntityId);
-            if (duplicateCount > 1)
+            var duplicateEntities = allEnts.Where(e => e.EntityId == entity.EntityId).ToArray();
+            if (duplicateEntities.Length > 1)
             {
-                var usedIds = allEnts.Select(e => e.EntityId).ToImmutableHashSet();
-                var allIds = Enumerable.Range(1, allEnts.Max(e => e.EntityId) + 3).ToImmutableHashSet();
-                var freeIds = allIds.Except(usedIds).OrderBy(id => id).ToArray();
-                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location, freeIds));
+                var clashingEntity = duplicateEntities.Where(e => e.TFN != entity.TFN).First();
+                //var otherProperties = ImmutableDictionary<string, string?>.Empty.Add("OtherEntity", clashingEntity.TFN.FullName);
+                //var usedIds = allEnts.Select(e => e.EntityId).ToImmutableHashSet();
+                //var allIds = Enumerable.Range(1, allEnts.Max(e => e.EntityId) + 3).ToImmutableHashSet();
+                //var freeIds = allIds.Except(usedIds).OrderBy(id => id).ToArray();
+                newDiagnostics.Add(Diagnostic.Create(DiagnosticsEN.DME12, entity.Location, clashingEntity.TFN.FullName));
             }
             return new Phase2Entity()
             {
