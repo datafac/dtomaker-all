@@ -152,24 +152,18 @@ namespace DTOMaker.SrcGen.Core
             if (member.IsCustom)
             {
                 tokens["MemberType"] = memberType;
-                // old todo keep these until feature done
-                tokens["NativeMemberType"] = member.MemberType.Impl.Name;
-                tokens["CustomMemberType"] = member.MemberType.Intf.FullName;
-                // endold
-                tokens["NativeStructType"] = member.MemberType.Impl.Name;
                 tokens["CustomStructType"] = member.MemberType.Intf.FullName;
-                tokens["NativeStringType"] = member.MemberType.Impl.Name;
                 tokens["CustomStringType"] = member.MemberType.Intf.FullName;
             }
             else
             {
                 tokens["MemberType"] = memberType;
-                tokens["NativeMemberType"] = memberType;
+                tokens["NativeStructType"] = member.MemberType.Impl.Name;
+                tokens["NativeStringType"] = member.MemberType.Impl.Name;
             }
             if (member.ConverterSpace is not null && member.ConverterName is not null)
             {
                 tokens["ConverterSpace"] = member.ConverterSpace;
-                tokens["ConverterName"] = member.ConverterName;         // todo this is needed until feature done
                 tokens["StructConverterName"] = member.ConverterName;   // for struct converters
                 tokens["StringConverterName"] = member.ConverterName;   // for string converters
             }

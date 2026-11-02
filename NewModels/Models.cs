@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 // Todo:
 // - Support records with init-only properties
 // - do we need a builder pattern?
-// - Support MessagePack 3.x
 
 #if NET6_0_OR_GREATER
 #else
@@ -82,6 +81,49 @@ namespace DTOMaker.Runtime.Records
     {
         public bool IsFrozen => true;
         public void Freeze() { }
+        protected abstract EntityBase OnShallowCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
+
+        public EntityBase() { }
+        public EntityBase(EntityBase source) { }
+        public EntityBase(IEntityBase source) { }
+    }
+}
+
+namespace DTOMaker.Runtime.NetStrux
+{
+    public abstract record EntityBase : IEntityBase
+    {
+        #region IFreezable implementation
+        private volatile bool _frozen = false;
+        public bool IsFrozen => _frozen;
+        protected virtual void OnFreeze() { }
+        public void Freeze()
+        {
+            if (_frozen) return;
+            _frozen = true;
+            OnFreeze();
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void ThrowIsFrozen(string? memberName)
+        {
+            throw new InvalidOperationException($"Cannot call {memberName} when frozen.");
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void CheckNotFrozen([CallerMemberName] string? memberName = null)
+        {
+            if (_frozen) ThrowIsFrozen(memberName);
+        }
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void ThrowIsNotFrozenException(string? methodName) => throw new InvalidOperationException($"Cannot call {methodName} when not frozen.");
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected void ThrowIfNotFrozen([CallerMemberName] string? methodName = null)
+        {
+            if (!_frozen) ThrowIsNotFrozenException(methodName);
+        }
+        #endregion
+
         protected abstract EntityBase OnShallowCopy();
         public IEntityBase ShallowCopy() => OnShallowCopy();
 

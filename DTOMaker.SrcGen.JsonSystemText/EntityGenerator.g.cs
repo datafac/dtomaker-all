@@ -242,7 +242,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_NullableCustomStructMemberName_);");
+                            Emit("            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_NullableCustomStructMemberName_);");
                         }
                         else
                         {
@@ -253,7 +253,7 @@ public partial class EntityGenerator
                     {
                         if (member.IsCustom)
                         {
-                            Emit("            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);");
+                            Emit("            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);");
                         }
                         else
                         {
@@ -385,8 +385,8 @@ public partial class EntityGenerator
                             Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_? T_NullableCustomStructMemberName_");
                             Emit("        {");
-                            Emit("            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_NullableCustomStructMemberName_);");
-                            Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));");
+                            Emit("            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(_T_NullableCustomStructMemberName_);");
+                            Emit("            set => _T_NullableCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StructConverterName_.ToNative(value));");
                             Emit("        }");
                         }
                         else
@@ -419,8 +419,8 @@ public partial class EntityGenerator
                             Emit("        [JsonIgnore]");
                             Emit("        public T_CustomMemberType_ T_RequiredCustomStructMemberName_");
                             Emit("        {");
-                            Emit("            get => T_ConverterSpace_.T_ConverterName_.ToCustom(_T_RequiredCustomStructMemberName_);");
-                            Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_ConverterName_.ToNative(value));");
+                            Emit("            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(_T_RequiredCustomStructMemberName_);");
+                            Emit("            set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StructConverterName_.ToNative(value));");
                             Emit("        }");
                         }
                         else

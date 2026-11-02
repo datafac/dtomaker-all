@@ -1,9 +1,5 @@
 ﻿using DataFac.Memory;
 using DTOMaker.Models;
-// old todo keep until feature done
-using T_CustomMemberType_ = System.DayOfWeek;
-using T_NativeMemberType_ = System.Int32;
-// endold
 using T_CustomStructType_ = System.DayOfWeek;
 using T_NativeStructType_ = System.Int32;
 using T_CustomStringType_ = System.Version;
@@ -17,16 +13,6 @@ namespace T_MemberTypeIntfSpace_
 }
 namespace T_ConverterSpace_
 {
-    // old todo keep until feature done
-    public class T_ConverterName_ : DTOMaker.Models.IStructConverter<T_CustomMemberType_, T_NativeMemberType_>
-    {
-        public NativeType NativeType => NativeType.Int32;
-        public static T_NativeMemberType_ ToNative(T_CustomMemberType_ custom) => (T_NativeMemberType_)custom;
-        public static T_NativeMemberType_? ToNative(T_CustomMemberType_? custom) => custom.HasValue ? (T_NativeMemberType_)custom.Value : null;
-        public static T_CustomMemberType_ ToCustom(T_NativeMemberType_ native) => (T_CustomMemberType_)native;
-        public static T_CustomMemberType_? ToCustom(T_NativeMemberType_? native) => native.HasValue ? (T_CustomMemberType_)native : null;
-    }
-    // endold
     public class T_StructConverterName_ : DTOMaker.Models.IStructConverter<T_CustomStructType_, T_NativeStructType_>
     {
         public NativeType NativeType => NativeType.Int32;
@@ -46,7 +32,7 @@ namespace T_BaseIntfNameSpace_
 {
     public interface T_BaseIntfName_ : IEntityBase
     {
-        T_NativeMemberType_ BaseField1 { get; set; }
+        T_NativeStructType_ BaseField1 { get; set; }
     }
 }
 namespace T_IntfNameSpace_
@@ -61,10 +47,6 @@ namespace T_IntfNameSpace_
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
         Octets? T_NullableBinaryMemberName_ { get; set; }
         Octets T_RequiredBinaryMemberName_ { get; set; }
-        // old todo keep until feature done
-        //string? T_NullableStringMemberName_ { get; set; }
-        //string T_RequiredStringMemberName_ { get; set; }
-        // endold
         T_NativeStringType_? T_NullableNativeStringMemberName_ { get; set; }
         T_NativeStringType_ T_RequiredNativeStringMemberName_ { get; set; }
         T_CustomStringType_? T_NullableCustomStringMemberName_ { get; set; }

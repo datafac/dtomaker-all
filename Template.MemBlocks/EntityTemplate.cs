@@ -34,14 +34,16 @@ using T_ImplNameSpace_;
 //##if(false) {
 #pragma warning disable CS0618 // Type or member is obsolete
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using T_CustomMemberType_ = System.DayOfWeek;
-using T_NativeMemberType_ = System.Int32;
+using T_CustomStructType_ = System.DayOfWeek;
+using T_NativeStructType_ = System.Int32;
+using T_CustomStringType_ = System.Version;
+using T_NativeStringType_ = System.String;
 namespace DataFac.Memory
 {
-    public sealed class Codec_T_NativeMemberType__T_MemberBELE_ : ISpanCodec<T_NativeMemberType_>
+    public sealed class Codec_T_NativeStructType__T_MemberBELE_ : ISpanCodec<T_NativeStructType_>
     {
-        public static T_NativeMemberType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);
-        public static void WriteToSpan(Span<byte> source, in T_NativeMemberType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
+        public static T_NativeStructType_ ReadFromSpan(ReadOnlySpan<byte> source) => Codec_Int32_LE.ReadFromSpan(source);
+        public static void WriteToSpan(Span<byte> source, in T_NativeStructType_ value) => Codec_Int32_LE.WriteToSpan(source, value);
     }
 }
 namespace T_MemberTypeImplSpace_
@@ -202,10 +204,10 @@ namespace T_BaseImplNameSpace_
         private const int T_FieldOffset_ = 0;
         private const int T_FieldLength_ = 4;
 
-        public T_NativeMemberType_ BaseField1
+        public T_NativeStructType_ BaseField1
         {
-            get => (T_NativeMemberType_)Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span);
-            set => Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
+            get => (T_NativeStructType_)Codec_T_NativeStructType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span);
+            set => Codec_T_NativeStructType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_FieldOffset_, T_FieldLength_).Span, IfNotFrozen(value));
         }
 
         public bool Equals(T_BaseImplName_? other) => base.Equals(other);
@@ -372,9 +374,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            await T_NullableStringMemberName__Pack(blobStore, cancellation);
+            //##if (member.IsCustom) {
+            await T_NullableCustomStringMemberName__Pack(blobStore, cancellation);
             //##} else {
-            await T_RequiredStringMemberName__Pack(blobStore, cancellation);
+            await T_NullableNativeStringMemberName__Pack(blobStore, cancellation);
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            await T_RequiredCustomStringMemberName__Pack(blobStore, cancellation);
+            //##} else {
+            await T_RequiredNativeStringMemberName__Pack(blobStore, cancellation);
+            //##}
             //##}
             //##break;
             //##default:
@@ -409,9 +419,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            await T_NullableStringMemberName__Unpack(blobStore, cancellation);
+            //##if (member.IsCustom) {
+            await T_NullableCustomStringMemberName__Unpack(blobStore, cancellation);
             //##} else {
-            await T_RequiredStringMemberName__Unpack(blobStore, cancellation);
+            await T_NullableNativeStringMemberName__Unpack(blobStore, cancellation);
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            await T_RequiredCustomStringMemberName__Unpack(blobStore, cancellation);
+            //##} else {
+            await T_RequiredNativeStringMemberName__Unpack(blobStore, cancellation);
+            //##}
             //##}
             //##break;
             //##default:
@@ -493,9 +511,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source._T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source._T_NullableCustomStringMemberName_;
             //##} else {
-            _T_RequiredStringMemberName_ = source._T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source._T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = source._T_RequiredCustomStringMemberName_;
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source._T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -551,9 +577,17 @@ namespace T_ImplNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source.T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source.T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_NullableCustomStringMemberName_);
             //##} else {
-            _T_RequiredStringMemberName_ = source.T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source.T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_RequiredCustomStringMemberName_);
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source.T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -598,8 +632,10 @@ namespace T_ImplNameSpace_
         private const int T_NullableBinaryFieldOffset_ = 256;
         private const int T_RequiredBinaryFieldOffset_ = 320;
 
-        private const int T_NullableStringFieldOffset_ = 448;
-        private const int T_RequiredStringFieldOffset_ = 512;
+        private const int T_NullableCustomStringFieldOffset_ = 448;
+        private const int T_NullableNativeStringFieldOffset_ = 512;
+        private const int T_RequiredCustomStringFieldOffset_ = 576;
+        private const int T_RequiredNativeStringFieldOffset_ = 640;
 
         private const int T_FieldLength_ = 4;
         private const bool T_IsBigEndian_ = false;
@@ -617,14 +653,14 @@ namespace T_ImplNameSpace_
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_CustomMemberType_? T_NullableCustomStructMemberName_
+        public T_CustomStructType_? T_NullableCustomStructMemberName_
         {
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
                 if (bits.GetBit(T_NullBitPosition_)) return null;
-                T_NativeMemberType_ nativeValue = Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span);
-                return T_ConverterSpace_.T_ConverterName_.ToCustom(nativeValue);
+                T_NativeStructType_ nativeValue = Codec_T_NativeStructType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span);
+                return T_ConverterSpace_.T_StructConverterName_.ToCustom(nativeValue);
             }
             set
             {
@@ -637,8 +673,8 @@ namespace T_ImplNameSpace_
                 }
                 if (value.HasValue)
                 {
-                    T_NativeMemberType_ nativeValue = T_ConverterSpace_.T_ConverterName_.ToNative(value.Value);
-                    Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
+                    T_NativeStructType_ nativeValue = T_ConverterSpace_.T_StructConverterName_.ToNative(value.Value);
+                    Codec_T_NativeStructType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
                 }
                 else
                 {
@@ -651,13 +687,13 @@ namespace T_ImplNameSpace_
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_NativeMemberType_? T_NullableNativeStructMemberName_
+        public T_NativeStructType_? T_NullableNativeStructMemberName_
         {
             get
             {
                 var bits = new Bits32(Codec_UInt32_LE.ReadFromSpan(_readonlyLocalBlock.Slice(T_BitsFieldOffset_, T_BitsFieldLength_).Span));
                 if (bits.GetBit(T_NullBitPosition_)) return null;
-                return Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span);
+                return Codec_T_NativeStructType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span);
             }
             set
             {
@@ -670,7 +706,7 @@ namespace T_ImplNameSpace_
                 }
                 if (value.HasValue)
                 {
-                    Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span, value.Value);
+                    Codec_T_NativeStructType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_NullableNativeStructFieldOffset_, T_FieldLength_).Span, value.Value);
                 }
                 else
                 {
@@ -685,18 +721,18 @@ namespace T_ImplNameSpace_
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
+        public T_CustomStructType_ T_RequiredCustomStructMemberName_
         {
             get
             {
-                T_NativeMemberType_ nativeValue = Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span);
-                return T_ConverterSpace_.T_ConverterName_.ToCustom(nativeValue);
+                T_NativeStructType_ nativeValue = Codec_T_NativeStructType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span);
+                return T_ConverterSpace_.T_StructConverterName_.ToCustom(nativeValue);
             }
             set
             {
                 ThrowIfFrozen();
-                T_NativeMemberType_ nativeValue = T_ConverterSpace_.T_ConverterName_.ToNative(value);
-                Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
+                T_NativeStructType_ nativeValue = T_ConverterSpace_.T_StructConverterName_.ToNative(value);
+                Codec_T_NativeStructType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredCustomStructFieldOffset_, T_FieldLength_).Span, nativeValue);
             }
         }
         //##} else {
@@ -704,16 +740,16 @@ namespace T_ImplNameSpace_
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_NativeMemberType_ T_RequiredNativeStructMemberName_
+        public T_NativeStructType_ T_RequiredNativeStructMemberName_
         {
             get
             {
-                return Codec_T_NativeMemberType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span);
+                return Codec_T_NativeStructType__T_MemberBELE_.ReadFromSpan(_readonlyLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span);
             }
             set
             {
                 ThrowIfFrozen();
-                Codec_T_NativeMemberType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span, value);
+                Codec_T_NativeStructType__T_MemberBELE_.WriteToSpan(_writableLocalBlock.Slice(T_RequiredNativeStructFieldOffset_, T_FieldLength_).Span, value);
             }
         }
         //##}
@@ -862,57 +898,129 @@ namespace T_ImplNameSpace_
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
-        private async ValueTask T_NullableStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
+        //##if (member.IsCustom) {
+        private async ValueTask T_NullableCustomStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            var writableField = _writableLocalBlock.Slice(T_NullableStringFieldOffset_, 64);
-            await PackText(_T_NullableStringMemberName_, writableField, blobStore, cancellation);
+            var writableField = _writableLocalBlock.Slice(T_NullableCustomStringFieldOffset_, 64);
+            await PackText(_T_NullableCustomStringMemberName_, writableField, blobStore, cancellation);
         }
-        private async ValueTask T_NullableStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
+        private async ValueTask T_NullableCustomStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            var readonlyField = _readonlyLocalBlock.Slice(T_NullableStringFieldOffset_, 64);
+            var readonlyField = _readonlyLocalBlock.Slice(T_NullableCustomStringFieldOffset_, 64);
             var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
-            _T_NullableStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
+            _T_NullableCustomStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
 #else
-            _T_NullableStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : null;
+            _T_NullableCustomStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : null;
 #endif
         }
-        private string? _T_NullableStringMemberName_;
+        private string? _T_NullableCustomStringMemberName_;
         /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public string? T_NullableStringMemberName_
+        public T_CustomStringType_? T_NullableCustomStringMemberName_
         {
-            get => IfUnpacked(_T_NullableStringMemberName_);
-            set => _T_NullableStringMemberName_ = IfNotFrozen(value);
+            get
+            {
+                ThrowIfNotUnpacked();
+                return _T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_NullableCustomStringMemberName_);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                _T_NullableCustomStringMemberName_ = value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value);
+            }
         }
         //##} else {
-        private async ValueTask T_RequiredStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
+        private async ValueTask T_NullableNativeStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            var writableField = _writableLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);
-            await PackText(_T_RequiredStringMemberName_, writableField, blobStore, cancellation);
+            var writableField = _writableLocalBlock.Slice(T_NullableNativeStringFieldOffset_, 64);
+            await PackText(_T_NullableNativeStringMemberName_, writableField, blobStore, cancellation);
         }
-        private async ValueTask T_RequiredStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
+        private async ValueTask T_NullableNativeStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
         {
-            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredStringFieldOffset_, 64);
+            var readonlyField = _readonlyLocalBlock.Slice(T_NullableNativeStringFieldOffset_, 64);
             var data = await UnpackData(readonlyField, blobStore, cancellation);
 #if NET8_0_OR_GREATER
-            _T_RequiredStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
+            _T_NullableNativeStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : null;
 #else
-            _T_RequiredStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
+            _T_NullableNativeStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : null;
 #endif
         }
-        private string _T_RequiredStringMemberName_ = string.Empty;
+        private string? _T_NullableNativeStringMemberName_;
         /// <inheritdoc/>
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public string T_RequiredStringMemberName_
+        public T_NativeStringType_? T_NullableNativeStringMemberName_
         {
-            get => IfUnpacked(_T_RequiredStringMemberName_);
-            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
+            get => IfUnpacked(_T_NullableNativeStringMemberName_);
+            set => _T_NullableNativeStringMemberName_ = IfNotFrozen(value);
         }
+        //##}
+        //##} else {
+        //##if (member.IsCustom) {
+        private async ValueTask T_RequiredCustomStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
+        {
+            var writableField = _writableLocalBlock.Slice(T_RequiredCustomStringFieldOffset_, 64);
+            await PackText(_T_RequiredCustomStringMemberName_, writableField, blobStore, cancellation);
+        }
+        private async ValueTask T_RequiredCustomStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
+        {
+            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredCustomStringFieldOffset_, 64);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
+#if NET8_0_OR_GREATER
+            _T_RequiredCustomStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
+#else
+            _T_RequiredCustomStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
+#endif
+        }
+        private string _T_RequiredCustomStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if(member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        public T_CustomStringType_ T_RequiredCustomStringMemberName_
+        {
+            get
+            {
+                ThrowIfNotUnpacked();
+                return T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_RequiredCustomStringMemberName_);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                _T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(value);
+            }
+        }
+        //##} else {
+        private async ValueTask T_RequiredNativeStringMemberName__Pack(IBlobStore blobStore, CancellationToken cancellation)
+        {
+            var writableField = _writableLocalBlock.Slice(T_RequiredNativeStringFieldOffset_, 64);
+            await PackText(_T_RequiredNativeStringMemberName_, writableField, blobStore, cancellation);
+        }
+        private async ValueTask T_RequiredNativeStringMemberName__Unpack(IBlobStore blobStore, CancellationToken cancellation)
+        {
+            var readonlyField = _readonlyLocalBlock.Slice(T_RequiredNativeStringFieldOffset_, 64);
+            var data = await UnpackData(readonlyField, blobStore, cancellation);
+#if NET8_0_OR_GREATER
+            _T_RequiredNativeStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
+#else
+            _T_RequiredNativeStringMemberName_ = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
+#endif
+        }
+        private string _T_RequiredNativeStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if(member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        public string T_RequiredNativeStringMemberName_
+        {
+            get => IfUnpacked(_T_RequiredNativeStringMemberName_);
+            set => _T_RequiredNativeStringMemberName_ = IfNotFrozen(value);
+        }
+        //##}
         //##}
         //##break;
         //##default:

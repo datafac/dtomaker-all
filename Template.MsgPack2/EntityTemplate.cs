@@ -27,8 +27,10 @@ using System;
 //##if (false) {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0618 // Type or member is obsolete
-using T_CustomMemberType_ = System.DayOfWeek;
-using T_NativeMemberType_ = System.Int32;
+using T_CustomStructType_ = System.DayOfWeek;
+using T_NativeStructType_ = System.Int32;
+using T_CustomStringType_ = System.Version;
+using T_NativeStringType_ = System.String;
 namespace T_MemberTypeImplSpace_
 {
     [MessagePackObject(SuppressSourceGeneration = true)]
@@ -72,7 +74,7 @@ namespace T_BaseImplNameSpace_
         public T_BaseImplName_(T_BaseIntfNameSpace_.T_BaseIntfName_ source) : base(source) { }
         public T_BaseImplName_(T_BaseImplName_ source) : base(source) { }
 
-        [Key(1)] public T_NativeMemberType_ BaseField1 { get; set; }
+        [Key(1)] public T_NativeStructType_ BaseField1 { get; set; }
 
         public bool Equals(T_BaseImplName_? other)
         {
@@ -116,8 +118,10 @@ namespace T_AbstractNameSpace_
         private const int T_RequiredEntityMemberKey_ = KeyOffset + 6;
         private const int T_NullableBinaryMemberKey_ = KeyOffset + 7;
         private const int T_RequiredBinaryMemberKey_ = KeyOffset + 8;
-        private const int T_NullableStringMemberKey_ = KeyOffset + 9;
-        private const int T_RequiredStringMemberKey_ = KeyOffset + 10;
+        private const int T_NullableCustomStringMemberKey_ = KeyOffset + 9;
+        private const int T_NullableNativeStringMemberKey_ = KeyOffset + 10;
+        private const int T_RequiredCustomStringMemberKey_ = KeyOffset + 11;
+        private const int T_RequiredNativeStringMemberKey_ = KeyOffset + 12;
         private const int T_MemberDefaultValue_ = 0;
         //##}
 
@@ -260,9 +264,17 @@ namespace T_AbstractNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source._T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source._T_NullableCustomStringMemberName_;
             //##} else {
-            _T_RequiredStringMemberName_ = source._T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source._T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = source._T_RequiredCustomStringMemberName_;
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source._T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -285,13 +297,13 @@ namespace T_AbstractNameSpace_
             //##case MemberKind.Struct:
             //##if (member.IsNullable) {
             //##if (member.IsCustom) {
-            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
+            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
             //##} else {
             _T_NullableNativeStructMemberName_ = source.T_NullableNativeStructMemberName_;
             //##}
             //##} else {
             //##if (member.IsCustom) {
-            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
+            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
             //##} else {
             _T_RequiredNativeStructMemberName_ = source.T_RequiredNativeStructMemberName_;
             //##}
@@ -313,9 +325,17 @@ namespace T_AbstractNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source.T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source.T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_NullableCustomStringMemberName_);
             //##} else {
-            _T_RequiredStringMemberName_ = source.T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source.T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_RequiredCustomStringMemberName_);
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source.T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -332,13 +352,13 @@ namespace T_AbstractNameSpace_
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
         [IgnoreMember]
-        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
+        private T_NativeStructType_? _T_NullableCustomStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_NullableCustomStructMemberKey_)]
-        public T_NativeMemberType_? Native_T_NullableCustomStructMemberName_
+        public T_NativeStructType_? Native_T_NullableCustomStructMemberName_
         {
             get => _T_NullableCustomStructMemberName_;
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
@@ -348,20 +368,20 @@ namespace T_AbstractNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [IgnoreMember]
-        public T_CustomMemberType_? T_NullableCustomStructMemberName_
+        public T_CustomStructType_? T_NullableCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Native_T_NullableCustomStructMemberName_);
-            set => Native_T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(value);
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(Native_T_NullableCustomStructMemberName_);
+            set => Native_T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private T_NativeMemberType_? _T_NullableNativeStructMemberName_;
+        private T_NativeStructType_? _T_NullableNativeStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_NullableNativeStructMemberKey_)]
-        public T_NativeMemberType_? T_NullableNativeStructMemberName_
+        public T_NativeStructType_? T_NullableNativeStructMemberName_
         {
             get => _T_NullableNativeStructMemberName_;
             set => _T_NullableNativeStructMemberName_ = IfNotFrozen(value);
@@ -370,13 +390,13 @@ namespace T_AbstractNameSpace_
         //##} else {
         //##if (member.IsCustom) {
         [IgnoreMember]
-        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;
+        private T_NativeStructType_ _T_RequiredCustomStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_RequiredCustomStructMemberKey_)]
-        public T_NativeMemberType_ Native_T_RequiredCustomStructMemberName_
+        public T_NativeStructType_ Native_T_RequiredCustomStructMemberName_
         {
             get => _T_RequiredCustomStructMemberName_;
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
@@ -386,20 +406,20 @@ namespace T_AbstractNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [IgnoreMember]
-        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
+        public T_CustomStructType_ T_RequiredCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Native_T_RequiredCustomStructMemberName_);
-            set => Native_T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(value);
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(Native_T_RequiredCustomStructMemberName_);
+            set => Native_T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;
+        private T_NativeStructType_ _T_RequiredNativeStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_RequiredNativeStructMemberKey_)]
-        public T_NativeMemberType_ T_RequiredNativeStructMemberName_
+        public T_NativeStructType_ T_RequiredNativeStructMemberName_
         {
             get => _T_RequiredNativeStructMemberName_;
             set => _T_RequiredNativeStructMemberName_ = IfNotFrozen(value);
@@ -477,31 +497,81 @@ namespace T_AbstractNameSpace_
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
+        //##if (member.IsCustom) {
         [IgnoreMember]
-        private string? _T_NullableStringMemberName_;
+        private T_NativeStringType_? _T_NullableCustomStringMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_NullableStringMemberKey_)]
-        public string? T_NullableStringMemberName_
+        [Key(T_NullableCustomStringMemberKey_)]
+        public T_NativeStringType_? Native_T_NullableCustomStringMemberName_
         {
-            get => _T_NullableStringMemberName_;
-            set => _T_NullableStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableCustomStringMemberName_;
+            set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [IgnoreMember]
+        public T_CustomStringType_? T_NullableCustomStringMemberName_
+        {
+            get => Native_T_NullableCustomStringMemberName_ is null ? null :T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_NullableCustomStringMemberName_);
+            set => Native_T_NullableCustomStringMemberName_ = value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private string _T_RequiredStringMemberName_ = string.Empty;
+        private T_NativeStringType_? _T_NullableNativeStringMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_RequiredStringMemberKey_)]
-        public string T_RequiredStringMemberName_
+        [Key(T_NullableNativeStringMemberKey_)]
+        public T_NativeStringType_? T_NullableNativeStringMemberName_
         {
-            get => _T_RequiredStringMemberName_;
-            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableNativeStringMemberName_;
+            set => _T_NullableNativeStringMemberName_ = IfNotFrozen(value);
         }
+        //##}
+        //##} else {
+        //##if (member.IsCustom) {
+        [IgnoreMember]
+        private T_NativeStringType_ _T_RequiredCustomStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [Key(T_RequiredCustomStringMemberKey_)]
+        public T_NativeStringType_ Native_T_RequiredCustomStringMemberName_
+        {
+            get => _T_RequiredCustomStringMemberName_;
+            set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [IgnoreMember]
+        public T_CustomStringType_ T_RequiredCustomStringMemberName_
+        {
+            get => T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_RequiredCustomStringMemberName_);
+            set => Native_T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(value);
+        }
+        //##} else {
+        [IgnoreMember]
+        private T_NativeStringType_ _T_RequiredNativeStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [Key(T_RequiredNativeStringMemberKey_)]
+        public T_NativeStringType_ T_RequiredNativeStringMemberName_
+        {
+            get => _T_RequiredNativeStringMemberName_;
+            set => _T_RequiredNativeStringMemberName_ = IfNotFrozen(value);
+        }
+        //##}
         //##}
         //##break;
         //##default:
@@ -551,9 +621,17 @@ namespace T_AbstractNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            if (!string.Equals(_T_NullableStringMemberName_, other._T_NullableStringMemberName_)) return false;
+            //##if (member.IsCustom) {
+            if (!string.Equals(_T_NullableCustomStringMemberName_, other._T_NullableCustomStringMemberName_)) return false;
             //##} else {
-            if (!string.Equals(_T_RequiredStringMemberName_, other._T_RequiredStringMemberName_)) return false;
+            if (!string.Equals(_T_NullableNativeStringMemberName_, other._T_NullableNativeStringMemberName_)) return false;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            if (!string.Equals(_T_RequiredCustomStringMemberName_, other._T_RequiredCustomStringMemberName_)) return false;
+            //##} else {
+            if (!string.Equals(_T_RequiredNativeStringMemberName_, other._T_RequiredNativeStringMemberName_)) return false;
+            //##}
             //##}
             //##break;
             //##default:
@@ -610,9 +688,17 @@ namespace T_AbstractNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            result.Add(_T_NullableStringMemberName_);
+            //##if (member.IsCustom) {
+            result.Add(_T_NullableCustomStringMemberName_);
             //##} else {
-            result.Add(_T_RequiredStringMemberName_);
+            result.Add(_T_NullableNativeStringMemberName_);
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            result.Add(_T_RequiredCustomStringMemberName_);
+            //##} else {
+            result.Add(_T_RequiredNativeStringMemberName_);
+            //##}
             //##}
             //##break;
             //##default:
@@ -686,8 +772,10 @@ namespace T_ConcreteNameSpace_
         private const int T_RequiredEntityMemberKey_ = KeyOffset + 6;
         private const int T_NullableBinaryMemberKey_ = KeyOffset + 7;
         private const int T_RequiredBinaryMemberKey_ = KeyOffset + 8;
-        private const int T_NullableStringMemberKey_ = KeyOffset + 9;
-        private const int T_RequiredStringMemberKey_ = KeyOffset + 10;
+        private const int T_NullableCustomStringMemberKey_ = KeyOffset + 9;
+        private const int T_NullableNativeStringMemberKey_ = KeyOffset + 10;
+        private const int T_RequiredCustomStringMemberKey_ = KeyOffset + 11;
+        private const int T_RequiredNativeStringMemberKey_ = KeyOffset + 12;
         private const int T_MemberDefaultValue_ = 0;
         //##}
 
@@ -826,9 +914,17 @@ namespace T_ConcreteNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source._T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source._T_NullableCustomStringMemberName_;
             //##} else {
-            _T_RequiredStringMemberName_ = source._T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source._T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = source._T_RequiredCustomStringMemberName_;
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source._T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -851,13 +947,13 @@ namespace T_ConcreteNameSpace_
             //##case MemberKind.Struct:
             //##if (member.IsNullable) {
             //##if (member.IsCustom) {
-            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
+            _T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_NullableCustomStructMemberName_);
             //##} else {
             _T_NullableNativeStructMemberName_ = source.T_NullableNativeStructMemberName_;
             //##}
             //##} else {
             //##if (member.IsCustom) {
-            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
+            _T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(source.T_RequiredCustomStructMemberName_);
             //##} else {
             _T_RequiredNativeStructMemberName_ = source.T_RequiredNativeStructMemberName_;
             //##}
@@ -879,9 +975,17 @@ namespace T_ConcreteNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            _T_NullableStringMemberName_ = source.T_NullableStringMemberName_;
+            //##if (member.IsCustom) {
+            _T_NullableCustomStringMemberName_ = source.T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_NullableCustomStringMemberName_);
             //##} else {
-            _T_RequiredStringMemberName_ = source.T_RequiredStringMemberName_;
+            _T_NullableNativeStringMemberName_ = source.T_NullableNativeStringMemberName_;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            _T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(source.T_RequiredCustomStringMemberName_);
+            //##} else {
+            _T_RequiredNativeStringMemberName_ = source.T_RequiredNativeStringMemberName_;
+            //##}
             //##}
             //##break;
             //##default:
@@ -898,13 +1002,13 @@ namespace T_ConcreteNameSpace_
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
         [IgnoreMember]
-        private T_NativeMemberType_? _T_NullableCustomStructMemberName_;
+        private T_NativeStructType_? _T_NullableCustomStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_NullableCustomStructMemberKey_)]
-        public T_NativeMemberType_? Native_T_NullableCustomStructMemberName_
+        public T_NativeStructType_? Native_T_NullableCustomStructMemberName_
         {
             get => _T_NullableCustomStructMemberName_;
             set => _T_NullableCustomStructMemberName_ = IfNotFrozen(value);
@@ -914,20 +1018,20 @@ namespace T_ConcreteNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [IgnoreMember]
-        public T_CustomMemberType_? T_NullableCustomStructMemberName_
+        public T_CustomStructType_? T_NullableCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Native_T_NullableCustomStructMemberName_);
-            set => Native_T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(value);
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(Native_T_NullableCustomStructMemberName_);
+            set => Native_T_NullableCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private T_NativeMemberType_? _T_NullableNativeStructMemberName_;
+        private T_NativeStructType_? _T_NullableNativeStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_NullableNativeStructMemberKey_)]
-        public T_NativeMemberType_? T_NullableNativeStructMemberName_
+        public T_NativeStructType_? T_NullableNativeStructMemberName_
         {
             get => _T_NullableNativeStructMemberName_;
             set => _T_NullableNativeStructMemberName_ = IfNotFrozen(value);
@@ -936,13 +1040,13 @@ namespace T_ConcreteNameSpace_
         //##} else {
         //##if (member.IsCustom) {
         [IgnoreMember]
-        private T_NativeMemberType_ _T_RequiredCustomStructMemberName_;
+        private T_NativeStructType_ _T_RequiredCustomStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_RequiredCustomStructMemberKey_)]
-        public T_NativeMemberType_ Native_T_RequiredCustomStructMemberName_
+        public T_NativeStructType_ Native_T_RequiredCustomStructMemberName_
         {
             get => _T_RequiredCustomStructMemberName_;
             set => _T_RequiredCustomStructMemberName_ = IfNotFrozen(value);
@@ -952,20 +1056,20 @@ namespace T_ConcreteNameSpace_
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [IgnoreMember]
-        public T_CustomMemberType_ T_RequiredCustomStructMemberName_
+        public T_CustomStructType_ T_RequiredCustomStructMemberName_
         {
-            get => T_ConverterSpace_.T_ConverterName_.ToCustom(Native_T_RequiredCustomStructMemberName_);
-            set => Native_T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_ConverterName_.ToNative(value);
+            get => T_ConverterSpace_.T_StructConverterName_.ToCustom(Native_T_RequiredCustomStructMemberName_);
+            set => Native_T_RequiredCustomStructMemberName_ = T_ConverterSpace_.T_StructConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private T_NativeMemberType_ _T_RequiredNativeStructMemberName_;
+        private T_NativeStructType_ _T_RequiredNativeStructMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [Key(T_RequiredNativeStructMemberKey_)]
-        public T_NativeMemberType_ T_RequiredNativeStructMemberName_
+        public T_NativeStructType_ T_RequiredNativeStructMemberName_
         {
             get => _T_RequiredNativeStructMemberName_;
             set => _T_RequiredNativeStructMemberName_ = IfNotFrozen(value);
@@ -1043,31 +1147,81 @@ namespace T_ConcreteNameSpace_
         //##break;
         //##case MemberKind.String:
         //##if (member.IsNullable) {
+        //##if (member.IsCustom) {
         [IgnoreMember]
-        private string? _T_NullableStringMemberName_;
+        private T_NativeStringType_? _T_NullableCustomStringMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_NullableStringMemberKey_)]
-        public string? T_NullableStringMemberName_
+        [Key(T_NullableCustomStringMemberKey_)]
+        public T_NativeStringType_? Native_T_NullableCustomStringMemberName_
         {
-            get => _T_NullableStringMemberName_;
-            set => _T_NullableStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableCustomStringMemberName_;
+            set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [IgnoreMember]
+        public T_CustomStringType_? T_NullableCustomStringMemberName_
+        {
+            get => Native_T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_NullableCustomStringMemberName_);
+            set => Native_T_NullableCustomStringMemberName_ = value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value);
         }
         //##} else {
         [IgnoreMember]
-        private string _T_RequiredStringMemberName_ = string.Empty;
+        private T_NativeStringType_? _T_NullableNativeStringMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        [Key(T_RequiredStringMemberKey_)]
-        public string T_RequiredStringMemberName_
+        [Key(T_NullableNativeStringMemberKey_)]
+        public T_NativeStringType_? T_NullableNativeStringMemberName_
         {
-            get => _T_RequiredStringMemberName_;
-            set => _T_RequiredStringMemberName_ = IfNotFrozen(value);
+            get => _T_NullableNativeStringMemberName_;
+            set => _T_NullableNativeStringMemberName_ = IfNotFrozen(value);
         }
+        //##}
+        //##} else {
+        //##if (member.IsCustom) {
+        [IgnoreMember]
+        private T_NativeStringType_ _T_RequiredCustomStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [Key(T_RequiredCustomStringMemberKey_)]
+        public T_NativeStringType_ Native_T_RequiredCustomStringMemberName_
+        {
+            get => _T_RequiredCustomStringMemberName_;
+            set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [IgnoreMember]
+        public T_CustomStringType_ T_RequiredCustomStringMemberName_
+        {
+            get => T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_RequiredCustomStringMemberName_);
+            set => Native_T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(value);
+        }
+        //##} else {
+        [IgnoreMember]
+        private T_NativeStringType_ _T_RequiredNativeStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [Key(T_RequiredNativeStringMemberKey_)]
+        public T_NativeStringType_ T_RequiredNativeStringMemberName_
+        {
+            get => _T_RequiredNativeStringMemberName_;
+            set => _T_RequiredNativeStringMemberName_ = IfNotFrozen(value);
+        }
+        //##}
         //##}
         //##break;
         //##default:
@@ -1117,9 +1271,17 @@ namespace T_ConcreteNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            if (!string.Equals(_T_NullableStringMemberName_, other._T_NullableStringMemberName_)) return false;
+            //##if (member.IsCustom) {
+            if (_T_NullableCustomStringMemberName_ != other._T_NullableCustomStringMemberName_) return false;
             //##} else {
-            if (!string.Equals(_T_RequiredStringMemberName_, other._T_RequiredStringMemberName_)) return false;
+            if (_T_NullableNativeStringMemberName_ != other._T_NullableNativeStringMemberName_) return false;
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            if (_T_RequiredCustomStringMemberName_ != other._T_RequiredCustomStringMemberName_) return false;
+            //##} else {
+            if (_T_RequiredNativeStringMemberName_ != other._T_RequiredNativeStringMemberName_) return false;
+            //##}
             //##}
             //##break;
             //##default:
@@ -1176,9 +1338,17 @@ namespace T_ConcreteNameSpace_
             //##break;
             //##case MemberKind.String:
             //##if (member.IsNullable) {
-            result.Add(_T_NullableStringMemberName_);
+            //##if (member.IsCustom) {
+            result.Add(_T_NullableCustomStringMemberName_);
             //##} else {
-            result.Add(_T_RequiredStringMemberName_);
+            result.Add(_T_NullableNativeStringMemberName_);
+            //##}
+            //##} else {
+            //##if (member.IsCustom) {
+            result.Add(_T_RequiredCustomStringMemberName_);
+            //##} else {
+            result.Add(_T_RequiredNativeStringMemberName_);
+            //##}
             //##}
             //##break;
             //##default:
