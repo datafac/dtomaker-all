@@ -471,15 +471,26 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
         [JsonIgnore]
-        private string? _T_NullableCustomStringMemberName_;
+        private T_NativeStringType_? _T_NullableCustomStringMemberName_;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonProperty("T_NullableCustomStringMemberJsonName_")]
+        public T_NativeStringType_? Native_T_NullableCustomStringMemberName_
+        {
+            get => _T_NullableCustomStringMemberName_;
+            set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [JsonIgnore]
         public T_CustomStringType_? T_NullableCustomStringMemberName_
         {
-            get => _T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_NullableCustomStringMemberName_);
-            set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value));
+            get => Native_T_NullableCustomStringMemberName_ is null ? null : T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_NullableCustomStringMemberName_);
+            set => Native_T_NullableCustomStringMemberName_ = value is null ? null : T_ConverterSpace_.T_StringConverterName_.ToNative(value);
         }
         //##} else {
         [JsonIgnore]
@@ -497,15 +508,26 @@ namespace T_ImplNameSpace_
         //##} else {
         //##if (member.IsCustom) {
         [JsonIgnore]
-        private string _T_RequiredCustomStringMemberName_ = string.Empty;
+        private T_NativeStringType_ _T_RequiredCustomStringMemberName_ = string.Empty;
+        /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonProperty("T_RequiredCustomStringMemberJsonName_")]
+        public T_NativeStringType_ Native_T_RequiredCustomStringMemberName_
+        {
+            get => _T_RequiredCustomStringMemberName_;
+            set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        //##if (member.IsObsolete) {
+        [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
+        //##}
+        [JsonIgnore]
         public T_CustomStringType_ T_RequiredCustomStringMemberName_
         {
-            get => T_ConverterSpace_.T_StringConverterName_.ToCustom(_T_RequiredCustomStringMemberName_);
-            set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(T_ConverterSpace_.T_StringConverterName_.ToNative(value));
+            get => T_ConverterSpace_.T_StringConverterName_.ToCustom(Native_T_RequiredCustomStringMemberName_);
+            set => Native_T_RequiredCustomStringMemberName_ = T_ConverterSpace_.T_StringConverterName_.ToNative(value);
         }
         //##} else {
         [JsonIgnore]
