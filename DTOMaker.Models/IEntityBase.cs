@@ -8,7 +8,7 @@ public interface IEntityBase
     /// <summary>
     /// Returns true if the entity is frozen, otherwise false.
     /// </summary>
-    bool IsFrozen { get; }
+    bool IsFrozen();
 
     /// <summary>
     /// If not already frozen, recursively freezes the entity, making it immutable.

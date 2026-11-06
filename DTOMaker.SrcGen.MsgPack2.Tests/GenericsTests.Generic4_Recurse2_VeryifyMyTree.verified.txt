@@ -32,7 +32,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static MyTree CreateFrom(MyTree source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.MyTree(source)
@@ -41,7 +41,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static MyTree CreateFrom(MyOrg.Models.IMyTree source)
         {
-            if (source is MyTree concrete && concrete.IsFrozen) return concrete;
+            if (source is MyTree concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.MyTree(source)
@@ -86,7 +86,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

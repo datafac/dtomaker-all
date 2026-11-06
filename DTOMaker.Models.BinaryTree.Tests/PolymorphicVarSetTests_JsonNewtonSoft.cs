@@ -32,9 +32,9 @@ public class PolymorphicVarSetTests_JsonNewtonSoft
         var json = orig.SerializeToJson();
         var copy = json.DeserializeFromJson<VarSet>();
         copy.ShouldNotBeNull();
-        copy.IsFrozen.ShouldBeFalse();
+        copy.IsFrozen().ShouldBeFalse();
         copy.Freeze();
-        copy.IsFrozen.ShouldBeTrue();
+        copy.IsFrozen().ShouldBeTrue();
         copy.ShouldBe(orig);
 
         await Verifier.Verify(json);

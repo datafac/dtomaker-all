@@ -35,7 +35,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Poco_2_String_Octets CreateFrom(Poco_2_String_Octets source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MessagePack.MyPoco1 source2 => new MyOrg.Models.MessagePack.MyPoco1(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Poco_2_String_Octets CreateFrom(MyOrg.Models.IPoco<String, Octets> source)
         {
-            if (source is Poco_2_String_Octets concrete && concrete.IsFrozen) return concrete;
+            if (source is Poco_2_String_Octets concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyPoco1 source2 => new MyOrg.Models.MessagePack.MyPoco1(source2),
@@ -103,7 +103,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

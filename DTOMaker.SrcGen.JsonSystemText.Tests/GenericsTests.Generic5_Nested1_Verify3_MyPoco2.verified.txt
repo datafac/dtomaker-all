@@ -32,7 +32,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static MyPoco2 CreateFrom(MyPoco2 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.MyPoco2(source)
@@ -41,7 +41,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static MyPoco2 CreateFrom(MyOrg.Models.IMyPoco2 source)
         {
-            if (source is MyPoco2 concrete && concrete.IsFrozen) return concrete;
+            if (source is MyPoco2 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.MyPoco2(source)
@@ -104,7 +104,7 @@ namespace MyOrg.Models.JsonSystemText
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

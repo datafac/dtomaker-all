@@ -3,7 +3,6 @@ using DTOMaker.Models;
 using T_CustomStructType_ = System.DayOfWeek;
 using T_NativeStructType_ = System.Int32;
 using T_CustomStringType_ = System.Version;
-using T_NativeStringType_ = System.String;
 namespace T_MemberTypeIntfSpace_
 {
     public interface T_MemberTypeIntfName_ : IEntityBase
@@ -21,11 +20,11 @@ namespace T_ConverterSpace_
         public static T_CustomStructType_ ToCustom(T_NativeStructType_ native) => (T_CustomStructType_)native;
         public static T_CustomStructType_? ToCustom(T_NativeStructType_? native) => native.HasValue ? (T_CustomStructType_)native : null;
     }
-    public class T_StringConverterName_ : DTOMaker.Models.IObjectConverter<T_CustomStringType_, T_NativeStringType_>
+    public class T_StringConverterName_ : DTOMaker.Models.IObjectConverter<T_CustomStringType_, string>
     {
         public NativeType NativeType => NativeType.String;
-        public static T_NativeStringType_ ToNative(T_CustomStringType_ custom) => custom.ToString();
-        public static T_CustomStringType_ ToCustom(T_NativeStringType_ native) => new T_CustomStringType_(native);
+        public static string ToNative(T_CustomStringType_ custom) => custom.ToString();
+        public static T_CustomStringType_ ToCustom(string native) => new T_CustomStringType_(native);
     }
 }
 namespace T_BaseIntfNameSpace_
@@ -47,8 +46,8 @@ namespace T_IntfNameSpace_
         T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ T_RequiredEntityMemberName_ { get; set; }
         Octets? T_NullableBinaryMemberName_ { get; set; }
         Octets T_RequiredBinaryMemberName_ { get; set; }
-        T_NativeStringType_? T_NullableNativeStringMemberName_ { get; set; }
-        T_NativeStringType_ T_RequiredNativeStringMemberName_ { get; set; }
+        string? T_NullableNativeStringMemberName_ { get; set; }
+        string T_RequiredNativeStringMemberName_ { get; set; }
         T_CustomStringType_? T_NullableCustomStringMemberName_ { get; set; }
         T_CustomStringType_ T_RequiredCustomStringMemberName_ { get; set; }
     }

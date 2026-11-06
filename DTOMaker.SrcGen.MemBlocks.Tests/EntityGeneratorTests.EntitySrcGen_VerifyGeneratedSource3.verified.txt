@@ -57,7 +57,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public new static Derived CreateRequired(Derived source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.MemBlocks.Derived(source)
@@ -77,7 +77,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public new static Derived CreateRequired(MyOrg.Models.IDerived source)
         {
-            if (source is Derived concrete && concrete.IsFrozen) return concrete;
+            if (source is Derived concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.MemBlocks.Derived(source)

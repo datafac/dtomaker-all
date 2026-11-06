@@ -68,7 +68,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     }
 
     private volatile bool _frozen;
-    public bool IsFrozen => _frozen;
+    public bool IsFrozen() => _frozen;
     protected virtual void OnFreeze() { }
     public void Freeze()
     {

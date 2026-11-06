@@ -35,7 +35,7 @@ namespace MyOrg.Models.MemBlocks
 
         public new static Pair_2_Int64_String CreateFrom(Pair_2_Int64_String source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MemBlocks.MyDTO2 source2 => new MyOrg.Models.MemBlocks.MyDTO2(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.MemBlocks
 
         public new static Pair_2_Int64_String CreateFrom(MyOrg.Models.IPair<Int64, String> source)
         {
-            if (source is Pair_2_Int64_String concrete && concrete.IsFrozen) return concrete;
+            if (source is Pair_2_Int64_String concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO2 source2 => new MyOrg.Models.MemBlocks.MyDTO2(source2),
@@ -115,7 +115,7 @@ namespace MyOrg.Models.MemBlocks
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

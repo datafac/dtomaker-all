@@ -33,7 +33,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static MyDTO CreateFrom(MyDTO source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
@@ -42,7 +42,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.MyDTO(source)
@@ -138,7 +138,7 @@ namespace MyOrg.Models.JsonSystemText
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

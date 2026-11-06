@@ -4,6 +4,8 @@
 :: converts templates to generators
 ::
 
+dotnet tool update -g dtomaker.cli
+
 set _cli=dtomaker
 
 call :t2g JsonSystemText

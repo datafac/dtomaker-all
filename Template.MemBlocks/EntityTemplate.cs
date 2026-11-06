@@ -37,7 +37,6 @@ using T_ImplNameSpace_;
 using T_CustomStructType_ = System.DayOfWeek;
 using T_NativeStructType_ = System.Int32;
 using T_CustomStringType_ = System.Version;
-using T_NativeStringType_ = System.String;
 namespace DataFac.Memory
 {
     public sealed class Codec_T_NativeStructType__T_MemberBELE_ : ISpanCodec<T_NativeStructType_>
@@ -59,7 +58,7 @@ namespace T_MemberTypeImplSpace_
 
         public static T_MemberTypeImplName_ CreateRequired(T_MemberTypeImplName_ source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return new T_MemberTypeImplName_(source);
         }
         public static T_MemberTypeImplName_? CreateNullable(T_MemberTypeImplName_? source)
@@ -68,7 +67,7 @@ namespace T_MemberTypeImplSpace_
         }
         public static T_MemberTypeImplName_ CreateRequired(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)
         {
-            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;
+            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen()) return concrete;
             return new T_MemberTypeImplName_(source);
         }
         public static T_MemberTypeImplName_? CreateNullable(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_? source)
@@ -257,7 +256,7 @@ namespace T_ImplNameSpace_
         /// </summary>
         public new static T_EntityImplName_ CreateRequired(T_EntityImplName_ source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
@@ -281,7 +280,7 @@ namespace T_ImplNameSpace_
         /// </summary>
         public new static T_EntityImplName_ CreateRequired(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
-            if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;
+            if (source is T_EntityImplName_ concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
@@ -953,7 +952,7 @@ namespace T_ImplNameSpace_
         //##if(member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
-        public T_NativeStringType_? T_NullableNativeStringMemberName_
+        public string? T_NullableNativeStringMemberName_
         {
             get => IfUnpacked(_T_NullableNativeStringMemberName_);
             set => _T_NullableNativeStringMemberName_ = IfNotFrozen(value);

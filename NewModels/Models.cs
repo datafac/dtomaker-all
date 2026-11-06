@@ -35,7 +35,7 @@ namespace DTOMaker.Runtime.Classes
 
         #region IFreezable implementation
         private volatile bool _frozen = false;
-        public bool IsFrozen => _frozen;
+        public bool IsFrozen() => _frozen;
         protected virtual void OnFreeze() { }
         public void Freeze()
         {
@@ -79,7 +79,7 @@ namespace DTOMaker.Runtime.Records
 {
     public abstract record EntityBase : IEntityBase
     {
-        public bool IsFrozen => true;
+        public bool IsFrozen() => true;
         public void Freeze() { }
         protected abstract EntityBase OnShallowCopy();
         public IEntityBase ShallowCopy() => OnShallowCopy();
@@ -96,7 +96,7 @@ namespace DTOMaker.Runtime.NetStrux
     {
         #region IFreezable implementation
         private volatile bool _frozen = false;
-        public bool IsFrozen => _frozen;
+        public bool IsFrozen() => _frozen;
         protected virtual void OnFreeze() { }
         public void Freeze()
         {

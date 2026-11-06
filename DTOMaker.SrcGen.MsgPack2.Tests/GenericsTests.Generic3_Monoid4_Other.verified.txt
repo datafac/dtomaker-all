@@ -32,7 +32,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Other CreateFrom(Other source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.Other(source)
@@ -41,7 +41,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Other CreateFrom(MyOrg.Models.IOther source)
         {
-            if (source is Other concrete && concrete.IsFrozen) return concrete;
+            if (source is Other concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.Other(source)
@@ -86,7 +86,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

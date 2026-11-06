@@ -141,7 +141,7 @@ namespace Template_MessagePack.Tests
 
             copy.ShouldNotBeNull();
             copy.Freeze();
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
@@ -174,7 +174,7 @@ namespace Template_MessagePack.Tests
             var copy = recd as T_ConcreteNameSpace_.T_ConcreteEntity_;
             copy.ShouldNotBeNull();
             copy.Freeze();
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());

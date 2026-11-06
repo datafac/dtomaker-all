@@ -20,9 +20,15 @@ namespace DTOMaker.Runtime.JsonSystemText
             }
         };
 
-        public static string SerializeToJson<T>(this T value) => JsonSerializer.Serialize<T>(value, _options);
+        public static string SerializeToJson<T>(this T source)
+            where T : EntityBase
+        {
+            source.Freeze();
+            return JsonSerializer.Serialize<T>(source, _options);
+        }
+
         public static T? DeserializeFromJson<T>(this string input)
-            where T: IEntityBase
+            where T: EntityBase
         {
             T? result = JsonSerializer.Deserialize<T>(input, _options);
             result?.Freeze();

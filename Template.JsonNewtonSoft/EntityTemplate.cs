@@ -28,7 +28,6 @@ using System.Runtime.CompilerServices;
 using T_CustomStructType_ = System.DayOfWeek;
 using T_NativeStructType_ = System.Int32;
 using T_CustomStringType_ = System.Version;
-using T_NativeStringType_ = System.String;
 namespace T_MemberTypeImplSpace_
 {
     public class T_MemberTypeImplName_ : EntityBase, T_MemberTypeIntfSpace_.T_MemberTypeIntfName_, IEquatable<T_MemberTypeImplName_>
@@ -46,7 +45,7 @@ namespace T_MemberTypeImplSpace_
 
         public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeImplName_ source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 T_MemberTypeImplName_ source2 => new T_MemberTypeImplName_(source2),
@@ -55,7 +54,7 @@ namespace T_MemberTypeImplSpace_
         }
         public static T_MemberTypeImplName_ CreateFrom(T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source)
         {
-            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen) return concrete;
+            if (source is T_MemberTypeImplName_ concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 T_MemberTypeIntfSpace_.T_MemberTypeIntfName_ source2 => new T_MemberTypeImplName_(source2),
@@ -144,7 +143,7 @@ namespace T_ImplNameSpace_
 
         public new static T_EntityImplName_ CreateFrom(T_EntityImplName_ source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
@@ -157,7 +156,7 @@ namespace T_ImplNameSpace_
 
         public new static T_EntityImplName_ CreateFrom(T_IntfNameSpace_.T_EntityIntfName_ source)
         {
-            if (source is T_EntityImplName_ concrete && concrete.IsFrozen) return concrete;
+            if (source is T_EntityImplName_ concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 //##foreach(var derived in entity.DerivedEntities.OrderByDescending(e => e.ClassHeight)) {
@@ -471,13 +470,13 @@ namespace T_ImplNameSpace_
         //##if (member.IsNullable) {
         //##if (member.IsCustom) {
         [JsonIgnore]
-        private T_NativeStringType_? _T_NullableCustomStringMemberName_;
+        private string? _T_NullableCustomStringMemberName_;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonProperty("T_NullableCustomStringMemberJsonName_")]
-        public T_NativeStringType_? Native_T_NullableCustomStringMemberName_
+        public string? Native_T_NullableCustomStringMemberName_
         {
             get => _T_NullableCustomStringMemberName_;
             set => _T_NullableCustomStringMemberName_ = IfNotFrozen(value);
@@ -508,13 +507,13 @@ namespace T_ImplNameSpace_
         //##} else {
         //##if (member.IsCustom) {
         [JsonIgnore]
-        private T_NativeStringType_ _T_RequiredCustomStringMemberName_ = string.Empty;
+        private string _T_RequiredCustomStringMemberName_ = string.Empty;
         /// <inheritdoc/>
         //##if (member.IsObsolete) {
         [Obsolete("T_MemberObsoleteMessage_", T_MemberObsoleteIsError_)]
         //##}
         [JsonProperty("T_RequiredCustomStringMemberJsonName_")]
-        public T_NativeStringType_ Native_T_RequiredCustomStringMemberName_
+        public string Native_T_RequiredCustomStringMemberName_
         {
             get => _T_RequiredCustomStringMemberName_;
             set => _T_RequiredCustomStringMemberName_ = IfNotFrozen(value);
@@ -698,7 +697,7 @@ namespace T_ImplNameSpace_
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

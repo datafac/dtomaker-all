@@ -33,7 +33,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Derived CreateFrom(Derived source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.Derived(source)
@@ -42,7 +42,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Derived CreateFrom(MyOrg.Models.IDerived source)
         {
-            if (source is Derived concrete && concrete.IsFrozen) return concrete;
+            if (source is Derived concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.JsonSystemText.Derived(source)
@@ -122,7 +122,7 @@ namespace MyOrg.Models.JsonSystemText
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

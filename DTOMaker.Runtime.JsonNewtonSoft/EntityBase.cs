@@ -45,8 +45,7 @@ namespace DTOMaker.Runtime.JsonNewtonSoft
         /// <summary>
         /// Gets a value indicating whether the object is in a frozen (read-only) state.
         /// </summary>
-        [JsonIgnore]
-        public bool IsFrozen => _frozen;
+        public bool IsFrozen() => _frozen;
 
         /// <summary>
         /// Performs actions when the object is being frozen.

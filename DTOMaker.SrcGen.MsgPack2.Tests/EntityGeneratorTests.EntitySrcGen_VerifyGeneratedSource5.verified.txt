@@ -45,7 +45,7 @@ namespace MyOrg.Model3.MsgPack2
         /// </summary>
         public new static MyDTO CreateFrom(MyDTO source)
         {
-            if (source.IsFrozen)
+            if (source.IsFrozen())
                 return source;
             else
                 return new MyDTO(source);
@@ -57,7 +57,7 @@ namespace MyOrg.Model3.MsgPack2
         /// </summary>
         public new static MyDTO CreateFrom(MyOrg.Model3.IMyDTO source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen)
+            if (source is MyDTO concrete && concrete.IsFrozen())
                 return concrete;
             else
                 return new MyDTO(source);
@@ -171,7 +171,7 @@ namespace MyOrg.Model3.MsgPack2
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

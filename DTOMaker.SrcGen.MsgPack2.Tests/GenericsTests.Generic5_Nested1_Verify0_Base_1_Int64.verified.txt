@@ -35,7 +35,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Base_1_Int64 CreateFrom(Base_1_Int64 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MessagePack.Poco_2_String_Int64 source2 => new MyOrg.Models.MessagePack.Poco_2_String_Int64(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Base_1_Int64 CreateFrom(MyOrg.Models.IBase<Int64> source)
         {
-            if (source is Base_1_Int64 concrete && concrete.IsFrozen) return concrete;
+            if (source is Base_1_Int64 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IPoco<String, Int64> source2 => new MyOrg.Models.MessagePack.Poco_2_String_Int64(source2),
@@ -103,7 +103,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

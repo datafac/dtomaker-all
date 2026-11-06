@@ -57,7 +57,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public new static MyDTO CreateRequired(MyDTO source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)
@@ -77,7 +77,7 @@ namespace MyOrg.Models.MemBlocks
         /// </summary>
         public new static MyDTO CreateRequired(MyOrg.Models.IMyDTO source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.MemBlocks.MyDTO(source)

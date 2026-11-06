@@ -32,7 +32,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static MyDTO CreateFrom(MyDTO source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
@@ -41,7 +41,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static MyDTO CreateFrom(MyOrg.Models.IMyDTO source)
         {
-            if (source is MyDTO concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.JsonNewtonSoft.MyDTO(source)
@@ -69,7 +69,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         }
         public MyDTO(MyOrg.Models.IMyDTO source) : base(source)
         {
-            _Field1 = source.Field1;
+            _Field1 = DTOMaker.Models.VersionConverter.ToNative(source.Field1);
         }
         public MyDTO(MyDTO source) : base(source)
         {
@@ -78,11 +78,19 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         [JsonIgnore]
         private string _Field1 = string.Empty;
+        /// <inheritdoc/>
         [JsonProperty("_f01_001")]
-        public string Field1
+        public string Native_Field1
         {
             get => _Field1;
             set => _Field1 = IfNotFrozen(value);
+        }
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public System.Version Field1
+        {
+            get => DTOMaker.Models.VersionConverter.ToCustom(Native_Field1);
+            set => Native_Field1 = DTOMaker.Models.VersionConverter.ToNative(value);
         }
 
 
@@ -110,7 +118,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

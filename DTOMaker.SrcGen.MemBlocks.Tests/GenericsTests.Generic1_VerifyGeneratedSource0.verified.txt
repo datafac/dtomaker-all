@@ -34,7 +34,7 @@ namespace DTOMaker.Runtime.MemBlocks
 
         public static EntityBase CreateFrom(EntityBase source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MemBlocks.MyDTO3 source2 => new MyOrg.Models.MemBlocks.MyDTO3(source2),
@@ -45,7 +45,7 @@ namespace DTOMaker.Runtime.MemBlocks
 
         public new static EntityBase CreateFrom(IEntityBase source)
         {
-            if (source is EntityBase concrete && concrete.IsFrozen) return concrete;
+            if (source is EntityBase concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO3 source2 => new MyOrg.Models.MemBlocks.MyDTO3(source2),

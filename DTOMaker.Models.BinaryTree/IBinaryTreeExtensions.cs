@@ -50,7 +50,7 @@ public static class BinaryTreeExtensions
         where TNode : class, IBinaryTree<TKey, TValue, TNode>
     {
         if (tree is null) return 0;
-        if (tree.IsFrozen) return tree.Count;
+        if (tree.IsFrozen()) return tree.Count;
         return 1 + tree.Left.GetCount<TKey, TValue, TNode>() + tree.Right.GetCount<TKey, TValue, TNode>();
     }
 
@@ -58,7 +58,7 @@ public static class BinaryTreeExtensions
         where TNode : class, IBinaryTree<TKey, TValue, TNode>
     {
         if (tree is null) return 0;
-        if (tree.IsFrozen) return tree.Depth;
+        if (tree.IsFrozen()) return tree.Depth;
         return (byte)(1 + Math.Max(tree.Left.GetDepth<TKey, TValue, TNode>(), tree.Right.GetDepth<TKey, TValue, TNode>()));
     }
 
@@ -73,7 +73,7 @@ public static class BinaryTreeExtensions
         where TNode : class, IBinaryTree<TKey, TValue, TNode>
     {
         if (tree is null) return;
-        if (tree.IsFrozen) return;
+        if (tree.IsFrozen()) return;
         tree.Count = 1 + tree.Left.GetCount<TKey, TValue, TNode>() + tree.Right.GetCount<TKey, TValue, TNode>();
         tree.Depth = (byte)(1 + Math.Max(tree.Left.GetDepth<TKey, TValue, TNode>(), tree.Right.GetDepth<TKey, TValue, TNode>()));
     }
@@ -126,7 +126,7 @@ public static class BinaryTreeExtensions
         if (tree.Count == 0) return null;
 
         // shallow clone (unfreeze) if needed
-        TNode result = tree.IsFrozen
+        TNode result = tree.IsFrozen()
             ? tree.ShallowCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
             : tree;
 
@@ -228,7 +228,7 @@ public static class BinaryTreeExtensions
     {
         if (tree is null) return new TNode().InitLeaf(key, value);
 
-        TNode result = tree.IsFrozen
+        TNode result = tree.IsFrozen()
             ? tree.ShallowCopy() as TNode ?? throw new InvalidOperationException("Failed to create unfrozen copy.")
             : tree;
 

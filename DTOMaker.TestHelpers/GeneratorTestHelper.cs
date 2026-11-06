@@ -86,7 +86,7 @@ namespace DTOMaker.TestHelpers
 
         public static string GenerateAndGetOutput(this IIncrementalGenerator generator, string modelSource, int index, string expectedHintName)
         {
-            VerifyTestHelpers.EnsureInitialized();
+            VerifyInitializer.EnsureInitialized();
             var generatorResult = GeneratorTestHelper.RunSourceGenerator(generator, modelSource, LanguageVersion.LatestMajor);
             var generated = generatorResult.GeneratedSources[index];
             generated.HintName.ShouldBe(expectedHintName);
@@ -96,7 +96,7 @@ namespace DTOMaker.TestHelpers
 
         public static void GenerateAndCheckLength(this IIncrementalGenerator generator, string modelSource, int expectedLength, string? expectedErrorCodes = null)
         {
-            VerifyTestHelpers.EnsureInitialized();
+            VerifyInitializer.EnsureInitialized();
             var generatorResult = GeneratorTestHelper.RunSourceGenerator(generator, modelSource, LanguageVersion.LatestMajor);
             generatorResult.Exception.ShouldBeNull();
             generatorResult.Diagnostics.Count(d => d.Id == "INF01").ShouldBe(1);

@@ -34,7 +34,7 @@ namespace DTOMaker.Runtime.MsgPack2
 
         public static EntityBase CreateFrom(EntityBase source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MessagePack.MyDTO3 source2 => new MyOrg.Models.MessagePack.MyDTO3(source2),
@@ -45,7 +45,7 @@ namespace DTOMaker.Runtime.MsgPack2
 
         public new static EntityBase CreateFrom(IEntityBase source)
         {
-            if (source is EntityBase concrete && concrete.IsFrozen) return concrete;
+            if (source is EntityBase concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO3 source2 => new MyOrg.Models.MessagePack.MyDTO3(source2),

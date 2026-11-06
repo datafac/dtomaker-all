@@ -87,8 +87,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     /// <summary>
     /// Gets a value indicating whether the entity is in a frozen (immutable) state.
     /// </summary>
-    [IgnoreMember]
-    public bool IsFrozen => _frozen;
+    public bool IsFrozen() => _frozen;
     protected virtual void OnFreeze() { }
 
     /// <inheritdoc/>

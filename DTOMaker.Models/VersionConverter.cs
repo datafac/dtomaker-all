@@ -9,7 +9,20 @@ namespace DTOMaker.Models;
 public sealed class VersionConverter : IObjectConverter<Version, String>
 {
     public NativeType NativeType => NativeType.String;
-    public static Version ToCustom(String native) => Version.TryParse(native, out var version) ? version : new Version();
-    public static String ToNative(Version custom) => custom.ToString();
+    public static Version ToCustom(String native)
+    {
+        Version? version;
+        if (!Version.TryParse(native, out version))
+        {
+            version = new Version();
+        }
+        return version;
+    }
+
+    public static String ToNative(Version custom)
+    {
+        string result= custom.ToString();
+        return result;
+    }
 }
 

@@ -35,7 +35,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Monoid_1_UInt32 CreateFrom(Monoid_1_UInt32 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.MessagePack.MyDTO source2 => new MyOrg.Models.MessagePack.MyDTO(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static Monoid_1_UInt32 CreateFrom(MyOrg.Models.IMonoid<UInt32> source)
         {
-            if (source is Monoid_1_UInt32 concrete && concrete.IsFrozen) return concrete;
+            if (source is Monoid_1_UInt32 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO source2 => new MyOrg.Models.MessagePack.MyDTO(source2),
@@ -103,7 +103,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

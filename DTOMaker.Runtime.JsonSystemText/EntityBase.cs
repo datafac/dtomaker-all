@@ -14,8 +14,10 @@ namespace DTOMaker.Runtime.JsonSystemText
         public EntityBase(IEntityBase _) { }
         public EntityBase(EntityBase _) { }
 
+        [JsonIgnore]
         private volatile bool _frozen;
-        [JsonIgnore] public bool IsFrozen => _frozen;
+        public bool IsFrozen() => _frozen;
+
         protected virtual void OnFreeze() { }
         public void Freeze()
         {

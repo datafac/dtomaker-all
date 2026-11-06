@@ -35,7 +35,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static Monoid_1_String CreateFrom(Monoid_1_String source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.JsonNewtonSoft.MyDTO source2 => new MyOrg.Models.JsonNewtonSoft.MyDTO(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static Monoid_1_String CreateFrom(MyOrg.Models.IMonoid<String> source)
         {
-            if (source is Monoid_1_String concrete && concrete.IsFrozen) return concrete;
+            if (source is Monoid_1_String concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO source2 => new MyOrg.Models.JsonNewtonSoft.MyDTO(source2),
@@ -103,7 +103,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using VerifyTests;
 
-namespace DTOMaker.TestHelpers
+namespace DTOMaker.TestHelpers;
+
+internal static class VerifyInitializer
 {
-    public static class VerifyTestHelpers
-    {
 #if NET5_0_OR_GREATER
     [ModuleInitializer()]
     public static void Init() => VerifierSettings.FixNewlinesOnRead();
@@ -15,20 +15,19 @@ namespace DTOMaker.TestHelpers
     /// </summary>
     public static void EnsureInitialized() { }
 #else
-        private static volatile bool _initialized = false;
+    private static volatile bool _initialized = false;
 
-        /// <summary>
-        /// On .NET versions less than 5.0 this method ensures that the VerifySettings.FixNewlinesOnRead() 
-        /// method is called only once.
-        /// </summary>
-        public static void EnsureInitialized()
+    /// <summary>
+    /// On .NET versions less than 5.0 this method ensures that the VerifySettings.FixNewlinesOnRead() 
+    /// method is called only once.
+    /// </summary>
+    public static void EnsureInitialized()
+    {
+        if (!_initialized)
         {
-            if (!_initialized)
-            {
-                _initialized = true;
-                VerifierSettings.FixNewlinesOnRead();
-            }
+            _initialized = true;
+            VerifierSettings.FixNewlinesOnRead();
         }
-#endif
     }
+#endif
 }

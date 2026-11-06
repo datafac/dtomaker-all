@@ -35,7 +35,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Tree_2_String_Octets CreateFrom(Tree_2_String_Octets source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.JsonSystemText.MyTree source2 => new MyOrg.Models.JsonSystemText.MyTree(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Tree_2_String_Octets CreateFrom(MyOrg.Models.ITree<String, Octets> source)
         {
-            if (source is Tree_2_String_Octets concrete && concrete.IsFrozen) return concrete;
+            if (source is Tree_2_String_Octets concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyTree source2 => new MyOrg.Models.JsonSystemText.MyTree(source2),
@@ -177,7 +177,7 @@ namespace MyOrg.Models.JsonSystemText
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

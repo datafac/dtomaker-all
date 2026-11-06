@@ -45,7 +45,7 @@ namespace MyOrg.Models.MsgPack2
         /// </summary>
         public new static Derived CreateFrom(Derived source)
         {
-            if (source.IsFrozen)
+            if (source.IsFrozen())
                 return source;
             else
                 return new Derived(source);
@@ -57,7 +57,7 @@ namespace MyOrg.Models.MsgPack2
         /// </summary>
         public new static Derived CreateFrom(MyOrg.Models.IDerived source)
         {
-            if (source is Derived concrete && concrete.IsFrozen)
+            if (source is Derived concrete && concrete.IsFrozen())
                 return concrete;
             else
                 return new Derived(source);
@@ -171,7 +171,7 @@ namespace MyOrg.Models.MsgPack2
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

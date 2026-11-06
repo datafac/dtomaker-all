@@ -35,7 +35,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Monoid_1_UInt128 CreateFrom(Monoid_1_UInt128 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 MyOrg.Models.JsonSystemText.MyDTO source2 => new MyOrg.Models.JsonSystemText.MyDTO(source2),
@@ -45,7 +45,7 @@ namespace MyOrg.Models.JsonSystemText
 
         public new static Monoid_1_UInt128 CreateFrom(MyOrg.Models.IMonoid<UInt128> source)
         {
-            if (source is Monoid_1_UInt128 concrete && concrete.IsFrozen) return concrete;
+            if (source is Monoid_1_UInt128 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 MyOrg.Models.IMyDTO source2 => new MyOrg.Models.JsonSystemText.MyDTO(source2),
@@ -103,7 +103,7 @@ namespace MyOrg.Models.JsonSystemText
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

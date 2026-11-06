@@ -152,7 +152,7 @@ namespace Template.MemBlocks.Tests
 
             var copy = new T_EntityImplName_(orig);
             await copy.Pack(blobStore, cancellation);
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
@@ -188,7 +188,7 @@ namespace Template.MemBlocks.Tests
             copy.BaseField1.ShouldBe(orig.BaseField1);
             copy.T_RequiredNativeStructMemberName_.ShouldBe(orig.T_RequiredNativeStructMemberName_);
 
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
@@ -224,7 +224,7 @@ namespace Template.MemBlocks.Tests
             copy.ShouldNotBeNull();
             await copy.UnpackAll(blobStore, cancellation);
 
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());

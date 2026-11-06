@@ -84,27 +84,11 @@ namespace DTOMaker.SrcGen.Core
             _builder.AppendLine(ReplaceTokens(line));
         }
 
-        private static string ToCamelCase_notUsed(string value)
-        {
-            ReadOnlySpan<char> input = value.AsSpan();
-            Span<char> output = stackalloc char[input.Length];
-            input.CopyTo(output);
-            for (int i = 0; i < output.Length; i++)
-            {
-                if (Char.IsLetter(output[i]))
-                {
-                    output[i] = Char.ToLower(output[i]);
-                    return new string(output.ToArray());
-                }
-            }
-            return new string(output.ToArray());
-        }
-
         protected virtual string OnBuildTokenName(OutputMember member, string name)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(member.IsNullable ? "Nullable" : "Required");
-            if (member.Kind == MemberKind.Struct)
+            if (member.Kind == MemberKind.Struct || member.Kind == MemberKind.String)
             {
                 sb.Append(member.IsCustom ? "Custom" : "Native");
             }
@@ -149,17 +133,12 @@ namespace DTOMaker.SrcGen.Core
             tokens[BuildTokenName(member, "MemberSequence")] = member.Sequence;
 
             string memberType = language.GetDataTypeToken(member.MemberType);
+            tokens["MemberType"] = memberType;
+            tokens["NativeStructType"] = member.MemberType.Impl.Name;
             if (member.IsCustom)
             {
-                tokens["MemberType"] = memberType;
                 tokens["CustomStructType"] = member.MemberType.Intf.FullName;
                 tokens["CustomStringType"] = member.MemberType.Intf.FullName;
-            }
-            else
-            {
-                tokens["MemberType"] = memberType;
-                tokens["NativeStructType"] = member.MemberType.Impl.Name;
-                tokens["NativeStringType"] = member.MemberType.Impl.Name;
             }
             if (member.ConverterSpace is not null && member.ConverterName is not null)
             {

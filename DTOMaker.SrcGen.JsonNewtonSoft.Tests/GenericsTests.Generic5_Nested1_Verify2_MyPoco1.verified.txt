@@ -32,7 +32,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static MyPoco1 CreateFrom(MyPoco1 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.JsonNewtonSoft.MyPoco1(source)
@@ -41,7 +41,7 @@ namespace MyOrg.Models.JsonNewtonSoft
 
         public new static MyPoco1 CreateFrom(MyOrg.Models.IMyPoco1 source)
         {
-            if (source is MyPoco1 concrete && concrete.IsFrozen) return concrete;
+            if (source is MyPoco1 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.JsonNewtonSoft.MyPoco1(source)
@@ -86,7 +86,7 @@ namespace MyOrg.Models.JsonNewtonSoft
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

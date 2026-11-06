@@ -39,7 +39,7 @@ namespace Template.JsonNewtonSoft.Tests
 
             copy.ShouldNotBeNull();
             copy.Freeze();
-            copy.IsFrozen.ShouldBeTrue();
+            copy.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());
@@ -70,7 +70,7 @@ namespace Template.JsonNewtonSoft.Tests
             recd.Freeze();
             var copy = recd as T_EntityImplName_;
             copy.ShouldNotBeNull();
-            copy!.IsFrozen.ShouldBeTrue();
+            copy!.IsFrozen().ShouldBeTrue();
             copy.Equals(orig).ShouldBeTrue();
             copy.ShouldBe(orig);
             copy.GetHashCode().ShouldBe(orig.GetHashCode());

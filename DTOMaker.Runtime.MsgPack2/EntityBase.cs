@@ -47,8 +47,7 @@ namespace DTOMaker.Runtime.MsgPack2
         /// <summary>
         /// Gets a value indicating whether the entity is in a frozen (immutable) state.
         /// </summary>
-        [IgnoreMember]
-        public bool IsFrozen => _frozen;
+        public bool IsFrozen() => _frozen;
         /// <summary>
         /// Provides a callback method that is invoked when the entity is being frozen.
         /// </summary>

@@ -31,7 +31,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static MyDTO3 CreateFrom(MyDTO3 source)
         {
-            if (source.IsFrozen) return source;
+            if (source.IsFrozen()) return source;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.MyDTO3(source)
@@ -40,7 +40,7 @@ namespace MyOrg.Models.MessagePack
 
         public new static MyDTO3 CreateFrom(MyOrg.Models.IMyDTO3 source)
         {
-            if (source is MyDTO3 concrete && concrete.IsFrozen) return concrete;
+            if (source is MyDTO3 concrete && concrete.IsFrozen()) return concrete;
             return source switch
             {
                 _ => new MyOrg.Models.MessagePack.MyDTO3(source)
@@ -124,7 +124,7 @@ namespace MyOrg.Models.MessagePack
         private int? _hashCode;
         public override int GetHashCode()
         {
-            if (!IsFrozen) return CalcHashCode();
+            if (!IsFrozen()) return CalcHashCode();
             if (_hashCode.HasValue) return _hashCode.Value;
             _hashCode = CalcHashCode();
             return _hashCode.Value;

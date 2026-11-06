@@ -7,7 +7,7 @@ namespace Testing.Models.MemPack;
 [MemoryPackable]
 public partial class Required_Int64 : IRequired_Int64, IEquatable<Required_Int64>
 {
-    public bool IsFrozen => false;
+    public bool IsFrozen() => false;
     public void Freeze() { }
     public IEntityBase ShallowCopy() => new Required_Int64() { Field = this.Field };
     [MemoryPackInclude] public Int64 Field { get; set; }
@@ -26,7 +26,7 @@ public partial class Required_Int64 : IRequired_Int64, IEquatable<Required_Int64
 [MemoryPackable]
 public partial class Required_String : IRequired_String, IEquatable<Required_String>
 {
-    public bool IsFrozen => false;
+    public bool IsFrozen() => false;
     public void Freeze() { }
     public IEntityBase ShallowCopy() => new Required_String() { Field = this.Field };
     [MemoryPackInclude] public String Field { get; set; } = string.Empty;

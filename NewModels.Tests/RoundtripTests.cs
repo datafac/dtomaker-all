@@ -19,7 +19,7 @@ namespace T_ConcreteNameSpace_.Tests.MsgPack3
             var buffer = EntityBase.Serialize<T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_>(send, cancellation);
             var recd = EntityBase.Deserialize<T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_>(buffer, cancellation);
             recd.ShouldNotBeNull();
-            recd.IsFrozen.ShouldBeTrue();
+            recd.IsFrozen().ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
             var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
@@ -37,7 +37,7 @@ namespace T_ConcreteNameSpace_.Tests.MsgPack3
             var buffer = EntityBase.Serialize<T_AncestorNameSpace_.MsgPack3.T_AncestorImplName_>(send, cancellation);
             var recd = EntityBase.Deserialize<T_AncestorNameSpace_.MsgPack3.T_AncestorImplName_>(buffer, cancellation) as T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_;
             recd.ShouldNotBeNull();
-            recd.IsFrozen.ShouldBeTrue();
+            recd.IsFrozen().ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
             var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
@@ -63,7 +63,7 @@ namespace T_ConcreteNameSpace_.Tests.MemBlox2
             var buffer = await send.Serialize(cancellation);
             var recd = T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_.DeserializeFrom(buffer);
             recd.ShouldNotBeNull();
-            recd.IsFrozen.ShouldBeTrue();
+            recd.IsFrozen().ShouldBeTrue();
             recd.IsPacked.ShouldBeTrue();
             await recd.UnpackAll(blobStore, cancellation);
             var copy = new T_ConcreteNameSpace_.Records.T_ConcreteImplName_(recd);
@@ -81,7 +81,7 @@ namespace T_ConcreteNameSpace_.Tests.MemBlox2
             var buffer = await send.Serialize(cancellation);
             var recdBase = T_AncestorNameSpace_.MemBlox2.T_AncestorImplName_.DeserializeFrom(buffer);
             recdBase.ShouldNotBeNull();
-            recdBase.IsFrozen.ShouldBeTrue();
+            recdBase.IsFrozen().ShouldBeTrue();
             recdBase.IsPacked.ShouldBeTrue();
             await recdBase.UnpackAll(blobStore, cancellation);
             recdBase.ShouldBeOfType<T_ConcreteNameSpace_.MemBlox2.T_ConcreteImplName_>();

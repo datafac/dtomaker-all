@@ -13,9 +13,13 @@ on:
 jobs:
   build:
 
+    permissions:
+      id-token: write  # enable GitHub OIDC token issuance for this job
+
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout
       uses: actions/checkout@v4
       with:  
@@ -39,5 +43,11 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-build --verbosity normal
 
-    - name: Push
-      run: dotnet nuget push **/D*.nupkg --api-key ${{ secrets.NUGET_APIKEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+    - name: NuGet Login
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: Psiman62 # or ${{secrets.NUGET_USER}}
+
+    - name: NuGet Push
+      run: dotnet nuget push **/D*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
