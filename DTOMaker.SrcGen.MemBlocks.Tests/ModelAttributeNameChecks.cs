@@ -1,6 +1,5 @@
 using DTOMaker.SrcGen.Core;
 using Shouldly;
-using System;
 using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.Tests

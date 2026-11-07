@@ -1,4 +1,2 @@
-﻿using DTOMaker.SrcGen.Core;
-
-namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
+﻿namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 

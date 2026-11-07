@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DTOMaker.SrcGen.Core;
+﻿using DTOMaker.SrcGen.Core;
 namespace DTOMaker.SrcGen.JsonSystemText;
 public sealed partial class EntityGenerator : EntityGeneratorBase
 {

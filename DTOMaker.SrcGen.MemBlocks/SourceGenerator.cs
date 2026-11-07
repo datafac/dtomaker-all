@@ -2,12 +2,10 @@
 using DTOMaker.SrcGen.MemBlocks.BlockLayout;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace DTOMaker.SrcGen.MemBlocks

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DTOMaker.Models.BinaryTree;
+﻿namespace DTOMaker.Models.BinaryTree;
 
 public interface IBinaryTree<TKey, TValue, TNode> : IEntityBase
     where TNode : class, IBinaryTree<TKey, TValue, TNode>

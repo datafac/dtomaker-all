@@ -1,6 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace DTOMaker.SrcGen.Core

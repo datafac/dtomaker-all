@@ -1,6 +1,4 @@
 ﻿using DTOMaker.TestHelpers;
-using System.Threading.Tasks;
-using VerifyXunit;
 using Xunit;
 
 namespace DTOMaker.SrcGen.MemBlocks.Tests

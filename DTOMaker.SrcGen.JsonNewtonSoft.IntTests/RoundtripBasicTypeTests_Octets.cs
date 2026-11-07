@@ -3,7 +3,6 @@ using DTOMaker.Models;
 using DTOMaker.Runtime.JsonNewtonSoft;
 using DTOMaker.SrcGen.JsonNewtonSoft.IntTests.JsonNewtonSoft;
 using Shouldly;
-using System;
 using System.Text;
 using System.Threading.Tasks;
 using VerifyXunit;

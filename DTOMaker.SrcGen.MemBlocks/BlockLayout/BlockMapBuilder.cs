@@ -1,7 +1,6 @@
 ﻿using DTOMaker.SrcGen.Core;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 

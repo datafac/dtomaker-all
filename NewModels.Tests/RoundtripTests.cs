@@ -48,8 +48,6 @@ namespace T_ConcreteNameSpace_.Tests.MsgPack3
 
 namespace T_ConcreteNameSpace_.Tests.MemBlox2
 {
-    using DTOMaker.Runtime.MemBlocks;
-
     public class RoundtripTests_MemBlox2
     {
         [Fact]

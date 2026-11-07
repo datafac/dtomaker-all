@@ -1,7 +1,6 @@
 using DTOMaker.Models;
 using DTOMaker.SrcGen.MemBlocks.IntTests.MemBlocks;
 using Shouldly;
-using System;
 using System.Threading.Tasks;
 using VerifyXunit;
 using Xunit;

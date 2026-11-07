@@ -3,7 +3,6 @@ using DTOMaker.Runtime.JsonSystemText;
 using DTOMaker.SrcGen.JsonSystemText.IntTests.JsonSystemText;
 using Shouldly;
 using System;
-using System.Text.Json.Serialization;
 using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.IntTests;

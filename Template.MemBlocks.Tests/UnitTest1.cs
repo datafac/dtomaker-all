@@ -1,7 +1,6 @@
 using DataFac.Memory;
 using DataFac.Storage;
 using DTOMaker.Models;
-using DTOMaker.Runtime;
 using DTOMaker.Runtime.MemBlocks;
 using Shouldly;
 using System;
@@ -9,7 +8,6 @@ using System.Buffers;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using T_BaseImplNameSpace_;
 using T_ImplNameSpace_;
 
 #pragma warning disable CS0618 // Type or member is obsolete

@@ -1,5 +1,4 @@
-﻿using Microsoft.Testing.Platform.Extensions.ArtifactPostProcessing;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using Xunit;
 

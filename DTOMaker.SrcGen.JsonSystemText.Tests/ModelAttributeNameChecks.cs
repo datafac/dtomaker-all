@@ -1,5 +1,4 @@
 using Shouldly;
-using System;
 using Xunit;
 
 namespace DTOMaker.SrcGen.JsonSystemText.Tests;

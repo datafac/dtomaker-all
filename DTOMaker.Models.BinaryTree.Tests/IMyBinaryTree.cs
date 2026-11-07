@@ -1,6 +1,5 @@
 using DTOMaker.Models;
 using DTOMaker.Models.BinaryTree;
-using System.Collections.Generic;
 
 namespace TestOrg.TestApp.Models
 {

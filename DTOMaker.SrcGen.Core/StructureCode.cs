@@ -1,4 +1,2 @@
-﻿using System;
-
-namespace DTOMaker.SrcGen.Core;
+﻿namespace DTOMaker.SrcGen.Core;
 
