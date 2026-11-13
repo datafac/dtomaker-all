@@ -1,7 +1,11 @@
-﻿using DataFac.Storage;
+﻿using DataFac.Memory;
+using DataFac.Storage;
 using DTOMaker.Models;
+using DTOMaker.Runtime;
+using DTOMaker.Runtime.MemBlocks;
 using MessagePack;
 using System;
+using System.Buffers;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -92,10 +96,15 @@ namespace DTOMaker.Runtime.Records
 
 namespace DTOMaker.Runtime.NetStrux
 {
-    public abstract record EntityBase : IEntityBase
+    public abstract class EntityBase : IEntityBase, IEquatable<EntityBase>, IBlockSerializer<EntityBase>
     {
         #region IFreezable implementation
         private volatile bool _frozen = false;
+
+        public bool IsPacked => throw new NotImplementedException();
+
+        public bool IsUnpacked => throw new NotImplementedException();
+
         public bool IsFrozen() => _frozen;
         protected virtual void OnFreeze() { }
         public void Freeze()
@@ -130,8 +139,53 @@ namespace DTOMaker.Runtime.NetStrux
         public EntityBase() { }
         public EntityBase(EntityBase source) { }
         public EntityBase(IEntityBase source) { }
+
+        #region IEquatable implementation
+        public bool Equals(EntityBase? that)
+        {
+            if (ReferenceEquals(this, that)) return true;
+            if (that is null) return false;
+            return true;
+        }
+        public override bool Equals(object? obj) => obj is EntityBase other && Equals(other);
+        public override int GetHashCode() => GetType().GetHashCode();
+        #endregion
+
+        #region IBlockSerializer implementation
+        private BlockB064 _header;
+
+        public static readonly int ClassHeight = 0;
+        public static readonly int BlockOffset = 0;
+        public static readonly int BlockLength = 64; //todo BlockB064.StaticSize
+        public static readonly int AccumLength = BlockOffset + BlockLength;
+        protected abstract int OnGetTotalBlockLength();
+        protected virtual void OnSerialize(Span<byte> buffer)
+        {
+            _header.WriteTo(buffer.Slice(BlockOffset, BlockLength));
+        }
+
+        /// <inheritdoc />
+        public ReadOnlyMemory<byte> SyncSerialize()
+        {
+            int globalBlockSize = OnGetTotalBlockLength();
+            Memory<byte> buffer = new byte[globalBlockSize];
+            // todo? write fixed header
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        /// <inheritdoc />
+        public static EntityBase? SyncDeserialize(ReadOnlyMemory<byte> buffer)
+        {
+            // todo? can we register all deserialization targets statically?
+            throw new InvalidOperationException($"{nameof(EntityBase)} cannot deserialize arbitrary buffers");
+        }
+
+        #endregion
     }
 }
+
+#pragma warning disable IDE1006 // Naming Styles
 
 namespace T_AncestorNameSpace_
 {
@@ -154,7 +208,9 @@ namespace T_ConcreteNameSpace_
     [Entity(5)]
     public interface IT_ConcreteImplName_ : T_AbstractNameSpace_.IT_AbstractImplName_
     {
-        [Member(1)][Name("val")] string Value { get; }
+        [Member(1)][Name("field1")] int Field1 { get; }
+
+        // todo [Member(2)][Name("field2")] string Field2 { get; }
     }
 }
 
@@ -172,7 +228,8 @@ namespace T_ConcreteNameSpace_
 {
     public interface IT_ConcreteImplName__Writable : IT_ConcreteImplName_, T_AbstractNameSpace_.IT_AbstractImplName__Writable
     {
-        new string Value { set; }
+        new int Field1 { set; }
+        //todo new string Value { set; }
     }
 }
 // </generated>
@@ -201,10 +258,10 @@ namespace T_ConcreteNameSpace_.Records
 {
     public sealed record T_ConcreteImplName_ : T_AbstractNameSpace_.Records.T_AbstractImplName_, IT_ConcreteImplName_
     {
-        public string Value { get; init; } = string.Empty;
+        public int Field1 { get; init; } = 0;
         public T_ConcreteImplName_() { }
-        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Value = source.Value; }
-        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
+        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
         protected override DTOMaker.Runtime.Records.EntityBase OnShallowCopy() => this;
     }
 }
@@ -237,17 +294,17 @@ namespace T_ConcreteNameSpace_.Classes
     {
         protected override DTOMaker.Runtime.Classes.EntityBase OnShallowCopy() => new T_ConcreteImplName_(this);
         protected override void OnFreeze() { base.OnFreeze(); }
-        public string Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
+        public int Field1 { get; set { CheckNotFrozen(); field = value; } } = 0;
         public T_ConcreteImplName_() { }
-        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Value = source.Value; }
-        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
+        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
     }
 }
 
 namespace T_AncestorNameSpace_.MsgPack3
 {
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_))]
+    [MessagePack. Union(5, typeof(T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_))]
     public abstract class T_AncestorImplName_ : DTOMaker.Runtime.MsgPack3.EntityBase, IT_AncestorImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
@@ -260,7 +317,7 @@ namespace T_AncestorNameSpace_.MsgPack3
 namespace T_AbstractNameSpace_.MsgPack3
 {
     [MessagePackObject(SuppressSourceGeneration = true)]
-    [Union(5, typeof(T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_))]
+    [MessagePack. Union(5, typeof(T_ConcreteNameSpace_.MsgPack3.T_ConcreteImplName_))]
     public abstract class T_AbstractImplName_ : T_AncestorNameSpace_.MsgPack3.T_AncestorImplName_, IT_AbstractImplName__Writable
     {
         protected override void OnFreeze() { base.OnFreeze(); }
@@ -279,13 +336,129 @@ namespace T_ConcreteNameSpace_.MsgPack3
         protected override IEntityBase OnShallowCopy() => new T_ConcreteImplName_(this);
         protected override void OnFreeze() { base.OnFreeze(); }
         [Key(1)]
-        public string Value { get; set { CheckNotFrozen(); field = value; } } = string.Empty;
+        public int Field1 { get; set { CheckNotFrozen(); field = value; } } = 0;
         public T_ConcreteImplName_() { }
-        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Value = source.Value; }
-        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Value = source.Value; }
+        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
+        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source) { Field1 = source.Field1; }
 
         protected override ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => base.OnPack(blobStore, cancellation);
         protected override ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => base.OnUnpack(blobStore, depth, cancellation);
+    }
+}
+
+namespace T_AncestorNameSpace_.NetStrux
+{
+    using DataFac.Memory;
+    using DTOMaker.Runtime;
+    using DTOMaker.Runtime.NetStrux;
+    public abstract class T_AncestorImplName_ : EntityBase, T_AncestorNameSpace_.IT_AncestorImplName__Writable, IBlockSerializer<T_AncestorImplName_>
+    {
+        private BlockB064 _block;
+
+        public static new readonly int ClassHeight = EntityBase.ClassHeight + 1;
+        public static new readonly int BlockOffset = EntityBase.AccumLength;
+        public static new readonly int BlockLength = 64; //todo BlockB064.StaticSize
+        public static new readonly int AccumLength = BlockOffset + BlockLength;
+        protected override void OnSerialize(Span<byte> buffer)
+        {
+            base.OnSerialize(buffer);
+            _block.WriteTo(buffer.Slice(BlockOffset, BlockLength));
+        }
+
+        public static new T_AncestorImplName_? SyncDeserialize(ReadOnlyMemory<byte> buffer)
+        {
+            //Guid entityId = xxx;
+            //if (entityId == yyy) return T_ConcreteNameSpace_.NetStrux.T_ConcreteImplName_.SyncDeserialize(buffer);
+            throw new NotImplementedException();
+        }
+
+        protected T_AncestorImplName_(T_AncestorImplName_ source) : base(source)
+        {
+            _block = source._block;
+        }
+        protected T_AncestorImplName_(IT_AncestorImplName_ source) : base(source)
+        {
+            _block = default;
+            // todo copy any fields from source into _block
+        }
+    }
+}
+
+namespace T_AbstractNameSpace_.NetStrux
+{
+    public abstract class T_AbstractImplName_ : T_AncestorNameSpace_.NetStrux.T_AncestorImplName_, IT_AbstractImplName__Writable, IBlockSerializer<T_AbstractImplName_>
+    {
+        private BlockB064 _block;
+
+        public static new readonly int ClassHeight = T_AncestorNameSpace_.NetStrux.T_AncestorImplName_.ClassHeight + 1;
+        public static new readonly int BlockOffset = T_AncestorNameSpace_.NetStrux.T_AncestorImplName_.AccumLength;
+        public static new readonly int BlockLength = 64; //todo BlockB064.StaticSize
+        public static new readonly int AccumLength = BlockOffset + BlockLength;
+        protected override void OnSerialize(Span<byte> buffer)
+        {
+            base.OnSerialize(buffer);
+            _block.WriteTo(buffer.Slice(BlockOffset, BlockLength));
+        }
+
+        public static new T_AbstractImplName_? SyncDeserialize(ReadOnlyMemory<byte> buffer)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected T_AbstractImplName_(T_AbstractImplName_ source) : base(source)
+        {
+            _block = source._block;
+        }
+        protected T_AbstractImplName_(IT_AbstractImplName_ source) : base(source)
+        {
+            _block = default;
+            // todo copy any fields from source into _block
+        }
+    }
+}
+
+namespace T_ConcreteNameSpace_.NetStrux
+{
+    using DTOMaker.Runtime.NetStrux;
+
+    public sealed class T_ConcreteImplName_ : T_AbstractNameSpace_.NetStrux.T_AbstractImplName_, IT_ConcreteImplName__Writable, IBlockSerializer<T_ConcreteImplName_>
+    {
+        protected sealed override void OnFreeze() { base.OnFreeze(); }
+        protected sealed override EntityBase OnShallowCopy() => new T_ConcreteImplName_(this);
+
+        private BlockB064 _block;
+
+        public static new readonly int ClassHeight = T_AbstractNameSpace_.NetStrux.T_AbstractImplName_.ClassHeight + 1;
+        public static new readonly int BlockOffset = T_AbstractNameSpace_.NetStrux.T_AbstractImplName_.AccumLength;
+        public static new readonly int BlockLength = 64; //todo BlockB064.StaticSize
+        public static new readonly int AccumLength = BlockOffset + BlockLength;
+        protected sealed override int OnGetTotalBlockLength() => AccumLength;
+        protected sealed override void OnSerialize(Span<byte> buffer)
+        {
+            base.OnSerialize(buffer);
+            _block.WriteTo(buffer.Slice(BlockOffset, BlockLength));
+        }
+
+        public static new T_ConcreteImplName_? SyncDeserialize(ReadOnlyMemory<byte> buffer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Field1
+        {
+            get => _block.A.A.A.A.Int32ValueLE;
+            set => _block.A.A.A.A.Int32ValueLE = value;
+        }
+
+        public T_ConcreteImplName_(T_ConcreteImplName_ source) : base(source)
+        {
+            _block = source._block;
+        }
+        public T_ConcreteImplName_(IT_ConcreteImplName_ source) : base(source)
+        {
+            _block = default;
+            // todo copy any fields from source into _block
+        }
     }
 }
 
@@ -465,13 +638,13 @@ namespace T_ConcreteNameSpace_.MemBlox2
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            this.Value = source.Value;
+            this.Field1 = source.Field1;
         }
         public T_ConcreteImplName_(T_ConcreteNameSpace_.IT_ConcreteImplName_ source) : base(_metadata, source)
         {
             _readonlyLocalBlock = _readonlyGlobalBlock.Slice(BlockOffset, BlockLength);
             _writableLocalBlock = _writableGlobalBlock.Slice(BlockOffset, BlockLength);
-            this.Value = source.Value;
+            this.Field1 = source.Field1;
         }
         public T_ConcreteImplName_(ReadOnlyMemory<byte> buffer) : base(_metadata, buffer)
         {
@@ -479,41 +652,24 @@ namespace T_ConcreteNameSpace_.MemBlox2
             _writableLocalBlock = Memory<byte>.Empty;
         }
 
-        private string _Value = string.Empty;
-        public string Value
+        private const int Field1_FieldOffset = 0;
+        private const int Field1_FieldLength = 4;
+        public int Field1
         {
-            get { return _Value; }
-            set { ThrowIfFrozen(); _Value = value; }
-        }
-        private const int Value_FieldOffset = 0;
-        private async ValueTask Value_Pack(IBlobStore blobStore, CancellationToken cancellation)
-        {
-            var writableField = _writableLocalBlock.Slice(Value_FieldOffset, 64);
-            await PackText(_Value, writableField, blobStore, cancellation);
-        }
-        private async ValueTask Value_Unpack(IBlobStore blobStore, CancellationToken cancellation)
-        {
-            var readonlyField = _readonlyLocalBlock.Slice(Value_FieldOffset, 64);
-            var data = await UnpackData(readonlyField, blobStore, cancellation);
-#if NET8_0_OR_GREATER
-            _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.Span) : string.Empty;
-#else
-            _Value = data.HasValue ? System.Text.Encoding.UTF8.GetString(data.Value.ToArray()) : string.Empty;
-#endif
+            get => Codec_Int32_LE.ReadFromSpan(_readonlyLocalBlock.Span.Slice(Field1_FieldOffset, Field1_FieldLength));
+            set => Codec_Int32_LE.WriteToSpan(_writableLocalBlock.Span.Slice(Field1_FieldOffset, Field1_FieldLength), IfNotFrozen(value));
         }
 
         /// <inheritdoc/>
         protected override async ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation)
         {
             await base.OnPack(blobStore, cancellation);
-            await Value_Pack(blobStore, cancellation);
         }
 
         /// <inheritdoc/>
         protected override async ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {
             await base.OnUnpack(blobStore, depth, cancellation);
-            await Value_Unpack(blobStore, cancellation);
         }
 
     }
