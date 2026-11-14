@@ -12,7 +12,7 @@ public class VersionChecks
         Version version = typeof(Microsoft.CodeAnalysis.CSharp.LanguageVersion).Assembly.GetName().Version ?? new Version(0, 0, 0);
 
         version.Major.ShouldBe(5);
-        version.ToString().ShouldBe("5.9.0.0");
+        version.ToString().ShouldBe("5.12.0.0");
     }
 
 }
