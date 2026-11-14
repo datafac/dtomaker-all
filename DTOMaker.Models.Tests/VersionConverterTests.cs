@@ -16,8 +16,8 @@ public class VersionConverterTests
     {
         Version custom = VersionConverter.ToCustom(input);
         custom.ToString().ShouldBe(input);
-        string native = VersionConverter.ToNative(custom);
-        native.ShouldBe(input);
+        string output = VersionConverter.ToNative(custom);
+        output.ShouldBe(input);
     }
 
     [Theory]
