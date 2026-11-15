@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="MemoryPack" Version="1.22.0" />
+		<PackageReference Include="Nino" Version="4.0.0-rc.10" />
 	</ItemGroup>
 
 </Project>

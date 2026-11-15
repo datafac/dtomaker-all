@@ -4,6 +4,7 @@ using BenchmarkDotNet.Order;
 using DataFac.Storage.Testing;
 using DTOMaker.Runtime.MsgPack2;
 using MemoryPack;
+using Nino.Core;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,6 +97,24 @@ public class Roundtrip_Simple
         }
         return buffer.Length;
     }
+
+    // todo Nino is buggy - try V4 again after release
+    //[Benchmark]
+    //public async ValueTask<long> NinoSer()
+    //{
+    //    var orig = new Testing.Models.NinoSer.Simple();
+    //    orig.Field1 = 123456L;
+    //    orig.Field2 = -23456L;
+    //    await orig.Pack(_dataStore, CancellationToken.None);
+    //    Span<byte> buffer = NinoSerializer.Serialize(orig);
+    //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Simple>(buffer);
+    //    if (_checkValues)
+    //    {
+    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
+    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+    //    }
+    //    return buffer.Length;
+    //}
 
     [Benchmark]
     public async ValueTask<long> MemBlocks()

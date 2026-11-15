@@ -12,6 +12,10 @@ namespace Testing.PerfBench.UnitTests
         [Fact] public async ValueTask Roundtrip_Int64_HyperSer() => _ = await new Roundtrip_Simple(true).HyperSer();
         [Fact] public async ValueTask Roundtrip_Int64_JsonSystemText() => _ = await new Roundtrip_Simple(true).JsonSystemText();
         [Fact] public async ValueTask Roundtrip_Int64_JsonNewtonSoft() => _ = await new Roundtrip_Simple(true).JsonNewtonSoft();
+        // todo Nino is buggy - try V4 again after release
+        //[Fact] public async ValueTask Roundtrip_Int64_NinoSer() => _ = await new Roundtrip_Simple(true).NinoSer();
+
+
 
         [Theory]
         [InlineData(ValueKind.StrZero)]
@@ -34,14 +38,21 @@ namespace Testing.PerfBench.UnitTests
         [Theory]
         [InlineData(ValueKind.StrZero)]
         [InlineData(ValueKind.StrB064)]
-        //[InlineData(ValueKind.StrK002)]
+        //[InlineData(ValueKind.StrK002)] won't fit
         public async ValueTask Roundtrip_String_NetStrux(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NetStrux();
 
         [Theory]
         [InlineData(ValueKind.StrZero)]
         [InlineData(ValueKind.StrB064)]
-        //[InlineData(ValueKind.StrK002)]
+        [InlineData(ValueKind.StrK002)]
         public async ValueTask Roundtrip_String_HyperSer(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).HyperSer();
+
+        // todo Nino is buggy - try V4 again after release
+        //[Theory]
+        //[InlineData(ValueKind.StrZero)]
+        //[InlineData(ValueKind.StrB064)]
+        //[InlineData(ValueKind.StrK002)]
+        //public async ValueTask Roundtrip_String_NinoSer(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NinoSer();
 
         [Theory]
         [InlineData(ValueKind.StrZero)]

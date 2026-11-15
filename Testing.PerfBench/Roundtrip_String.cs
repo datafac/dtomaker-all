@@ -4,6 +4,7 @@ using BenchmarkDotNet.Order;
 using DataFac.Storage.Testing;
 using DTOMaker.Runtime.MsgPack2;
 using MemoryPack;
+using Nino.Core;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -107,7 +108,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.MemPack.Required_String();
         orig.Field = GetTestValue(Kind);
         orig.Freeze();
-        var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Required_String>(orig);
+        ReadOnlySpan<byte> buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Required_String>(orig);
         var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Required_String>(buffer);
         copy!.Freeze();
         if (_checkValues)
@@ -124,7 +125,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.NetStrux.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = await orig.Serialize(CancellationToken.None);
+        ReadOnlyMemory<byte> buffer = await orig.Serialize(CancellationToken.None);
         var copy = new Testing.Models.NetStrux.Required_String(buffer.Span);
         if (_checkValues)
         {
@@ -140,7 +141,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.HyperSer.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore, CancellationToken.None);
-        Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
+        ReadOnlySpan<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
         var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Required_String>(buffer);
         if (_checkValues)
         {
@@ -149,6 +150,23 @@ public class Roundtrip_String
         }
         return buffer.Length;
     }
+
+    // todo Nino is buggy - try V4 again after release
+    //[Benchmark]
+    //public async ValueTask<long> NinoSer()
+    //{
+    //    var orig = new Testing.Models.NinoSer.Required_String();
+    //    orig.Field = GetTestValue(Kind);
+    //    await orig.Pack(_dataStore, CancellationToken.None);
+    //    ReadOnlySpan<byte> buffer = NinoSerializer.Serialize(orig);
+    //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Simple>(buffer);
+    //    if (_checkValues)
+    //    {
+    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
+    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+    //    }
+    //    return buffer.Length;
+    //}
 
     [Benchmark]
     public async ValueTask<long> MsgPack2()
