@@ -5,20 +5,22 @@ using MemoryPack;
 namespace Testing.Models.MemPack;
 
 [MemoryPackable]
-public partial class Required_Int64 : IRequired_Int64, IEquatable<Required_Int64>
+public partial class Simple : ISimple, IEquatable<Simple>
 {
     public bool IsFrozen() => false;
     public void Freeze() { }
-    public IEntityBase ShallowCopy() => new Required_Int64() { Field = this.Field };
-    [MemoryPackInclude] public Int64 Field { get; set; }
+    public IEntityBase ShallowCopy() => new Simple() { Field1 = this.Field1, Field2 = this.Field2 };
+    [MemoryPackInclude] public Int64 Field1 { get; set; }
+    [MemoryPackInclude] public Int64? Field2 { get; set; }
 
-    public bool Equals(Required_Int64? other) => other is not null;
-    public override bool Equals(object? obj) => obj is Required_Int64 other && Equals(other);
+    public bool Equals(Simple? other) => other is not null;
+    public override bool Equals(object? obj) => obj is Simple other && Equals(other);
     public override int GetHashCode()
     {
         HashCode hasher = new();
-        hasher.Add(typeof(Required_Int64));
-        hasher.Add(Field);
+        hasher.Add(typeof(Simple));
+        hasher.Add(Field1);
+        hasher.Add(Field2);
         return hasher.ToHashCode();
     }
 }
@@ -29,6 +31,7 @@ public partial class Required_String : IRequired_String, IEquatable<Required_Str
     public bool IsFrozen() => false;
     public void Freeze() { }
     public IEntityBase ShallowCopy() => new Required_String() { Field = this.Field };
+
     [MemoryPackInclude] public String Field { get; set; } = string.Empty;
 
     public bool Equals(Required_String? other) => other is not null;

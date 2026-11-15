@@ -89,32 +89,40 @@ namespace DTOMaker.Runtime.HyperSer
 
 namespace Testing.Models.HyperSer
 {
-    public sealed partial class Required_Int64 : DTOMaker.Runtime.HyperSer.EntityBase, IRequired_Int64, IEquatable<Required_Int64>
+    public sealed partial class Simple : DTOMaker.Runtime.HyperSer.EntityBase, ISimple, IEquatable<Simple>
     {
-        public Int64 Field
+        public Int64 Field1
         {
             get;
             set { field = IfNotFrozen(value); }
         }
 
-        public Required_Int64() : base() { }
+        public Int64? Field2
+        {
+            get;
+            set { field = IfNotFrozen(value); }
+        }
 
-        public bool Equals(Required_Int64? other)
+        public Simple() : base() { }
+
+        public bool Equals(Simple? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field != this.Field) return false;
+            if (other.Field1 != this.Field1) return false;
+            if (other.Field2 != this.Field2) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Required_Int64 other && Equals(other);
+        public override bool Equals(object? obj) => obj is Simple other && Equals(other);
         public override int GetHashCode()
         {
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
-            hasher.Add(typeof(Required_Int64));
-            hasher.Add(Field);
+            hasher.Add(typeof(Simple));
+            hasher.Add(Field1);
+            hasher.Add(Field2);
             return hasher.ToHashCode();
         }
     }

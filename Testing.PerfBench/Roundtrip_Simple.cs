@@ -17,10 +17,10 @@ namespace Testing.PerfBench;
 [SimpleJob(RuntimeMoniker.Net10_0)]
 [MemoryDiagnoser]
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
-public class Roundtrip_Int64
+public class Roundtrip_Simple
 {
-    public Roundtrip_Int64() => _checkValues = false;
-    public Roundtrip_Int64(bool checkValues) => _checkValues = checkValues;
+    public Roundtrip_Simple() => _checkValues = false;
+    public Roundtrip_Simple(bool checkValues) => _checkValues = checkValues;
 
     /// <summary>
     /// Unit tests should set this to true to validate that the values are correctly roundtripped.
@@ -32,11 +32,12 @@ public class Roundtrip_Int64
     [Benchmark(Baseline = true)]
     public async ValueTask<long> MemoryPack()
     {
-        var orig = new Testing.Models.MemPack.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.MemPack.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         orig.Freeze();
-        var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Required_Int64>(orig);
-        var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Required_Int64>(buffer);
+        var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Simple>(orig);
+        var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Simple>(buffer);
         copy!.Freeze();
         if (_checkValues)
         {
@@ -49,11 +50,12 @@ public class Roundtrip_Int64
     [Benchmark]
     public async ValueTask<long> MsgPack2()
     {
-        var orig = new Testing.Models.MsgPack2.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.MsgPack2.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         orig.Freeze();
-        var buffer = orig.SerializeToMessagePack<Testing.Models.MsgPack2.Required_Int64>();
-        var copy = buffer.DeserializeFromMessagePack<Testing.Models.MsgPack2.Required_Int64>();
+        var buffer = orig.SerializeToMessagePack<Testing.Models.MsgPack2.Simple>();
+        var copy = buffer.DeserializeFromMessagePack<Testing.Models.MsgPack2.Simple>();
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -65,11 +67,12 @@ public class Roundtrip_Int64
     [Benchmark]
     public async ValueTask<long> NetStrux()
     {
-        var orig = new Testing.Models.NetStrux.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.NetStrux.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = await orig.Serialize(CancellationToken.None);
-        var copy = new Testing.Models.NetStrux.Required_Int64(buffer.Span);
+        var copy = new Testing.Models.NetStrux.Simple(buffer.Span);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -82,11 +85,12 @@ public class Roundtrip_Int64
     public async ValueTask<long> HyperSer()
     {
         //HyperSerializerSettings.SerializeFields = false;
-        var orig = new Testing.Models.HyperSer.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.HyperSer.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         await orig.Pack(_dataStore, CancellationToken.None);
         Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
-        var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Required_Int64>(buffer);
+        var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -98,11 +102,12 @@ public class Roundtrip_Int64
     [Benchmark]
     public async ValueTask<long> MemBlocks()
     {
-        var orig = new Testing.Models.MemBlocks.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.MemBlocks.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = await orig.Serialize(CancellationToken.None);
-        var copy = new Testing.Models.MemBlocks.Required_Int64(buffer);
+        var copy = new Testing.Models.MemBlocks.Simple(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -114,11 +119,12 @@ public class Roundtrip_Int64
     [Benchmark]
     public async ValueTask<long> JsonSystemText()
     {
-        var orig = new Testing.Models.JsonSystemText.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.JsonSystemText.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.SerializeToJson(orig);
-        var copy = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonSystemText.Required_Int64>(buffer);
+        var copy = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonSystemText.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -130,11 +136,12 @@ public class Roundtrip_Int64
     [Benchmark]
     public async ValueTask<long> JsonNewtonSoft()
     {
-        var orig = new Testing.Models.JsonNewtonSoft.Required_Int64();
-        orig.Field = 123456L;
+        var orig = new Testing.Models.JsonNewtonSoft.Simple();
+        orig.Field1 = 123456L;
+        orig.Field2 = -23456L;
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.SerializeToJson(orig);
-        var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonNewtonSoft.Required_Int64>(buffer);
+        var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonNewtonSoft.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");

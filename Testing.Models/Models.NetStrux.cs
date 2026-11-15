@@ -130,26 +130,37 @@ namespace DTOMaker.Runtime.NetStrux
 
 namespace Testing.Models.NetStrux
 {
-    public sealed partial class Required_Int64 : DTOMaker.Runtime.NetStrux.EntityBase, IRequired_Int64, IEquatable<Required_Int64>
+    public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimple, IEquatable<Simple>
     {
-        private BlockB008 _block = default;
+        private BlockB032 _block = default;
         public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
-        public new static readonly int BlockLength = 8; // todo _block.StaticSize
+        public new static readonly int BlockLength = 32; // todo _block.StaticSize
         public new static readonly int TotalLength = BlockOffset + BlockLength;
 
-        public Int64 Field
+        public Int64 Field1
         {
-            get { return _block.Int64ValueLE; }
-            set { _block.Int64ValueLE = IfNotFrozen(value); }
+            get { return _block.A.A.Int64ValueLE; }
+            set { _block.A.A.Int64ValueLE = IfNotFrozen(value); }
         }
 
-        public Required_Int64() : base(TotalLength) { }
-        protected Required_Int64(int outerLength) : base(outerLength) { }
-        public Required_Int64(ReadOnlySpan<byte> source) : base(TotalLength, source)
+        public Int64? Field2
+        {
+            get => _block.B.A.A.A.A.BoolValue ? _block.A.B.Int64ValueLE : null;
+            set
+            {
+                ThrowIfFrozen();
+                _block.B.A.A.A.A.BoolValue = value.HasValue;
+                if (value.HasValue) _block.A.B.Int64ValueLE = value.Value;
+            }
+        }
+
+        public Simple() : base(TotalLength) { }
+        protected Simple(int outerLength) : base(outerLength) { }
+        public Simple(ReadOnlySpan<byte> source) : base(TotalLength, source)
         {
             _block.TryRead(source.Slice(BlockOffset, BlockLength));
         }
-        protected Required_Int64(int outerLength, ReadOnlySpan<byte> source) : base(outerLength, source)
+        protected Simple(int outerLength, ReadOnlySpan<byte> source) : base(outerLength, source)
         {
             _block.TryRead(source.Slice(BlockOffset, BlockLength));
         }
@@ -160,22 +171,24 @@ namespace Testing.Models.NetStrux
             _block.WriteTo(target.Slice(BlockOffset, BlockLength));
         }
 
-        public bool Equals(Required_Int64? other)
+        public bool Equals(Simple? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field != this.Field) return false;
+            if (other.Field1 != this.Field1) return false;
+            if (other.Field2 != this.Field2) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Required_Int64 other && Equals(other);
+        public override bool Equals(object? obj) => obj is Simple other && Equals(other);
         public override int GetHashCode()
         {
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
-            hasher.Add(typeof(Required_Int64));
-            hasher.Add(Field);
+            hasher.Add(typeof(Simple));
+            hasher.Add(Field1);
+            hasher.Add(Field2);
             return hasher.ToHashCode();
         }
     }
