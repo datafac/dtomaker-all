@@ -8,6 +8,7 @@ namespace Testing.PerfBench.UnitTests
         [Fact] public async ValueTask Roundtrip_Int64_MemoryPack() => _ = await new Roundtrip_Int64(true).MemoryPack();
         [Fact] public async ValueTask Roundtrip_Int64_MsgPack2() => _ = await new Roundtrip_Int64(true).MsgPack2();
         [Fact] public async ValueTask Roundtrip_Int64_MemBlocks() => _ = await new Roundtrip_Int64(true).MemBlocks();
+        [Fact] public async ValueTask Roundtrip_Int64_NetStrux() => _ = await new Roundtrip_Int64(true).NetStrux();
         [Fact] public async ValueTask Roundtrip_Int64_JsonSystemText() => _ = await new Roundtrip_Int64(true).JsonSystemText();
         [Fact] public async ValueTask Roundtrip_Int64_JsonNewtonSoft() => _ = await new Roundtrip_Int64(true).JsonNewtonSoft();
 
@@ -28,6 +29,12 @@ namespace Testing.PerfBench.UnitTests
         [InlineData(ValueKind.StrB064)]
         [InlineData(ValueKind.StrK002)]
         public async ValueTask Roundtrip_String_MemBlocks(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).MemBlocks();
+
+        [Theory]
+        [InlineData(ValueKind.StrZero)]
+        [InlineData(ValueKind.StrB064)]
+        //[InlineData(ValueKind.StrK002)]
+        public async ValueTask Roundtrip_String_NetStrux(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NetStrux();
 
         [Theory]
         [InlineData(ValueKind.StrZero)]

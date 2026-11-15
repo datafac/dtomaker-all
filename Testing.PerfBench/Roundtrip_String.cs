@@ -119,6 +119,22 @@ public class Roundtrip_String
     }
 
     [Benchmark]
+    public async ValueTask<long> NetStrux()
+    {
+        var orig = new Testing.Models.NetStrux.Required_String();
+        orig.Field = GetTestValue(Kind);
+        await orig.Pack(_dataStore, CancellationToken.None);
+        var buffer = await orig.Serialize(CancellationToken.None);
+        var copy = new Testing.Models.NetStrux.Required_String(buffer.Span);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffer.Length;
+    }
+
+    [Benchmark]
     public async ValueTask<long> MsgPack2()
     {
         var orig = new Testing.Models.MsgPack2.Required_String();

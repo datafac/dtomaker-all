@@ -61,6 +61,22 @@ public class Roundtrip_Int64
     }
 
     [Benchmark]
+    public async ValueTask<long> NetStrux()
+    {
+        var orig = new Testing.Models.NetStrux.Required_Int64();
+        orig.Field = 123456L;
+        await orig.Pack(_dataStore, CancellationToken.None);
+        var buffer = await orig.Serialize(CancellationToken.None);
+        var copy = new Testing.Models.NetStrux.Required_Int64(buffer.Span);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffer.Length;
+    }
+
+    [Benchmark]
     public async ValueTask<long> MemBlocks()
     {
         var orig = new Testing.Models.MemBlocks.Required_Int64();
