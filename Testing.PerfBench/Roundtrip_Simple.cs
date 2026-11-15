@@ -3,7 +3,6 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using DataFac.Storage.Testing;
 using DTOMaker.Runtime.MsgPack2;
-using Hyper;
 using MemoryPack;
 using System;
 using System.Threading;
@@ -84,7 +83,6 @@ public class Roundtrip_Simple
     [Benchmark]
     public async ValueTask<long> HyperSer()
     {
-        //HyperSerializerSettings.SerializeFields = false;
         var orig = new Testing.Models.HyperSer.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
