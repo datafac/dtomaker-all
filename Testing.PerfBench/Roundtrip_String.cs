@@ -135,6 +135,22 @@ public class Roundtrip_String
     }
 
     [Benchmark]
+    public async ValueTask<long> HyperSer()
+    {
+        var orig = new Testing.Models.HyperSer.Required_String();
+        orig.Field = GetTestValue(Kind);
+        await orig.Pack(_dataStore, CancellationToken.None);
+        Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
+        var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Required_String>(buffer);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffer.Length;
+    }
+
+    [Benchmark]
     public async ValueTask<long> MsgPack2()
     {
         var orig = new Testing.Models.MsgPack2.Required_String();

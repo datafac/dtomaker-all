@@ -124,8 +124,7 @@ namespace DTOMaker.Runtime.MsgPack2
 
         private volatile bool _packed;
         /// <inheritdoc/>
-        [IgnoreMember]
-        public bool IsPacked => _packed;
+        public bool IsPacked() => _packed;
         protected virtual ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;
         public async ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation)
         {
@@ -140,8 +139,7 @@ namespace DTOMaker.Runtime.MsgPack2
 
         private volatile bool _unpacked;
         /// <inheritdoc/>
-        [IgnoreMember]
-        public bool IsUnpacked => _unpacked;
+        public bool IsUnpacked() => _unpacked;
         protected virtual ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;
         public async ValueTask Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
         {

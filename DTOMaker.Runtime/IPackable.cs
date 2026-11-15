@@ -17,7 +17,7 @@ public interface IPackable : IEntityBase
     /// Returns true if the entity is packed and ready for serialization, otherwise false. 
     /// A packed entity is also frozen and immutable, and can be safely serialized.
     /// </summary>
-    bool IsPacked { get; }
+    bool IsPacked();
 
     /// <summary>
     /// Prepares the entity for serialization, which includes packing and emitting any large 
@@ -36,7 +36,7 @@ public interface IPackable : IEntityBase
     /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 
     /// </summary>
-    bool IsUnpacked { get; }
+    bool IsUnpacked();
 
     /// <summary>
     /// Performs a shallow restore of the entity's state from the data store to the depth 

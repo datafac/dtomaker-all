@@ -209,7 +209,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
 
     private volatile bool _packed;
     /// <inheritdoc/>
-    public bool IsPacked => _packed;
+    public bool IsPacked() => _packed;
     /// <inheritdoc/>
     protected virtual ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;
     /// <inheritdoc/>
@@ -226,7 +226,7 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
 
     private volatile bool _unpacked;
     /// <inheritdoc/>
-    public bool IsUnpacked => _unpacked;
+    public bool IsUnpacked() => _unpacked;
     /// <inheritdoc/>
     protected virtual ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;
     /// <inheritdoc/>

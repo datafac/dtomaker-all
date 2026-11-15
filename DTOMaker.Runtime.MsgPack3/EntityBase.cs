@@ -28,7 +28,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     public static ReadOnlyMemory<byte> Serialize<T>(T entity, CancellationToken cancellation)
         where T : EntityBase
     {
-        if (!entity.IsPacked) ThrowIsNotPackedException(nameof(Serialize));
+        if (!entity.IsPacked()) ThrowIsNotPackedException(nameof(Serialize));
         return MessagePackSerializer.Serialize<T>(entity, _options, cancellation);
     }
 
@@ -140,8 +140,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     [IgnoreMember]
     private volatile bool _packed;
     /// <inheritdoc/>
-    [IgnoreMember]
-    public bool IsPacked => _packed;
+    public bool IsPacked() => _packed;
     protected virtual ValueTask OnPack(IBlobStore blobStore, CancellationToken cancellation) => default;
     public async ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation)
     {
@@ -156,8 +155,7 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     [IgnoreMember]
     private volatile bool _unpacked;
     /// <inheritdoc/>
-    [IgnoreMember]
-    public bool IsUnpacked => _unpacked;
+    public bool IsUnpacked() => _unpacked;
     protected virtual ValueTask OnUnpack(IBlobStore blobStore, int depth, CancellationToken cancellation) => default;
     public async ValueTask Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
     {
