@@ -2,7 +2,12 @@
 using DataFac.Storage;
 using DataFac.UnsafeHelpers;
 using DTOMaker.Models;
+using DTOMaker.Runtime.NetStrux;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -126,6 +131,308 @@ namespace DTOMaker.Runtime.NetStrux
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
     }
+
+    public enum Fill
+    {
+        Zero,
+        Part,
+        Full
+    }
+    public sealed class BinaryMap
+    {
+        public Fill State { get; }
+        public BinaryMap? A { get; }
+        public BinaryMap? B { get; }
+
+        private readonly sbyte _lenLog2;
+        public int SizeInBits => PowerOf2(_lenLog2);
+        public (int ByteCount, int BitsRemain) Sizes => (SizeInBits / 8, SizeInBits % 8);
+
+        private readonly struct Result
+        {
+            public readonly bool Found;
+            public readonly BinaryMap? NewMap;
+            public readonly int Offset;
+            public Result(bool found, BinaryMap? newMap, int offset)
+            {
+                Found = found;
+                NewMap = newMap;
+                Offset = offset;
+            }
+        }
+
+        /// <summary>
+        /// Default initial map contains 2^3 or 8 bits (1 byte)
+        /// </summary>
+        public static BinaryMap Empty { get; } = new BinaryMap(3, Fill.Zero, null, null);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int PowerOf2(sbyte x)
+        {
+            return 1 << x;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static sbyte Log2(int x)
+        {
+            sbyte result = 0;
+            int test = 1;
+            while (test < x)
+            {
+                result += 1;
+                test *= 2;
+            }
+            return result;
+        }
+
+        private BinaryMap(sbyte lenLog2, Fill fill, BinaryMap? a, BinaryMap? b)
+        {
+            if (lenLog2 < 0)
+                throw new ArgumentOutOfRangeException(nameof(lenLog2), lenLog2, $"Must be >= 0");
+            _lenLog2 = lenLog2;
+            A = a;
+            B = b;
+            State = fill;
+        }
+
+        public BinaryMap Expand()
+        {
+            var currentSizeInBytes = PowerOf2(_lenLog2) / 8;
+            if (_lenLog2 >= 16)
+                throw new InvalidOperationException($"Cannot expand block map beyond 8KiB (yet)");
+            switch (State)
+            {
+                case Fill.Zero:
+                    return new BinaryMap((sbyte)(_lenLog2 + 1), Fill.Zero, null, null);
+                case Fill.Part:
+                    return new BinaryMap((sbyte)(_lenLog2 + 1), Fill.Part, this, new BinaryMap(_lenLog2, Fill.Zero, null, null));
+                case Fill.Full:
+                    return new BinaryMap((sbyte)(_lenLog2 + 1), Fill.Part, this, new BinaryMap(_lenLog2, Fill.Zero, null, null));
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(State), State, null);
+            }
+        }
+
+        private static Fill CalcFill(Fill? a, Fill? b)
+        {
+            Fill ax = a ?? Fill.Zero;
+            Fill bx = b ?? Fill.Zero;
+            if (ax == Fill.Zero && bx == Fill.Zero)
+                return Fill.Zero;
+            if (ax == Fill.Full && bx == Fill.Full)
+                return Fill.Full;
+            return Fill.Part;
+        }
+
+        private Result assignField(sbyte bitlenLog2)
+        {
+            if (bitlenLog2 > _lenLog2)
+                return new Result(false, null, 0);
+            if (State == Fill.Full)
+                return new Result(false, null, 0);
+            if (bitlenLog2 == _lenLog2)
+            {
+                if (State == Fill.Zero)
+                    return new Result(true, new BinaryMap(_lenLog2, Fill.Full, null, null), 0);
+                else
+                    return new Result(false, null, 0);
+            }
+            // check legs
+            int half = 0;
+            {
+                var a = A ?? new BinaryMap((sbyte)(_lenLog2 - 1), Fill.Zero, null, null);
+                var x = a.assignField(bitlenLog2);
+                if (x.Found)
+                    return new Result(true, new BinaryMap(_lenLog2, CalcFill(x.NewMap?.State, B?.State), x.NewMap, B), x.Offset);
+                half = a.SizeInBits;
+            }
+            {
+                var b = B ?? new BinaryMap((sbyte)(_lenLog2 - 1), Fill.Zero, null, null);
+                var x = b.assignField(bitlenLog2);
+                if (x.Found)
+                    return new Result(true, new BinaryMap(_lenLog2, CalcFill(A?.State, x.NewMap?.State), A, x.NewMap), half + x.Offset);
+            }
+            return new Result(false, null, 0);
+        }
+
+        /// <summary>
+        /// Finds and assigns a field of the given size (in bits).
+        /// </summary>
+        /// <param name="lengthInBits">The length of the field to assign (eg. byte = 8 bits, Int32 = 32 bits)</param>
+        /// <returns>An updated map conatining the assignment.</returns>
+        public (BinaryMap, int) AssignField(int lengthInBits)
+        {
+            const int maxLengthInBits = 8 * 1024 * 8; // 64KiB * 8 bits
+            if (lengthInBits <= 0)
+                throw new ArgumentOutOfRangeException(nameof(lengthInBits), lengthInBits, $"Must be > 0");
+            if (lengthInBits > maxLengthInBits)
+                throw new InvalidOperationException($"Cannot add fields larger than 8KiB (yet)");
+            sbyte lengthLog2 = Log2(lengthInBits);
+            bool found = false;
+            BinaryMap? map = this;
+            int offset = 0;
+            while (!found)
+            {
+                var x = map!.assignField(lengthLog2);
+                found = x.Found;
+                if (found)
+                {
+                    map = x.NewMap;
+                    offset = x.Offset;
+                }
+                else
+                {
+                    map = map.Expand();
+                }
+            }
+            return (map!, offset);
+        }
+    }
+    public sealed class BitAddress
+    {
+        public int Instance { get; }
+        public int Position { get; }
+        public int FieldOffset { get; }
+        public int FieldLength { get; }
+        public BitAddress(int instance, int position, int fieldOffset, int fieldLength)
+        {
+            Instance = instance;
+            Position = position;
+            FieldOffset = fieldOffset;
+            FieldLength = fieldLength;
+        }
+    }
+    public sealed class FieldDef
+    {
+        public int Offset { get; }
+        public int Length { get; }
+        public FieldDef(int offset, int length)
+        {
+            Offset = offset;
+            Length = length;
+        }
+        public FieldDef WithOffset(int offset) => new FieldDef(offset, Length);
+    }
+    public sealed class BlockMap
+    {
+        public static bool Vacant(BitArray map, int position, int length)
+        {
+            for (int i = position; i < (position + length); i++)
+            {
+                if (map[i]) return false;
+            }
+
+            return true;
+        }
+
+        public static void Reserve(BitArray map, int position, int length)
+        {
+            for (int i = position; i < position + length; i++)
+            {
+                if (map[i]) throw new InvalidOperationException($"Cannot reserve map[{position}..{position + length - 1}] - map[{i}] is already reserved");
+                map[i] = true;
+            }
+        }
+
+        private readonly int _blockSize;
+        private readonly BinaryMap _map;
+        private readonly ImmutableArray<FieldDef> _fields;
+
+        public int BlockSize => _blockSize;
+        public ImmutableArray<FieldDef> Fields => _fields;
+        public FieldDef LastAdded => Fields[^1];
+
+
+        private BlockMap(int blockSize, BinaryMap map, ImmutableArray<FieldDef> fields)
+        {
+            _blockSize = blockSize;
+            _map = map;
+            _fields = fields;
+        }
+
+        private static readonly BlockMap _empty = new BlockMap(0, BinaryMap.Empty, ImmutableArray<FieldDef>.Empty);
+        public static BlockMap Empty => _empty;
+
+        private string? GetFirstValidationError()
+        {
+            var map = new BitArray(BlockSize);
+            foreach (FieldDef field in Fields)
+            {
+                // check alignment
+                if (field.Offset % field.Length != 0)
+                    return
+                        $"Field incorrectly aligned (Offset={field.Offset},Length={field.Length})";
+
+                // check memory overlaps
+                var bytesNeeded = field.Length;
+                if (Vacant(map, field.Offset, bytesNeeded))
+                {
+                    Reserve(map, field.Offset, bytesNeeded);
+                }
+                else
+                {
+                    return $"Field incorrectly mapped (Offset={field.Offset},Length={field.Length})";
+                }
+            }
+
+            return null;
+        }
+
+        public bool IsValid(bool throwOnError = false)
+        {
+            string? reason = GetFirstValidationError();
+            if (reason is null)
+                return true;
+            if (throwOnError)
+                throw new InvalidOperationException(reason);
+            return false;
+        }
+
+        private static int GetFieldLength<T>()
+        {
+            if (typeof(T) == typeof(byte)) return 1;
+            if (typeof(T) == typeof(sbyte)) return 1;
+            if (typeof(T) == typeof(bool)) return 1;
+
+            if (typeof(T) == typeof(short)) return 2;
+            if (typeof(T) == typeof(ushort)) return 2;
+            if (typeof(T) == typeof(char)) return 2;
+
+            if (typeof(T) == typeof(int)) return 4;
+            if (typeof(T) == typeof(uint)) return 4;
+            if (typeof(T) == typeof(float)) return 4;
+
+            if (typeof(T) == typeof(long)) return 8;
+            if (typeof(T) == typeof(ulong)) return 8;
+            if (typeof(T) == typeof(double)) return 8;
+
+            if (typeof(T) == typeof(Guid)) return 16;
+
+            if (typeof(T) == typeof(string)) return 64;
+            if (typeof(T) == typeof(Octets)) return 64;
+
+            throw new InvalidOperationException($"Cannot determine length of type: {typeof(T).FullName}");
+        }
+
+        public BlockMap AddField<T>()
+        {
+            int fieldLength = GetFieldLength<T>();
+
+            int lengthInBits = fieldLength * 8;
+            (BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
+            var bitsRemain = bitOffset % 8;
+            if (bitsRemain != 0)
+                throw new InvalidOperationException($"Can't do bit offsets yet");
+
+            if (newMap.Sizes.BitsRemain != 0)
+                throw new InvalidOperationException($"Cannot build maps with bit remainders (yet)");
+
+            int fieldOffset = bitOffset / 8;
+            var fieldDef = new FieldDef(fieldOffset, fieldLength);
+            var newFields = _fields.Add(fieldDef);
+            return new BlockMap(newMap.Sizes.ByteCount, newMap, newFields);
+        }
+    }
 }
 
 namespace Testing.Models.NetStrux
@@ -137,22 +444,66 @@ namespace Testing.Models.NetStrux
         public new static readonly int BlockLength = 32; // todo _block.StaticSize
         public new static readonly int TotalLength = BlockOffset + BlockLength;
 
+        // ==================== fields begin ========================================
+        private static readonly BlockMap Field000_Map = BlockMap.Empty;
+
+        // -------------------- Field001 ----------------------------------------
+        private static readonly BlockMap Field001_Map = Field000_Map.AddField<Int64>();
+        private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+
         public Int64 Field1
         {
-            get { return _block.A.A.Int64ValueLE; }
-            set { _block.A.A.Int64ValueLE = IfNotFrozen(value); }
+            get
+            {
+                var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                return Codec_Int64_LE.ReadFromSpan(valueSpan);
+            }
+            set
+            {
+                var blockSpan = BlockHelper.AsWritableSpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                Codec_Int64_LE.WriteToSpan(valueSpan, value);
+            }
         }
 
+        // -------------------- Field002 ----------------------------------------
+        private static readonly BlockMap Field002Flags_Map = Field001_Map.AddField<bool>();
+        private static readonly FieldDef Field002Flags_Def = Field002Flags_Map.LastAdded;
+        private static readonly BlockMap Field002_Map = Field002Flags_Map.AddField<Int64>();
+        private static readonly FieldDef Field002_Def = Field002_Map.LastAdded;
         public Int64? Field2
         {
-            get => _block.B.A.A.A.A.BoolValue ? _block.A.B.Int64ValueLE : null;
+            get
+            {
+                var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
+                var flagsSpan = blockSpan.Slice(Field002Flags_Def.Offset, Field002Flags_Def.Length);
+                if (!Codec_Boolean_LE.ReadFromSpan(flagsSpan)) return null;
+                var valueSpan = blockSpan.Slice(Field002_Def.Offset, Field002_Def.Length);
+                return Codec_Int64_LE.ReadFromSpan(valueSpan);
+            }
+
             set
             {
                 ThrowIfFrozen();
-                _block.B.A.A.A.A.BoolValue = value.HasValue;
-                if (value.HasValue) _block.A.B.Int64ValueLE = value.Value;
+                var blockSpan = BlockHelper.AsWritableSpan(ref _block);
+                var flagsSpan = blockSpan.Slice(Field002Flags_Def.Offset, Field002Flags_Def.Length);
+                Codec_Boolean_LE.WriteToSpan(flagsSpan, value.HasValue);
+                if (value.HasValue)
+                {
+                    var valueSpan = blockSpan.Slice(Field002_Def.Offset, Field002_Def.Length);
+                    Codec_Int64_LE.WriteToSpan(valueSpan, value.Value);
+                }
             }
         }
+
+        // -------------------- Field001 ----------------------------------------
+        private static readonly BlockMap Field999_Map = Field002_Map;
+
+        //private static readonly int DeclaredBlockSize = _block.BlockSize;
+        private static readonly int ComputedBlockSize = Field999_Map.BlockSize;
+
+        // ==================== fields end ========================================
 
         public Simple() : base(TotalLength) { }
         protected Simple(int outerLength) : base(outerLength) { }

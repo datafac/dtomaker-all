@@ -4,12 +4,12 @@ namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
 public abstract record FieldDef
 {
-    public string Name { get; init; } = string.Empty;
+    //public string Name { get; init; } = string.Empty;
     public int Offset { get; init; }
     public int Length { get; init; }
-    public FieldDef(string name, int offset, int length)
+    public FieldDef(int offset, int length)
     {
-        Name = name;
+        //Name = name;
         Offset = offset;
         Length = length;
     }
@@ -20,7 +20,7 @@ public record ExternalFieldDef : FieldDef
 {
     public int Sequence { get; init; }
     public BitAddress? NullAddress { get; init; }
-    public ExternalFieldDef(string name, int offset, int length, int sequence, BitAddress? nullAddress) : base(name, offset, length)
+    public ExternalFieldDef(string name, int offset, int length, int sequence, BitAddress? nullAddress) : base(offset, length)
     {
         Sequence = sequence;
         NullAddress = nullAddress;
@@ -30,7 +30,7 @@ public record ExternalFieldDef : FieldDef
 public record InternalFieldDef : FieldDef
 {
     public int Instance { get; init; }
-    public InternalFieldDef(string name, int offset, int length, int instance) : base(name, offset, length)
+    public InternalFieldDef(string name, int offset, int length, int instance) : base(offset, length)
     {
         Instance = instance;
     }

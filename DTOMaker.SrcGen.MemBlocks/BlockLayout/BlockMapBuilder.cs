@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DTOMaker.SrcGen.MemBlocks.BlockLayout;
 
-public class BlockMapBuilder
+public sealed class BlockMapBuilder
 {
     private BinaryMap _map = BinaryMap.Empty;
     private List<FieldDef> _fields = new List<FieldDef>();

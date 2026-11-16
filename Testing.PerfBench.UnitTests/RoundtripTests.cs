@@ -3,6 +3,7 @@ using Xunit;
 
 namespace Testing.PerfBench.UnitTests
 {
+
     public class RoundtripTests
     {
         [Fact] public async ValueTask Roundtrip_Int64_MemoryPack() => _ = await new Roundtrip_Simple(true).MemoryPack();

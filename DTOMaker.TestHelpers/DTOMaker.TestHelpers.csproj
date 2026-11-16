@@ -14,8 +14,8 @@
 		<PackageReference Include="DataFac.Memory" Version="2.1.2" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" PrivateAssets="all" />
 		<PackageReference Include="Shouldly" Version="4.3.0" />
-		<PackageReference Include="Verify" Version="33.4.0" />
-		<PackageReference Include="Verify.XunitV3" Version="33.4.0" />
+		<PackageReference Include="Verify" Version="33.5.0" />
+		<PackageReference Include="Verify.XunitV3" Version="33.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
