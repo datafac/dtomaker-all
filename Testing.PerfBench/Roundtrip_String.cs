@@ -107,10 +107,9 @@ public class Roundtrip_String
     {
         var orig = new Testing.Models.MemPack.Required_String();
         orig.Field = GetTestValue(Kind);
-        orig.Freeze();
+        await orig.Pack(_dataStore, CancellationToken.None);
         ReadOnlySpan<byte> buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Required_String>(orig);
         var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Required_String>(buffer);
-        copy!.Freeze();
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");

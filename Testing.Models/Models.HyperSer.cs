@@ -91,6 +91,8 @@ namespace Testing.Models.HyperSer
 {
     public sealed partial class Simple : DTOMaker.Runtime.HyperSer.EntityBase, ISimple, IEquatable<Simple>
     {
+        protected override IEntityBase OnShallowCopy() => new Simple() { Field1 = this.Field1, Field2 = this.Field2 };
+
         public Int64 Field1
         {
             get;

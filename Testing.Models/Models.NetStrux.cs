@@ -54,6 +54,9 @@ namespace DTOMaker.Runtime.NetStrux
             _frozen = true;
         }
 
+        protected abstract IEntityBase OnShallowCopy();
+        public IEntityBase ShallowCopy() => OnShallowCopy();
+
         // todo? reserve header
         private BlockB008 _block = default;
         public static readonly int BlockOffset = 0;
@@ -78,7 +81,6 @@ namespace DTOMaker.Runtime.NetStrux
             OnSerialize(target.Span);
             return new ValueTask<ReadOnlyMemory<byte>>(target);
         }
-
 
         private volatile bool _packed;
         /// <inheritdoc/>
@@ -113,9 +115,6 @@ namespace DTOMaker.Runtime.NetStrux
         }
         /// <inheritdoc/>
         public ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation) => Unpack(blobStore, int.MaxValue, cancellation);
-
-        protected virtual IEntityBase OnShallowCopy() => throw new NotImplementedException();
-        public IEntityBase ShallowCopy() => OnShallowCopy();
 
         /// <summary>
         /// Determines whether the this entity is equal to another entity of the same type.
@@ -505,7 +504,10 @@ namespace Testing.Models.NetStrux
 
         // ==================== fields end ========================================
 
+        protected override IEntityBase OnShallowCopy() => new Simple(this);
+
         public Simple() : base(TotalLength) { }
+        public Simple(Simple source) : base(TotalLength) { _block = source._block; }
         protected Simple(int outerLength) : base(outerLength) { }
         public Simple(ReadOnlySpan<byte> source) : base(TotalLength, source)
         {
@@ -574,7 +576,10 @@ namespace Testing.Models.NetStrux
             }
         }
 
+        protected override IEntityBase OnShallowCopy() => new Required_String(this);
+
         public Required_String() : base(TotalLength) { }
+        public Required_String(Required_String source) : base(TotalLength) { _block = source._block; }
         protected Required_String(int outerLength) : base(outerLength) { }
         public Required_String(ReadOnlySpan<byte> source) : base(TotalLength, source)
         {

@@ -35,10 +35,9 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.MemPack.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
-        orig.Freeze();
+        await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Simple>(orig);
         var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Simple>(buffer);
-        copy!.Freeze();
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");

@@ -3,20 +3,17 @@ using Xunit;
 
 namespace Testing.PerfBench.UnitTests
 {
-
     public class RoundtripTests
     {
-        [Fact] public async ValueTask Roundtrip_Int64_MemoryPack() => _ = await new Roundtrip_Simple(true).MemoryPack();
-        [Fact] public async ValueTask Roundtrip_Int64_MsgPack2() => _ = await new Roundtrip_Simple(true).MsgPack2();
-        [Fact] public async ValueTask Roundtrip_Int64_MemBlocks() => _ = await new Roundtrip_Simple(true).MemBlocks();
-        [Fact] public async ValueTask Roundtrip_Int64_NetStrux() => _ = await new Roundtrip_Simple(true).NetStrux();
-        [Fact] public async ValueTask Roundtrip_Int64_HyperSer() => _ = await new Roundtrip_Simple(true).HyperSer();
-        [Fact] public async ValueTask Roundtrip_Int64_JsonSystemText() => _ = await new Roundtrip_Simple(true).JsonSystemText();
-        [Fact] public async ValueTask Roundtrip_Int64_JsonNewtonSoft() => _ = await new Roundtrip_Simple(true).JsonNewtonSoft();
+        [Fact] public async ValueTask Roundtrip_Simple_MemoryPack() => _ = await new Roundtrip_Simple(true).MemoryPack();
+        [Fact] public async ValueTask Roundtrip_Simple_MsgPack2() => _ = await new Roundtrip_Simple(true).MsgPack2();
+        [Fact] public async ValueTask Roundtrip_Simple_MemBlocks() => _ = await new Roundtrip_Simple(true).MemBlocks();
+        [Fact] public async ValueTask Roundtrip_Simple_NetStrux() => _ = await new Roundtrip_Simple(true).NetStrux();
+        [Fact] public async ValueTask Roundtrip_Simple_HyperSer() => _ = await new Roundtrip_Simple(true).HyperSer();
+        [Fact] public async ValueTask Roundtrip_Simple_JsonSystemText() => _ = await new Roundtrip_Simple(true).JsonSystemText();
+        [Fact] public async ValueTask Roundtrip_Simple_JsonNewtonSoft() => _ = await new Roundtrip_Simple(true).JsonNewtonSoft();
         // todo Nino is buggy - try V4 again after release
-        //[Fact] public async ValueTask Roundtrip_Int64_NinoSer() => _ = await new Roundtrip_Simple(true).NinoSer();
-
-
+        //[Fact] public async ValueTask Roundtrip_Simple_NinoSer() => _ = await new Roundtrip_Simple(true).NinoSer();
 
         [Theory]
         [InlineData(ValueKind.StrZero)]
