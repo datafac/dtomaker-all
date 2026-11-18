@@ -218,7 +218,7 @@ namespace MyOrg.Model2.MemBlocks
                 _Field31 = await CreateEmpty<MyOrg.Model2.MemBlocks.MyDTO>(blobStore, cancellation);
             }
             await _Field31.Pack(blobStore, cancellation);
-            ReadOnlyMemory<byte> buffer = await _Field31.Serialize(cancellation);
+            ReadOnlyMemory<byte> buffer = _Field31.SerializeSync();
             await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask Field31_Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)
@@ -258,7 +258,7 @@ namespace MyOrg.Model2.MemBlocks
             else
             {
                 await _Field32.Pack(blobStore, cancellation);
-                ReadOnlyMemory<byte> buffer = await _Field32.Serialize(cancellation);
+                ReadOnlyMemory<byte> buffer = _Field32.SerializeSync();
                 await PackData(buffer, writableField, blobStore, cancellation);
             }
         }

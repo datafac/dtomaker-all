@@ -214,7 +214,7 @@ namespace MyOrg.Models.MemBlocks
             else
             {
                 await _Field1.Pack(blobStore, cancellation);
-                ReadOnlyMemory<byte> buffer = await _Field1.Serialize(cancellation);
+                ReadOnlyMemory<byte> buffer = _Field1.SerializeSync();
                 await PackData(buffer, writableField, blobStore, cancellation);
             }
         }

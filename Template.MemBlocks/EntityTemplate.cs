@@ -766,7 +766,7 @@ namespace T_ImplNameSpace_
             else
             {
                 await _T_NullableEntityMemberName_.Pack(blobStore, cancellation);
-                ReadOnlyMemory<byte> buffer = await _T_NullableEntityMemberName_.Serialize(cancellation);
+                ReadOnlyMemory<byte> buffer = _T_NullableEntityMemberName_.SerializeSync();
                 await PackData(buffer, writableField, blobStore, cancellation);
             }
         }
@@ -805,7 +805,7 @@ namespace T_ImplNameSpace_
                 _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(blobStore, cancellation);
             }
             await _T_RequiredEntityMemberName_.Pack(blobStore, cancellation);
-            ReadOnlyMemory<byte> buffer = await _T_RequiredEntityMemberName_.Serialize(cancellation);
+            ReadOnlyMemory<byte> buffer = _T_RequiredEntityMemberName_.SerializeSync();
             await PackData(buffer, writableField, blobStore, cancellation);
         }
         private async ValueTask T_RequiredEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)

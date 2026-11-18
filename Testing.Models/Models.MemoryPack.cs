@@ -3,9 +3,11 @@ using DTOMaker.Models;
 using DTOMaker.Runtime;
 using MemoryPack;
 using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Testing.Models.HyperSer;
 
 namespace Testing.Models.MemPack;
 
@@ -84,11 +86,6 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// <inheritdoc/>
     public ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation) => Unpack(blobStore, int.MaxValue, cancellation);
 
-    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Determines whether the this entity is equal to another entity of the same type.
     /// </summary>
@@ -102,17 +99,29 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
     /// </summary>
     public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
+    protected abstract ReadOnlyMemory<byte> OnSerialize();
+    public ReadOnlyMemory<byte> SerializeSync() => OnSerialize();
+    public void DeserializeSync(ReadOnlySpan<byte> buffer) => throw new NotImplementedException();
 }
 
 
 [MemoryPackable]
-public partial class Simple : EntityBase, ISimple, IEquatable<Simple>
+public partial class Simple : EntityBase, ISimple, IEquatable<Simple>, IPackable<Simple>
 {
     protected override IEntityBase OnShallowCopy() => new Simple() { Field1 = this.Field1, Field2 = this.Field2 };
     [MemoryPackInclude] public Int64 Field1 { get; set; }
     [MemoryPackInclude] public Int64? Field2 { get; set; }
 
-    public bool Equals(Simple? other) => other is not null;
+    public bool Equals(Simple? other)
+    {
+        if (ReferenceEquals(this, other)) return true;
+        if (other is null) return false;
+        if (!base.Equals(other)) return false;
+        if (Field1 != other.Field1) return false;
+        if (Field2 != other.Field2) return false;
+        return true;
+    }
+
     public override bool Equals(object? obj) => obj is Simple other && Equals(other);
     public override int GetHashCode()
     {
@@ -122,10 +131,19 @@ public partial class Simple : EntityBase, ISimple, IEquatable<Simple>
         hasher.Add(Field2);
         return hasher.ToHashCode();
     }
+
+    protected override ReadOnlyMemory<byte> OnSerialize()
+    {
+        return MemoryPackSerializer.Serialize<Simple>(this);
+    }
+    public static Simple DeserializeFrom(ReadOnlySpan<byte> buffer)
+    {
+        return MemoryPackSerializer.Deserialize<Simple>(buffer) ?? throw new InvalidDataException();
+    }
 }
 
 [MemoryPackable]
-public partial class Required_String : EntityBase, IRequired_String, IEquatable<Required_String>
+public partial class Required_String : EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
 {
     protected override IEntityBase OnShallowCopy() => new Required_String() { Field = this.Field };
 
@@ -139,5 +157,14 @@ public partial class Required_String : EntityBase, IRequired_String, IEquatable<
         hasher.Add(typeof(Required_String));
         hasher.Add(Field);
         return hasher.ToHashCode();
+    }
+
+    protected override ReadOnlyMemory<byte> OnSerialize()
+    {
+        return MemoryPackSerializer.Serialize<Required_String>(this);
+    }
+    public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+    {
+        return MemoryPackSerializer.Deserialize<Required_String>(buffer) ?? throw new InvalidDataException();
     }
 }

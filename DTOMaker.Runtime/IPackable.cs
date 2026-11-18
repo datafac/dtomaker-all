@@ -26,14 +26,6 @@ public interface IPackable : IEntityBase
     ValueTask Pack(IBlobStore blobStore, CancellationToken cancellation);
 
     /// <summary>
-    /// Serializes the entity to a byte array, which can be stored or transmitted. The entity 
-    /// must be packed before serialization.
-    /// </summary>
-    /// <param name="cancellation"></param>
-    /// <returns></returns>
-    ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation);
-
-    /// <summary>
     /// Returns true if the entity has been unpacked from the data store, otherwise false. 
     /// </summary>
     bool IsUnpacked();
@@ -51,4 +43,34 @@ public interface IPackable : IEntityBase
     /// Performs a full restore of the entity's state from the data store.
     /// </summary>
     ValueTask UnpackAll(IBlobStore blobStore, CancellationToken cancellation);
+
+    /// <summary>
+    /// Serializes the entity to a byte array. The entity  must be packed before serialization.
+    /// </summary>
+    /// <returns>A read-only memory region containing the serialized data.</returns>
+    ReadOnlyMemory<byte> SerializeSync();
+
+    /// <summary>
+    /// Deserializes the entity from a byte array. The entity  must be unfrozen before deserialization.
+    /// </summary>
+    /// <param name="buffer">The byte data to deserialize.</param>
+    void DeserializeSync(ReadOnlySpan<byte> buffer);
+
+}
+
+/// <summary>
+/// Provides a contract for packing and unpacking values of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">The type of value represented by this interface.</typeparam>
+public interface IPackable<T> : IPackable
+{
+#if NET5_0_OR_GREATER
+    /// <summary>
+    /// Deserializes a value from the specified byte buffer.
+    /// </summary>
+    /// <param name="buffer">The byte buffer containing the serialized value.</param>
+    /// <returns>The deserialized value.</returns>
+    static abstract T DeserializeFrom(ReadOnlySpan<byte> buffer);
+#endif
+
 }

@@ -49,10 +49,16 @@ public abstract class EntityBase : IPackable, IEquatable<EntityBase>
     protected virtual ReadOnlyMemory<byte> OnSerialize() => ReadOnlyMemory<byte>.Empty;
 
     /// <inheritdoc/>
-    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
+    public ReadOnlyMemory<byte> SerializeSync()
     {
         ThrowIfNotPacked();
-        return new ValueTask<ReadOnlyMemory<byte>>(OnSerialize());
+        return OnSerialize();
+    }
+
+    /// <inheritdoc/>
+    public void DeserializeSync(ReadOnlySpan<byte> buffer)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>

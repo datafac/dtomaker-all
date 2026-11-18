@@ -201,10 +201,16 @@ public abstract class EntityBase : IEntityBase, IPackable, IEquatable<EntityBase
 
     #region IPackable
     /// <inheritdoc/>
-    public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
+    public ReadOnlyMemory<byte> SerializeSync()
     {
-        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(Serialize));
-        return new ValueTask<ReadOnlyMemory<byte>>(_readonlyGlobalBlock);
+        if (!_packed) EntityBase.ThrowIsNotPackedException(nameof(SerializeSync));
+        return _readonlyGlobalBlock;
+    }
+
+    /// <inheritdoc/>
+    public void DeserializeSync(ReadOnlySpan<byte> buffer)
+    {
+        throw new NotImplementedException();
     }
 
     private volatile bool _packed;

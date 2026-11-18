@@ -1,8 +1,10 @@
 ﻿using DataFac.Memory;
 using DataFac.Storage;
 using DTOMaker.Models;
+using DTOMaker.Runtime;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -80,10 +82,9 @@ namespace DTOMaker.Runtime.HyperSer
         public override bool Equals(object? obj) => obj is EntityBase;
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
 
-        public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract ReadOnlyMemory<byte> OnSerialize();
+        public ReadOnlyMemory<byte> SerializeSync() => OnSerialize();
+        public void DeserializeSync(ReadOnlySpan<byte> buffer) => throw new NotImplementedException();
     }
 }
 
@@ -127,9 +128,18 @@ namespace Testing.Models.HyperSer
             hasher.Add(Field2);
             return hasher.ToHashCode();
         }
+
+        protected override ReadOnlyMemory<byte> OnSerialize()
+        {
+            return Hyper.HyperSerializer.Serialize<Simple>(this).ToArray(); // todo alloc!
+        }
+        public static Simple DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            return Hyper.HyperSerializer.Deserialize<Simple>(buffer);
+        }
     }
 
-    public sealed partial class Required_String: DTOMaker.Runtime.HyperSer.EntityBase, IRequired_String, IEquatable<Required_String>
+    public sealed partial class Required_String: DTOMaker.Runtime.HyperSer.EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
     {
         public String Field
         {
@@ -156,6 +166,15 @@ namespace Testing.Models.HyperSer
             hasher.Add(typeof(Required_String));
             hasher.Add(Field);
             return hasher.ToHashCode();
+        }
+
+        protected override ReadOnlyMemory<byte> OnSerialize()
+        {
+            return Hyper.HyperSerializer.Serialize<Required_String>(this).ToArray(); // todo alloc!
+        }
+        public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            return Hyper.HyperSerializer.Deserialize<Required_String>(buffer);
         }
     }
 

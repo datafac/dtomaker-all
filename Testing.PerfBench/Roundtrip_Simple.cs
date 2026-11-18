@@ -70,8 +70,8 @@ public class Roundtrip_Simple
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = await orig.Serialize(CancellationToken.None);
-        var copy = new Testing.Models.NetStrux.Simple(buffer.Span);
+        var buffer = orig.SerializeSync();
+        var copy = Testing.Models.NetStrux.Simple.DeserializeFrom(buffer.Span);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -122,7 +122,7 @@ public class Roundtrip_Simple
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = await orig.Serialize(CancellationToken.None);
+        var buffer = orig.SerializeSync();
         var copy = new Testing.Models.MemBlocks.Simple(buffer);
         if (_checkValues)
         {

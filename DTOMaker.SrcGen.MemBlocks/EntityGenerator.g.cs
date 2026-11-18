@@ -882,7 +882,7 @@ public partial class EntityGenerator
                         Emit("            else");
                         Emit("            {");
                         Emit("                await _T_NullableEntityMemberName_.Pack(blobStore, cancellation);");
-                        Emit("                ReadOnlyMemory<byte> buffer = await _T_NullableEntityMemberName_.Serialize(cancellation);");
+                        Emit("                ReadOnlyMemory<byte> buffer = _T_NullableEntityMemberName_.SerializeSync();");
                         Emit("                await PackData(buffer, writableField, blobStore, cancellation);");
                         Emit("            }");
                         Emit("        }");
@@ -924,7 +924,7 @@ public partial class EntityGenerator
                         Emit("                _T_RequiredEntityMemberName_ = await CreateEmpty<T_MemberTypeImplSpace_.T_MemberTypeImplName_>(blobStore, cancellation);");
                         Emit("            }");
                         Emit("            await _T_RequiredEntityMemberName_.Pack(blobStore, cancellation);");
-                        Emit("            ReadOnlyMemory<byte> buffer = await _T_RequiredEntityMemberName_.Serialize(cancellation);");
+                        Emit("            ReadOnlyMemory<byte> buffer = _T_RequiredEntityMemberName_.SerializeSync();");
                         Emit("            await PackData(buffer, writableField, blobStore, cancellation);");
                         Emit("        }");
                         Emit("        private async ValueTask T_RequiredEntityMemberName__Unpack(IBlobStore blobStore, int depth, CancellationToken cancellation)");

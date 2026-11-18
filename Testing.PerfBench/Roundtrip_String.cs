@@ -124,8 +124,8 @@ public class Roundtrip_String
         var orig = new Testing.Models.NetStrux.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore, CancellationToken.None);
-        ReadOnlyMemory<byte> buffer = await orig.Serialize(CancellationToken.None);
-        var copy = new Testing.Models.NetStrux.Required_String(buffer.Span);
+        var buffer = orig.SerializeSync();
+        var copy = Testing.Models.NetStrux.Required_String.DeserializeFrom(buffer.Span);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -189,7 +189,7 @@ public class Roundtrip_String
         var orig = new Testing.Models.MemBlocks.Required_String();
         orig.Field = GetTestValue(Kind);
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = await orig.Serialize(CancellationToken.None);
+        var buffer = orig.SerializeSync();
         var copy = new Testing.Models.MemBlocks.Required_String(buffer);
         if (_checkValues)
         {

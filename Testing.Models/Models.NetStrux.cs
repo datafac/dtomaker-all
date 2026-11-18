@@ -2,8 +2,10 @@
 using DataFac.Storage;
 using DataFac.UnsafeHelpers;
 using DTOMaker.Models;
+using DTOMaker.Runtime;
 using DTOMaker.Runtime.NetStrux;
 using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -63,23 +65,51 @@ namespace DTOMaker.Runtime.NetStrux
         public static readonly int BlockLength = 8; // todo _block.StaticSize
         public static readonly int TotalLength = BlockOffset + BlockLength;
 
-        private readonly int _outerLength;
-        protected EntityBase(int outerLength) => _outerLength = outerLength;
-        protected EntityBase(int outerLength, ReadOnlySpan<byte> source) => _outerLength = outerLength;
+        protected EntityBase() { }
+        protected EntityBase(EntityBase source) { }
 
         /// <summary>
         /// When implemented in a derived class, serializes the entity's data into a byte array.
         /// </summary>
         /// <returns></returns>
-        protected virtual void OnSerialize(Span<byte> target) { }
+        protected abstract void OnSerialize(Span<byte> target);
 
-        /// <inheritdoc/>
-        public ValueTask<ReadOnlyMemory<byte>> Serialize(CancellationToken cancellation)
+        /// <summary>
+        /// Restores the state of the object from the provided serialized data.
+        /// </summary>
+        /// <remarks>Override to customize deserialization behavior for derived types. The base
+        /// implementation does nothing.</remarks>
+        /// <param name="source">The serialized data used to restore the object's state.</param>
+        protected abstract void OnDeserialize(ReadOnlySpan<byte> source);
+
+        protected abstract ReadOnlyMemory<byte> OnOuterSerialize();
+
+        public ReadOnlyMemory<byte> SerializeSync()
         {
             ThrowIfNotPacked();
-            Memory<byte> target = new byte[_outerLength];
-            OnSerialize(target.Span);
-            return new ValueTask<ReadOnlyMemory<byte>>(target);
+            var buffer = OnOuterSerialize();
+            return buffer;
+        }
+
+        protected virtual void OnSerialize3(IBufferWriter<byte> bufferWriter)
+        {
+            // todo? serialize header?
+            var source = BlockHelper.AsReadOnlySpan(ref _block);
+            var target = bufferWriter.GetSpan(source.Length);
+            source.CopyTo(target);
+            bufferWriter.Advance(source.Length);
+        }
+
+        public void Serialize3(IBufferWriter<byte> bufferWriter)
+        {
+            ThrowIfNotPacked();
+            OnSerialize3(bufferWriter);
+        }
+
+        public void DeserializeSync(ReadOnlySpan<byte> buffer)
+        {
+            ThrowIfFrozen();
+            OnDeserialize(buffer);
         }
 
         private volatile bool _packed;
@@ -128,7 +158,6 @@ namespace DTOMaker.Runtime.NetStrux
         /// The hash function for the current entity.
         /// </summary>
         public override int GetHashCode() => HashCode.Combine<Type>(typeof(EntityBase));
-
     }
 
     public enum Fill
@@ -436,7 +465,7 @@ namespace DTOMaker.Runtime.NetStrux
 
 namespace Testing.Models.NetStrux
 {
-    public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimple, IEquatable<Simple>
+    public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimple, IEquatable<Simple>, IPackable<Simple>
     {
         private BlockB032 _block = default;
         public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
@@ -506,22 +535,41 @@ namespace Testing.Models.NetStrux
 
         protected override IEntityBase OnShallowCopy() => new Simple(this);
 
-        public Simple() : base(TotalLength) { }
-        public Simple(Simple source) : base(TotalLength) { _block = source._block; }
-        protected Simple(int outerLength) : base(outerLength) { }
-        public Simple(ReadOnlySpan<byte> source) : base(TotalLength, source)
+        public Simple() : base() { }
+        public Simple(Simple source) : base(source) { _block = source._block; }
+
+        protected override void OnSerialize(Span<byte> target)
         {
-            _block.TryRead(source.Slice(BlockOffset, BlockLength));
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
         }
-        protected Simple(int outerLength, ReadOnlySpan<byte> source) : base(outerLength, source)
+
+        protected override void OnDeserialize(ReadOnlySpan<byte> source)
         {
             _block.TryRead(source.Slice(BlockOffset, BlockLength));
         }
 
-        protected override void OnSerialize(Span<byte> target)
+        protected override ReadOnlyMemory<byte> OnOuterSerialize()
         {
-            base.OnSerialize(target);
-            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+            Memory<byte> buffer = new byte[TotalLength];
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
+        {
+            base.OnSerialize3(bufferWriter);
+            var source = BlockHelper.AsReadOnlySpan(ref _block);
+            var target = bufferWriter.GetSpan(source.Length);
+            source.CopyTo(target);
+            bufferWriter.Advance(source.Length);
+        }
+
+        public static Simple DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            // todo polymorphic deserialization
+            var result = new Simple();
+            result.DeserializeSync(buffer);
+            return result;
         }
 
         public bool Equals(Simple? other)
@@ -529,8 +577,7 @@ namespace Testing.Models.NetStrux
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field1 != this.Field1) return false;
-            if (other.Field2 != this.Field2) return false;
+            if (other._block != this._block) return false;
             return true;
         }
 
@@ -540,13 +587,12 @@ namespace Testing.Models.NetStrux
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
             hasher.Add(typeof(Simple));
-            hasher.Add(Field1);
-            hasher.Add(Field2);
+            hasher.AddBytes(BlockHelper.AsReadOnlySpan(ref _block));
             return hasher.ToHashCode();
         }
     }
 
-    public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBase, IRequired_String, IEquatable<Required_String>
+    public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
     {
         private BlockB064 _block = default;
         public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
@@ -578,22 +624,32 @@ namespace Testing.Models.NetStrux
 
         protected override IEntityBase OnShallowCopy() => new Required_String(this);
 
-        public Required_String() : base(TotalLength) { }
-        public Required_String(Required_String source) : base(TotalLength) { _block = source._block; }
-        protected Required_String(int outerLength) : base(outerLength) { }
-        public Required_String(ReadOnlySpan<byte> source) : base(TotalLength, source)
+        public Required_String() : base() { }
+        public Required_String(Required_String source) : base(source) { _block = source._block; }
+
+        protected override void OnSerialize(Span<byte> target)
         {
-            _block.TryRead(source.Slice(BlockOffset, BlockLength));
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
         }
-        protected Required_String(int outerLength, ReadOnlySpan<byte> source) : base(outerLength, source)
+
+        protected override void OnDeserialize(ReadOnlySpan<byte> source)
         {
             _block.TryRead(source.Slice(BlockOffset, BlockLength));
         }
 
-        protected override void OnSerialize(Span<byte> target)
+        protected override ReadOnlyMemory<byte> OnOuterSerialize()
         {
-            base.OnSerialize(target);
-            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+            Memory<byte> buffer = new byte[TotalLength];
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            // todo polymorphic deserialization
+            var result = new Required_String();
+            result.DeserializeSync(buffer);
+            return result;
         }
 
         public bool Equals(Required_String? other)

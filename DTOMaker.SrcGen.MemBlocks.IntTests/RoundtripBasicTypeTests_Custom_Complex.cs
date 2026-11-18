@@ -26,7 +26,7 @@ public class RoundtripBasicTypeTests_Custom_Complex
         await orig.Pack(blobStore, cancellation);
         orig.Field1.ShouldBe(reqValue);
         orig.Field2.ShouldBe(optValue);
-        var buffer = await orig.Serialize(cancellation);
+        var buffer = orig.SerializeSync();
         var copy = new SimpleDTO_Complex(buffer);
         copy.ShouldNotBeNull();
         copy.ShouldBe(orig);
