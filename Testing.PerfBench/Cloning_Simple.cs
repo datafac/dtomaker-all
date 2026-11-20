@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Order;
 using DataFac.Storage.Testing;
+using MemoryPack;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ public class Cloning_Simple
         var orig = new Testing.Models.MemPack.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var copy = orig.ShallowCopy() as Testing.Models.MemPack.Simple;
         if (_checkValues)
@@ -47,6 +49,7 @@ public class Cloning_Simple
         var orig = new Testing.Models.MsgPack2.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         var copy = orig.ShallowCopy() as Testing.Models.MsgPack2.Simple;
         if (_checkValues)
@@ -63,6 +66,7 @@ public class Cloning_Simple
         var orig = new Testing.Models.NetStrux.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var copy = orig.ShallowCopy() as Testing.Models.NetStrux.Simple;
         if (_checkValues)
@@ -73,21 +77,22 @@ public class Cloning_Simple
         return 1;
     }
 
-    [Benchmark]
-    public async ValueTask<long> HyperSer()
-    {
-        var orig = new Testing.Models.HyperSer.Simple();
-        orig.Field1 = 123456L;
-        orig.Field2 = -23456L;
-        await orig.Pack(_dataStore, CancellationToken.None);
-        var copy = orig.ShallowCopy() as Testing.Models.HyperSer.Simple;
-        if (_checkValues)
-        {
-            if (copy is null) throw new Exception("Roundtrip entity is null!");
-            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-        }
-        return 1;
-    }
+    //[Benchmark]
+    //public async ValueTask<long> HyperSer()
+    //{
+    //    var orig = new Testing.Models.HyperSer.Simple();
+    //    orig.Field1 = 123456L;
+    //    orig.Field2 = -23456L;
+    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
+    //    await orig.Pack(_dataStore, CancellationToken.None);
+    //    var copy = orig.ShallowCopy() as Testing.Models.HyperSer.Simple;
+    //    if (_checkValues)
+    //    {
+    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
+    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+    //    }
+    //    return 1;
+    //}
 
     // todo Nino is buggy - try V4 again after release
     //[Benchmark]
@@ -96,6 +101,7 @@ public class Cloning_Simple
     //    var orig = new Testing.Models.NinoSer.Simple();
     //    orig.Field1 = 123456L;
     //    orig.Field2 = -23456L;
+    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
     //    await orig.Pack(_dataStore, CancellationToken.None);
     //    Span<byte> buffer = NinoSerializer.Serialize(orig);
     //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Simple>(buffer);
@@ -113,11 +119,13 @@ public class Cloning_Simple
         var orig = new Testing.Models.MemBlocks.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
-        var copy = orig.ShallowCopy() as Testing.Models.MemBlocks.Simple;
+         var copy = orig.ShallowCopy() as Testing.Models.MemBlocks.Simple;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
+            await copy.Pack(_dataStore, CancellationToken.None);
             if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
         }
         return 1;
@@ -129,6 +137,7 @@ public class Cloning_Simple
         var orig = new Testing.Models.JsonSystemText.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         var copy = orig.ShallowCopy() as Testing.Models.JsonSystemText.Simple;
         if (_checkValues)
@@ -145,6 +154,7 @@ public class Cloning_Simple
         var orig = new Testing.Models.JsonNewtonSoft.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         var copy = orig.ShallowCopy() as Testing.Models.JsonNewtonSoft.Simple;
         if (_checkValues)

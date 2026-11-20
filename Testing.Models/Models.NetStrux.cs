@@ -6,14 +6,17 @@ using DTOMaker.Runtime;
 using DTOMaker.Runtime.NetStrux;
 using System;
 using System.Buffers;
+using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Testing.Models;
 
 namespace DTOMaker.Runtime.NetStrux
 {
@@ -60,19 +63,37 @@ namespace DTOMaker.Runtime.NetStrux
         public IEntityBase ShallowCopy() => OnShallowCopy();
 
         // todo? reserve header
-        private BlockB008 _block = default;
+        private BlockB004 _block = default;
         public static readonly int BlockOffset = 0;
-        public static readonly int BlockLength = 8; // todo _block.StaticSize
+        public static readonly int BlockLength = 4; // todo _block.StaticSize
         public static readonly int TotalLength = BlockOffset + BlockLength;
 
-        protected EntityBase() { }
-        protected EntityBase(EntityBase source) { }
+        protected readonly struct Header
+        {
+            public readonly int EntityId;
+            public Header(int entityId)
+            {
+                EntityId = entityId;
+            }
+        }
+        protected static Header GetHeader(ReadOnlySpan<byte> buffer)
+        {
+            int entityId = BinaryPrimitives.ReadInt32LittleEndian(buffer);
+            return new Header(entityId);
+        }
+
+        public int GetEntityId() => _block.Int32ValueLE;
+        protected EntityBase(int entityId) { _block.Int32ValueLE = entityId; }
+        protected EntityBase(EntityBase source) { _block.Int32ValueLE = source.GetEntityId(); }
 
         /// <summary>
         /// When implemented in a derived class, serializes the entity's data into a byte array.
         /// </summary>
         /// <returns></returns>
-        protected abstract void OnSerialize(Span<byte> target);
+        protected virtual void OnSerialize(Span<byte> target)
+        {
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+        }
 
         /// <summary>
         /// Restores the state of the object from the provided serialized data.
@@ -416,7 +437,26 @@ namespace DTOMaker.Runtime.NetStrux
             return false;
         }
 
-        private static int GetFieldLength<T>()
+        /// <summary>
+        /// Valid fixed field sizes are: 8, 16, 32, 64, 128 and 256
+        /// </summary>
+        /// <param name="stringSize"></param>
+        /// <returns></returns>
+        private static bool IsValidFixedSize(int fixedSize)
+        {
+            return fixedSize switch
+            {
+                8 => true,
+                16 => true,
+                32 => true,
+                64 => true,
+                128 => true,
+                256 => true,
+                _ => false
+            };
+        }
+
+        private static int GetFieldLength<T>(int? fixedSize = null)
         {
             if (typeof(T) == typeof(byte)) return 1;
             if (typeof(T) == typeof(sbyte)) return 1;
@@ -436,15 +476,32 @@ namespace DTOMaker.Runtime.NetStrux
 
             if (typeof(T) == typeof(Guid)) return 16;
 
-            if (typeof(T) == typeof(string)) return 64;
-            if (typeof(T) == typeof(Octets)) return 64;
+            if (typeof(T) == typeof(string))
+            {
+                if (fixedSize.HasValue && IsValidFixedSize(fixedSize.Value))
+                {
+                    return fixedSize.Value;
+                }
+                else
+                    return 64;
+            }
+            if (typeof(T) == typeof(Octets))
+            {
+                if (fixedSize.HasValue && IsValidFixedSize(fixedSize.Value))
+                {
+                    return fixedSize.Value;
+                }
+                else
+                    return 64;
+            }
 
+            // todo don't throw - generate error messages
             throw new InvalidOperationException($"Cannot determine length of type: {typeof(T).FullName}");
         }
 
-        public BlockMap AddField<T>()
+        public BlockMap AddField<T>(int? sizeInBytes = null)
         {
-            int fieldLength = GetFieldLength<T>();
+            int fieldLength = GetFieldLength<T>(sizeInBytes);
 
             int lengthInBits = fieldLength * 8;
             (BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
@@ -465,11 +522,90 @@ namespace DTOMaker.Runtime.NetStrux
 
 namespace Testing.Models.NetStrux
 {
+    public sealed partial class Nothing : DTOMaker.Runtime.NetStrux.EntityBase, INothing, IEquatable<Nothing>, IPackable<Nothing>
+    {
+        public const int EntityId = 1;
+        private BlockB008 _block = default;
+        public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
+        public new static readonly int BlockLength = 8; // todo _block.StaticSize
+        public new static readonly int TotalLength = BlockOffset + BlockLength;
+
+        // ==================== fields begin ========================================
+        private static readonly BlockMap Field000_Map = BlockMap.Empty;
+
+        // -------------------- fields end ----------------------------------------
+        private static readonly BlockMap Field999_Map = Field000_Map;
+
+        //private static readonly int DeclaredBlockSize = _block.BlockSize;
+        private static readonly int ComputedBlockSize = Field999_Map.BlockSize;
+
+        // ==================== fields end ========================================
+
+        protected override IEntityBase OnShallowCopy() => new Nothing(this);
+
+        public Nothing() : base(Nothing.EntityId) { }
+        public Nothing(Nothing source) : base(source) { _block = source._block; }
+
+        protected override void OnSerialize(Span<byte> target)
+        {
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override void OnDeserialize(ReadOnlySpan<byte> source)
+        {
+            _block.TryRead(source.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override ReadOnlyMemory<byte> OnOuterSerialize()
+        {
+            Memory<byte> buffer = new byte[TotalLength];
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
+        {
+            base.OnSerialize3(bufferWriter);
+            var source = BlockHelper.AsReadOnlySpan(ref _block);
+            var target = bufferWriter.GetSpan(source.Length);
+            source.CopyTo(target);
+            bufferWriter.Advance(source.Length);
+        }
+
+        public static Nothing DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            // todo polymorphic deserialization
+            var result = new Nothing();
+            result.DeserializeSync(buffer);
+            return result;
+        }
+
+        public bool Equals(Nothing? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (other._block != this._block) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is Nothing other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(Nothing));
+            hasher.AddBytes(BlockHelper.AsReadOnlySpan(ref _block));
+            return hasher.ToHashCode();
+        }
+    }
+
     public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimple, IEquatable<Simple>, IPackable<Simple>
     {
-        private BlockB032 _block = default;
+        public const int EntityId = 2;
+        private BlockB064 _block = default;
         public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
-        public new static readonly int BlockLength = 32; // todo _block.StaticSize
+        public new static readonly int BlockLength = 64; // todo _block.StaticSize
         public new static readonly int TotalLength = BlockOffset + BlockLength;
 
         // ==================== fields begin ========================================
@@ -525,8 +661,45 @@ namespace Testing.Models.NetStrux
             }
         }
 
-        // -------------------- Field001 ----------------------------------------
-        private static readonly BlockMap Field999_Map = Field002_Map;
+        // -------------------- Field003 ----------------------------------------
+        private static readonly BlockMap Field003_Map = Field002_Map.AddField<String>(32);
+        private static readonly FieldDef Field003_Def = Field003_Map.LastAdded;
+        public String? Field3
+        {
+            get
+            {
+                var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field003_Def.Offset, Field003_Def.Length);
+                var length = valueSpan[0];
+                if (length == Byte.MaxValue) return null;
+                if (length == 0) return string.Empty;
+                return Encoding.UTF8.GetString(valueSpan.Slice(1, length));
+            }
+
+            set
+            {
+                ThrowIfFrozen();
+                var blockSpan = BlockHelper.AsWritableSpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field003_Def.Offset, Field003_Def.Length);
+                valueSpan.Clear();
+                if (value is null)
+                {
+                    valueSpan[0] = Byte.MaxValue;
+                    return;
+                }
+                if (Encoding.UTF8.TryGetBytes(value, valueSpan.Slice(1), out int lengthInBytes))
+                {
+                    valueSpan[0] = (byte)lengthInBytes;
+                }
+                else
+                {
+                    throw new ArgumentException($"String value is too long to fit in {Field003_Def.Length - 1} bytes.");
+                }
+            }
+        }
+
+        // -------------------- fields end ----------------------------------------
+        private static readonly BlockMap Field999_Map = Field003_Map;
 
         //private static readonly int DeclaredBlockSize = _block.BlockSize;
         private static readonly int ComputedBlockSize = Field999_Map.BlockSize;
@@ -535,7 +708,7 @@ namespace Testing.Models.NetStrux
 
         protected override IEntityBase OnShallowCopy() => new Simple(this);
 
-        public Simple() : base() { }
+        public Simple() : base(Simple.EntityId) { }
         public Simple(Simple source) : base(source) { _block = source._block; }
 
         protected override void OnSerialize(Span<byte> target)
@@ -592,43 +765,19 @@ namespace Testing.Models.NetStrux
         }
     }
 
-    public sealed partial class Required_String : DTOMaker.Runtime.NetStrux.EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
+    public abstract partial class NumberBase : DTOMaker.Runtime.NetStrux.EntityBase, INumberBase, IEquatable<NumberBase>, IPackable<NumberBase>
     {
-        private BlockB064 _block = default;
+        private BlockB008 _block = default; // todo placeholder
         public new static readonly int BlockOffset = DTOMaker.Runtime.NetStrux.EntityBase.TotalLength;
-        public new static readonly int BlockLength = 64; // todo _block.StaticSize
+        public new static readonly int BlockLength = 8; // todo _block.StaticSize
         public new static readonly int TotalLength = BlockOffset + BlockLength;
 
-        public String Field
-        {
-            get
-            {
-                var span = BlockHelper.AsReadOnlySpan(ref _block);
-                var lengthInBytes = span[0];
-                return Encoding.UTF8.GetString(span.Slice(1, lengthInBytes));
-            }
-            set
-            {
-                ThrowIfFrozen();
-                var span = BlockHelper.AsWritableSpan(ref _block);
-                if (Encoding.UTF8.TryGetBytes(value, span.Slice(1, BlockLength - 1), out int lengthInBytes))
-                {
-                    span[0] = (byte)lengthInBytes;
-                }
-                else
-                {
-                    throw new ArgumentException($"String value is too long to fit in {BlockLength - 1} bytes.");
-                }
-            }
-        }
-
-        protected override IEntityBase OnShallowCopy() => new Required_String(this);
-
-        public Required_String() : base() { }
-        public Required_String(Required_String source) : base(source) { _block = source._block; }
+        public NumberBase(int entityId) : base(entityId) { }
+        public NumberBase(NumberBase source) : base(source) { _block = source._block; }
 
         protected override void OnSerialize(Span<byte> target)
         {
+            base.OnSerialize(target);
             _block.WriteTo(target.Slice(BlockOffset, BlockLength));
         }
 
@@ -644,30 +793,232 @@ namespace Testing.Models.NetStrux
             return buffer;
         }
 
-        public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+        public static NumberBase DeserializeFrom(ReadOnlySpan<byte> buffer)
         {
-            // todo polymorphic deserialization
-            var result = new Required_String();
+            var header = GetHeader(buffer);
+            var entityId = header.EntityId;
+            NumberBase result = entityId switch
+            {
+                FloatNumber.EntityId => new FloatNumber(),
+                WholeNumber.EntityId => new WholeNumber(),
+                _ => throw new InvalidDataException($"Unexpected entity id: {entityId}")
+            };
             result.DeserializeSync(buffer);
             return result;
         }
 
-        public bool Equals(Required_String? other)
+        public bool Equals(NumberBase? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field != this.Field) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Required_String other && Equals(other);
+        public override bool Equals(object? obj) => obj is NumberBase other && Equals(other);
         public override int GetHashCode()
         {
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
-            hasher.Add(typeof(Required_String));
-            hasher.Add(Field);
+            hasher.Add(typeof(NumberBase));
+            return hasher.ToHashCode();
+        }
+    }
+
+    public sealed partial class FloatNumber : NumberBase, IFloatNumber, IEquatable<FloatNumber>, IPackable<FloatNumber>
+    {
+        public const int EntityId = 3;
+        private BlockB008 _block = default;
+        public new static readonly int BlockOffset = NumberBase.TotalLength;
+        public new static readonly int BlockLength = 8; // todo _block.StaticSize
+        public new static readonly int TotalLength = BlockOffset + BlockLength;
+
+        // ==================== fields begin ========================================
+        private static readonly BlockMap Field000_Map = BlockMap.Empty;
+
+        // -------------------- Field001 ----------------------------------------
+        private static readonly BlockMap Field001_Map = Field000_Map.AddField<Double>();
+        private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+
+        public Double Value
+        {
+            get
+            {
+                var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                return Codec_Double_LE.ReadFromSpan(valueSpan);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                var blockSpan = BlockHelper.AsWritableSpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                Codec_Double_LE.WriteToSpan(valueSpan, value);
+            }
+        }
+
+        // -------------------- fields end ----------------------------------------
+        private static readonly BlockMap Field999_Map = Field001_Map;
+
+        //private static readonly int DeclaredBlockSize = _block.BlockSize;
+        private static readonly int ComputedBlockSize = Field999_Map.BlockSize;
+
+        // ==================== fields end ========================================
+
+        protected override IEntityBase OnShallowCopy() => new FloatNumber(this);
+
+        public FloatNumber() : base(FloatNumber.EntityId) { }
+        public FloatNumber(FloatNumber source) : base(source) { _block = source._block; }
+
+        protected override void OnSerialize(Span<byte> target)
+        {
+            base.OnSerialize(target);
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override void OnDeserialize(ReadOnlySpan<byte> source)
+        {
+            _block.TryRead(source.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override ReadOnlyMemory<byte> OnOuterSerialize()
+        {
+            Memory<byte> buffer = new byte[TotalLength];
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
+        {
+            base.OnSerialize3(bufferWriter);
+            var source = BlockHelper.AsReadOnlySpan(ref _block);
+            var target = bufferWriter.GetSpan(source.Length);
+            source.CopyTo(target);
+            bufferWriter.Advance(source.Length);
+        }
+
+        public static FloatNumber DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            var result = new FloatNumber();
+            result.DeserializeSync(buffer);
+            return result;
+        }
+
+        public bool Equals(FloatNumber? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (other._block != this._block) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is FloatNumber other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(FloatNumber));
+            hasher.AddBytes(BlockHelper.AsReadOnlySpan(ref _block));
+            return hasher.ToHashCode();
+        }
+    }
+
+    public sealed partial class WholeNumber : NumberBase, IWholeNumber, IEquatable<WholeNumber>, IPackable<WholeNumber>
+    {
+        public const int EntityId = 4;
+        private BlockB008 _block = default;
+        public new static readonly int BlockOffset = NumberBase.TotalLength;
+        public new static readonly int BlockLength = 8; // todo _block.StaticSize
+        public new static readonly int TotalLength = BlockOffset + BlockLength;
+
+        // ==================== fields begin ========================================
+        private static readonly BlockMap Field000_Map = BlockMap.Empty;
+
+        // -------------------- Field001 ----------------------------------------
+        private static readonly BlockMap Field001_Map = Field000_Map.AddField<Int64>();
+        private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+
+        public Int64 Value
+        {
+            get
+            {
+                var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                return Codec_Int64_LE.ReadFromSpan(valueSpan);
+            }
+            set
+            {
+                ThrowIfFrozen();
+                var blockSpan = BlockHelper.AsWritableSpan(ref _block);
+                var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
+                Codec_Int64_LE.WriteToSpan(valueSpan, value);
+            }
+        }
+
+        // -------------------- fields end ----------------------------------------
+        private static readonly BlockMap Field999_Map = Field001_Map;
+
+        //private static readonly int DeclaredBlockSize = _block.BlockSize;
+        private static readonly int ComputedBlockSize = Field999_Map.BlockSize;
+
+        // ==================== fields end ========================================
+
+        protected override IEntityBase OnShallowCopy() => new WholeNumber(this);
+
+        public WholeNumber() : base(WholeNumber.EntityId) { }
+        public WholeNumber(WholeNumber source) : base(source) { _block = source._block; }
+
+        protected override void OnSerialize(Span<byte> target)
+        {
+            base.OnSerialize(target);
+            _block.WriteTo(target.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override void OnDeserialize(ReadOnlySpan<byte> source)
+        {
+            _block.TryRead(source.Slice(BlockOffset, BlockLength));
+        }
+
+        protected override ReadOnlyMemory<byte> OnOuterSerialize()
+        {
+            Memory<byte> buffer = new byte[TotalLength];
+            OnSerialize(buffer.Span);
+            return buffer;
+        }
+
+        protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
+        {
+            base.OnSerialize3(bufferWriter);
+            var source = BlockHelper.AsReadOnlySpan(ref _block);
+            var target = bufferWriter.GetSpan(source.Length);
+            source.CopyTo(target);
+            bufferWriter.Advance(source.Length);
+        }
+
+        public static WholeNumber DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            var result = new WholeNumber();
+            result.DeserializeSync(buffer);
+            return result;
+        }
+
+        public bool Equals(WholeNumber? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (other._block != this._block) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is WholeNumber other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(WholeNumber));
+            hasher.AddBytes(BlockHelper.AsReadOnlySpan(ref _block));
             return hasher.ToHashCode();
         }
     }

@@ -106,6 +106,12 @@ namespace Testing.Models.NinoSer
             set { field = IfNotFrozen(value); }
         }
 
+        public String? Field3
+        {
+            get;
+            set { field = IfNotFrozen(value); }
+        }
+
         public Simple() : base() { }
 
         public bool Equals(Simple? other)
@@ -115,6 +121,7 @@ namespace Testing.Models.NinoSer
             if (!base.Equals(other)) return false;
             if (other.Field1 != this.Field1) return false;
             if (other.Field2 != this.Field2) return false;
+            if (other.Field3 != this.Field3) return false;
             return true;
         }
 
@@ -126,6 +133,7 @@ namespace Testing.Models.NinoSer
             hasher.Add(typeof(Simple));
             hasher.Add(Field1);
             hasher.Add(Field2);
+            hasher.Add(Field3);
             return hasher.ToHashCode();
         }
 
@@ -140,42 +148,32 @@ namespace Testing.Models.NinoSer
     }
 
     [NinoType]
-    public sealed partial class Required_String : DTOMaker.Runtime.NinoSer.EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
+    public abstract partial class NumberBase : DTOMaker.Runtime.NinoSer.EntityBase, INumberBase, IEquatable<NumberBase>, IPackable<NumberBase>
     {
-        public String Field
-        {
-            get;
-            set { field = IfNotFrozen(value); }
-        } = string.Empty;
-
-        public Required_String() : base() { }
-
-        public bool Equals(Required_String? other)
+        public bool Equals(NumberBase? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field != this.Field) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Required_String other && Equals(other);
+        public override bool Equals(object? obj) => obj is NumberBase other && Equals(other);
         public override int GetHashCode()
         {
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
-            hasher.Add(typeof(Required_String));
-            hasher.Add(Field);
+            hasher.Add(typeof(NumberBase));
             return hasher.ToHashCode();
         }
 
         protected override ReadOnlyMemory<byte> OnSerialize()
         {
-            return NinoSerializer.Serialize<Required_String>(this);
+            return NinoSerializer.Serialize<NumberBase>(this);
         }
-        public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+        public static NumberBase DeserializeFrom(ReadOnlySpan<byte> buffer)
         {
-            return NinoDeserializer.Deserialize<Required_String>(buffer);
+            return NinoDeserializer.Deserialize<NumberBase>(buffer);
         }
     }
 

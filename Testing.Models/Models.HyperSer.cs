@@ -90,9 +90,42 @@ namespace DTOMaker.Runtime.HyperSer
 
 namespace Testing.Models.HyperSer
 {
+    public sealed partial class Nothing : DTOMaker.Runtime.HyperSer.EntityBase, INothing, IEquatable<Nothing>
+    {
+        protected override IEntityBase OnShallowCopy() => new Nothing() { };
+
+        public Nothing() : base() { }
+
+        public bool Equals(Nothing? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is Nothing other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(Nothing));
+            return hasher.ToHashCode();
+        }
+
+        protected override ReadOnlyMemory<byte> OnSerialize()
+        {
+            return Hyper.HyperSerializer.Serialize<Nothing>(this).ToArray(); // todo alloc!
+        }
+        public static Nothing DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            return Hyper.HyperSerializer.Deserialize<Nothing>(buffer);
+        }
+    }
+
     public sealed partial class Simple : DTOMaker.Runtime.HyperSer.EntityBase, ISimple, IEquatable<Simple>
     {
-        protected override IEntityBase OnShallowCopy() => new Simple() { Field1 = this.Field1, Field2 = this.Field2 };
+        protected override IEntityBase OnShallowCopy() => new Simple() { Field1 = this.Field1, Field2 = this.Field2, Field3 = this.Field3 };
 
         public Int64 Field1
         {
@@ -101,6 +134,12 @@ namespace Testing.Models.HyperSer
         }
 
         public Int64? Field2
+        {
+            get;
+            set { field = IfNotFrozen(value); }
+        }
+
+        public String? Field3
         {
             get;
             set { field = IfNotFrozen(value); }
@@ -115,6 +154,7 @@ namespace Testing.Models.HyperSer
             if (!base.Equals(other)) return false;
             if (other.Field1 != this.Field1) return false;
             if (other.Field2 != this.Field2) return false;
+            if (other.Field3 != this.Field3) return false;
             return true;
         }
 
@@ -126,6 +166,7 @@ namespace Testing.Models.HyperSer
             hasher.Add(typeof(Simple));
             hasher.Add(Field1);
             hasher.Add(Field2);
+            hasher.Add(Field3);
             return hasher.ToHashCode();
         }
 
@@ -139,42 +180,96 @@ namespace Testing.Models.HyperSer
         }
     }
 
-    public sealed partial class Required_String: DTOMaker.Runtime.HyperSer.EntityBase, IRequired_String, IEquatable<Required_String>, IPackable<Required_String>
+    public abstract partial class NumberBase: DTOMaker.Runtime.HyperSer.EntityBase, INumberBase, IEquatable<NumberBase>, IPackable<NumberBase>
     {
-        public String Field
-        {
-            get;
-            set { field = IfNotFrozen(value); }
-        } = string.Empty;
-
-        public Required_String() : base() { }
-
-        public bool Equals(Required_String? other)
+        public bool Equals(NumberBase? other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (other is null) return false;
             if (!base.Equals(other)) return false;
-            if (other.Field != this.Field) return false;
             return true;
         }
 
-        public override bool Equals(object? obj) => obj is Required_String other && Equals(other);
+        public override bool Equals(object? obj) => obj is NumberBase other && Equals(other);
         public override int GetHashCode()
         {
             HashCode hasher = new();
             hasher.Add(base.GetHashCode());
-            hasher.Add(typeof(Required_String));
-            hasher.Add(Field);
+            hasher.Add(typeof(NumberBase));
             return hasher.ToHashCode();
         }
 
         protected override ReadOnlyMemory<byte> OnSerialize()
         {
-            return Hyper.HyperSerializer.Serialize<Required_String>(this).ToArray(); // todo alloc!
+            return Hyper.HyperSerializer.Serialize<NumberBase>(this).ToArray(); // todo alloc!
         }
-        public static Required_String DeserializeFrom(ReadOnlySpan<byte> buffer)
+        public static NumberBase DeserializeFrom(ReadOnlySpan<byte> buffer)
         {
-            return Hyper.HyperSerializer.Deserialize<Required_String>(buffer);
+            return Hyper.HyperSerializer.Deserialize<NumberBase>(buffer);
+        }
+    }
+
+    public sealed partial class FloatNumber : NumberBase, IFloatNumber, IEquatable<FloatNumber>, IPackable<FloatNumber>
+    {
+        public Double Value { get; set; }
+        public bool Equals(FloatNumber? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (other.Value != this.Value) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is FloatNumber other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(FloatNumber));
+            hasher.Add(Value);
+            return hasher.ToHashCode();
+        }
+
+        protected override ReadOnlyMemory<byte> OnSerialize()
+        {
+            return Hyper.HyperSerializer.Serialize<FloatNumber>(this).ToArray(); // todo alloc!
+        }
+        public static FloatNumber DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            return Hyper.HyperSerializer.Deserialize<FloatNumber>(buffer);
+        }
+    }
+
+    public sealed partial class WholeNumber : NumberBase, IWholeNumber, IEquatable<WholeNumber>, IPackable<WholeNumber>
+    {
+        public Int64 Value { get; set; }
+        public bool Equals(WholeNumber? other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (other is null) return false;
+            if (!base.Equals(other)) return false;
+            if (other.Value != this.Value) return false;
+            return true;
+        }
+
+        public override bool Equals(object? obj) => obj is WholeNumber other && Equals(other);
+        public override int GetHashCode()
+        {
+            HashCode hasher = new();
+            hasher.Add(base.GetHashCode());
+            hasher.Add(typeof(WholeNumber));
+            hasher.Add(Value);
+            return hasher.ToHashCode();
+        }
+
+        protected override ReadOnlyMemory<byte> OnSerialize()
+        {
+            return Hyper.HyperSerializer.Serialize<WholeNumber>(this).ToArray(); // todo alloc!
+        }
+        public static WholeNumber DeserializeFrom(ReadOnlySpan<byte> buffer)
+        {
+            return Hyper.HyperSerializer.Deserialize<WholeNumber>(buffer);
         }
     }
 

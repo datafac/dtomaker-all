@@ -35,6 +35,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.MemPack.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Simple>(orig);
         var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Simple>(buffer);
@@ -52,6 +53,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.MsgPack2.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         var buffer = orig.SerializeToMessagePack<Testing.Models.MsgPack2.Simple>();
         var copy = buffer.DeserializeFromMessagePack<Testing.Models.MsgPack2.Simple>();
@@ -69,6 +71,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.NetStrux.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = orig.SerializeSync();
         var copy = Testing.Models.NetStrux.Simple.DeserializeFrom(buffer.Span);
@@ -80,22 +83,23 @@ public class Roundtrip_Simple
         return buffer.Length;
     }
 
-    [Benchmark]
-    public async ValueTask<long> HyperSer()
-    {
-        var orig = new Testing.Models.HyperSer.Simple();
-        orig.Field1 = 123456L;
-        orig.Field2 = -23456L;
-        await orig.Pack(_dataStore, CancellationToken.None);
-        Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
-        var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Simple>(buffer);
-        if (_checkValues)
-        {
-            if (copy is null) throw new Exception("Roundtrip entity is null!");
-            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-        }
-        return buffer.Length;
-    }
+    //[Benchmark]
+    //public async ValueTask<long> HyperSer()
+    //{
+    //    var orig = new Testing.Models.HyperSer.Simple();
+    //    orig.Field1 = 123456L;
+    //    orig.Field2 = -23456L;
+    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
+    //    await orig.Pack(_dataStore, CancellationToken.None);
+    //    Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
+    //    var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Simple>(buffer);
+    //    if (_checkValues)
+    //    {
+    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
+    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+    //    }
+    //    return buffer.Length;
+    //}
 
     // todo Nino is buggy - try V4 again after release
     //[Benchmark]
@@ -104,6 +108,7 @@ public class Roundtrip_Simple
     //    var orig = new Testing.Models.NinoSer.Simple();
     //    orig.Field1 = 123456L;
     //    orig.Field2 = -23456L;
+    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
     //    await orig.Pack(_dataStore, CancellationToken.None);
     //    Span<byte> buffer = NinoSerializer.Serialize(orig);
     //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Simple>(buffer);
@@ -121,6 +126,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.MemBlocks.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = orig.SerializeSync();
         var copy = new Testing.Models.MemBlocks.Simple(buffer);
@@ -138,6 +144,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.JsonSystemText.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.SerializeToJson(orig);
         var copy = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonSystemText.Simple>(buffer);
@@ -155,6 +162,7 @@ public class Roundtrip_Simple
         var orig = new Testing.Models.JsonNewtonSoft.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
+        orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.SerializeToJson(orig);
         var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonNewtonSoft.Simple>(buffer);

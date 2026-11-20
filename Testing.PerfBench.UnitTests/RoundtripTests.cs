@@ -9,60 +9,33 @@ namespace Testing.PerfBench.UnitTests
         [Fact] public async ValueTask Roundtrip_Simple_MsgPack2() => _ = await new Roundtrip_Simple(true).MsgPack2();
         [Fact] public async ValueTask Roundtrip_Simple_MemBlocks() => _ = await new Roundtrip_Simple(true).MemBlocks();
         [Fact] public async ValueTask Roundtrip_Simple_NetStrux() => _ = await new Roundtrip_Simple(true).NetStrux();
-        [Fact] public async ValueTask Roundtrip_Simple_HyperSer() => _ = await new Roundtrip_Simple(true).HyperSer();
         [Fact] public async ValueTask Roundtrip_Simple_JsonSystemText() => _ = await new Roundtrip_Simple(true).JsonSystemText();
         [Fact] public async ValueTask Roundtrip_Simple_JsonNewtonSoft() => _ = await new Roundtrip_Simple(true).JsonNewtonSoft();
         // todo Nino is buggy - try V4 again after release
         //[Fact] public async ValueTask Roundtrip_Simple_NinoSer() => _ = await new Roundtrip_Simple(true).NinoSer();
+        // HyperSerializer ignored due to simplicity - does not support nesting or polymorphism
+        //[Fact] public async ValueTask Roundtrip_Simple_HyperSer() => _ = await new Roundtrip_Simple(true).HyperSer();
 
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_MemoryPack(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).MemoryPack();
-
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_MsgPack2(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).MsgPack2();
-
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_MemBlocks(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).MemBlocks();
-
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        //[InlineData(ValueKind.StrK002)] won't fit
-        public async ValueTask Roundtrip_String_NetStrux(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NetStrux();
-
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_HyperSer(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).HyperSer();
-
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_MemoryPack() => _ = await new Roundtrip_PolyLeaf(true).MemoryPack();
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_MsgPack2() => _ = await new Roundtrip_PolyLeaf(true).MsgPack2();
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_MemBlocks() => _ = await new Roundtrip_PolyLeaf(true).MemBlocks();
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_NetStrux() => _ = await new Roundtrip_PolyLeaf(true).NetStrux();
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_JsonSystemText() => _ = await new Roundtrip_PolyLeaf(true).JsonSystemText();
+        [Fact] public async ValueTask Roundtrip_PolyLeaf_JsonNewtonSoft() => _ = await new Roundtrip_PolyLeaf(true).JsonNewtonSoft();
+        // HyperSerializer ignored due to simplicity - does not support nesting or polymorphism
+        //[Fact] public async ValueTask Roundtrip_PolyLeaf_HyperSer() => _ = await new Roundtrip_PolyLeaf(true).HyperSer();
         // todo Nino is buggy - try V4 again after release
-        //[Theory]
-        //[InlineData(ValueKind.StrZero)]
-        //[InlineData(ValueKind.StrB064)]
-        //[InlineData(ValueKind.StrK002)]
-        //public async ValueTask Roundtrip_String_NinoSer(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).NinoSer();
+        //[Fact] public async ValueTask Roundtrip_PolyLeaf_NinoSer() => _ = await new Roundtrip_PolyLeaf(true).NinoSer();
 
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_JsonSystemText(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).JsonSystemText();
-
-        [Theory]
-        [InlineData(ValueKind.StrZero)]
-        [InlineData(ValueKind.StrB064)]
-        [InlineData(ValueKind.StrK002)]
-        public async ValueTask Roundtrip_String_JsonNewtonSoft(ValueKind valueKind) => _ = await new Roundtrip_String(true, valueKind).JsonNewtonSoft();
-
+        [Fact] public async ValueTask Roundtrip_PolyBase_MemoryPack() => _ = await new Roundtrip_PolyBase(true).MemoryPack();
+        [Fact] public async ValueTask Roundtrip_PolyBase_MsgPack2() => _ = await new Roundtrip_PolyBase(true).MsgPack2();
+        [Fact] public async ValueTask Roundtrip_PolyBase_MemBlocks() => _ = await new Roundtrip_PolyBase(true).MemBlocks();
+        [Fact] public async ValueTask Roundtrip_PolyBase_NetStrux() => _ = await new Roundtrip_PolyBase(true).NetStrux();
+        [Fact] public async ValueTask Roundtrip_PolyBase_JsonSystemText() => _ = await new Roundtrip_PolyBase(true).JsonSystemText();
+        [Fact] public async ValueTask Roundtrip_PolyBase_JsonNewtonSoft() => _ = await new Roundtrip_PolyBase(true).JsonNewtonSoft();
+        // HyperSerializer ignored due to simplicity - does not support nesting or polymorphism
+        //[Fact] public async ValueTask Roundtrip_PolyBase_HyperSer() => _ = await new Roundtrip_PolyBase(true).HyperSer();
+        // todo Nino is buggy - try V4 again after release
+        //[Fact] public async ValueTask Roundtrip_PolyBase_NinoSer() => _ = await new Roundtrip_PolyBase(true).NinoSer();
     }
 }
