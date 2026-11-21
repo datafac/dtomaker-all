@@ -10,13 +10,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-		<PackageReference Include="DataFac.Storage.Testing" Version="4.0.29-dev" />
-		<PackageReference Include="Nino" Version="4.0.0-rc.10" />
+		<PackageReference Include="DataFac.Storage.Testing" Version="4.0.30-dev" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\HyperSerializer\HyperSerializer.csproj" />
-		<ProjectReference Include="..\Testing.Models\Testing.Models.csproj" />
+	  <ProjectReference Include="..\Testing.ModelsBasic\Testing.ModelsBasic.csproj" />
+	  <ProjectReference Include="..\Testing.ModelsGeneric\Testing.ModelsGeneric.csproj" />
+	  <ProjectReference Include="..\Testing.ModelsPolymorphic\Testing.ModelsPolymorphic.csproj" />
 	</ItemGroup>
 
 </Project>

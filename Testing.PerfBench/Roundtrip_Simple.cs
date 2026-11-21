@@ -4,7 +4,6 @@ using BenchmarkDotNet.Order;
 using DataFac.Storage.Testing;
 using DTOMaker.Runtime.MsgPack2;
 using MemoryPack;
-using Nino.Core;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,13 +31,13 @@ public class Roundtrip_Simple
     [Benchmark(Baseline = true)]
     public async ValueTask<long> MemoryPack()
     {
-        var orig = new Testing.Models.MemPack.Simple();
+        var orig = new Testing.ModelsBasic.MemPack.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
-        var buffer = MemoryPackSerializer.Serialize<Testing.Models.MemPack.Simple>(orig);
-        var copy = MemoryPackSerializer.Deserialize<Testing.Models.MemPack.Simple>(buffer);
+        var buffer = MemoryPackSerializer.Serialize<Testing.ModelsBasic.MemPack.Simple>(orig);
+        var copy = MemoryPackSerializer.Deserialize<Testing.ModelsBasic.MemPack.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -50,13 +49,13 @@ public class Roundtrip_Simple
     [Benchmark]
     public async ValueTask<long> MsgPack2()
     {
-        var orig = new Testing.Models.MsgPack2.Simple();
+        var orig = new Testing.ModelsBasic.MsgPack2.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
-        var buffer = orig.SerializeToMessagePack<Testing.Models.MsgPack2.Simple>();
-        var copy = buffer.DeserializeFromMessagePack<Testing.Models.MsgPack2.Simple>();
+        var buffer = orig.SerializeToMessagePack<Testing.ModelsBasic.MsgPack2.Simple>();
+        var copy = buffer.DeserializeFromMessagePack<Testing.ModelsBasic.MsgPack2.Simple>();
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -68,13 +67,13 @@ public class Roundtrip_Simple
     [Benchmark]
     public async ValueTask<long> NetStrux()
     {
-        var orig = new Testing.Models.NetStrux.Simple();
+        var orig = new Testing.ModelsBasic.NetStrux.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = orig.SerializeSync();
-        var copy = Testing.Models.NetStrux.Simple.DeserializeFrom(buffer.Span);
+        var copy = Testing.ModelsBasic.NetStrux.Simple.DeserializeFrom(buffer.Span);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -83,53 +82,16 @@ public class Roundtrip_Simple
         return buffer.Length;
     }
 
-    //[Benchmark]
-    //public async ValueTask<long> HyperSer()
-    //{
-    //    var orig = new Testing.Models.HyperSer.Simple();
-    //    orig.Field1 = 123456L;
-    //    orig.Field2 = -23456L;
-    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
-    //    await orig.Pack(_dataStore, CancellationToken.None);
-    //    Span<byte> buffer = Hyper.HyperSerializer.Serialize(orig);
-    //    var copy = Hyper.HyperSerializer.Deserialize<Testing.Models.HyperSer.Simple>(buffer);
-    //    if (_checkValues)
-    //    {
-    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
-    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-    //    }
-    //    return buffer.Length;
-    //}
-
-    // todo Nino is buggy - try V4 again after release
-    //[Benchmark]
-    //public async ValueTask<long> NinoSer()
-    //{
-    //    var orig = new Testing.Models.NinoSer.Simple();
-    //    orig.Field1 = 123456L;
-    //    orig.Field2 = -23456L;
-    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
-    //    await orig.Pack(_dataStore, CancellationToken.None);
-    //    Span<byte> buffer = NinoSerializer.Serialize(orig);
-    //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Simple>(buffer);
-    //    if (_checkValues)
-    //    {
-    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
-    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-    //    }
-    //    return buffer.Length;
-    //}
-
     [Benchmark]
     public async ValueTask<long> MemBlocks()
     {
-        var orig = new Testing.Models.MemBlocks.Simple();
+        var orig = new Testing.ModelsBasic.MemBlocks.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         await orig.Pack(_dataStore, CancellationToken.None);
         var buffer = orig.SerializeSync();
-        var copy = new Testing.Models.MemBlocks.Simple(buffer);
+        var copy = new Testing.ModelsBasic.MemBlocks.Simple(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -141,13 +103,13 @@ public class Roundtrip_Simple
     [Benchmark]
     public async ValueTask<long> JsonSystemText()
     {
-        var orig = new Testing.Models.JsonSystemText.Simple();
+        var orig = new Testing.ModelsBasic.JsonSystemText.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.SerializeToJson(orig);
-        var copy = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonSystemText.Simple>(buffer);
+        var copy = DTOMaker.Runtime.JsonSystemText.SerializationHelpers.DeserializeFromJson<Testing.ModelsBasic.JsonSystemText.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -159,13 +121,13 @@ public class Roundtrip_Simple
     [Benchmark]
     public async ValueTask<long> JsonNewtonSoft()
     {
-        var orig = new Testing.Models.JsonNewtonSoft.Simple();
+        var orig = new Testing.ModelsBasic.JsonNewtonSoft.Simple();
         orig.Field1 = 123456L;
         orig.Field2 = -23456L;
         orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
         orig.Freeze();
         string buffer = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.SerializeToJson(orig);
-        var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.Models.JsonNewtonSoft.Simple>(buffer);
+        var copy = DTOMaker.Runtime.JsonNewtonSoft.SerializationHelpers.DeserializeFromJson<Testing.ModelsBasic.JsonNewtonSoft.Simple>(buffer);
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");

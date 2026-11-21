@@ -17,7 +17,7 @@
 		<ProjectReference Include="..\DTOMaker.SrcGen.JsonSystemText\DTOMaker.SrcGen.JsonSystemText.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.MemBlocks\DTOMaker.SrcGen.MemBlocks.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\DTOMaker.SrcGen.MsgPack2\DTOMaker.SrcGen.MsgPack2.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-		<ProjectReference Include="..\HyperSerializer\HyperSerializer.csproj" />
+		<ProjectReference Include="..\Testing.Runtime.MemoryPack\Testing.Runtime.MemoryPack.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

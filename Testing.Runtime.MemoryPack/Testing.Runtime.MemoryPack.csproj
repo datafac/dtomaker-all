@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime\DTOMaker.Runtime.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DataFac.Storage" Version="4.0.30-dev" />
+		<PackageReference Include="MemoryPack" Version="1.22.0" />
+	</ItemGroup>
+
+</Project>

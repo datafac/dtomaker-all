@@ -29,9 +29,9 @@ public class Cloning_Nothing
     [Benchmark(Baseline = true)]
     public async ValueTask<long> MemoryPack()
     {
-        var orig = new Testing.Models.MemPack.Nothing();
+        var orig = new Testing.ModelsBasic.MemPack.Nothing();
         await orig.Pack(_dataStore, CancellationToken.None);
-        var copy = orig.ShallowCopy() as Testing.Models.MemPack.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.MemPack.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -43,9 +43,9 @@ public class Cloning_Nothing
     [Benchmark]
     public async ValueTask<long> MsgPack2()
     {
-        var orig = new Testing.Models.MsgPack2.Nothing();
+        var orig = new Testing.ModelsBasic.MsgPack2.Nothing();
         orig.Freeze();
-        var copy = orig.ShallowCopy() as Testing.Models.MsgPack2.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.MsgPack2.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -57,9 +57,9 @@ public class Cloning_Nothing
     [Benchmark]
     public async ValueTask<long> NetStrux()
     {
-        var orig = new Testing.Models.NetStrux.Nothing();
+        var orig = new Testing.ModelsBasic.NetStrux.Nothing();
         await orig.Pack(_dataStore, CancellationToken.None);
-        var copy = orig.ShallowCopy() as Testing.Models.NetStrux.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.NetStrux.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -68,45 +68,12 @@ public class Cloning_Nothing
         return 1;
     }
 
-    //[Benchmark]
-    //public async ValueTask<long> HyperSer()
-    //{
-    //    var orig = new Testing.Models.HyperSer.Nothing();
-    //    await orig.Pack(_dataStore, CancellationToken.None);
-    //    var copy = orig.ShallowCopy() as Testing.Models.HyperSer.Nothing;
-    //    if (_checkValues)
-    //    {
-    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
-    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-    //    }
-    //    return 1;
-    //}
-
-    // todo Nino is buggy - try V4 again after release
-    //[Benchmark]
-    //public async ValueTask<long> NinoSer()
-    //{
-    //    var orig = new Testing.Models.NinoSer.Nothing();
-    //    orig.Field1 = 123456L;
-    //    orig.Field2 = -23456L;
-    //    orig.Field3 = "abcdefghijklmnopqrstuvwxyz";
-    //    await orig.Pack(_dataStore, CancellationToken.None);
-    //    Span<byte> buffer = NinoSerializer.Serialize(orig);
-    //    var copy = NinoDeserializer.Deserialize<Testing.Models.NinoSer.Nothing>(buffer);
-    //    if (_checkValues)
-    //    {
-    //        if (copy is null) throw new Exception("Roundtrip entity is null!");
-    //        if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
-    //    }
-    //    return buffer.Length;
-    //}
-
     [Benchmark]
     public async ValueTask<long> MemBlocks()
     {
-        var orig = new Testing.Models.MemBlocks.Nothing();
+        var orig = new Testing.ModelsBasic.MemBlocks.Nothing();
         await orig.Pack(_dataStore, CancellationToken.None);
-        var copy = orig.ShallowCopy() as Testing.Models.MemBlocks.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.MemBlocks.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -118,9 +85,9 @@ public class Cloning_Nothing
     [Benchmark]
     public async ValueTask<long> JsonSystemText()
     {
-        var orig = new Testing.Models.JsonSystemText.Nothing();
+        var orig = new Testing.ModelsBasic.JsonSystemText.Nothing();
         orig.Freeze();
-        var copy = orig.ShallowCopy() as Testing.Models.JsonSystemText.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.JsonSystemText.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");
@@ -132,9 +99,9 @@ public class Cloning_Nothing
     [Benchmark]
     public async ValueTask<long> JsonNewtonSoft()
     {
-        var orig = new Testing.Models.JsonNewtonSoft.Nothing();
+        var orig = new Testing.ModelsBasic.JsonNewtonSoft.Nothing();
         orig.Freeze();
-        var copy = orig.ShallowCopy() as Testing.Models.JsonNewtonSoft.Nothing;
+        var copy = orig.ShallowCopy() as Testing.ModelsBasic.JsonNewtonSoft.Nothing;
         if (_checkValues)
         {
             if (copy is null) throw new Exception("Roundtrip entity is null!");

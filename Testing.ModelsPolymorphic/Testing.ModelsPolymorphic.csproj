@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime.JsonNewtonSoft\DTOMaker.Runtime.JsonNewtonSoft.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime.JsonSystemText\DTOMaker.Runtime.JsonSystemText.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime.MemBlocks\DTOMaker.Runtime.MemBlocks.csproj" />
+		<ProjectReference Include="..\DTOMaker.Runtime.MsgPack2\DTOMaker.Runtime.MsgPack2.csproj" />
+		<ProjectReference Include="..\DTOMaker.SrcGen.JsonNewtonSoft\DTOMaker.SrcGen.JsonNewtonSoft.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\DTOMaker.SrcGen.JsonSystemText\DTOMaker.SrcGen.JsonSystemText.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\DTOMaker.SrcGen.MemBlocks\DTOMaker.SrcGen.MemBlocks.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\DTOMaker.SrcGen.MsgPack2\DTOMaker.SrcGen.MsgPack2.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\Testing.Runtime.MemoryPack\Testing.Runtime.MemoryPack.csproj" />
+		<ProjectReference Include="..\Testing.Runtime.NetStrux\Testing.Runtime.NetStrux.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MemoryPack" Version="1.22.0" />
+	</ItemGroup>
+	
+</Project>
