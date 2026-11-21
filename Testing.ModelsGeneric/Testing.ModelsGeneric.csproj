@@ -10,6 +10,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\DTOMaker.Models\DTOMaker.Models.csproj" />
 		<ProjectReference Include="..\Testing.Runtime.MemoryPack\Testing.Runtime.MemoryPack.csproj" />
+		<ProjectReference Include="..\Testing.Runtime.NetStrux\Testing.Runtime.NetStrux.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

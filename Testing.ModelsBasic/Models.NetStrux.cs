@@ -50,15 +50,6 @@ public sealed partial class Nothing : EntityBase, INothing, IEquatable<Nothing>,
         return buffer;
     }
 
-    protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
-    {
-        base.OnSerialize3(bufferWriter);
-        var source = BlockHelper.AsReadOnlySpan(ref _block);
-        var target = bufferWriter.GetSpan(source.Length);
-        source.CopyTo(target);
-        bufferWriter.Advance(source.Length);
-    }
-
     public static Nothing DeserializeFrom(ReadOnlySpan<byte> buffer)
     {
         // todo polymorphic deserialization
@@ -100,89 +91,32 @@ public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimp
 
     // -------------------- Field001 ----------------------------------------
     private static readonly BlockMap Field001_Map = Field000_Map.AddField<Int64>();
-    private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+    private static readonly FieldDefn<Int64> Field001_Def = (FieldDefn<Int64>)Field001_Map.LastAdded;
 
     public Int64 Field1
     {
-        get
-        {
-            var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            return Codec_Int64_LE.ReadFromSpan(valueSpan);
-        }
-        set
-        {
-            var blockSpan = BlockHelper.AsWritableSpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            Codec_Int64_LE.WriteToSpan(valueSpan, value);
-        }
+        get => Field001_Def.ReadFromSpan(BlockHelper.AsReadOnlySpan(ref _block));
+        set => Field001_Def.WriteToSpan(BlockHelper.AsWritableSpan(ref _block), IfNotFrozen(value));
     }
 
     // -------------------- Field002 ----------------------------------------
-    private static readonly BlockMap Field002Flags_Map = Field001_Map.AddField<bool>();
-    private static readonly FieldDef Field002Flags_Def = Field002Flags_Map.LastAdded;
-    private static readonly BlockMap Field002_Map = Field002Flags_Map.AddField<Int64>();
-    private static readonly FieldDef Field002_Def = Field002_Map.LastAdded;
+    private static readonly BlockMap Field002_Map = Field001_Map.AddField<Int64?>();
+    private static readonly FieldDefn<Int64?> Field002_Def = (FieldDefn<Int64?>)Field002_Map.LastAdded;
+
     public Int64? Field2
     {
-        get
-        {
-            var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
-            var flagsSpan = blockSpan.Slice(Field002Flags_Def.Offset, Field002Flags_Def.Length);
-            if (!Codec_Boolean_LE.ReadFromSpan(flagsSpan)) return null;
-            var valueSpan = blockSpan.Slice(Field002_Def.Offset, Field002_Def.Length);
-            return Codec_Int64_LE.ReadFromSpan(valueSpan);
-        }
-
-        set
-        {
-            ThrowIfFrozen();
-            var blockSpan = BlockHelper.AsWritableSpan(ref _block);
-            var flagsSpan = blockSpan.Slice(Field002Flags_Def.Offset, Field002Flags_Def.Length);
-            Codec_Boolean_LE.WriteToSpan(flagsSpan, value.HasValue);
-            if (value.HasValue)
-            {
-                var valueSpan = blockSpan.Slice(Field002_Def.Offset, Field002_Def.Length);
-                Codec_Int64_LE.WriteToSpan(valueSpan, value.Value);
-            }
-        }
+        get => Field002_Def.ReadFromSpan(BlockHelper.AsReadOnlySpan(ref _block));
+        set => Field002_Def.WriteToSpan(BlockHelper.AsWritableSpan(ref _block), IfNotFrozen(value));
     }
 
     // -------------------- Field003 ----------------------------------------
-    private static readonly BlockMap Field003_Map = Field002_Map.AddField<String>(32);
-    private static readonly FieldDef Field003_Def = Field003_Map.LastAdded;
+    private static readonly BlockMap Field003_Map = Field002_Map.AddField<String?>();
+    private static readonly FieldDefn<String?> Field003_Def = (FieldDefn<String?>)Field003_Map.LastAdded;
+
     public String? Field3
     {
-        get
-        {
-            var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field003_Def.Offset, Field003_Def.Length);
-            var length = valueSpan[0];
-            if (length == Byte.MaxValue) return null;
-            if (length == 0) return string.Empty;
-            return Encoding.UTF8.GetString(valueSpan.Slice(1, length));
-        }
-
-        set
-        {
-            ThrowIfFrozen();
-            var blockSpan = BlockHelper.AsWritableSpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field003_Def.Offset, Field003_Def.Length);
-            valueSpan.Clear();
-            if (value is null)
-            {
-                valueSpan[0] = Byte.MaxValue;
-                return;
-            }
-            if (Encoding.UTF8.TryGetBytes(value, valueSpan.Slice(1), out int lengthInBytes))
-            {
-                valueSpan[0] = (byte)lengthInBytes;
-            }
-            else
-            {
-                throw new ArgumentException($"String value is too long to fit in {Field003_Def.Length - 1} bytes.");
-            }
-        }
+        get => Field003_Def.ReadFromSpan(BlockHelper.AsReadOnlySpan(ref _block));
+        set => Field003_Def.WriteToSpan(BlockHelper.AsWritableSpan(ref _block), IfNotFrozen(value));
     }
 
     // -------------------- fields end ----------------------------------------
@@ -213,15 +147,6 @@ public sealed partial class Simple : DTOMaker.Runtime.NetStrux.EntityBase, ISimp
         Memory<byte> buffer = new byte[TotalLength];
         OnSerialize(buffer.Span);
         return buffer;
-    }
-
-    protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
-    {
-        base.OnSerialize3(bufferWriter);
-        var source = BlockHelper.AsReadOnlySpan(ref _block);
-        var target = bufferWriter.GetSpan(source.Length);
-        source.CopyTo(target);
-        bufferWriter.Advance(source.Length);
     }
 
     public static Simple DeserializeFrom(ReadOnlySpan<byte> buffer)

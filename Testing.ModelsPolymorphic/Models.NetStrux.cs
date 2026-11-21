@@ -16,8 +16,8 @@ public abstract partial class NumberBase : DTOMaker.Runtime.NetStrux.EntityBase,
     public new static readonly int BlockLength = 8; // todo _block.StaticSize
     public new static readonly int TotalLength = BlockOffset + BlockLength;
 
-    public NumberBase(int entityId) : base(entityId) { }
-    public NumberBase(NumberBase source) : base(source) { _block = source._block; }
+    protected NumberBase(int entityId) : base(entityId) { }
+    protected NumberBase(NumberBase source) : base(source) { _block = source._block; }
 
     protected override void OnSerialize(Span<byte> target)
     {
@@ -82,23 +82,12 @@ public sealed partial class FloatNumber : NumberBase, IFloatNumber, IEquatable<F
 
     // -------------------- Field001 ----------------------------------------
     private static readonly BlockMap Field001_Map = Field000_Map.AddField<Double>();
-    private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+    private static readonly FieldDefn<Double> Field001_Def = (FieldDefn<Double>)Field001_Map.LastAdded;
 
     public Double Value
     {
-        get
-        {
-            var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            return Codec_Double_LE.ReadFromSpan(valueSpan);
-        }
-        set
-        {
-            ThrowIfFrozen();
-            var blockSpan = BlockHelper.AsWritableSpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            Codec_Double_LE.WriteToSpan(valueSpan, value);
-        }
+        get => Field001_Def.ReadFromSpan(BlockHelper.AsReadOnlySpan(ref _block));
+        set => Field001_Def.WriteToSpan(BlockHelper.AsWritableSpan(ref _block), IfNotFrozen(value));
     }
 
     // -------------------- fields end ----------------------------------------
@@ -130,15 +119,6 @@ public sealed partial class FloatNumber : NumberBase, IFloatNumber, IEquatable<F
         Memory<byte> buffer = new byte[TotalLength];
         OnSerialize(buffer.Span);
         return buffer;
-    }
-
-    protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
-    {
-        base.OnSerialize3(bufferWriter);
-        var source = BlockHelper.AsReadOnlySpan(ref _block);
-        var target = bufferWriter.GetSpan(source.Length);
-        source.CopyTo(target);
-        bufferWriter.Advance(source.Length);
     }
 
     public static FloatNumber DeserializeFrom(ReadOnlySpan<byte> buffer)
@@ -181,23 +161,12 @@ public sealed partial class WholeNumber : NumberBase, IWholeNumber, IEquatable<W
 
     // -------------------- Field001 ----------------------------------------
     private static readonly BlockMap Field001_Map = Field000_Map.AddField<Int64>();
-    private static readonly FieldDef Field001_Def = Field001_Map.LastAdded;
+    private static readonly FieldDefn<Int64> Field001_Def = (FieldDefn<Int64>)Field001_Map.LastAdded;
 
     public Int64 Value
     {
-        get
-        {
-            var blockSpan = BlockHelper.AsReadOnlySpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            return Codec_Int64_LE.ReadFromSpan(valueSpan);
-        }
-        set
-        {
-            ThrowIfFrozen();
-            var blockSpan = BlockHelper.AsWritableSpan(ref _block);
-            var valueSpan = blockSpan.Slice(Field001_Def.Offset, Field001_Def.Length);
-            Codec_Int64_LE.WriteToSpan(valueSpan, value);
-        }
+        get => Field001_Def.ReadFromSpan(BlockHelper.AsReadOnlySpan(ref _block));
+        set => Field001_Def.WriteToSpan(BlockHelper.AsWritableSpan(ref _block), IfNotFrozen(value));
     }
 
     // -------------------- fields end ----------------------------------------
@@ -229,15 +198,6 @@ public sealed partial class WholeNumber : NumberBase, IWholeNumber, IEquatable<W
         Memory<byte> buffer = new byte[TotalLength];
         OnSerialize(buffer.Span);
         return buffer;
-    }
-
-    protected override void OnSerialize3(IBufferWriter<byte> bufferWriter)
-    {
-        base.OnSerialize3(bufferWriter);
-        var source = BlockHelper.AsReadOnlySpan(ref _block);
-        var target = bufferWriter.GetSpan(source.Length);
-        source.CopyTo(target);
-        bufferWriter.Advance(source.Length);
     }
 
     public static WholeNumber DeserializeFrom(ReadOnlySpan<byte> buffer)

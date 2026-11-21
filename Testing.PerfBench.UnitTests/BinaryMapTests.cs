@@ -128,16 +128,16 @@ namespace Testing.PerfBench.UnitTests
             blockMap.Fields.Length.ShouldBe(3);
 
             var field0 = blockMap.Fields[0];
-            field0.Offset.ShouldBe(0);
-            field0.Length.ShouldBe(8);
+            field0.ValueOffset.ShouldBe(0);
+            field0.ValueLength.ShouldBe(8);
 
             var field1 = blockMap.Fields[1];
-            field1.Offset.ShouldBe(8);
-            field1.Length.ShouldBe(1);
+            field1.ValueOffset.ShouldBe(8);
+            field1.ValueLength.ShouldBe(1);
 
             var field2 = blockMap.Fields[2];
-            field2.Offset.ShouldBe(16);
-            field2.Length.ShouldBe(8);
+            field2.ValueOffset.ShouldBe(16);
+            field2.ValueLength.ShouldBe(8);
 
             blockMap.BlockSize.ShouldBe(32);
         }
@@ -159,32 +159,32 @@ namespace Testing.PerfBench.UnitTests
             blockMap.Fields.Length.ShouldBe(7);
 
             var field0 = blockMap.Fields[0];
-            field0.Offset.ShouldBe(0);
-            field0.Length.ShouldBe(1);
+            field0.ValueOffset.ShouldBe(0);
+            field0.ValueLength.ShouldBe(1);
 
             var field1 = blockMap.Fields[1];
-            field1.Offset.ShouldBe(1);
-            field1.Length.ShouldBe(1);
+            field1.ValueOffset.ShouldBe(1);
+            field1.ValueLength.ShouldBe(1);
 
             var field2 = blockMap.Fields[2];
-            field2.Offset.ShouldBe(2);
-            field2.Length.ShouldBe(1);
+            field2.ValueOffset.ShouldBe(2);
+            field2.ValueLength.ShouldBe(1);
 
             var field3 = blockMap.Fields[3];
-            field3.Offset.ShouldBe(4);
-            field3.Length.ShouldBe(4);
+            field3.ValueOffset.ShouldBe(4);
+            field3.ValueLength.ShouldBe(4);
 
             var field4 = blockMap.Fields[4];
-            field4.Offset.ShouldBe(8);
-            field4.Length.ShouldBe(8);
+            field4.ValueOffset.ShouldBe(8);
+            field4.ValueLength.ShouldBe(8);
 
             var field5 = blockMap.Fields[5];
-            field5.Offset.ShouldBe(64);
-            field5.Length.ShouldBe(64);
+            field5.ValueOffset.ShouldBe(64);
+            field5.ValueLength.ShouldBe(64);
 
             var field6 = blockMap.Fields[6];
-            field6.Offset.ShouldBe(16);
-            field6.Length.ShouldBe(4);
+            field6.ValueOffset.ShouldBe(16);
+            field6.ValueLength.ShouldBe(4);
 
             blockMap.BlockSize.ShouldBe(128);
         }

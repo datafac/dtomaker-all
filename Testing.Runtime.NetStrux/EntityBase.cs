@@ -105,21 +105,6 @@ namespace DTOMaker.Runtime.NetStrux
             return buffer;
         }
 
-        protected virtual void OnSerialize3(IBufferWriter<byte> bufferWriter)
-        {
-            // todo? serialize header?
-            var source = BlockHelper.AsReadOnlySpan(ref _block);
-            var target = bufferWriter.GetSpan(source.Length);
-            source.CopyTo(target);
-            bufferWriter.Advance(source.Length);
-        }
-
-        public void Serialize3(IBufferWriter<byte> bufferWriter)
-        {
-            ThrowIfNotPacked();
-            OnSerialize3(bufferWriter);
-        }
-
         public void DeserializeSync(ReadOnlySpan<byte> buffer)
         {
             ThrowIfFrozen();
@@ -344,16 +329,286 @@ namespace DTOMaker.Runtime.NetStrux
             FieldLength = fieldLength;
         }
     }
-    public sealed class FieldDef
+    internal interface ISpanReaderWriter<T>
     {
-        public int Offset { get; }
-        public int Length { get; }
-        public FieldDef(int offset, int length)
+        T ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset);
+        void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, T value);
+    }
+    internal sealed class SpanReaderWriter_OptionalBoolean : ISpanReaderWriter<Boolean?>
+    {
+        private static readonly SpanReaderWriter_OptionalBoolean _instance = new();
+        public static SpanReaderWriter_OptionalBoolean Instance => _instance;
+        public Boolean? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
         {
-            Offset = offset;
-            Length = length;
+            return blockSpan[flagsOffset] == 0 ? null : (blockSpan[valueOffset] != 0);
         }
-        public FieldDef WithOffset(int offset) => new FieldDef(offset, Length);
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Boolean? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                blockSpan[valueOffset] = value.Value ? (byte)1 : (byte)0;
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan[valueOffset] = (byte)0;
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredBoolean : ISpanReaderWriter<Boolean>
+    {
+        private static readonly SpanReaderWriter_RequiredBoolean _instance = new();
+        public static SpanReaderWriter_RequiredBoolean Instance => _instance;
+        public Boolean ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return (blockSpan[valueOffset] != 0);
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Boolean value)
+        {
+            blockSpan[valueOffset] = value ? (byte)1 : (byte)0;
+        }
+    }
+    internal sealed class SpanReaderWriter_OptionalByte : ISpanReaderWriter<Byte?>
+    {
+        private static readonly SpanReaderWriter_OptionalByte _instance = new();
+        public static SpanReaderWriter_OptionalByte Instance => _instance;
+        public Byte? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return blockSpan[flagsOffset] == 0 ? null : (Byte)blockSpan[valueOffset];
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Byte? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                blockSpan[valueOffset] = (byte)value.Value;
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan[valueOffset] = (byte)0;
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredByte : ISpanReaderWriter<Byte>
+    {
+        private static readonly SpanReaderWriter_RequiredByte _instance = new();
+        public static SpanReaderWriter_RequiredByte Instance => _instance;
+        public Byte ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return (Byte)blockSpan[valueOffset];
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Byte value)
+        {
+            blockSpan[valueOffset] = (byte)value;
+        }
+    }
+    internal sealed class SpanReaderWriter_OptionalSByte : ISpanReaderWriter<SByte?>
+    {
+        private static readonly SpanReaderWriter_OptionalSByte _instance = new();
+        public static SpanReaderWriter_OptionalSByte Instance => _instance;
+        public SByte? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return blockSpan[flagsOffset] == 0 ? null : (SByte)blockSpan[valueOffset];
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, SByte? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                blockSpan[valueOffset] = (byte)value.Value;
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan[valueOffset] = (byte)0;
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredSByte : ISpanReaderWriter<SByte>
+    {
+        private static readonly SpanReaderWriter_RequiredSByte _instance = new();
+        public static SpanReaderWriter_RequiredSByte Instance => _instance;
+        public SByte ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return (SByte)blockSpan[valueOffset];
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, SByte value)
+        {
+            blockSpan[valueOffset] = (byte)value;
+        }
+    }
+    internal sealed class SpanReaderWriter_OptionalInt16 : ISpanReaderWriter<Int16?>
+    {
+        private static readonly SpanReaderWriter_OptionalInt16 _instance = new();
+        public static SpanReaderWriter_OptionalInt16 Instance => _instance;
+        public Int16? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return blockSpan[flagsOffset] == 0 ? null : BinaryPrimitives.ReadInt16LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int16? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                BinaryPrimitives.WriteInt16LittleEndian(blockSpan.Slice(valueOffset, valueLength), value.Value);
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan.Slice(valueOffset, valueLength).Clear();
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredInt16 : ISpanReaderWriter<Int16>
+    {
+        private static readonly SpanReaderWriter_RequiredInt16 _instance = new();
+        public static SpanReaderWriter_RequiredInt16 Instance => _instance;
+        public Int16 ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return BinaryPrimitives.ReadInt16LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int16 value)
+        {
+            BinaryPrimitives.WriteInt16LittleEndian(blockSpan.Slice(valueOffset, valueLength), value);
+        }
+    }
+    internal sealed class SpanReaderWriter_OptionalInt32 : ISpanReaderWriter<Int32?>
+    {
+        private static readonly SpanReaderWriter_OptionalInt32 _instance = new();
+        public static SpanReaderWriter_OptionalInt32 Instance => _instance;
+        public Int32? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return blockSpan[flagsOffset] == 0 ? null : BinaryPrimitives.ReadInt32LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int32? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                BinaryPrimitives.WriteInt32LittleEndian(blockSpan.Slice(valueOffset, valueLength), value.Value);
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan.Slice(valueOffset, valueLength).Clear();
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredInt32 : ISpanReaderWriter<Int32>
+    {
+        private static readonly SpanReaderWriter_RequiredInt32 _instance = new();
+        public static SpanReaderWriter_RequiredInt32 Instance => _instance;
+        public Int32 ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return BinaryPrimitives.ReadInt32LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int32 value)
+        {
+            BinaryPrimitives.WriteInt32LittleEndian(blockSpan.Slice(valueOffset, valueLength), value);
+        }
+    }
+    internal sealed class SpanReaderWriter_OptionalInt64 : ISpanReaderWriter<Int64?>
+    {
+        private static readonly SpanReaderWriter_OptionalInt64 _instance = new();
+        public static SpanReaderWriter_OptionalInt64 Instance => _instance;
+        public Int64? ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return blockSpan[flagsOffset] == 0 ? null : BinaryPrimitives.ReadInt64LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int64? value)
+        {
+            if (value.HasValue)
+            {
+                blockSpan[flagsOffset] = (byte)1;
+                BinaryPrimitives.WriteInt64LittleEndian(blockSpan.Slice(valueOffset, valueLength), value.Value);
+            }
+            else
+            {
+                blockSpan[flagsOffset] = (byte)0;
+                blockSpan.Slice(valueOffset, valueLength).Clear();
+            }
+        }
+    }
+    internal sealed class SpanReaderWriter_RequiredInt64 : ISpanReaderWriter<Int64>
+    {
+        private static readonly SpanReaderWriter_RequiredInt64 _instance = new();
+        public static SpanReaderWriter_RequiredInt64 Instance => _instance;
+        public Int64 ReadFromSpan(ReadOnlySpan<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset)
+        {
+            return BinaryPrimitives.ReadInt64LittleEndian(blockSpan.Slice(valueOffset, valueLength));
+        }
+
+        public void WriteToSpan(Span<byte> blockSpan, int valueOffset, int valueLength, int flagsOffset, Int64 value)
+        {
+            BinaryPrimitives.WriteInt64LittleEndian(blockSpan.Slice(valueOffset, valueLength), value);
+        }
+    }
+    internal static class CodecFactory
+    {
+        public static ISpanReaderWriter<T> GetCodec<T>()
+        {
+            if (typeof(T) == typeof(Boolean)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Boolean>)SpanReaderWriter_RequiredBoolean.Instance;
+            if (typeof(T) == typeof(Boolean?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Boolean?>)SpanReaderWriter_OptionalBoolean.Instance;
+            if (typeof(T) == typeof(SByte)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<SByte>)SpanReaderWriter_RequiredSByte.Instance;
+            if (typeof(T) == typeof(SByte?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<SByte?>)SpanReaderWriter_OptionalSByte.Instance;
+            if (typeof(T) == typeof(Int16)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int16>)SpanReaderWriter_RequiredInt16.Instance;
+            if (typeof(T) == typeof(Int16?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int16?>)SpanReaderWriter_OptionalInt16.Instance;
+            if (typeof(T) == typeof(Int32)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int32>)SpanReaderWriter_RequiredInt32.Instance;
+            if (typeof(T) == typeof(Int32?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int32?>)SpanReaderWriter_OptionalInt32.Instance;
+            if (typeof(T) == typeof(Int64)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int64>)SpanReaderWriter_RequiredInt64.Instance;
+            if (typeof(T) == typeof(Int64?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Int64?>)SpanReaderWriter_OptionalInt64.Instance;
+            if (typeof(T) == typeof(Byte)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Byte>)SpanReaderWriter_RequiredByte.Instance;
+            if (typeof(T) == typeof(Byte?)) return (ISpanReaderWriter<T>)(ISpanReaderWriter<Byte?>)SpanReaderWriter_OptionalByte.Instance;
+            throw new NotImplementedException($"Unsupported type: {typeof(T).FullName}"); // todo remove this
+            throw new NotSupportedException($"Unsupported type: {typeof(T).FullName}");
+        }
+    }
+    public abstract class FieldDefnBase
+    {
+        public int ValueOffset { get; }
+        public int ValueLength { get; }
+        public int FlagsOffset { get; }
+        protected FieldDefnBase(int valueOffset, int valueLength, int flagsOffset)
+        {
+            ValueOffset = valueOffset;
+            ValueLength = valueLength;
+            FlagsOffset = flagsOffset;
+        }
+    }
+    public sealed class FieldDefn<T> : FieldDefnBase
+    {
+        private readonly ISpanReaderWriter<T> _codec;
+        private FieldDefn(int valueOffset, int valueLength, int flagsOffset, ISpanReaderWriter<T> codec)
+            : base(valueOffset, valueLength, flagsOffset)
+        {
+            _codec = codec;
+        }
+        public FieldDefn(int valueOffset, int valueLength, int flagsOffset)
+            : this(valueOffset, valueLength, flagsOffset, CodecFactory.GetCodec<T>())
+        {
+        }
+        public FieldDefn<T> WithValueOffset(int offset) => new FieldDefn<T>(offset, ValueLength, FlagsOffset, _codec);
+        public T ReadFromSpan(ReadOnlySpan<byte> blockSpan)
+        {
+            return _codec.ReadFromSpan(blockSpan, ValueOffset, ValueLength, FlagsOffset);
+        }
+        public void WriteToSpan(Span<byte> blockSpan, T value)
+        {
+            _codec.WriteToSpan(blockSpan, ValueOffset, ValueLength, FlagsOffset, value);
+        }
     }
     public sealed class BlockMap
     {
@@ -378,42 +633,54 @@ namespace DTOMaker.Runtime.NetStrux
 
         private readonly int _blockSize;
         private readonly BinaryMap _map;
-        private readonly ImmutableArray<FieldDef> _fields;
+        private readonly ImmutableArray<FieldDefnBase> _fields;
 
         public int BlockSize => _blockSize;
-        public ImmutableArray<FieldDef> Fields => _fields;
-        public FieldDef LastAdded => _fields[_fields.Length - 1];
+        public ImmutableArray<FieldDefnBase> Fields => _fields;
+        public FieldDefnBase LastAdded => _fields[_fields.Length - 1];
 
 
-        private BlockMap(int blockSize, BinaryMap map, ImmutableArray<FieldDef> fields)
+        private BlockMap(int blockSize, BinaryMap map, ImmutableArray<FieldDefnBase> fields)
         {
             _blockSize = blockSize;
             _map = map;
             _fields = fields;
         }
 
-        private static readonly BlockMap _empty = new BlockMap(0, BinaryMap.Empty, ImmutableArray<FieldDef>.Empty);
+        private static readonly BlockMap _empty = new BlockMap(0, BinaryMap.Empty, ImmutableArray<FieldDefnBase>.Empty);
         public static BlockMap Empty => _empty;
 
         private string? GetFirstValidationError()
         {
             var map = new BitArray(BlockSize);
-            foreach (FieldDef field in Fields)
+            foreach (FieldDefnBase field in Fields)
             {
-                // check alignment
-                if (field.Offset % field.Length != 0)
-                    return
-                        $"Field incorrectly aligned (Offset={field.Offset},Length={field.Length})";
+                // check value alignment
+                if (field.ValueOffset % field.ValueLength != 0)
+                    return $"Value incorrectly aligned (Offset={field.ValueOffset},Length={field.ValueLength})";
 
                 // check memory overlaps
-                var bytesNeeded = field.Length;
-                if (Vacant(map, field.Offset, bytesNeeded))
+                if (Vacant(map, field.ValueOffset, field.ValueLength))
                 {
-                    Reserve(map, field.Offset, bytesNeeded);
+                    Reserve(map, field.ValueOffset, field.ValueLength);
                 }
                 else
                 {
-                    return $"Field incorrectly mapped (Offset={field.Offset},Length={field.Length})";
+                    return $"Value incorrectly mapped (Offset={field.ValueOffset},Length={field.ValueLength})";
+                }
+
+                // check flags byte
+                if (field.FlagsOffset >= 0)
+                {
+                    // check memory overlaps
+                    if (Vacant(map, field.FlagsOffset, 1))
+                    {
+                        Reserve(map, field.FlagsOffset, 1);
+                    }
+                    else
+                    {
+                        return $"Flags incorrectly mapped (Offset={field.FlagsOffset})";
+                    }
                 }
             }
 
@@ -449,43 +716,66 @@ namespace DTOMaker.Runtime.NetStrux
             };
         }
 
-        private static int GetFieldLength<T>(int? fixedSize = null)
+        private static (bool , int ) GetFieldLength<T>(int? fixedSize = null)
         {
-            if (typeof(T) == typeof(byte)) return 1;
-            if (typeof(T) == typeof(sbyte)) return 1;
-            if (typeof(T) == typeof(bool)) return 1;
+            // todo: Half, U/Int128
 
-            if (typeof(T) == typeof(short)) return 2;
-            if (typeof(T) == typeof(ushort)) return 2;
-            if (typeof(T) == typeof(char)) return 2;
+            // check for Nullable<T>
+            if (typeof(T) == typeof(byte?)) return (true, 1);
+            if (typeof(T) == typeof(sbyte?)) return (true, 1);
+            if (typeof(T) == typeof(bool?)) return (true, 1);
 
-            if (typeof(T) == typeof(int)) return 4;
-            if (typeof(T) == typeof(uint)) return 4;
-            if (typeof(T) == typeof(float)) return 4;
+            if (typeof(T) == typeof(short?)) return (true, 2);
+            if (typeof(T) == typeof(ushort?)) return (true, 2);
+            if (typeof(T) == typeof(char?)) return (true, 2);
 
-            if (typeof(T) == typeof(long)) return 8;
-            if (typeof(T) == typeof(ulong)) return 8;
-            if (typeof(T) == typeof(double)) return 8;
+            if (typeof(T) == typeof(int?)) return (true, 4);
+            if (typeof(T) == typeof(uint?)) return (true, 4);
+            if (typeof(T) == typeof(float?)) return (true, 4);
 
-            if (typeof(T) == typeof(Guid)) return 16;
+            if (typeof(T) == typeof(long?)) return (true, 8);
+            if (typeof(T) == typeof(ulong?)) return (true, 8);
+            if (typeof(T) == typeof(double?)) return (true, 8);
 
+            if (typeof(T) == typeof(Guid?)) return (true, 16);
+
+            // check for value types
+            if (typeof(T) == typeof(byte)) return (false, 1);
+            if (typeof(T) == typeof(sbyte)) return (false, 1);
+            if (typeof(T) == typeof(bool)) return (false, 1);
+
+            if (typeof(T) == typeof(short)) return (false, 2);
+            if (typeof(T) == typeof(ushort)) return (false, 2);
+            if (typeof(T) == typeof(char)) return (false, 2);
+
+            if (typeof(T) == typeof(int)) return (false, 4);
+            if (typeof(T) == typeof(uint)) return (false, 4);
+            if (typeof(T) == typeof(float)) return (false, 4);
+
+            if (typeof(T) == typeof(long)) return (false, 8);
+            if (typeof(T) == typeof(ulong)) return (false, 8);
+            if (typeof(T) == typeof(double)) return (false, 8);
+
+            if (typeof(T) == typeof(Guid)) return (false, 16);
+
+            // check for reference types
             if (typeof(T) == typeof(string))
             {
                 if (fixedSize.HasValue && IsValidFixedSize(fixedSize.Value))
                 {
-                    return fixedSize.Value;
+                    return (false, fixedSize.Value);
                 }
                 else
-                    return 64;
+                    return (false, 64);
             }
             if (typeof(T) == typeof(Octets))
             {
                 if (fixedSize.HasValue && IsValidFixedSize(fixedSize.Value))
                 {
-                    return fixedSize.Value;
+                    return (false, fixedSize.Value);
                 }
                 else
-                    return 64;
+                    return (false, 64);
             }
 
             // todo don't throw - generate error messages
@@ -494,19 +784,39 @@ namespace DTOMaker.Runtime.NetStrux
 
         public BlockMap AddField<T>(int? sizeInBytes = null)
         {
-            int fieldLength = GetFieldLength<T>(sizeInBytes);
+            (bool isNullable, int valueLength) = GetFieldLength<T>(sizeInBytes);
 
-            int lengthInBits = fieldLength * 8;
-            (BinaryMap newMap, int bitOffset) = _map.AssignField(lengthInBits);
-            var bitsRemain = bitOffset % 8;
-            if (bitsRemain != 0)
-                throw new InvalidOperationException($"Can't do bit offsets yet");
+            BinaryMap newMap = _map;
+            int flagsOffset = -1;
+            if (isNullable)
+            {
+                // assign a field for the flags byte
+                (newMap, int bitOffset) = newMap.AssignField(1 * 8);
+                var bitsRemain = bitOffset % 8;
+                if (bitsRemain != 0)
+                    throw new InvalidOperationException($"Can't do bit offsets yet");
 
-            if (newMap.Sizes.BitsRemain != 0)
-                throw new InvalidOperationException($"Cannot build maps with bit remainders (yet)");
+                if (newMap.Sizes.BitsRemain != 0)
+                    throw new InvalidOperationException($"Cannot build maps with bit remainders (yet)");
 
-            int fieldOffset = bitOffset / 8;
-            var fieldDef = new FieldDef(fieldOffset, fieldLength);
+                flagsOffset = bitOffset / 8;
+            }
+
+            // assign a field for the value
+            int valueOffset;
+            {
+                (newMap, int bitOffset) = newMap.AssignField(valueLength * 8);
+                var bitsRemain = bitOffset % 8;
+                if (bitsRemain != 0)
+                    throw new InvalidOperationException($"Can't do bit offsets yet");
+
+                if (newMap.Sizes.BitsRemain != 0)
+                    throw new InvalidOperationException($"Cannot build maps with bit remainders (yet)");
+
+                valueOffset = bitOffset / 8;
+            }
+
+            var fieldDef = new FieldDefn<T>(valueOffset, valueLength, flagsOffset);
             var newFields = _fields.Add(fieldDef);
             return new BlockMap(newMap.Sizes.ByteCount, newMap, newFields);
         }

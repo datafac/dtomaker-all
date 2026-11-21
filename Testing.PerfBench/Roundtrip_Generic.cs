@@ -46,4 +46,24 @@ public class Roundtrip_Generic
         return buffer.Length;
     }
 
+    [Benchmark]
+    public async ValueTask<long> NetStrux()
+    {
+        var orig = new ModelsGeneric.NetStrux.MyCoupleA
+        {
+            Item1 = 123,
+            Item2 = "abcdefghijklmnopqrstuvwxyz",
+        };
+        await orig.Pack(_dataStore, CancellationToken.None);
+        var buffer = orig.SerializeSync();
+        var copy = ModelsGeneric.NetStrux.MyCoupleA.DeserializeFrom(buffer.Span);
+        if (_checkValues)
+        {
+            if (copy is null) throw new Exception("Roundtrip entity is null!");
+            if (copy is not ModelsGeneric.NetStrux.MyCoupleA) throw new Exception("Roundtrip entity is not correct type!");
+            if (!copy.Equals(orig)) throw new Exception("Roundtrip entity != original");
+        }
+        return buffer.Length;
+    }
+
 }
